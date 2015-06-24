@@ -1,0 +1,6 @@
+/botogram.egg-info
+/build
+/dist
+
+__pycache__
+*.py[oc]
