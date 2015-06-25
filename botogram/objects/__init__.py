@@ -7,6 +7,7 @@
 """
 
 from .base import BaseObject, multiple, one_of, _itself
+from . import mixins
 
 
 class EmptyObject(BaseObject):
@@ -14,7 +15,7 @@ class EmptyObject(BaseObject):
     pass
 
 
-class User(BaseObject):
+class User(BaseObject, mixins.ChatMixin):
     """Telegram API representation of an user
 
     https://core.telegram.org/bots/api#user
@@ -30,7 +31,7 @@ class User(BaseObject):
     }
 
 
-class GroupChat(BaseObject):
+class GroupChat(BaseObject, mixins.ChatMixin):
     """Telegram API representation of a group chat
 
     https://core.telegram.org/bots/api#groupchat
