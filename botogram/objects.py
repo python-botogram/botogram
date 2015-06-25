@@ -39,7 +39,6 @@ class BaseObject:
                 # of types nesting
                 if key in data:
                     # API instance is passed to the child if it wants it
-                    print(field_type, hasattr(field_type, "_provide_api"))
                     if hasattr(field_type, "_provide_api"):
                         value = field_type(data[key], api)
                     else:
@@ -337,7 +336,7 @@ class ReplyKeyboardHide(BaseObject):
 class ForceReply(BaseObject):
     """Telegram API special object which forces the user to reply to a message
 
-    https://core.elegram.org/bots/api#forcereply
+    https://core.telegram.org/bots/api#forcereply
     """
 
     required = {
