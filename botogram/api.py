@@ -42,7 +42,7 @@ class TelegramAPI:
         # Note that if it wants the API, this instance is provided to it
         if expect is None:
             return content
-        elif hasattr(expect, "_provide_api")::
-            return expect(content["result"], api)
+        elif hasattr(expect, "_provide_api"):
+            return expect(content["result"], self)
         else:
             return expect(content["result"])
