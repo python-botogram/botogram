@@ -345,3 +345,21 @@ class ForceReply(BaseObject):
     optional = {
         "selective": bool,
     }
+
+
+class Update(BaseObject):
+    """Telegram API representation of an update
+
+    https://core.telegram.org/bots/api#update
+    """
+
+    required = {
+        "update_id": int,
+    }
+    optional = {
+        "message": Message
+    }
+
+
+# Shortcut for the Updates type
+Updates = multiple(Update)
