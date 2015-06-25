@@ -15,6 +15,11 @@ setuptools.setup(
 
     description = "A Python microframework for Telegram bots",
 
+    packages = [
+        "botogram",
+        "botogram.objects",
+    ],
+
     install_requires = [
         "requests",
     ],
