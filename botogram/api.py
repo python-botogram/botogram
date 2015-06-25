@@ -8,6 +8,8 @@
 
 import requests
 
+from . import objects
+
 
 class APIError(Exception):
     """Something went wrong with the API"""
@@ -37,7 +39,10 @@ class TelegramAPI:
 
         # If no special object is expected, return the decoded json.
         # Else, return the "pythonized" result
+        # Note that if it wants the API, this instance is provided to it
         if expect is None:
             return content
+        elif hasattr(expect, "_provide_api")::
+            return expect(content["result"], api)
         else:
             return expect(content["result"])
