@@ -19,6 +19,7 @@ class BaseObject:
 
     required = {}
     optional = {}
+    replace_keys = {}
 
     def __init__(self, data, api=None):
         self._api = api
@@ -43,6 +44,10 @@ class BaseObject:
                         value = field_type(data[key], api)
                     else:
                         value = field_type(data[key])
+
+                    # Replace the keys -- useful for reserved keywords
+                    if key in self.replace_keys:
+                        key = self.replace_keys[key]
 
                     setattr(self, key, value)
 

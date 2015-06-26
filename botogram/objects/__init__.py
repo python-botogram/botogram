@@ -200,6 +200,9 @@ class Message(BaseObject):
         "delete_chat_photo": bool,
         "group_chat_crated": bool,
     }
+    replace_keys = {
+        "from": "from_",
+    }
 
 
 class ReplyKeyboardMarkup(BaseObject):
