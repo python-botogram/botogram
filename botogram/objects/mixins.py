@@ -15,7 +15,7 @@ def _require_api(func):
     def __(self, *args, **kwargs):
         if not hasattr(self, "_api") or self._api is None:
             raise RuntimeError("An API instance must be provided")
-        return func(*args, **kwargs)
+        return func(self, *args, **kwargs)
     return __
 
 
@@ -37,4 +37,4 @@ class ChatMixin:
         if extra is not None:
             args["reply_markup"] = extra.serialize()
 
-        return self._api.call("sendMessage", args, Message)
+        self._api.call("sendMessage", args)
