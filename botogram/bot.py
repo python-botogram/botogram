@@ -11,6 +11,7 @@ import re
 from . import api
 from . import objects
 from . import utils
+from . import runner
 
 
 class Bot:
@@ -81,6 +82,13 @@ class Bot:
             result = hook(update.message.chat, update.message)
             if result is True:
                 return
+
+
+    def run(self, workers=2):
+        """Run the bot with the multi-process runner"""
+        print("Botogram runner started -- Exit with Ctrl+C")
+        inst = runner.BotogramRunner(self, workers)
+        inst.run()
 
 
     def _get_commands(self):
