@@ -23,12 +23,12 @@ class Bot:
         self.owner = ""
 
         self._commands = {}
+        self._default_commands = {
+            "help": self._default_help_command,
+            "start": self._default_start_command,
+        }
         self._processors = [self._process_commands]
         self._before_hooks = []
-
-        # Add the automatic help command if the user wants it
-        if help:
-            self._commands["help"] = self._automatic_help_command
 
         # Fetch the bot itself's object
         self.itself = self.api.call("getMe", expect=objects.User)
@@ -82,6 +82,13 @@ class Bot:
             if result is True:
                 return
 
+
+    def _get_commands(self):
+        """Get a list of all available commands"""
+        commands = self._default_commands.copy()
+        commands.update(self._commands)
+        return commands
+
     def _process_commands(self, chat, message):
         """Hook which process all the commands"""
         if not hasattr(message, "text"):
@@ -94,27 +101,44 @@ class Bot:
         command = match.group(1)
         args = message.text.split(" ")[1:]
 
-        if command in self._commands:
-            self._commands[command](chat, message, args)
+        # This allows overriding default commands
+        commands = self._get_commands()
+
+        if command in commands:
+            commands[command](chat, message, args)
             return True
 
-    def _automatic_help_command(self, chat, message, args):
+    def _default_start_command(self, chat, message, args):
+        """Start using the bot.
+        It shows a greeting message.
+        """
+        message = []
+        if self.about:
+            message.append(self.about)
+        message.append("Use /help to get a list of all the commands")
+
+        chat.send("\n".join(message))
+
+    def _default_help_command(self, chat, message, args):
         """Show this help message
-        You can also use '/help <command>' to get help about a command."""
+        You can also use '/help <command>' to get help about a command.
+        """
+        commands = self._get_commands()
+
         if len(args) > 1:
             message = ["Error: the /help command allows up to one argument."]
         elif len(args) == 1:
-            if args[0] in self._commands:
-                message = self._command_help_message(args[0])
+            if args[0] in commands:
+                message = self._command_help_message(commands, args[0])
             else:
                 message = ["Error: Unknow command: /%s" % args[0],
                            "Use /help for a list of commands."]
         else:
-            message = self._generic_help_message()
+            message = self._generic_help_message(commands)
 
         chat.send("\n".join(message))
 
-    def _generic_help_message(self):
+    def _generic_help_message(self, commands):
         """Generate an help message"""
         message = []
 
@@ -126,7 +150,8 @@ class Bot:
         # Show help on commands
         if len(self._commands) > 0:
             message.append("Available commands:")
-            for name, func in self._commands.items():
+            for name in sorted(commands.keys()):
+                func = commands[name]
                 # Put a default docstring
                 if not func.__doc__:
                     docstring = "No description available."
@@ -147,12 +172,12 @@ class Bot:
 
         return message
 
-    def _command_help_message(self, command):
+    def _command_help_message(self, commands, command):
         """Generate a command's help message"""
         message = []
 
-        if self._commands[command].__doc__:
-            docstring = utils.format_docstr(self._commands[command].__doc__)
+        if commands[command].__doc__:
+            docstring = utils.format_docstr(commands[command].__doc__)
             message.append("/%s - %s" % (command, docstring))
         else:
             message.append("No help messages for the /%s command." % command)
