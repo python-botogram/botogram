@@ -15,8 +15,6 @@ _itself = object()
 class BaseObject:
     """A base class for all of the API types"""
 
-    _provide_api = True
-
     required = {}
     optional = {}
     replace_keys = {}
@@ -39,17 +37,26 @@ class BaseObject:
                 # it in the field_type. This allows also automatic resolution
                 # of types nesting
                 if key in data:
-                    # API instance is passed to the child if it wants it
-                    if hasattr(field_type, "_provide_api"):
-                        value = field_type(data[key], api)
-                    else:
-                        value = field_type(data[key])
-
                     # Replace the keys -- useful for reserved keywords
+                    new_key = key
                     if key in self.replace_keys:
-                        key = self.replace_keys[key]
+                        new_key = self.replace_keys[key]
 
-                    setattr(self, key, value)
+                    setattr(self, new_key, field_type(data[key]))
+
+    def set_api(self, api):
+        """Change the API instance"""
+        self._api = api
+
+        # Recursively set the API
+        for key in list(self.required.keys())+list(self.optional.keys()):
+            if not hasattr(self, key):
+                continue
+            value = getattr(self, key)
+
+            # Update the API, if it supports that
+            if hasattr(value, "set_api"):
+                value.set_api(api)
 
     def serialize(self):
         """Serialize this object"""
@@ -81,33 +88,35 @@ class BaseObject:
         return item
 
 
+class _MultipleList(list):
+    """Custom list which adds the set_api method"""
+
+    def set_api(self, api):
+        """Set the API on a multiple() result"""
+        for item in self:
+            if hasattr(item, "set_api"):
+                item.set_api(api)
+
+
 def multiple(field_type):
     """_Accept a list of objects"""
-    def __(objects, api):
+    def __(objects):
         if not isinstance(objects, list):
             raise ValueError("multiple(%r) needs a list of objects"
                              % field_type)
 
-        if hasattr(field_type, "_provide_api"):
-            return [field_type(item, api) for item in objects]
-        else:
-            return [field_type(item) for item in objects]
-    __._provide_api = True
+        return _MultipleList([field_type(item) for item in objects])
     return __
 
 
 def one_of(*field_types):
     """Accept one of these field types"""
-    def __(object, api):
+    def __(object):
         # Try to use all of the types
         for field_type in field_types:
             try:
-                if hasattr(field_type, "_provide_api"):
-                    return field_type(object, api)
-                else:
-                    return field_type(object)
+                return field_type(object)
             except ValueError:
                 pass
         raise ValueError("The object is neither a %s" % ", ".format(objects))
-    __._provide_api = True
     return __

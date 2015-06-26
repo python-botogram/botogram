@@ -39,10 +39,10 @@ class TelegramAPI:
 
         # If no special object is expected, return the decoded json.
         # Else, return the "pythonized" result
-        # Note that if it wants the API, this instance is provided to it
         if expect is None:
             return content
-        elif hasattr(expect, "_provide_api"):
-            return expect(content["result"], self)
         else:
-            return expect(content["result"])
+            wrapped = expect(content["result"])
+            if hasattr(wrapped, "set_api"):
+                wrapped.set_api(self)
+            return wrapped
