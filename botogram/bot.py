@@ -107,7 +107,13 @@ class Bot:
             return
 
         command = match.group(1)
-        args = message.text.split(" ")[1:]
+        splitted = message.text.split(" ")
+        args = splitted[1:]
+
+        # This detects if the bot is called with a mention
+        mentioned = False
+        if splitted[0] == "/%s@%s" % (command, self.itself.username):
+            mentioned = True
 
         # This allows overriding default commands
         commands = self._get_commands()
@@ -115,6 +121,13 @@ class Bot:
         if command in commands:
             commands[command](chat, message, args)
             return True
+        # Match single-user chat or command pointed to this
+        # specific bot -- /command@botname
+        elif isinstance(chat, objects.User) or mentioned:
+            chat.send("\n".join([
+                "Unknow command /%s." % command,
+                "Use /help for a list of commands."
+            ]))
 
     def _default_start_command(self, chat, message, args):
         """Start using the bot.
