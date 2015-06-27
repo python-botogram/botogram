@@ -261,6 +261,7 @@ div.toctree-wrapper ul li {
 div.buildthedocs-warning:before {
     content: "\f071";
     font-size: 1.2em;
+    font-family: "FontAwesome";
     display: inline-block;
     margin-right: 0.4em;
 }
