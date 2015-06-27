@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name = "botogram",
-    version = "1.0",
+    version = "0.1.dev0",
     url = "http://botogram.pietroalbini.io",
 
     license = "MIT",
@@ -18,6 +18,7 @@ setuptools.setup(
     packages = [
         "botogram",
         "botogram.objects",
+        "botogram.runner",
     ],
 
     install_requires = [
