@@ -28,7 +28,22 @@ command.
 
    bot.run()
 
+========================
+Introduction to botogram
+========================
+
 .. toctree::
    :maxdepth: 2
+
+   install
+
+==========
+Side notes
+==========
+
+.. toctree::
+   :maxdepth: 2
+
+   license
 
 .. _Telegram bots: https://core.telegram.org/bots
