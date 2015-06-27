@@ -4,3 +4,5 @@
 
 __pycache__
 *.py[oc]
+
+/docs/_build

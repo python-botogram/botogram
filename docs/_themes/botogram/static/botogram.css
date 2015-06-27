@@ -1,0 +1,357 @@
+@import url("font-awesome.css");
+
+@font-face {
+    font-family: 'Glacial Indifference';
+    font-style: normal;
+    font-weight: 700;
+    src: url('fonts/glacial-indifference.ttf') format('truetype');
+}
+
+body {
+    background: #ffffff;
+    color: #333333;
+    font-family: sans-serif;
+}
+
+a {
+    color: #179cde;
+    text-decoration: none;
+    border-bottom: 0.1em dotted transparent;
+}
+
+a:hover {
+    border-bottom-color: currentColor;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Glacial Indifference';
+    font-weight: 700;
+    margin: 1.5em 0 0.7em 0;
+}
+
+hr {
+    border: none;
+    border-top: 0.1em dotted #cccccc;
+    margin: 1.5em 0;
+}
+
+ol, ul {
+    margin: 0.4em 0;
+    padding: 0 0 0 1.5em;
+}
+
+ol li, ul li {
+    margin: 0.2em 0;
+    line-height: 1.5em;
+}
+
+ol blockquote, ul blockquote {
+    margin: 0;
+}
+
+ol p, ul p {
+    margin: 0;
+}
+
+ul li {
+    list-style: square;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+
+/* API reference things */
+
+dl dl {
+    margin-top: 0.7em;
+}
+
+dl dt em.property {
+    font-weight: bold;
+}
+
+dl dt tt {
+    font-family: sans-serif;
+}
+
+dl dt tt.descname {
+    font-weight: bold;
+}
+
+dl dt big, dl dt span.optional {
+    font-size: 1.1em;
+    margin: 0 0.1em;
+    color: #aaaaaa;
+}
+
+dl dt em {
+    font-style: normal;
+}
+
+dl dd {
+    margin: 0 0 0 1.5em;
+}
+
+dl dd p {
+    margin: 0.3em 0;
+}
+
+a.reference {
+    border-bottom: 0;
+}
+
+a.reference em {
+    font-style: normal;
+}
+
+a.reference:hover em, a.reference.external:hover, div.toctree-wrapper a.reference:hover {
+    border-bottom: 0.1em dotted currentColor;
+}
+
+a.reference:hover span.pre {
+    border-color: currentColor;
+}
+
+pre {
+    border: 0.1em solid #dddddd;
+    padding: 0.7em 1em;
+    border-radius: 0.6em;
+    overflow-x: auto;
+    line-height: 1.6em;
+}
+
+span.pre {
+    border: 0.1em solid #dddddd;
+    border-radius: 0.2em;
+    padding: 0.3em 0.5em;
+}
+
+span.private {
+    color: #ff5722;
+}
+
+span.versionmodified {
+    font-style: italic
+}
+
+.text-center {
+    text-align: center;
+}
+
+div.wrapper,
+div.document {
+    margin: auto;
+    width: 60em;
+}
+
+div.documentwrapper {
+    float: left;
+    width: 45em;
+}
+
+div.sphinxsidebar {
+    float: right;
+    width: 13em;
+}
+
+div.sphinxsidebar ul {
+    margin-top: 0.2em;
+}
+
+div.sphinxsidebar ul li {
+    margin: 0;
+}
+
+div.sphinxsidebar h3 {
+    font-size: 1.3em;
+    margin-bottom: 0.4em;
+    margin-top: 0.9em;
+}
+
+div.clearer {
+    clear: both;
+}
+
+div.header:after {
+    content: "";
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+
+div.header h1 {
+    float: left;
+    margin: 0;
+}
+
+div.header ul.menu {
+    float: right;
+    margin: 0;
+    margin-top: 0.4em;
+    padding: 0;
+}
+
+div.header ul.menu li {
+    display: inline-block;
+    margin-left: 1em;
+    line-height: 1.1em;
+}
+
+div.headerwrapper hr {
+    margin-bottom: 0.5em;
+}
+
+ul.menu li:first-child {
+    margin-left: 0;
+}
+
+div.highlight {
+    background: transparent;
+}
+
+div.footer {
+    margin: 2em 0;
+    font-size: 0.8em;
+    color: #aaaaaa;
+}
+
+div.footer span.separator:after {
+    content: "•";
+    display: inline-block;
+    margin: 0 0.5em;
+}
+
+div.footer a {
+    color: #aaaaaa;
+    border-bottom-color: #cccccc;
+}
+
+div.footer a:hover {
+    border-bottom-color: #aaaaaa;
+}
+
+a.headerlink {
+    visibility: hidden;
+    width: 0;
+}
+
+a.headerlink:after {
+    content: "\f0c1";
+    font-family: "FontAwesome";
+    display: inline-block;
+    font-size: 0.6em;
+}
+
+h1:hover a.headerlink:after {
+    visibility: visible;
+}
+
+div.documentwrapper h1:first-child,
+div.documentwrapper h1:nth-child(2){
+    display: none;
+}
+
+div.toctree-wrapper ul li {
+    line-height: 1.3em;
+}
+
+div.buildthedocs-warning:before {
+    content: "\f071";
+    font-size: 1.2em;
+    display: inline-block;
+    margin-right: 0.4em;
+}
+
+div.buildthedocs-warning {
+    color: #ff5447;
+    margin-top: 1.5em;
+    text-align: center;
+    line-height: 1.4em;
+    padding: 0.3em 0;
+    border-radius: 0.4em;
+    font-size: 0.9em;
+}
+
+div.buildthedocs-versions li.active a {
+    color: #333333;
+    border-bottom: none;
+}
+
+div.buildthedocs-versions li small {
+    color: #333333;
+}
+
+div.search-box input {
+    border: none;
+    border-bottom: 0.1em solid #dddddd;
+    padding: 0.4em 0.6em;
+    width: 50%;
+}
+
+div.search-box button {
+    width: 10%;
+    background: transparent;
+    border: none;
+    margin: 0;
+}
+
+@media all and (max-width: 60em) {
+
+    div.wrapper, div.document {
+        width: 100%;
+    }
+
+    div.documentwrapper {
+        float: normal;
+        width: 100%;
+    }
+
+    div.sphinxsidebar {
+        display: none;
+    }
+
+    div.header h1 {
+        float: none;
+        text-align: center;
+        margin-top: 0.7em;
+    }
+
+    div.header ul.menu {
+        float: none;
+        text-align: center;
+    }
+
+}
+
+@media all and (max-width: 50em) {
+
+    div.buildthedocs-warning:before {
+        display: block;
+        margin-right: 0;
+        margin-top: 0.2em;
+    }
+
+    div.buildthedocs-warning {
+        margin-top: 1em;
+    }
+
+    div.header ul.menu li {
+        display: block;
+        margin-left: 0;
+        margin-top: 0.7em;
+    }
+
+    div.footer {
+        text-align: center;
+    }
+
+    div.footer span.separator:after {
+        display: block;
+        height: 0.4em;
+        visibility: hidden;
+    }
+
+}
