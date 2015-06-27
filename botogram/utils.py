@@ -2,7 +2,7 @@
     botogram.utils
     Utilities used by the rest of the code
 
-    Copyright (c) 2015 Pietro Albini
+    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 

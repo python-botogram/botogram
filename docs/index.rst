@@ -1,4 +1,4 @@
-.. Copyright (c) 2015 Pietro Albini
+.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT licende
 
 ~~~~~~~~~~~~~~~~~~~~~~

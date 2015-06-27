@@ -2,7 +2,7 @@
     botogram.api
     Wrapper for the Telegram Bot API
 
-    Copyright (c) 2015 Pietro Albini
+    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 

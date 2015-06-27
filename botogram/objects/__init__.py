@@ -2,7 +2,7 @@
     botogram.objects
     Representation of the different upstream API objects
 
-    Copyright (c) 2015 Pietro Albini
+    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 

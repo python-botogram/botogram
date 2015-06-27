@@ -2,7 +2,7 @@
     botogram.runner
     A multi-process, scalable bot runner
 
-    Copyright (c) 2015 Pietro Albini
+    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
