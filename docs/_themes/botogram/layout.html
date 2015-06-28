@@ -24,6 +24,13 @@
 {%- block relbar2 -%}{%- endblock -%}
 {%- block footer %}
     <div class="wrapper">
+        {% if next %}
+        <div class="mobile-nav-container">
+            <a class="mobile-nav-button" href="{{ next.link|e }}">
+                Next page
+            </a>
+        </div>
+        {% endif %}
         <div class="footer">
             Copyright &copy; 2015
             <a href="http://pietroalbini.io">Pietro Albini</a>

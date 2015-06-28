@@ -299,6 +299,10 @@ div.search-box button {
     margin: 0;
 }
 
+a.mobile-nav-button {
+    display: none;
+}
+
 @media all and (max-width: 60em) {
 
     div.wrapper, div.document {
@@ -325,10 +329,6 @@ div.search-box button {
         text-align: center;
     }
 
-}
-
-@media all and (max-width: 50em) {
-
     div.buildthedocs-warning:before {
         display: block;
         margin-right: 0;
@@ -343,6 +343,26 @@ div.search-box button {
         display: block;
         margin-left: 0;
         margin-top: 0.7em;
+    }
+
+    div.mobile-nav-container {
+        text-align: center;
+        margin: 1em 0;
+    }
+
+    a.mobile-nav-button {
+        display: inline-block;
+        padding: 0.5em 1.2em;
+        background: #179cde;
+        color: #fff;
+        border-radius: 1.2em / 50%;
+        text-align: center;
+        transition: 0.2s all ease-in-out;
+    }
+
+    a.mobile-nav-button:hover {
+        border-bottom-color: transparent;
+        background: #54A9EB;
     }
 
     div.footer {
