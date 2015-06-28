@@ -1,0 +1,21 @@
+{% if next or prev %}
+<div>
+    <h3>Navigate in the docs</h3>
+    <ul>
+        {% if prev %}
+        <li><a href="{{ prev.link|e }}">
+            To the previous page
+        </a></li>
+        {% else %}
+        <li>To the previous page</li>
+        {% endif %}
+        {% if next %}
+        <li><a href="{{ next.link|e }}">
+            To the next page
+        </a></li>
+        {% else %}
+        <li>To the next page</li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

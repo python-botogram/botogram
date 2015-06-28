@@ -39,7 +39,7 @@ html_theme_path = ["_themes"]
 html_static_path = ["_static"]
 
 html_sidebars = {
-    "**": ["links.html"]
+    "**": ["links.html", "navigation.html"],
 }
 #html_additional_pages = {}
 #html_domain_indices = True
