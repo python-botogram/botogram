@@ -136,6 +136,35 @@ span.versionmodified {
     font-style: italic
 }
 
+div.admonition {
+    border-left: 0.45em solid #e5e5e5;
+    padding-left: 0.9em;
+    margin: 0.8em 0;
+}
+
+div.admonition.warning {
+    border-color: #fa8144;
+}
+
+div.admonition p {
+    margin: 0 0 0.4em 0;
+}
+
+div.admonition p.last {
+    margin-bottom: 0;
+}
+
+div.admonition p.admonition-title {
+    margin-bottom: 0;
+    font-size: 1.2em;
+    font-family: "Glacial Indifference";
+    font-weight: bold;
+}
+
+div.admonition.warning p.admonition-title {
+    color: #fa8144;
+}
+
 .text-center {
     text-align: center;
 }
