@@ -9,6 +9,8 @@ import sys
 import os
 import shlex
 
+sys.path.append(os.path.abspath('_ext'))
+
 extensions = []
 templates_path = ["_templates"]
 source_suffix = ".rst"
@@ -25,7 +27,7 @@ language = None
 
 exclude_patterns = ["_build"]
 
-pygments_style = "sphinx"
+pygments_style = "botogramext.BotogramStyle"
 
 todo_include_todos = False
 
