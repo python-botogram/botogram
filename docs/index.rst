@@ -36,6 +36,7 @@ Introduction to botogram
    :maxdepth: 2
 
    install
+   tutorial/index
 
 ==========
 Side notes
