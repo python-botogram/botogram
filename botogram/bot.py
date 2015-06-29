@@ -187,8 +187,9 @@ class Bot:
         # Execute all hooks if something matches their pattern
         found = False
         for regex, funcs in self._message_matches_hooks.items():
-            result = regex.match(message.text)
-            if result:
+            # Support multiple matches per message
+            results = regex.finditer(message.text)
+            for result in results:
                 found = True
                 for func in funcs:
                     func(chat, message, result.groups())
