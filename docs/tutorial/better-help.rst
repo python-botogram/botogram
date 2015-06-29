@@ -82,7 +82,7 @@ Bot's source code until now
    bot.about = "This bot is just the one from the botogram's tutorial"
    bot.owner = "@yourusername"
 
-   @bof.command("hello")
+   @bot.command("hello")
    def hello_command(chat, message, args):
        """Say hello to the world!
        This command sends "Hello world" to the current chat
