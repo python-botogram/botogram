@@ -28,7 +28,11 @@ class Bot:
             "help": self._default_help_command,
             "start": self._default_start_command,
         }
-        self._processors = [self._process_commands]
+        self._processors = [
+            self._process_commands,
+            self._process_message_matches
+        ]
+        self._message_matches_hooks = {}
         self._before_hooks = []
 
         # Fetch the bot itself's object
@@ -51,6 +55,47 @@ class Bot:
 
         self._processors.append(func)
         return func
+
+    def message_contains(self, string, ignore_case=True, func=None):
+        """Add a message contains hook"""
+        def apply(func):
+            if not callable(func):
+                raise ValueError("A message contains hook must be callable")
+
+            regex = r'\b('+string+r')\b'
+            flags = re.IGNORECASE if ignore_case else 0
+
+            # Register this as a regex
+            self.message_matches(regex, flags, func)
+
+            return func
+
+        # If the function was called as a decorator, then return the applier,
+        # which will act as a decorator
+        # Else, simply apply the function
+        if func is None:
+            return apply
+        apply(func)
+
+    def message_matches(self, regex, flags=0, func=None):
+        """Add a message matches hook"""
+        def apply(func):
+            if not callable(func):
+                raise ValueError("A message matches hook must be callable")
+
+            compiled = re.compile(regex, flags=flags)
+            if compiled not in self._message_matches_hooks:
+                self._message_matches_hooks[compiled] = []
+            self._message_matches_hooks[compiled].append(func)
+
+            return func
+
+        # If the function was called as a decorator, then return the applier,
+        # which will act as a decorator
+        # Else, simply apply the function
+        if func is None:
+            return apply
+        apply(func)
 
     def command(self, name, func=None):
         """Register a new command"""
@@ -82,7 +127,6 @@ class Bot:
             result = hook(update.message.chat, update.message)
             if result is True:
                 return
-
 
     def run(self, workers=2):
         """Run the bot with the multi-process runner"""
@@ -128,6 +172,24 @@ class Bot:
                 "Unknow command /%s." % command,
                 "Use /help for a list of commands."
             ]))
+
+    def _process_message_matches(self, chat, message):
+        """Hook which processes all the message matches hooks"""
+        if not hasattr(message, "text"):
+            return
+
+        # Execute all hooks if something matches their pattern
+        found = False
+        for regex, funcs in self._message_matches_hooks.items():
+            if regex.match(message.text):
+                found = True
+                for func in funcs:
+                    func(chat, message)
+
+        # If something was found, return true so no other message processors
+        # is called
+        if found:
+            return True
 
     def _default_start_command(self, chat, message, args):
         """Start using the bot.
