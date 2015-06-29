@@ -23,8 +23,7 @@ class Bot:
         self.about = ""
         self.owner = ""
 
-        self._commands = {}
-        self._default_commands = {
+        self._commands = {
             "help": self._default_help_command,
             "start": self._default_start_command,
         }
@@ -34,6 +33,9 @@ class Bot:
         ]
         self._message_matches_hooks = {}
         self._before_hooks = []
+
+        # You can override these commands one time
+        self._builtin_commands = list(self._commands.keys())
 
         # Fetch the bot itself's object
         self.itself = self.api.call("getMe", expect=objects.User)
@@ -105,7 +107,8 @@ class Bot:
 
     def command(self, name, func=None):
         """Register a new command"""
-        if name in self._commands:
+        # You can override all the builtin commands
+        if name in self._commands and name not in self._builtin_commands:
             raise NameError("The command /%s already exists" % name)
 
         def apply(func):
@@ -113,6 +116,11 @@ class Bot:
                 raise ValueError("A command processor must be callable")
 
             self._commands[name] = func
+
+            # This isn't a builtin command anymore...
+            if name in self._builtin_commands:
+                self._builtin_commands.remove(name)
+
             return func
 
         # If the function is called as a decorator, then return the applier,
@@ -140,13 +148,6 @@ class Bot:
         inst = runner.BotogramRunner(self, workers)
         inst.run()
 
-
-    def _get_commands(self):
-        """Get a list of all available commands"""
-        commands = self._default_commands.copy()
-        commands.update(self._commands)
-        return commands
-
     def _process_commands(self, chat, message):
         """Hook which process all the commands"""
         if not hasattr(message, "text"):
@@ -165,9 +166,7 @@ class Bot:
         if splitted[0] == "/%s@%s" % (command, self.itself.username):
             mentioned = True
 
-        # This allows overriding default commands
-        commands = self._get_commands()
-
+        commands = self._commands
         if command in commands:
             commands[command](chat, message, args)
             return True
@@ -214,8 +213,7 @@ class Bot:
         """Show this help message
         You can also use '/help <command>' to get help about a command.
         """
-        commands = self._get_commands()
-
+        commands = self._commands
         if len(args) > 1:
             message = ["Error: the /help command allows up to one argument."]
         elif len(args) == 1:
