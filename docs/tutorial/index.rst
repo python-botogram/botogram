@@ -18,3 +18,4 @@ check the ":ref:`install`" chapter.
    skeleton
    hello-world
    better-help
+   chat-messages
