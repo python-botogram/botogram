@@ -56,7 +56,7 @@ function:
 .. code-block:: python
    :emphasize-lines: 3,4,5
 
-   @bot.command("Hello")
+   @bot.command("hello")
    def hello_command(chat, message, args):
        """Say hello to the world!
        This command sends "Hello world" to the current chat
@@ -82,7 +82,7 @@ Bot's source code until now
    bot.about = "This bot is just the one from the botogram's tutorial"
    bot.owner = "@yourusername"
 
-   @bot.command("Hello")
+   @bof.command("hello")
    def hello_command(chat, message, args):
        """Say hello to the world!
        This command sends "Hello world" to the current chat
