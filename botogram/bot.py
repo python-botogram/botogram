@@ -65,8 +65,14 @@ class Bot:
             regex = r'\b('+string+r')\b'
             flags = re.IGNORECASE if ignore_case else 0
 
+            # Ignore the matches argument
+            def wrapper(func):
+                def __(chat, message, matches):
+                    return func(chat, message)
+                return __
+
             # Register this as a regex
-            self.message_matches(regex, flags, func)
+            self.message_matches(regex, flags, wrapper(func))
 
             return func
 
@@ -181,10 +187,11 @@ class Bot:
         # Execute all hooks if something matches their pattern
         found = False
         for regex, funcs in self._message_matches_hooks.items():
-            if regex.match(message.text):
+            result = regex.match(message.text)
+            if result:
                 found = True
                 for func in funcs:
-                    func(chat, message)
+                    func(chat, message, result.groups())
 
         # If something was found, return true so no other message processors
         # is called
