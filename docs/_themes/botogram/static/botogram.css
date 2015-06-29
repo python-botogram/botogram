@@ -122,6 +122,12 @@ pre {
     line-height: 1.6em;
 }
 
+pre span.hll {
+    margin: 0 -1em;
+    padding: 0 1em;
+    display: block;
+}
+
 span.pre {
     border: 0.1em solid #dddddd;
     border-radius: 0.2em;
