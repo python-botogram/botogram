@@ -59,7 +59,8 @@ class Bot:
         self._processors.append(func)
         return func
 
-    def message_contains(self, string, ignore_case=True, func=None):
+    def message_contains(self, string, ignore_case=True, multiple=False,
+                         func=None):
         """Add a message contains hook"""
         def apply(func):
             if not callable(func):
@@ -75,7 +76,7 @@ class Bot:
                 return __
 
             # Register this as a regex
-            self.message_matches(regex, flags, wrapper(func))
+            self.message_matches(regex, flags, multiple, wrapper(func))
 
             return func
 
@@ -86,11 +87,14 @@ class Bot:
             return apply
         apply(func)
 
-    def message_matches(self, regex, flags=0, func=None):
+    def message_matches(self, regex, flags=0, multiple=False, func=None):
         """Add a message matches hook"""
         def apply(func):
             if not callable(func):
                 raise ValueError("A message matches hook must be callable")
+
+            # Save the multiple status
+            func._botogram_multiple = multiple
 
             compiled = re.compile(regex, flags=flags)
             if compiled not in self._message_matches_hooks:
@@ -186,13 +190,19 @@ class Bot:
 
         # Execute all hooks if something matches their pattern
         found = False
+        executed = set()
         for regex, funcs in self._message_matches_hooks.items():
             # Support multiple matches per message
             results = regex.finditer(message.text)
             for result in results:
                 found = True
                 for func in funcs:
+                    # Prevents running things multiple times
+                    if not func._botogram_multiple and func in executed:
+                        continue
+
                     func(chat, message, result.groups())
+                    executed.add(func)
 
         # If something was found, return true so no other message processors
         # is called
