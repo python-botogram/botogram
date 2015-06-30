@@ -126,6 +126,36 @@ That code will check if the hypothetic issue URL exists (so the status code
 isn't ``404``), and if the URL exists the code will send it to the chat. Then
 Telegram will automatically show the preview to the user.
 
+=================================
+Matching more things in a message
+=================================
+
+The GitHub thing we built previously works great, except if someone sends
+multiple issues in the same message: in that case, the bot will only send to
+the chat the first issue present in the message, ignoring the other ones.
+
+In order to fix this, you can provide the ``multiple`` parameter to the
+decorator:
+
+.. code-block:: python
+   :emphasize-lines: 1
+
+   @bot.message_matches(r'([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\._]+)#([0-9]+)', multiple=True)
+   def github_links(chat, message, matches):
+       url = "https://github.com/{}/{}/issues/{}".format(*matches)
+       if requests.head(url).status_code != 404:
+           chat.send(url)
+
+So, now that function will be called multiple times if the message contains
+multiple matches. You can easily try that by sending multiple issues to the
+bot.
+
+.. note::
+
+   The ``multiple`` parameter can be provided only to
+   :py:meth:`botogram.Bot.message_matches` and
+   :py:meth:`botogram.Bot.message_contains`.
+
 ===========================
 Bot's source code until now
 ===========================
@@ -150,7 +180,7 @@ Bot's source code until now
    def send_botogram_link(chat, message):
        chat.send("https://github.com/pietroalbini/botogram")
 
-   @bot.message_matches(r'([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\._]+)#([0-9]+)')
+   @bot.message_matches(r'([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-\._]+)#([0-9]+)', multiple=True)
    def github_links(chat, message, matches):
        url = "https://github.com/{}/{}/issues/{}".format(*matches)
        if requests.head(url).status_code != 404:
