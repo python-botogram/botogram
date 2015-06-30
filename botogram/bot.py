@@ -22,7 +22,7 @@ class Bot:
 
         self.about = ""
         self.owner = ""
-        self.hide_from_help = ["start"]
+        self.hide_commands = ["start"]
 
         self._commands = {
             "help": self._default_help_command,
@@ -242,7 +242,7 @@ class Bot:
             message.append("Available commands:")
             for name in sorted(commands.keys()):
                 # Allow to hide commands in the help message
-                if name in self.hide_from_help:
+                if name in self.hide_commands:
                     continue
 
                 func = commands[name]
