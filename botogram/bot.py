@@ -17,7 +17,7 @@ from . import runner
 class Bot:
     """A botogram-made bot"""
 
-    def __init__(self, api_connection, help=True):
+    def __init__(self, api_connection):
         self.api = api_connection
 
         self.about = ""
