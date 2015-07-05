@@ -51,7 +51,7 @@ class Bot:
 
         self._before_hooks.append(func)
 
-    def process_messages(self, func):
+    def process_message(self, func):
         """Add a message processor hook"""
         if not callable(func):
             raise ValueError("A message processor must be callable")
