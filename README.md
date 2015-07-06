@@ -20,7 +20,8 @@ def hello_command(chat, message, args):
     """Say hello to the world!"""
     chat.send("Hello world")
 
-bot.run()
+if __name__ == "__main__":
+    bot.run()
 ```
 
 You can find the documentation at [botogram.pietroalbini.io][2].

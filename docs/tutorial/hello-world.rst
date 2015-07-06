@@ -64,4 +64,5 @@ Bot's source code until now
    def hello_command(chat, message, args):
        chat.send("Hello world")
 
-   bot.run()
+   if __name__ == "__main__":
+       bot.run()

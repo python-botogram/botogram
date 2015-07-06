@@ -23,10 +23,11 @@ command.
 
    @bot.command("hello")
    def hello_command(chat, message, args):
-      """Say hello to the world!"""
-      chat.send("Hello world")
+       """Say hello to the world!"""
+       chat.send("Hello world")
 
-   bot.run()
+   if __name__ == "__main__":
+       bot.run()
 
 ========================
 Introduction to botogram

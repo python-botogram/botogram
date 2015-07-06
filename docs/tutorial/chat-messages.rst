@@ -62,7 +62,7 @@ Now we can simply send the GitHub link, like how we previously did in the
 
    @bot.message_contains("botogram")
    def send_botogram_link(chat, message):
-      chat.send("https://github.com/pietroalbini/botogram")
+       chat.send("https://github.com/pietroalbini/botogram")
 
 Perfect, you can now try to execute the bot an send to it the word "botogram":
 you should receive that link!
@@ -186,7 +186,8 @@ Bot's source code until now
        if requests.head(url).status_code != 404:
            chat.send(url)
 
-   bot.run()
+   if __name__ == "__main__":
+       bot.run()
 
 .. _Regular Expression HOWTO: https://docs.python.org/3/howto/regex.html
 .. _requests: http://docs.python-requests.org

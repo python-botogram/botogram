@@ -20,7 +20,8 @@ it:
 
    bot = botogram.create("YOUR-API-KEY")
 
-   bot.run()
+   if __name__ == "__main__":
+      bot.run()
 
 The first line imports the botogram microframework, allowing you to use it in
 the program. The second one will create a brand new bot, with ``YOUR-API-KEY``
