@@ -64,15 +64,20 @@ class BaseObject:
 
         for group, required in ((self.required, True), (self.optional, False)):
             for key, field_type in group.items():
+                # Replace the keys -- useful for reserved keywords
+                new_key = key
+                if key in self.replace_keys:
+                    new_key = self.replace_keys[key]
+
                 # A required key must be present
-                if not hasattr(self, key) and required:
-                    raise ValueError("The key %s must be present" % key)
+                if not hasattr(self, new_key) and required:
+                    raise ValueError("The key %s must be present" % new_key)
 
                 # Optional keys not present will be ignored
-                if not hasattr(self, key):
+                if not hasattr(self, new_key):
                     continue
 
-                result[key] = self._serialize_one(getattr(self, key))
+                result[key] = self._serialize_one(getattr(self, new_key))
 
         return result
 
