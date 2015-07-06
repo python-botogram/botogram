@@ -88,7 +88,7 @@ class BaseObject:
         if isinstance(item, list):
             result = []
             for one in item:
-                result.append(self._serialize_one(item))
+                result.append(self._serialize_one(one))
             return result
         return item
 
