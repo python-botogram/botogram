@@ -42,7 +42,8 @@ class Bot:
         self.itself = self.api.call("getMe", expect=objects.User)
 
         # This regex will match all commands pointed to this bot
-        self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@'+self.itself.username+r')?( .*)?$')
+        self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
+                                       self.itself.username+r')?( .*)?$')
 
     def before_processing(self, func):
         """Register a before processing hook"""

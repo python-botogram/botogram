@@ -6,6 +6,7 @@
     Released under the MIT license
 """
 
+
 def format_docstr(docstring):
     """Prepare a docstring for /help"""
     result = []
