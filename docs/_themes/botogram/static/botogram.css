@@ -98,6 +98,24 @@ dl dd p {
     margin: 0.3em 0;
 }
 
+table.field-list .field-name {
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+    font-style: italic;
+    padding-right: 1em;
+}
+
+table.field-list .field-body ul {
+    margin: 0;
+    padding: 0;
+}
+
+table.field-list .field-body ul li {
+    list-style: none;
+    margin: 0;
+}
+
 a.reference {
     border-bottom: 0;
 }

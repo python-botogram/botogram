@@ -39,6 +39,15 @@ Introduction to botogram
    install
    tutorial/index
 
+===============
+Advanced topics
+===============
+
+.. toctree::
+   :maxdepth: 2
+
+   api
+
 ==========
 Side notes
 ==========
