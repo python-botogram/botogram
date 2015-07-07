@@ -72,15 +72,19 @@ dl dt em.property {
     font-weight: bold;
 }
 
-dl dt tt {
+dl dt code {
     font-family: sans-serif;
 }
 
-dl dt tt.descname {
+dl dt code.descname {
     font-weight: bold;
 }
 
-dl dt big, dl dt span.optional {
+dl.method dt code.descclassname {
+    font-weight: bold;
+}
+
+dl dt span.sig-paren, dl dt span.optional {
     font-size: 1.1em;
     margin: 0 0.1em;
     color: #aaaaaa;
