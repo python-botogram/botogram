@@ -62,6 +62,13 @@ Bot instance
       contains by default the ``/start`` command, and you shouldn't prepend the
       slash.
 
+   .. py:attribute:: process_backlog
+
+      A boolean representing if the backlog should be processed. Backlog is
+      intended as all the messages sent to the bot before its startup. If
+      this attribute is set to ``False``, as by default, the backlog is not
+      processed by the bot.
+
    .. py:attribute:: itself
 
       The :py:class:`botogram.User` representation of the bot's user account.

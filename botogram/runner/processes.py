@@ -17,7 +17,8 @@ from .. import objects
 class BaseProcess(multiprocessing.Process):
     """Base class for all of the processes"""
 
-    def __init__(self, updates, bot, *args):
+    def __init__(self, runner, updates, bot, *args):
+        self.runner = runner
         self.stop = False
         self.updates_queue = updates
         self.bot = bot
@@ -62,6 +63,11 @@ class UpdaterProcess(BaseProcess):
     def setup(self, commands_queue):
         self.last_id = -1
         self.commands_queue = commands_queue
+        self.backlog_processed = False
+
+        # This will process the backlog if the programmer wants so
+        if self.bot.process_backlog:
+            self.backlog_processed = True
 
     def loop(self):
         try:
@@ -81,5 +87,10 @@ class UpdaterProcess(BaseProcess):
         }, objects.Updates)
 
         for update in updates:
+            if not self.backlog_processed:
+                if update.message.date < self.runner._started_at:
+                    continue
+                self.backlog_processed = True
+
             self.updates_queue.put(update)
             self.last_id = update.update_id

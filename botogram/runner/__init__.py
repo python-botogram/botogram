@@ -22,6 +22,7 @@ class BotogramRunner:
         self.processes = []
         self.running = False
         self._stop = False
+        self._started_at = None
 
         self._workers_count = workers
 
@@ -46,6 +47,7 @@ class BotogramRunner:
         if self.running:
             raise RuntimeError("Server already running")
         self.running = True
+        self._started_at = time.time()
 
         self._define_processes()
 
@@ -62,6 +64,7 @@ class BotogramRunner:
 
         self.running = False
         self._stop_signal = False
+        self._started_at = None
 
     def stop(self, *__):
         """Stop a running runner"""
@@ -74,10 +77,11 @@ class BotogramRunner:
 
     def _define_processes(self):
         """Define all the processes"""
-        updater = processes.UpdaterProcess(self._updates_queue, self.bot,
+        updater = processes.UpdaterProcess(self, self._updates_queue, self.bot,
                                            self._updater_commands)
         self.processes.append(updater)
 
         for i in range(self._workers_count):
-            self.processes.append(processes.WorkerProcess(self._updates_queue,
+            self.processes.append(processes.WorkerProcess(self,
+                                                          self._updates_queue,
                                                           self.bot))

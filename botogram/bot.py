@@ -24,6 +24,8 @@ class Bot:
         self.owner = ""
         self.hide_commands = ["start"]
 
+        self.process_backlog = False
+
         self._commands = {
             "help": self._default_help_command,
             "start": self._default_start_command,
