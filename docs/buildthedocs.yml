@@ -1,0 +1,9 @@
+versions:
+- name: "dev"
+  source:
+    provider: local
+    path: docs
+  directory: .
+  title: Development
+  notice: unstable
+  warning: This documentation is for the unstable and in-development version of botogram!

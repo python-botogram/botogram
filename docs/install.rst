@@ -24,12 +24,13 @@ Living on the edge
 ==================
 
 If you don't mind having some instability or bugs, and you want the latest
-features not yet released, you can clone the `botogram git repository`_ and
-execute the installation from source::
+features not yet released, you can clone the `botogram git repository`_,
+`install virtualenv`_ and execute the installation from source::
 
    $ git clone https://github.com/pietroalbini/botogram.git
    $ cd botogram
-   $ pip3 install .
+   $ make
+   $ make install
 
 Remember that something can change without notice, and even be removed, until
 the feature is released, so don't use a non-released version in production.
@@ -81,6 +82,11 @@ execute the above command, or you can wrap the command with sudo, if you
 are allowed to do so::
 
    $ sudo pip3 install botogram
+
+If you installed from source, you need to use this command instead of the last
+one::
+
+   $ sudo make install
 
 .. _on the Python Packages Index: https://pypi.python.org/pypi/botogram
 .. _pip: https://pip.pypa.io

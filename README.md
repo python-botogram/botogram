@@ -34,9 +34,10 @@ it with setuptools. Be sure to have Python 3, pip and setuptools installed:
 
     $ git clone https://github.com/pietroalbini/botogram.git
     $ cd botogram
-    $ pip install .
+    $ make
+    $ make install
 
-On some Linux systems you might need to wrap the ``pip install`` command with
+On some Linux systems you might need to wrap the ``make install`` command with
 ``sudo``, if you don't have root privileges.
 
 [1]: https://core.telegram.org/bots
