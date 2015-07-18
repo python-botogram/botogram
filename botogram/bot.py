@@ -24,6 +24,9 @@ class Bot:
         self.owner = ""
         self.hide_commands = ["start"]
 
+        self.before_help = []
+        self.after_help = []
+
         self.process_backlog = False
 
         self._commands = {
@@ -250,6 +253,10 @@ class Bot:
             message.append(self.about)
             message.append("")
 
+        if len(self.before_help):
+            message += self.before_help
+            message.append("")
+
         # Show help on commands
         if len(self._commands) > 0:
             message.append("Available commands:")
@@ -271,9 +278,13 @@ class Bot:
         else:
             message.append("No commands available.")
 
+        if len(self.after_help):
+            message.append("")
+            message += self.after_help
+
         # Show the owner informations
         if self.owner:
-            message.append(" ")
+            message.append("")
             message.append("Please contact %s if you have problems with "
                            "this bot." % self.owner)
 
