@@ -1,10 +1,10 @@
 @import url("font-awesome.css");
 
 @font-face {
-    font-family: 'Glacial Indifference';
+    font-family: 'Bitter';
     font-style: normal;
     font-weight: 700;
-    src: url('fonts/glacial-indifference.ttf') format('truetype');
+    src: url('fonts/bitter.ttf') format('truetype');
 }
 
 body {
@@ -24,7 +24,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Glacial Indifference';
+    font-family: 'Bitter';
     font-weight: 700;
     margin: 1.5em 0 0.7em 0;
 }
