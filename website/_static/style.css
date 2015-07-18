@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: 'Bitter';
+    font-style: normal;
+    font-weight: 700;
+    src: url('fonts/bitter.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'DejaVu';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/dejavu.ttf') format('truetype');
+}
+
+body {
+    font-family: 'DejaVu', sans-serif;
+    color: #333;
+}
+
+div.wrapper {
+    width: 45em;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 2.5em;
+    font-family: 'Bitter', serif;
+    margin: 0.4em 0;
+}
+
+hr {
+    width: 40%;
+    margin: 1.5em auto;
+    border: 0;
+    border-bottom: 0.1em dotted #ccc;
+}
+
+p {
+    line-height: 1.4em;
+}
+
+nav ul {
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+
+nav ul li {
+    list-style: none;
+    display: inline-block;
+}
+
+nav ul li a {
+    color: #179cde;
+    padding: 0 0.7em;
+    display: block;
+    font-weight: bold;
+    font-family: 'Bitter', serif;
+    font-size: 1.2em;
+    text-align: center;
+    text-decoration: none;
+    transition: .2s all ease-in-out;
+    border-radius: 3px;
+}
+
+nav ul li a:hover {
+    color: #555;
+}
+
+footer ul {
+    margin: 1em 0;
+    text-align: center;
+    padding: 0;
+}
+
+footer ul li {
+    list-style: none;
+    display: inline-block;
+    font-size: 0.85em;
+    color: #aaa;
+    margin: 0 0.5em;
+}
+
+footer ul li a {
+    color: #aaa;
+    border-bottom: 0.1em dotted #ccc;
+    text-decoration: none;
+}
+
+footer ul li a:hover {
+    border-bottom-color: #aaa;
+}
