@@ -1,3 +1,4 @@
 # Fix code percentages on GitHub
 /docs/_themes linguist-vendored
 /Makefile linguist-vendored
+/website linguist-vendored
