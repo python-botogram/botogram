@@ -54,3 +54,8 @@ class MessageMixin:
             "from_chat_id": self.chat.id,
             "message_id": self.message_id,
         })
+
+    @_require_api
+    def reply(self, message, preview=True, extra=None):
+        """Reply to the current message"""
+        self.chat.send(message, preview, self.message_id, extra)
