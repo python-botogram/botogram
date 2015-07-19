@@ -15,6 +15,14 @@ class EmptyObject(BaseObject):
     pass
 
 
+class GenericChat(BaseObject, mixins.ChatMixin):
+    """Internal representation of a generic chat"""
+
+    required = {
+        "id": int,
+    }
+
+
 class User(BaseObject, mixins.ChatMixin):
     """Telegram API representation of an user
 
