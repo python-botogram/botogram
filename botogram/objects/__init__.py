@@ -177,7 +177,7 @@ class UserProfilePhotos(BaseObject):
     }
 
 
-class Message(BaseObject):
+class Message(BaseObject, mixins.MessageMixin):
     """Telegram API representation of a message
 
     https://core.telegram.org/bots/api#message

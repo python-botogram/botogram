@@ -38,3 +38,19 @@ class ChatMixin:
             args["reply_markup"] = extra.serialize()
 
         self._api.call("sendMessage", args)
+
+
+class MessageMixin:
+    """Add some methods for messages"""
+
+    @_require_api
+    def forward_to(self, to):
+        """Forward the message to another user"""
+        if hasattr(to, "id"):
+            to = to.id
+
+        self._api.call("forwardMessage", {
+            "chat_id": to,
+            "from_chat_id": self.chat.id,
+            "message_id": self.message_id,
+        })
