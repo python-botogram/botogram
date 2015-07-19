@@ -17,6 +17,7 @@
 body {
     font-family: 'DejaVu', sans-serif;
     color: #333;
+    margin: 0;
 }
 
 div.wrapper {
@@ -93,4 +94,22 @@ footer ul li a {
 
 footer ul li a:hover {
     border-bottom-color: #aaa;
+}
+
+@media all and (max-width: 47em) {
+
+    div.wrapper {
+        width: auto;
+        padding: 0 1em;
+    }
+
+    nav ul li, footer ul li {
+        display: block;
+        margin-bottom: 0.5em;
+    }
+
+    nav ul li:last-child, footer ul li:last-child {
+        margin-bottom: 0;
+    }
+
 }
