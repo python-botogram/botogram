@@ -169,6 +169,10 @@ Bot's source code until now
    bot.about = "This bot is just the one from the botogram's tutorial"
    bot.owner = "@yourusername"
 
+   bot.after_help = [
+      "This bot also parses the chat in order to send you useful informations.",
+   ]
+
    @bot.command("hello")
    def hello_command(chat, message, args):
        """Say hello to the world!

@@ -52,6 +52,16 @@ Bot instance
       to insert an username be sure to prefix it with ``@``, so the Telegram
       client will make that text clickable.
 
+   .. py:attribute:: before_help
+
+      A list of strings to be inserted in the ``/help`` messages. These ones
+      will be inserted before the commands list.
+
+   .. py:attribute:: after_help
+
+      A list of strings to be inserted in the ``/help`` messages. These ones
+      will be inserted after the commands list.
+
    .. py:attribute:: hide_commands
 
       A list of all the commands you want to hide from ``/help``. These

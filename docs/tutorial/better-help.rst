@@ -68,6 +68,32 @@ available issuing ``/help``, and the whole docstring will be showed only if
 someone asks more detailed help for a command, issuing ``/help`` with the
 command name as argument.
 
+.. _tutorial-better-help-custom:
+
+====================
+Custom help messages
+====================
+
+If your bot doesn't execute only commands, but it does something else, it's
+better to write what it does in the help message. In order to do so, you can
+append messages before and after the commands list, with either the
+:py:attr:`botogram.Bot.before_help` or :py:attr:`botogram.Bot.after_help`
+attributes. These attributes should contain a list of messages, and each
+message will be sent in one different line.
+
+In this case, we're going to add a message after the commands, which explains
+that the bot will also parse chat messages to send useful informations (we're
+going to implement this afterwards):
+
+.. code-block:: python
+   :emphasize-lines: 3,4,5
+
+   bot.owner = "@yourusername"
+
+   bot.after_help = [
+      "This bot also parses the chat in order to send you useful informations.",
+   ]
+
 .. _tutorial-better-help-source:
 
 ===========================
@@ -81,6 +107,10 @@ Bot's source code until now
    bot = botogram.create("YOUR-API-KEY")
    bot.about = "This bot is just the one from the botogram's tutorial"
    bot.owner = "@yourusername"
+
+   bot.after_help = [
+      "This bot also parses the chat in order to send you useful informations.",
+   ]
 
    @bot.command("hello")
    def hello_command(chat, message, args):
