@@ -27,6 +27,9 @@ class BotogramRunner:
         self._workers_count = workers
 
         self._setup_shared()
+
+        # This is useful only on non-Windows platforms, since Windows doesn't
+        # catch properly the SIGINT signal
         self._setup_signals()
 
     def _setup_shared(self):
@@ -54,9 +57,12 @@ class BotogramRunner:
         for process in self.processes:
             process.start()
 
-        # Main server loop
-        while not self._stop:
-            time.sleep(0.2)
+        try:
+            # Main server loop
+            while not self._stop:
+                time.sleep(0.2)
+        except (KeyboardInterrupt, InterruptedError):
+            pass
 
         for process in self.processes:
             process.join()

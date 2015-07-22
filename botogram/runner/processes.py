@@ -35,6 +35,8 @@ class BaseProcess(multiprocessing.Process):
         while not self.stop:
             try:
                 self.loop()
+            except (KeyboardInterrupt, InterruptedError):
+                self.on_stop()
             except:
                 traceback.print_exc()
 
@@ -42,12 +44,26 @@ class BaseProcess(multiprocessing.Process):
         """One single loop"""
         pass
 
+    def on_stop(self):
+        """When the process is stopping"""
+        self.stop = True
+
 
 class WorkerProcess(BaseProcess):
     """This process will execute all the updates it receives"""
 
+    def setup(self):
+        self.will_stop = False
+
     def loop(self):
-        update = self.updates_queue.get()
+        try:
+            update = self.updates_queue.get(True, 0.2)
+        except queue.Empty:
+            # If the worker should be stopped and no updates are in the queue,
+            # then gracefully stop
+            if self.will_stop:
+                self.stop = True
+            return
 
         # If the update is None, stop the worker
         if update is None:
@@ -55,6 +71,9 @@ class WorkerProcess(BaseProcess):
             return
 
         self.bot.process(update)
+
+    def on_stop(self):
+        self.will_stop = True
 
 
 class UpdaterProcess(BaseProcess):
