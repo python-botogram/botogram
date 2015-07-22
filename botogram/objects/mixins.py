@@ -39,6 +39,26 @@ class ChatMixin:
 
         self._api.call("sendMessage", args)
 
+    @_require_api
+    def send_photo(self, path, caption=None, reply_to=None, extra=None):
+        """Send a photo"""
+        # Convert instance of Message to ids in reply_to
+        if hasattr(reply_to, "message_id"):
+            reply_to = reply_to.message_id
+
+        # Build API call arguments
+        args = {"chat_id": self.id}
+        if caption is not None:
+            args["caption"] = caption
+        if reply_to is not None:
+            args["reply_to_message_id"] = reply_to
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        files = {"photo": open(path, "rb")}
+
+        self._api.call("sendPhoto", args, files)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -59,3 +79,7 @@ class MessageMixin:
     def reply(self, message, preview=True, extra=None):
         """Reply to the current message"""
         self.chat.send(message, preview, self.message_id, extra)
+
+    def reply_with_photo(self, path, caption, extra):
+        """Reply with a photo to the current message"""
+        self.chat.send_photo(path, caption, self.message_id, extra)

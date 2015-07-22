@@ -103,7 +103,7 @@ class UpdaterProcess(BaseProcess):
         updates = api.call("getUpdates", {
             "offset": self.last_id+1,
             "timeout": 1,
-        }, objects.Updates)
+        }, expect=objects.Updates)
 
         for update in updates:
             if not self.backlog_processed:

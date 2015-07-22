@@ -164,6 +164,11 @@ class Bot:
         obj = objects.GenericChat({"id": chat}, self.api)
         obj.send(message, preview, reply_to, extra)
 
+    def send_photo(self, chat, path, caption="", reply_to=None, extra=None):
+        """Send a photo in a chat"""
+        obj = objects.GenericChat({"id": chat}, self.api)
+        obj.send_photo(path, caption, reply_to, extra)
+
     def _process_commands(self, chat, message):
         """Hook which process all the commands"""
         if not hasattr(message, "text"):
