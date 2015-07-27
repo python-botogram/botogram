@@ -33,17 +33,20 @@ class BaseObject:
                 if field_type is _itself:
                     field_type = self.__class__
 
-                value = data[key] if key in data else None
-
                 # Replace the keys -- useful for reserved keywords
                 new_key = key
                 if key in self.replace_keys:
                     new_key = self.replace_keys[key]
 
+                # Don't resolve non-present keys
+                if key not in data:
+                    setattr(self, new_key, None)
+                    continue
+
                 # It's important to note that the value is validated passing
                 # it in the field_type. This allows also automatic resolution
                 # of types nesting
-                setattr(self, new_key, field_type(value))
+                setattr(self, new_key, field_type(data[key]))
 
     def set_api(self, api):
         """Change the API instance"""

@@ -171,7 +171,7 @@ class Bot:
 
     def _process_commands(self, chat, message):
         """Hook which process all the commands"""
-        if message.text is not None:
+        if message.text is None:
             return
 
         match = self._commands_re.match(message.text)
@@ -201,7 +201,7 @@ class Bot:
 
     def _process_message_matches(self, chat, message):
         """Hook which processes all the message matches hooks"""
-        if message.text is not None:
+        if message.text is None:
             return
 
         # Execute all hooks if something matches their pattern
