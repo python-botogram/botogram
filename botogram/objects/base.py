@@ -33,16 +33,17 @@ class BaseObject:
                 if field_type is _itself:
                     field_type = self.__class__
 
+                value = data[key] if key in data else None
+
+                # Replace the keys -- useful for reserved keywords
+                new_key = key
+                if key in self.replace_keys:
+                    new_key = self.replace_keys[key]
+
                 # It's important to note that the value is validated passing
                 # it in the field_type. This allows also automatic resolution
                 # of types nesting
-                if key in data:
-                    # Replace the keys -- useful for reserved keywords
-                    new_key = key
-                    if key in self.replace_keys:
-                        new_key = self.replace_keys[key]
-
-                    setattr(self, new_key, field_type(data[key]))
+                setattr(self, new_key, field_type(value))
 
     def set_api(self, api):
         """Change the API instance"""
@@ -75,6 +76,10 @@ class BaseObject:
 
                 # Optional keys not present will be ignored
                 if not hasattr(self, new_key):
+                    continue
+
+                # Empty keys will be ignored
+                if getattr(self, new_key) is None:
                     continue
 
                 result[key] = self._serialize_one(getattr(self, new_key))
