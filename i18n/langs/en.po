@@ -72,18 +72,3 @@ msgstr ""
 msgid "No help messages for the /%(command)s command."
 msgstr ""
 
-#~ msgid ""
-#~ msgstr ""
-
-#~ msgid "Error: Unknow command: /%(name)s"
-#~ msgstr ""
-
-#~ msgid "Unknow command: /%(command)s."
-#~ msgstr ""
-
-#~ msgid "You can also use '/help <command> to get help about a specific command."
-#~ msgstr ""
-
-#~ msgid "Use /help <command> if you need help about a specific command."
-#~ msgstr ""
-
