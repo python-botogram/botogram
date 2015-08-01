@@ -9,6 +9,9 @@
 import re
 import os
 import logging
+import gettext
+
+import pkg_resources
 
 from . import api
 from . import objects
@@ -33,6 +36,12 @@ class Bot:
         self.after_help = []
 
         self.process_backlog = False
+
+        self._lang = ""
+        self._lang_inst = None
+
+        # Set the default language to english
+        self.lang = "en"
 
         self._commands = {
             "help": defaults.HelpCommand(self),
@@ -209,6 +218,30 @@ class Bot:
         obj = objects.GenericChat({"id": chat}, self.api)
         obj.send_photo(path, caption, reply_to, extra)
 
+    def _(self, message, **args):
+        """Translate a string"""
+        return self._lang_inst.gettext(message) % args
+
+    @property
+    def lang(self):
+        return self._lang
+
+    @lang.setter
+    def lang(self, lang):
+        """Update the bot's language"""
+        if lang == self._lang:
+            return
+
+        path = pkg_resources.resource_filename("botogram", "i18n/%s.mo" % lang)
+        if not os.path.exists(path):
+            raise ValueError("Language \"%s\" is not supported by botogram"
+                             % lang)
+
+        with open(path, "rb") as f:
+            self._lang_inst = gettext.GNUTranslations(f)
+
+        self._lang = lang
+
     def _process_commands(self, chat, message):
         """Hook which process all the commands"""
         if message.text is None:
@@ -235,8 +268,8 @@ class Bot:
         # specific bot -- /command@botname
         elif isinstance(chat, objects.User) or mentioned:
             chat.send("\n".join([
-                "Unknow command /%s." % command,
-                "Use /help for a list of commands."
+                self._("Unknow command: /%(name)s.", name=command),
+                self._("Use /help for a list of commands."),
             ]))
 
     def _process_message_matches(self, chat, message):

@@ -1,0 +1,4 @@
+include LICENSE Makefile
+recursive-include docs *.rst
+recursive-include botogram/i18n *.mo
+recursive-include i18n/langs *.po
