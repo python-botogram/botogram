@@ -1,0 +1,74 @@
+# Italian translations for botogram.
+# Copyright (C) 2015 Pietro Albini <pietro@pietroalbini.io>
+# This file is distributed under the same license as the botogram project.
+# Pietro Albini <pietro@pietroalbini.io>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: botogram 0.1.dev0\n"
+"Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
+"POT-Creation-Date: 2015-08-01 23:37+0200\n"
+"PO-Revision-Date: 2015-08-01 17:06+0200\n"
+"Last-Translator: Pietro Albini <pietro@pietroalbini.io>\n"
+"Language-Team: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.0\n"
+
+#: botogram/bot.py:271 botogram/defaults.py:50
+#, python-format
+msgid "Unknow command: /%(name)s."
+msgstr "Comando sconosciuto: /%(name)s"
+
+#: botogram/bot.py:272 botogram/defaults.py:51
+msgid "Use /help for a list of commands."
+msgstr "Utilizza /help per la lista dei comandi."
+
+#: botogram/defaults.py:23
+msgid "Use /help to get a list of all the commands."
+msgstr "Utilizza /help per ottenere la lista di tutti i comandi."
+
+#: botogram/defaults.py:30
+msgid "Start using the bot."
+msgstr "Inizia ad usare il bot."
+
+#: botogram/defaults.py:31
+msgid "This shows a greeting message."
+msgstr "Questo comando visualizza un messaggio di benvenuto."
+
+#: botogram/defaults.py:44
+msgid "Error: the /help command allows up to one argument."
+msgstr "Errore: il comando /help non accetta più di un argomento."
+
+#: botogram/defaults.py:60
+msgid "Show this help message."
+msgstr "Visualizza questo messaggio di aiuto."
+
+#: botogram/defaults.py:61 botogram/defaults.py:98
+msgid "You can also use '/help <command>' to get help about a specific command."
+msgstr "Puoi anche usare '/help <comando>' per ottenere aiuto su un comando."
+
+#: botogram/defaults.py:80
+msgid "Available commands:"
+msgstr "Comandi disponibili:"
+
+#: botogram/defaults.py:93
+msgid "No description available."
+msgstr "Nessuna descrizione disponibile."
+
+#: botogram/defaults.py:101
+msgid "No commands available."
+msgstr "Nessun comando disponibile."
+
+#: botogram/defaults.py:110 botogram/defaults.py:130
+#, python-format
+msgid "Please contact %(owner)s if you have problems with this bot."
+msgstr "Contatta %(owner)s se hai problemi con questo bot."
+
+#: botogram/defaults.py:124
+#, python-format
+msgid "No help messages for the /%(command)s command."
+msgstr "Nessun messaggio di aiuto per il comando /%(command)s."
+
