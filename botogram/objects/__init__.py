@@ -128,9 +128,9 @@ class Video(BaseObject):
         "width": int,
         "height": int,
         "duration": int,
-        "thumb": one_of(PhotoSize, EmptyObject),
     }
     optional = {
+        "thumb": one_of(PhotoSize, EmptyObject),
         "mime_type": str,
         "file_size": int,
         "caption": int,
