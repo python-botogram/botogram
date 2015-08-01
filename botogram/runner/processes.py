@@ -13,6 +13,7 @@ import traceback
 import queue
 
 from .. import objects
+from .. import api
 
 
 class BaseProcess(multiprocessing.Process):
@@ -95,6 +96,11 @@ class UpdaterProcess(BaseProcess):
         self.commands_queue = commands_queue
         self.backlog_processed = False
 
+        # This will be incremented each time a request failed, and
+        # set to zero each time a request goes well
+        # If this is two, that update will be skipped
+        self.skip_on_error = 0
+
         # This will process the backlog if the programmer wants so
         if self.bot.process_backlog:
             self.backlog_processed = True
@@ -111,10 +117,23 @@ class UpdaterProcess(BaseProcess):
             pass
 
         api = self.bot.api
-        updates = api.call("getUpdates", {
-            "offset": self.last_id+1,
-            "timeout": 1,
-        }, expect=objects.Updates)
+        try:
+            updates = api.call("getUpdates", {
+                "offset": self.last_id+1,
+                "timeout": 1,
+            }, expect=objects.Updates)
+        except (api.APIError, ValueError, TypeError) as e:
+            self.logger.error("Error occured while fetching updates!")
+            self.logger.debug("Exception type: %s" % e.__class__.__name__)
+            self.logger.debug("Exception content: %s" % str(e))
+
+            self.skip_on_error += 1
+            if self.skip_on_error >= 2:
+                self.logger.warning("This update will be skipped.")
+                self.last_id += 1
+            else:
+                self.logger.info("Retrying...")
+            return
 
         for update in updates:
             self.last_id = update.update_id
