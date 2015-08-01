@@ -13,7 +13,16 @@ from . import objects
 
 class APIError(Exception):
     """Something went wrong with the API"""
-    pass
+
+    def __init__(self, response):
+        self.error_code = response["error_code"]
+        self.description = response["description"]
+
+        msg = "Request failed with code %s. Response from Telegram: \"%s\"" % (
+            self.error_code, self.description
+        )
+
+        super(APIError, self).__init__(msg)
 
 
 class TelegramAPI:
@@ -34,8 +43,7 @@ class TelegramAPI:
         content = response.json()
 
         if not content["ok"]:
-            raise APIError("Request returned an error response: %s"
-                           % response.text)
+            raise APIError(content)
 
         # If no special object is expected, return the decoded json.
         # Else, return the "pythonized" result

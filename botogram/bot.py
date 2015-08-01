@@ -7,6 +7,8 @@
 """
 
 import re
+import os
+import logging
 
 from . import api
 from . import objects
@@ -18,6 +20,9 @@ class Bot:
     """A botogram-made bot"""
 
     def __init__(self, api_connection):
+        self.logger = logging.getLogger("botogram")
+        self._configure_logger(self.logger)
+
         self.api = api_connection
 
         self.about = ""
@@ -44,11 +49,36 @@ class Bot:
         self._builtin_commands = list(self._commands.keys())
 
         # Fetch the bot itself's object
-        self.itself = self.api.call("getMe", expect=objects.User)
+        try:
+            self.itself = self.api.call("getMe", expect=objects.User)
+        except api.APIError as e:
+            self.logger.error("Can't connect to Telegram!")
+            if e.error_code == 401:
+                self.logger.error("The API token seems to be invalid.")
+            else:
+                self.logger.error("Response from Telegram: %s" % e.description)
+            exit(1)
 
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
                                        self.itself.username+r')?( .*)?$')
+
+    def _configure_logger(self, logger):
+        """Configure a logger object"""
+        if "BOTOGRAM_DEBUG" in os.environ:
+            logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.INFO)
+
+        formatter = logging.Formatter(
+            "%(asctime)s - %(levelname)-8s - %(message)s",
+            datefmt='%I:%M:%S'
+        )
+
+        handler = logging.StreamHandler()
+        handler.setFormatter(formatter)
+
+        logger.addHandler(handler)
 
     def before_processing(self, func):
         """Register a before processing hook"""
@@ -149,13 +179,23 @@ class Bot:
         # Call all the hooks and processors
         # If something returns True, then stop the processing
         for hook in self._before_hooks+self._processors:
+            self.logger.debug("Processing update #%s with the %s hook...",
+                              update.update_id, hook.__name__)
+
             result = hook(update.message.chat, update.message)
             if result is True:
+                self.logger.debug("Update #%s was just processed by the %s "
+                                  "hook.", update.update_id, hook.__name__)
                 return
+
+        self.logger.debug("No hook actually processed the #%s update.",
+                          update.update_id)
 
     def run(self, workers=2):
         """Run the bot with the multi-process runner"""
-        print("Botogram runner started -- Exit with Ctrl+C")
+        self.logger.info("The botogram runner is booting up.")
+        self.logger.info("Press Ctrl+C in order to exit.")
+
         inst = runner.BotogramRunner(self, workers)
         inst.run()
 

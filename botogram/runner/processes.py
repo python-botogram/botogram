@@ -8,6 +8,7 @@
 
 import multiprocessing
 import sys
+import os
 import traceback
 import queue
 
@@ -22,6 +23,7 @@ class BaseProcess(multiprocessing.Process):
         self.stop = False
         self.updates_queue = updates
         self.bot = bot
+        self.logger = bot.logger
 
         super(BaseProcess, self).__init__()
         self.setup(*args)
@@ -32,6 +34,8 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
+        self.logger.debug("%s process is ready! (pid: %s)", self.name,
+                          os.getpid())
         while not self.stop:
             try:
                 self.loop()
@@ -39,6 +43,9 @@ class BaseProcess(multiprocessing.Process):
                 self.on_stop()
             except:
                 traceback.print_exc()
+
+        self.logger.debug("%s process with pid %s just stopped", self.name,
+                          os.getpid())
 
     def loop(self):
         """One single loop"""
@@ -51,6 +58,8 @@ class BaseProcess(multiprocessing.Process):
 
 class WorkerProcess(BaseProcess):
     """This process will execute all the updates it receives"""
+
+    name = "Worker"
 
     def setup(self):
         self.will_stop = False
@@ -79,6 +88,8 @@ class WorkerProcess(BaseProcess):
 class UpdaterProcess(BaseProcess):
     """This process will fetch the updates"""
 
+    name = "Updater"
+
     def setup(self, commands_queue):
         self.last_id = -1
         self.commands_queue = commands_queue
@@ -106,10 +117,15 @@ class UpdaterProcess(BaseProcess):
         }, expect=objects.Updates)
 
         for update in updates:
+            self.last_id = update.update_id
+
             if not self.backlog_processed:
                 if update.message.date < self.runner._started_at:
+                    self.logger.debug("Update #%s skipped because it's coming "
+                                      "from the backlog." % update.update_id)
                     continue
                 self.backlog_processed = True
 
+            self.logger.debug("Successifully queued update #%s!" %
+                              update.update_id)
             self.updates_queue.put(update)
-            self.last_id = update.update_id
