@@ -91,9 +91,9 @@ class Document(BaseObject):
 
     required = {
         "file_id": str,
-        "thumb": one_of(PhotoSize, EmptyObject),
     }
     optional = {
+        "thumb": one_of(PhotoSize, EmptyObject),
         "file_name": str,
         "mime_type": str,
         "file_size": str,
@@ -110,9 +110,9 @@ class Sticker(BaseObject):
         "file_id": str,
         "width": int,
         "height": int,
-        "thumb": one_of(PhotoSize, EmptyObject),
     }
     optional = {
+        "thumb": one_of(PhotoSize, EmptyObject),
         "file_size": int,
     }
 
@@ -133,7 +133,6 @@ class Video(BaseObject):
         "thumb": one_of(PhotoSize, EmptyObject),
         "mime_type": str,
         "file_size": int,
-        "caption": int,
     }
 
 
@@ -149,7 +148,7 @@ class Contact(BaseObject):
     }
     optional = {
         "last_name": str,
-        "user_id": str,
+        "user_id": int,
     }
 
 
@@ -199,6 +198,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "photo": multiple(PhotoSize),
         "sticker": Sticker,
         "video": Video,
+        "caption": str,
         "contact": Contact,
         "location": Location,
         "new_chat_participant": User,

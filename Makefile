@@ -40,7 +40,7 @@ build/envs/devel:
 	@mkdir -p build/envs/devel
 	virtualenv -p python3 build/envs/devel
 
-botogram.egg-info: build/envs/devel setup.py
+botogram.egg-info: i18n build/envs/devel setup.py
 	build/envs/devel/bin/pip install -e .
 	@touch botogram.egg-info
 
@@ -67,6 +67,7 @@ i18n/langs/%.po: build/envs/build i18n/botogram.pot botogram/
 	fi
 
 botogram/i18n/%.mo: build/envs/build i18n/langs/%.po
+	@mkdir -p botogram/i18n
 	@build/envs/build/bin/pybabel compile \
 		-i i18n/langs/`basename $@ .mo`.po \
 		-o $@ -l `basename $@ .mo`
@@ -93,7 +94,7 @@ clean:
 	@rm -rf build
 	@rm -rf botogram.egg-info
 	@rm -f i18n/botogram.pot
-	@rm -f botogram/i18n/*
+	@rm -f botogram/i18n/*.mo
 
 
 # Help message
