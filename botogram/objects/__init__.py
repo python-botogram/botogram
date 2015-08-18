@@ -68,9 +68,27 @@ class PhotoSize(BaseObject):
 
 
 class Audio(BaseObject):
-    """Telegram API representation of an audio message
+    """Telegram API representation of an audio track
 
     https://core.telegram.org/bots/api#audio
+    """
+
+    required = {
+        "file_id": str,
+        "duration": int,
+    }
+    optional = {
+        "performer": str,
+        "title": str,
+        "mime_type": str,
+        "file_size": int,
+    }
+
+
+class Voice(BaseObject):
+    """Telegram API representation of a voice message
+
+    https://core.telegram.org/bots/api#voice
     """
 
     required = {
@@ -194,6 +212,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "reply_to_message": _itself,
         "text": str,
         "audio": Audio,
+        "voice": Voice,
         "document": Document,
         "photo": multiple(PhotoSize),
         "sticker": Sticker,
