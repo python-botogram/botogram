@@ -3,7 +3,7 @@
 # Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
 # Released under the MIT license
 
-.PHONY: build install devel i18n docs clean
+.PHONY: build install devel i18n docs test clean
 
 
 # Package build
@@ -86,6 +86,18 @@ build/envs/docs: requirements-docs.txt
 build/docs: build/envs/docs docs/**
 	@rm -rf build/docs
 	build/envs/docs/bin/buildthedocs docs/buildthedocs.yml -o build/docs
+
+
+# Testing
+
+test: build/envs/test
+	@build/envs/test/bin/py.test tests/
+
+build/envs/test: requirements-test.txt
+	@rm -rf build/envs/test
+	@mkdir -p build/envs/test
+	virtualenv -p python3 build/envs/test
+	build/envs/test/bin/pip install -r requirements-test.txt
 
 
 # Cleanup

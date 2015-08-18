@@ -1,0 +1,23 @@
+language: python
+python:
+- "3.2"
+- "3.3"
+- "3.4"
+
+sudo: false
+cache: pip
+
+script:
+- make build
+- make test
+
+notifications:
+  email: false
+  irc:
+    channels:
+    - "chat.freenode.net#pietroalbini"
+    template:
+    - "Build %{result} for %{repository_slug} on branch %{branch} (%{commit})."
+    - "More details: %{build_url}"
+    use_notice: true
+    skip_join: true

@@ -1,4 +1,4 @@
-## botogram
+## botogram [![Build Status](https://img.shields.io/travis/pietroalbini/botogram.svg)](https://travis-ci.org/pietroalbini/botogram)
 
 _A microframework for Telegram bots_
 
