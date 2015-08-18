@@ -20,8 +20,6 @@ class BaseObject:
     replace_keys = {}
 
     def __init__(self, data, api=None):
-        self._api = api
-
         # Prevent receiving strange types
         if not isinstance(data, dict):
             raise ValueError("A dict must be provided")
@@ -52,15 +50,18 @@ class BaseObject:
                 # of types nesting
                 setattr(self, new_key, field_type(data[key]))
 
+        if api is not None:
+            self.set_api(api)
+
     def set_api(self, api):
         """Change the API instance"""
         self._api = api
 
         # Recursively set the API
         for key in list(self.required.keys())+list(self.optional.keys()):
-            if not hasattr(self, key):
-                continue
             value = getattr(self, key)
+            if value is None:
+                continue
 
             # Update the API, if it supports that
             if hasattr(value, "set_api"):
