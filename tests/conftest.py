@@ -11,6 +11,8 @@ import pytest
 import responses
 
 import botogram.api
+import botogram.bot
+import botogram.objects
 
 
 API_KEY = "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
@@ -37,3 +39,36 @@ def mock_req(request):
 @pytest.fixture()
 def api(request):
     return botogram.api.TelegramAPI(API_KEY)
+
+
+@pytest.fixture()
+def bot(request):
+    mocker = responses.RequestsMock()
+    mocker.add("GET", "https://api.telegram.org/bot"+API_KEY+"/getMe",
+               content_type="application/json", body=json.dumps({
+                   "ok": True, "result": {"id": 1, "first_name": "test",
+                   "username": "test_bot"}}))
+
+    with mocker:
+        bot = botogram.bot.create(API_KEY)
+    return bot
+
+
+@pytest.fixture()
+def sample_update(request):
+    return botogram.objects.Update({
+        "update_id": 1,
+        "message": {
+            "message_id": 2,
+            "chat": {
+                "id": -1,
+                "title": "test",
+            },
+            "from": {
+                "id": 3,
+                "first_name": "test",
+            },
+            "date": 4,
+            "text": "test",
+        },
+    })
