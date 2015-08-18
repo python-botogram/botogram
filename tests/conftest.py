@@ -19,13 +19,17 @@ API_KEY = "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
 @pytest.fixture()
 def mock_req(request):
     """Shortcut for mocking a request"""
-    responses.start()
-    request.addfinalizer(lambda: responses.stop())
+    def __(requests):
+        mocker = responses.RequestsMock(assert_all_requests_are_fired=False)
+        mocker.start()
 
-    def __(method, response):
-        responses.add("GET", "https://api.telegram.org/bot"+API_KEY+"/"+method,
-                      content_type="application/json",
-                      body=json.dumps(response))
+        request.addfinalizer(lambda: mocker.stop())
+
+        for method, response in requests.items():
+            mocker.add("GET",
+                       "https://api.telegram.org/bot"+API_KEY+"/"+method,
+                       content_type="application/json",
+                       body=json.dumps(response))
 
     return __
 
