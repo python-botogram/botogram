@@ -22,6 +22,10 @@ class BaseObject:
     def __init__(self, data, api=None):
         self._api = api
 
+        # Prevent receiving strange types
+        if not isinstance(data, dict):
+            raise ValueError("A dict must be provided")
+
         # Populate the namespace
         for group, required in ((self.required, True), (self.optional, False)):
             for key, field_type in group.items():
