@@ -7,4 +7,5 @@
 """
 
 from .bot import Bot, create
+from .components import Component
 from .objects import *
