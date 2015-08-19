@@ -7,14 +7,17 @@
 """
 
 from . import utils
+from . import objects
+from . import components
 
 
 class StartCommand:
 
+    __name__ = "botogram.defaults.StartCommand"
+
     def __init__(self, bot):
         self.bot = bot
         self._ = bot._
-
 
     def __call__(self, chat, message, args):
         message = []
@@ -34,12 +37,14 @@ class StartCommand:
 
 class HelpCommand:
 
+    __name__ = "botogram.defaults.HelpCommand"
+
     def __init__(self, bot):
         self.bot = bot
         self._ = bot._
 
     def __call__(self, chat, message, args):
-        commands = self.bot._commands
+        commands = self.bot._get_commands()
         if len(args) > 1:
             message = [self._("Error: the /help command allows up to one "
                               "argument.")]
@@ -136,3 +141,43 @@ class HelpCommand:
                                   owner=self.bot.owner))
 
         return message
+
+
+class NoCommandsHook:
+
+    __name__ = "botogram.defaults.NoCommandsHook"
+
+    def __init__(self, bot):
+        self.bot = bot
+        self._ = bot._
+
+    def __call__(self, chat, message):
+        if message.text is None:
+            return
+
+        # First check if a command was invoked
+        match = self.bot._commands_re.match(message.text)
+        if not match:
+            return
+
+        command = match.group(1)
+        splitted = message.text.split(" ")
+        username = self.bot.itself.username
+
+        mentioned = splitted[0] == "/%s@%s" % (command, username)
+        single_user = isinstance(chat, objects.User)
+        if mentioned or single_user:
+            chat.send("\n".join([
+                self._("Unknow command: /%(name)s", name=command),
+                self._("Use /help for a list of commands"),
+            ]))
+            return True
+
+
+def get_default_component(bot):
+    """Get a component with the default stuff"""
+    comp = components.Component()
+    comp.command("help")(HelpCommand(bot))
+    comp.command("start")(StartCommand(bot))
+
+    return comp
