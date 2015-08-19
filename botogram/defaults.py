@@ -177,7 +177,7 @@ class NoCommandsHook:
 def get_default_component(bot):
     """Get a component with the default stuff"""
     comp = components.Component()
-    comp.command("help")(HelpCommand(bot))
-    comp.command("start")(StartCommand(bot))
+    comp.add_command(HelpCommand(bot), "help")
+    comp.add_command(StartCommand(bot), "start")
 
     return comp

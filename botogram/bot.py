@@ -81,24 +81,35 @@ class Bot:
 
     def before_processing(self, func):
         """Register a before processing hook"""
-        return self._main_component.before_processing(func)
+        return self._main_component.add_before_processing_hook(func)
 
     def process_message(self, func):
         """Add a message processor hook"""
-        return self._main_component.process_message(func)
+        return self._main_component.add_process_message_hook(func)
 
     def message_contains(self, string, ignore_case=True, multiple=False):
         """Add a message contains hook"""
-        return self._main_component.message_contains(string, ignore_case,
-                                                     multiple)
+        def __(func):
+            self._main_component.add_message_contains_hook(func, string,
+                                                            ignore_case,
+                                                            multiple)
+            return func
+        return __
 
     def message_matches(self, regex, flags=0, multiple=False):
         """Add a message matches hook"""
-        return self._main_component.message_matches(regex, flags, multiple)
+        def __(func):
+             self._main_component.add_message_matches_hook(func, regex, flags,
+                                                           multiple)
+             return func
+        return __
 
     def command(self, name):
         """Register a new command"""
-        return self._main_component.command(name)
+        def __(func):
+            self._main_component.add_command(func, name)
+            return func
+        return __
 
     def process(self, update):
         """Process an update object"""

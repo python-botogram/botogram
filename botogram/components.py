@@ -15,98 +15,88 @@ class Component:
 
     def __init__(self):
         # These will contain all the things registered in this component
-        self._commands = {}
-        self._processors = []
-        self._before_processors = []
+        self.__commands = {}
+        self.__processors = []
+        self.__before_processors = []
 
-    def before_processing(self, func):
+    def add_before_processing_hook(self, func):
         """Register a before processing hook"""
         if not callable(func):
             raise ValueError("A before processing hook must be callable")
 
-        self._before_processors.append(func)
-        return func
+        self.__before_processors.append(func)
 
-    def process_message(self, func):
+    def add_process_message_hook(self, func):
         """Add a message processor hook"""
         if not callable(func):
             raise ValueError("A message processor must be callable")
 
-        self._processors.append(func)
-        return func
+        self.__processors.append(func)
 
-    def message_contains(self, string, ignore_case=True, multiple=False):
+    def add_message_contains_hook(self, func, string, ignore_case=True,
+                                  multiple=False):
         """Add a message contains hook"""
-        def __(func):
-            if not callable(func):
-                raise ValueError("A message contains hook must be callable")
+        if not callable(func):
+            raise ValueError("A message contains hook must be callable")
 
-            regex = r'\b('+string+r')\b'
-            flags = re.IGNORECASE if ignore_case else 0
+        regex = r'\b('+string+r')\b'
+        flags = re.IGNORECASE if ignore_case else 0
 
-            @functools.wraps(func)
-            def wrapped(chat, message, matches):
-                return func(chat, message)
+        @functools.wraps(func)
+        def wrapped(chat, message, matches):
+            return func(chat, message)
 
-            self.message_matches(regex, flags, multiple)(wrapped)
-            return func
-        return __
+        self.add_message_matches_hook(wrapped, regex, flags, multiple)
 
-    def message_matches(self, regex, flags=0, multiple=False):
+    def add_message_matches_hook(self, func, regex, flags=0, multiple=False):
         """Apply a message matches hook"""
-        def __(func):
-            if not callable(func):
-                raise ValueError("A message matches hook must be callable")
+        if not callable(func):
+            raise ValueError("A message matches hook must be callable")
 
-            @functools.wraps(func)
-            def processor(chat, message):
-                if message.text is None:
-                    return
+        @functools.wraps(func)
+        def processor(chat, message):
+            if message.text is None:
+                return
 
-                compiled = re.compile(regex, flags=flags)
-                results = compiled.finditer(message.text)
+            compiled = re.compile(regex, flags=flags)
+            results = compiled.finditer(message.text)
 
-                found = False
-                for result in results:
-                    found = True
+            found = False
+            for result in results:
+                found = True
 
-                    func(chat, message, result.groups())
-                    if not multiple:
-                        break
+                func(chat, message, result.groups())
+                if not multiple:
+                    break
 
-                return found
+            return found
 
-            self._processors.append(processor)
-            return func
-        return __
+        self.__processors.append(processor)
 
-    def command(self, name):
+    def add_command(self, func, name):
         """Register a new command"""
-        if name in self._commands:
+        if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
 
-        def __(func):
-            if not callable(func):
-                raise ValueError("A command processor must be callable")
+        if not callable(func):
+            raise ValueError("A command processor must be callable")
 
-            self._commands[name] = func
-            return func
-        return __
+        self.__commands[name] = func
 
     def _get_hooks_chain(self, bot):
         """Get the full hooks chain for this component"""
         chain = [
-            self._before_processors,
-            self._generate_commands_processors(bot),
-            self._processors,
+            self.__before_processors,
+            self.__generate_commands_processors(bot),
+            self.__processors,
         ]
         return chain
 
     def _get_commands(self):
         """Get all the commands this component implements"""
-        return self._commands
+        return self.__commands
 
-    def _generate_commands_processors(self, bot):
+    def __generate_commands_processors(self, bot):
         """Generate a list of commands processors"""
         def base(name, func):
             @functools.wraps(func)
@@ -125,4 +115,4 @@ class Component:
                 return True
             return __
 
-        return [base(name, func) for name, func in self._commands.items()]
+        return [base(name, func) for name, func in self.__commands.items()]
