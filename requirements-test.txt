@@ -1,4 +1,6 @@
 pytest==2.7.2
 responses==0.4.0
 
--e .
+# This is because with pip < 6.0, installing in a virtualenv called "test"
+# packages in editable mode raises an exception
+pip>=6.0

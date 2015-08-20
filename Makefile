@@ -98,6 +98,7 @@ build/envs/test: requirements-test.txt
 	@mkdir -p build/envs/test
 	virtualenv -p python3 build/envs/test
 	build/envs/test/bin/pip install -r requirements-test.txt
+	build/envs/test/bin/pip install -e .
 
 
 # Cleanup
