@@ -116,9 +116,9 @@ class Bot:
         if not isinstance(update, objects.Update):
             raise ValueError("Only Update objects are allowed")
 
-        chain = self._main_component._get_hooks_chain(self)
+        chain = self._main_component._get_hooks_chain()
         for component in reversed(self._components):
-            current_chain = component._get_hooks_chain(self)
+            current_chain = component._get_hooks_chain()
             for i in range(len(chain)):
                 chain[i] += current_chain[i]
 
@@ -132,7 +132,7 @@ class Bot:
                 self.logger.debug("Processing update #%s with the %s hook...",
                                   update.update_id, hook.__name__)
 
-                result = hook(update.message.chat, update.message)
+                result = self._call(hook, update.message.chat, update.message)
                 if result is True:
                     self.logger.debug("Update #%s was just processed by the "
                                       "%s hook.", update.update_id,
@@ -192,6 +192,14 @@ class Bot:
         result.update(self._main_component._get_commands())
 
         return result
+
+    def _call(self, func, *args, **kwargs):
+        """Wrapper for calling user-provided functions"""
+        # Put the bot as first argument, if wanted
+        if hasattr(func, "_botogram_pass_bot") and func._botogram_pass_bot:
+            args = (self,) + args
+
+        return func(*args, **kwargs)
 
 
 def create(api_key, *args, **kwargs):

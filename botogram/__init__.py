@@ -8,4 +8,5 @@
 
 from .bot import Bot, create
 from .components import Component
+from .utils import pass_bot
 from .objects import *
