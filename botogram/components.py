@@ -9,6 +9,8 @@
 import re
 import functools
 
+from . import utils
+
 
 class Component:
     """A component of a bot"""
@@ -45,8 +47,9 @@ class Component:
             flags = re.IGNORECASE if ignore_case else 0
 
             @functools.wraps(func)
-            def wrapped(chat, message, matches):
-                return func(chat, message)
+            @utils.pass_bot
+            def wrapped(bot, chat, message, matches):
+                return bot._call(func, chat, message)
 
             self.message_matches(regex, flags, multiple)(wrapped)
             return func
@@ -59,7 +62,8 @@ class Component:
                 raise ValueError("A message matches hook must be callable")
 
             @functools.wraps(func)
-            def processor(chat, message):
+            @utils.pass_bot
+            def processor(bot, chat, message):
                 if message.text is None:
                     return
 
@@ -70,7 +74,7 @@ class Component:
                 for result in results:
                     found = True
 
-                    func(chat, message, result.groups())
+                    bot._call(func, chat, message, result.groups())
                     if not multiple:
                         break
 
@@ -93,11 +97,11 @@ class Component:
             return func
         return __
 
-    def _get_hooks_chain(self, bot):
+    def _get_hooks_chain(self):
         """Get the full hooks chain for this component"""
         chain = [
             self._before_processors,
-            self._generate_commands_processors(bot),
+            self._generate_commands_processors(),
             self._processors,
         ]
         return chain
@@ -106,11 +110,12 @@ class Component:
         """Get all the commands this component implements"""
         return self._commands
 
-    def _generate_commands_processors(self, bot):
+    def _generate_commands_processors(self):
         """Generate a list of commands processors"""
         def base(name, func):
             @functools.wraps(func)
-            def __(chat, message):
+            @utils.pass_bot
+            def __(bot, chat, message):
                 # Commands must have a message
                 if message.text is None:
                     return
@@ -121,7 +126,7 @@ class Component:
                     return
 
                 args = message.text.split(" ")[1:]
-                func(chat, message, args)
+                bot._call(func, chat, message, args)
                 return True
             return __
 

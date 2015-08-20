@@ -27,9 +27,21 @@ def test_format_docstr():
 
 
 def test_pass_bot(bot, sample_update):
-    @bot.process_message
     @botogram.utils.pass_bot
-    def process_message(local_bot, chat, message):
+    def func(local_bot, *args, **kwargs):
         assert local_bot is bot
 
-    bot.process(sample_update)
+    decorators = [
+        bot.before_processing,
+        bot.process_message,
+        bot.message_contains("test1"),
+        bot.message_matches(r"^test2$"),
+        bot.command("test3")
+    ]
+
+    for decorator in decorators:
+        func = decorator(func)
+
+    for msg in "test1", "test2", "/test3":
+        sample_update.message.text = msg
+        bot.process(sample_update)

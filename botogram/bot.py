@@ -105,9 +105,9 @@ class Bot:
         if not isinstance(update, objects.Update):
             raise ValueError("Only Update objects are allowed")
 
-        chain = self._main_component._get_hooks_chain(self)
+        chain = self._main_component._get_hooks_chain()
         for component in reversed(self._components):
-            current_chain = component._get_hooks_chain(self)
+            current_chain = component._get_hooks_chain()
             for i in range(len(chain)):
                 chain[i] += current_chain[i]
 
