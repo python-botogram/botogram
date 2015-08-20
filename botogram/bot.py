@@ -12,6 +12,7 @@ import logging
 import gettext
 
 import pkg_resources
+import requests.exceptions
 
 from . import api
 from . import objects
@@ -66,6 +67,10 @@ class Bot:
                 self.logger.error("The API token seems to be invalid.")
             else:
                 self.logger.error("Response from Telegram: %s" % e.description)
+            exit(1)
+        except requests.exceptions.ConnectionError:
+            self.logger.error("Can't reach Telegram servers! Are you sure "
+                              "you're connected to the internet?")
             exit(1)
 
         # This regex will match all commands pointed to this bot
