@@ -40,7 +40,7 @@ def test_pass_bot(bot, sample_update):
     ]
 
     for decorator in decorators:
-        func = decorator(func)
+        decorator(func)
 
     for msg in "test1", "test2", "/test3":
         sample_update.message.text = msg
