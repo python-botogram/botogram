@@ -15,7 +15,6 @@ class StartCommand:
         self.bot = bot
         self._ = bot._
 
-
     def __call__(self, chat, message, args):
         message = []
         if self.bot.about:

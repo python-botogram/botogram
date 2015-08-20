@@ -140,5 +140,6 @@ def one_of(*field_types):
                 return field_type(object)
             except ValueError:
                 pass
-        raise ValueError("The object is neither a %s" % ", ".format(objects))
+        raise ValueError("The object is neither a %s"
+                         % ", ".format(field_types))
     return __

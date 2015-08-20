@@ -8,8 +8,6 @@
 
 import requests
 
-from . import objects
-
 
 class APIError(Exception):
     """Something went wrong with the API"""

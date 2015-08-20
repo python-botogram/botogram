@@ -7,7 +7,6 @@
 """
 
 import multiprocessing
-import sys
 import os
 import traceback
 import queue

@@ -9,6 +9,7 @@ cache: pip
 script:
 - make build
 - make test
+- make lint
 
 notifications:
   email: false

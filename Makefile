@@ -3,7 +3,7 @@
 # Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
 # Released under the MIT license
 
-.PHONY: build install devel i18n docs test clean
+.PHONY: build install devel i18n docs test lint clean
 
 
 # Package build
@@ -99,6 +99,18 @@ build/envs/test: requirements-test.txt
 	virtualenv -p python3 build/envs/test
 	build/envs/test/bin/pip install -r requirements-test.txt
 	build/envs/test/bin/pip install -e .
+
+
+# Lint
+
+lint: build/envs/lint
+	@build/envs/lint/bin/flake8 botogram --builtins InterruptedError
+
+build/envs/lint: requirements-lint.txt
+	@rm -rf build/envs/lint
+	@mkdir -p build/envs/lint
+	@virtualenv -p python3 build/envs/lint
+	@build/envs/lint/bin/pip install -r requirements-lint.txt
 
 
 # Cleanup
