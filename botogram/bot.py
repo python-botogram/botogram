@@ -184,7 +184,20 @@ class Bot:
 
     def _call(self, func, *args, **kwargs):
         """Wrapper for calling user-provided functions"""
+        # Put the bot as first argument, if wanted
+        if hasattr(func, "_botogram_pass_bot") and func._botogram_pass_bot:
+            args = (self,) + args
+
         return func(*args, **kwargs)
+
+
+def pass_bot(func):
+    """An handy decorator which passes the current bot as first argument.
+
+    Please note that the bot is passed only if the function is called by the
+    bot itself, for example in an hook."""
+    func._botogram_pass_bot = True
+    return func
 
 
 def create(api_key, *args, **kwargs):

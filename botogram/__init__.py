@@ -6,5 +6,5 @@
     Released under the MIT license
 """
 
-from .bot import Bot, create
+from .bot import Bot, create, pass_bot
 from .objects import *
