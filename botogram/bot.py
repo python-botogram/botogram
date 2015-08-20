@@ -191,15 +191,6 @@ class Bot:
         return func(*args, **kwargs)
 
 
-def pass_bot(func):
-    """An handy decorator which passes the current bot as first argument.
-
-    Please note that the bot is passed only if the function is called by the
-    bot itself, for example in an hook."""
-    func._botogram_pass_bot = True
-    return func
-
-
 def create(api_key, *args, **kwargs):
     """Create a new bot"""
     conn = api.TelegramAPI(api_key)

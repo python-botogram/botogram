@@ -25,3 +25,12 @@ def format_docstr(docstring):
             result.pop(pos)
 
     return "\n".join(result)
+
+
+def pass_bot(func):
+    """An handy decorator which passes the current bot as first argument.
+
+    Please note that the bot is passed only if the function is called by the
+    bot itself, for example in an hook."""
+    func._botogram_pass_bot = True
+    return func

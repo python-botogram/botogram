@@ -24,3 +24,12 @@ def test_format_docstr():
     # This instead should be left as it is
     ok = "a\nb"
     assert botogram.utils.format_docstr(ok) == ok
+
+
+def test_pass_bot(bot, sample_update):
+    @bot.process_message
+    @botogram.utils.pass_bot
+    def process_message(local_bot, chat, message):
+        assert local_bot is bot
+
+    bot.process(sample_update)

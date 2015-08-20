@@ -75,12 +75,3 @@ def test_process_message(bot, sample_update):
     bot.process(sample_update)
 
     assert process_hook_processed
-
-
-def test_pass_bot(bot, sample_update):
-    @bot.process_message
-    @botogram.bot.pass_bot
-    def process_message(local_bot, chat, message):
-        assert local_bot is bot
-
-    bot.process(sample_update)
