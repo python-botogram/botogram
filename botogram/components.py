@@ -21,6 +21,7 @@ class Component:
         # These will contain all the things registered in this component
         self.__commands = {}
         self.__processors = []
+        self.__no_commands = []
         self.__before_processors = []
 
         # Be sure to have a component name
@@ -95,11 +96,19 @@ class Component:
 
         self.__commands[name] = func
 
+    def _add_no_commands_hook(self, func):
+        """Register an hook which will be executed when no commands matches"""
+        if not callable(func):
+            raise ValueError("A no commands hook must be callable")
+
+        self.__no_commands.append(func)
+
     def _get_hooks_chain(self):
         """Get the full hooks chain for this component"""
         chain = [
             self.__before_processors,
             self.__generate_commands_processors(),
+            self.__no_commands,
             self.__processors,
         ]
         return [[self.__wrap_function(f) for f in c] for c in chain]
