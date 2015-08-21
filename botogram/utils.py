@@ -32,5 +32,17 @@ def pass_bot(func):
 
     Please note that the bot is passed only if the function is called by the
     bot itself, for example in an hook."""
-    func._botogram_pass_bot = True
+    if not hasattr(func, "botogram"):
+        func.botogram = HookDetails()
+
+    func.botogram.pass_bot = True
     return func
+
+
+class HookDetails:
+    """Container for some details of user-provided hooks"""
+
+    def __init__(self):
+        self.name = ""
+        self.component = None
+        self.pass_bot = False

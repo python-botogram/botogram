@@ -133,7 +133,7 @@ class Component:
     def __wrap_function(self, func):
         """Wrap a function, adding to it component-specific things"""
         if not hasattr(func, "botogram"):
-            func.botogram = HookDetails()
+            func.botogram = utils.HookDetails()
 
         prefix = self.component_name+"::" if self.component_name else ""
 
@@ -141,11 +141,3 @@ class Component:
         func.botogram.component = self
 
         return func
-
-
-class HookDetails:
-    """Container for some details of user-provided hooks"""
-
-    def __init__(self):
-        self.name = ""
-        self.component = None

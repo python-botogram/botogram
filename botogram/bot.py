@@ -201,7 +201,7 @@ class Bot:
     def _call(self, func, *args, **kwargs):
         """Wrapper for calling user-provided functions"""
         # Put the bot as first argument, if wanted
-        if hasattr(func, "_botogram_pass_bot") and func._botogram_pass_bot:
+        if hasattr(func, "botogram") and func.botogram.pass_bot:
             args = (self,) + args
 
         return func(*args, **kwargs)
