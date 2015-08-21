@@ -17,18 +17,25 @@ class Component:
 
     component_name = None
 
-    def __init__(self, name=None):
-        # These will contain all the things registered in this component
+    def __new__(cls, *args, **kwargs):
+        # Here __new__ is used because this way subclasses can define their
+        # own __init__ without explicitly calling the Component one
+        self = super(Component, cls).__new__(cls)
+
         self.__commands = {}
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
 
-        # Be sure to have a component name
+        if cls.component_name is None:
+            self.component_name = cls.__name__
+
+        return self
+
+    def __init__(self, name=None):
+        # This is a default, completly overrideable init
         if name is not None:
             self.component_name = name
-        elif self.component_name is None:
-            self.component_name = self.__class__.__name__
 
     def add_before_processing_hook(self, func):
         """Register a before processing hook"""
