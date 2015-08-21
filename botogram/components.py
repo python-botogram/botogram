@@ -15,11 +15,19 @@ from . import utils
 class Component:
     """A component of a bot"""
 
-    def __init__(self):
+    component_name = None
+
+    def __init__(self, name=None):
         # These will contain all the things registered in this component
         self.__commands = {}
         self.__processors = []
         self.__before_processors = []
+
+        # Be sure to have a component name
+        if name is not None:
+            self.component_name = name
+        elif self.component_name is None:
+            self.component_name = self.__class__.__name__
 
     def add_before_processing_hook(self, func):
         """Register a before processing hook"""
@@ -94,7 +102,7 @@ class Component:
             self.__generate_commands_processors(),
             self.__processors,
         ]
-        return chain
+        return [[self.__wrap_function(f) for f in c] for c in chain]
 
     def _get_commands(self):
         """Get all the commands this component implements"""
@@ -121,3 +129,23 @@ class Component:
             return __
 
         return [base(name, func) for name, func in self.__commands.items()]
+
+    def __wrap_function(self, func):
+        """Wrap a function, adding to it component-specific things"""
+        if not hasattr(func, "botogram"):
+            func.botogram = HookDetails()
+
+        prefix = self.component_name+"::" if self.component_name else ""
+
+        func.botogram.name = prefix+func.__name__
+        func.botogram.component = self
+
+        return func
+
+
+class HookDetails:
+    """Container for some details of user-provided hooks"""
+
+    def __init__(self):
+        self.name = ""
+        self.component = None

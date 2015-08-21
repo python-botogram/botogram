@@ -13,7 +13,7 @@ from . import components
 
 class StartCommand:
 
-    __name__ = "botogram.defaults.StartCommand"
+    __name__ = "start_command"
 
     def __init__(self, bot):
         self.bot = bot
@@ -37,7 +37,7 @@ class StartCommand:
 
 class HelpCommand:
 
-    __name__ = "botogram.defaults.HelpCommand"
+    __name__ = "help_command"
 
     def __init__(self, bot):
         self.bot = bot
@@ -145,7 +145,7 @@ class HelpCommand:
 
 class NoCommandsHook:
 
-    __name__ = "botogram.defaults.NoCommandsHook"
+    __name__ = "no_commands_hook"
 
     def __init__(self, bot):
         self.bot = bot
@@ -176,7 +176,7 @@ class NoCommandsHook:
 
 def get_default_component(bot):
     """Get a component with the default stuff"""
-    comp = components.Component()
+    comp = components.Component("botogram")
     comp.add_command(HelpCommand(bot), "help")
     comp.add_command(StartCommand(bot), "start")
 

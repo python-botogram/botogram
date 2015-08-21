@@ -45,7 +45,7 @@ class Bot:
         self.lang = "en"
 
         self._components = [defaults.get_default_component(self)]
-        self._main_component = components.Component()
+        self._main_component = components.Component("")
 
         # Fetch the bot itself's object
         try:
@@ -129,14 +129,19 @@ class Bot:
         # If something returns True, then stop the processing
         for one in chain:
             for hook in one:
+                # Get the correct name of the hook
+                try:
+                    name = hook.botogram.name
+                except AttributeError:
+                    name = hook.__name__
+
                 self.logger.debug("Processing update #%s with the %s hook...",
-                                  update.update_id, hook.__name__)
+                                  update.update_id, name)
 
                 result = self._call(hook, update.message.chat, update.message)
                 if result is True:
                     self.logger.debug("Update #%s was just processed by the "
-                                      "%s hook.", update.update_id,
-                                      hook.__name__)
+                                      "%s hook.", update.update_id, name)
                     return
 
         self.logger.debug("No hook actually processed the #%s update.",
