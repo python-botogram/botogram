@@ -27,22 +27,15 @@ def format_docstr(docstring):
     return "\n".join(result)
 
 
-def pass_bot(func):
-    """An handy decorator which passes the current bot as first argument.
-
-    Please note that the bot is passed only if the function is called by the
-    bot itself, for example in an hook."""
-    if not hasattr(func, "botogram"):
-        func.botogram = HookDetails()
-
-    func.botogram.pass_bot = True
-    return func
-
-
 class HookDetails:
     """Container for some details of user-provided hooks"""
 
-    def __init__(self):
+    def __init__(self, func):
+        self._func = func
         self.name = ""
         self.component = None
         self.pass_bot = False
+        self.help_message = None
+
+    def _default_help_message(self):
+        return format_docstring(self._func.__doc__)

@@ -10,6 +10,7 @@ import re
 import functools
 
 from . import utils
+from . import decorators
 
 
 class Component:
@@ -61,7 +62,7 @@ class Component:
         flags = re.IGNORECASE if ignore_case else 0
 
         @functools.wraps(func)
-        @utils.pass_bot
+        @decorators.pass_bot
         def wrapped(bot, chat, message, matches):
             return bot._call(func, chat, message)
 
@@ -73,7 +74,7 @@ class Component:
             raise ValueError("A message matches hook must be callable")
 
         @functools.wraps(func)
-        @utils.pass_bot
+        @decorators.pass_bot
         def processor(bot, chat, message):
             if message.text is None:
                 return
@@ -128,7 +129,7 @@ class Component:
         """Generate a list of commands processors"""
         def base(name, func):
             @functools.wraps(func)
-            @utils.pass_bot
+            @decorators.pass_bot
             def __(bot, chat, message):
                 # Commands must have a message
                 if message.text is None:
@@ -149,7 +150,7 @@ class Component:
     def __wrap_function(self, func):
         """Wrap a function, adding to it component-specific things"""
         if not hasattr(func, "botogram"):
-            func.botogram = utils.HookDetails()
+            func.botogram = utils.HookDetails(func)
 
         prefix = self.component_name+"::" if self.component_name else ""
 
