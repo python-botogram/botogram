@@ -44,8 +44,10 @@ class Bot:
         # Set the default language to english
         self.lang = "en"
 
-        self._components = [defaults.DefaultComponent()]
+        self._components = []
         self._main_component = components.Component("")
+
+        self.use(defaults.DefaultComponent())
 
         # Fetch the bot itself's object
         try:
@@ -110,6 +112,13 @@ class Bot:
             self._main_component.add_command(name, func)
             return func
         return __
+
+    def use(self, *components):
+        """Use the provided components in the bot"""
+        for component in components:
+            self.logger.debug("Component %s just loaded into the bot",
+                              component.component_name)
+            self._components.append(component)
 
     def process(self, update):
         """Process an update object"""
