@@ -44,7 +44,7 @@ class Bot:
         # Set the default language to english
         self.lang = "en"
 
-        self._components = [defaults.get_default_component(self)]
+        self._components = [defaults.DefaultComponent()]
         self._main_component = components.Component("")
 
         # Fetch the bot itself's object
@@ -121,9 +121,6 @@ class Bot:
             current_chain = component._get_hooks_chain()
             for i in range(len(chain)):
                 chain[i] += current_chain[i]
-
-        # chain[1] should be the commands one
-        chain[1].append(defaults.NoCommandsHook(self))
 
         # Call all the hooks and processors
         # If something returns True, then stop the processing
