@@ -149,6 +149,11 @@ class Component:
 
     def __wrap_function(self, func):
         """Wrap a function, adding to it component-specific things"""
+        # This allows us to wrap methods
+        real_func = func
+        if hasattr(func, "__func__"):
+            func = func.__func__
+
         if not hasattr(func, "botogram"):
             func.botogram = utils.HookDetails(func)
 
@@ -157,4 +162,4 @@ class Component:
         func.botogram.name = prefix+func.__name__
         func.botogram.component = self
 
-        return func
+        return real_func
