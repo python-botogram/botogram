@@ -90,7 +90,7 @@ class Bot:
     def message_contains(self, string, ignore_case=True, multiple=False):
         """Add a message contains hook"""
         def __(func):
-            self._main_component.add_message_contains_hook(func, string,
+            self._main_component.add_message_contains_hook(string, func,
                                                             ignore_case,
                                                             multiple)
             return func
@@ -99,7 +99,7 @@ class Bot:
     def message_matches(self, regex, flags=0, multiple=False):
         """Add a message matches hook"""
         def __(func):
-             self._main_component.add_message_matches_hook(func, regex, flags,
+             self._main_component.add_message_matches_hook(regex, func, flags,
                                                            multiple)
              return func
         return __
@@ -107,7 +107,7 @@ class Bot:
     def command(self, name):
         """Register a new command"""
         def __(func):
-            self._main_component.add_command(func, name)
+            self._main_component.add_command(name, func)
             return func
         return __
 

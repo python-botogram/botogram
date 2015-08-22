@@ -51,7 +51,7 @@ class Component:
 
         self.__processors.append(func)
 
-    def add_message_contains_hook(self, func, string, ignore_case=True,
+    def add_message_contains_hook(self, string, func, ignore_case=True,
                                   multiple=False):
         """Add a message contains hook"""
         if not callable(func):
@@ -65,9 +65,9 @@ class Component:
         def wrapped(bot, chat, message, matches):
             return bot._call(func, chat, message)
 
-        self.add_message_matches_hook(wrapped, regex, flags, multiple)
+        self.add_message_matches_hook(regex, wrapped, flags, multiple)
 
-    def add_message_matches_hook(self, func, regex, flags=0, multiple=False):
+    def add_message_matches_hook(self, regex, func, flags=0, multiple=False):
         """Apply a message matches hook"""
         if not callable(func):
             raise ValueError("A message matches hook must be callable")
@@ -93,7 +93,7 @@ class Component:
 
         self.__processors.append(processor)
 
-    def add_command(self, func, name):
+    def add_command(self, name, func):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
