@@ -8,6 +8,7 @@
 import copy
 
 import botogram.bot
+import botogram.components
 
 import conftest
 
@@ -26,52 +27,32 @@ def test_bot_creation(api, mock_req):
         assert bot.itself.first_name == "test"
 
 
-def test_before_processing(bot, sample_update):
-    # This will be true if the before_processing hook was processed
-    before_hook_processed = False
-    process_hook_processed = False
+def test_use_components(bot, sample_update):
+    comp1 = botogram.components.Component()
+    comp2 = botogram.components.Component()
 
-    # Configure the test bot
-    @bot.before_processing
-    def before_processing(chat, message):
-        nonlocal before_hook_processed
-        before_hook_processed = True
+    hook1_called = False
+    hook2_called = False
 
-        # Test provided arguments are OK
-        assert chat.id == -1
-        assert message.text == "test"
-        assert message.chat == chat
+    def hook1(chat, message):
+        nonlocal hook1_called
+        hook1_called = True
 
-    # This will test if the hook processing order is right
-    @bot.process_message
-    def process_message(*__):
-        nonlocal process_hook_processed
-        process_hook_processed = True
+    def hook2(chat, message):
+        nonlocal hook2_called
+        hook2_called = True
 
-        # Should be called after before_processing
-        assert before_hook_processed
+        # This should be executed before hook_1
+        assert not hook1_called
 
+    comp1.add_process_message_hook(hook1)
+    comp2.add_process_message_hook(hook2)
+
+    # comp2 is registered after comp1, so their hooks should be called before
+    # the comp1's ones
+    bot.use(comp1)
+    bot.use(comp2)
     bot.process(sample_update)
 
-    assert before_hook_processed
-    assert process_hook_processed
-
-
-def test_process_message(bot, sample_update):
-    # This will be true if the process_message hook was processed
-    process_hook_processed = False
-
-    # Configure the test bot
-    @bot.process_message
-    def process_message(chat, message):
-        nonlocal process_hook_processed
-        process_hook_processed = True
-
-        # Test provided arguments are OK
-        assert chat.id == -1
-        assert message.text == "test"
-        assert message.chat == chat
-
-    bot.process(sample_update)
-
-    assert process_hook_processed
+    assert hook1_called
+    assert hook2_called
