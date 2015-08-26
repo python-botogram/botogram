@@ -46,6 +46,15 @@ Advanced topics
 .. toctree::
    :maxdepth: 2
 
+   custom-components
+
+=========
+Reference
+=========
+
+.. toctree::
+   :maxdepth: 2
+
    api
 
 ==========
