@@ -9,6 +9,8 @@ import sys
 import os
 import shlex
 
+import pietroalbini_sphinx_themes
+
 sys.path.append(os.path.abspath('_ext'))
 
 extensions = []
@@ -17,7 +19,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 project = "botogram"
-copyright = "2015, Pietro Albini"
+copyright = "2015 Pietro Albini"
 author = "Pietro Albini"
 
 version = "0.1"
@@ -27,7 +29,7 @@ language = None
 
 exclude_patterns = ["_build"]
 
-pygments_style = "botogramext.BotogramStyle"
+#pygments_style = "botogramext.BotogramStyle"
 
 todo_include_todos = False
 
@@ -35,11 +37,11 @@ todo_include_todos = False
 ## HTML output
 
 html_theme = "botogram"
-html_theme_path = ["_themes"]
+html_theme_path = ["_themes", pietroalbini_sphinx_themes.themes_path()]
 html_static_path = ["_static"]
 
 html_sidebars = {
-    "**": ["links.html", "navigation.html"],
+    "**": ["links.html"],
 }
 #html_additional_pages = {}
 #html_domain_indices = True

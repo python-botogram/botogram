@@ -1,46 +1,8 @@
-{% extends 'basic/layout.html' %}
+{%- extends "pietroalbini/layout.html" -%}
 
-{%- block extrahead %}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-{% endblock -%}
-
-{%- block relbar1 -%}{%- endblock -%}
-{%- block header %}
-    <div class="wrapper headerwrapper">
-        <div class="header">
-            <h1 class="title">{{ title }}</h1>
-            <ul class="menu">
-                <li><a href="{{ pathto(master_doc) }}">
-                    <i class="fa fa-bars"></i> Table of contents
-                </a></li>
-                <li><a href="{{ pathto('search') }}">
-                    <i class="fa fa-search"></i> Search in the docs
-                </a></li>
-            </ul>
-        </div>
-        <hr>
-    </div>
-{% endblock -%}
-{%- block relbar2 -%}{%- endblock -%}
-{%- block footer %}
-    <div class="wrapper">
-        {% if next %}
-        <div class="mobile-nav-container">
-            <a class="mobile-nav-button" href="{{ next.link|e }}">
-                Next page
-            </a>
-        </div>
-        {% endif %}
-        <div class="footer">
-            Copyright &copy; 2015
-            <a href="http://pietroalbini.io">Pietro Albini</a>
-            <span class="separator"></span>
-            Documentation under the
-            <a href="{{ pathto('license') }}">MIT</a>
-            license
-            <span class="separator"></span>
-            Created using
-            <a href="http://sphinx-doc.org">Sphinx</a>
-        </div>
-    </div>
-{% endblock -%}
+{%- block theme_footer_extra -%}
+    <li>
+        Documentation released under the
+        <a href='{{ pathto("license") }}'>MIT</a> license
+    </li>
+{%- endblock -%}
