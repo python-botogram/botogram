@@ -6,6 +6,7 @@
 """
 
 import botogram.decorators
+import botogram.utils
 
 
 def test_pass_bot(bot, sample_update):
@@ -28,3 +29,17 @@ def test_pass_bot(bot, sample_update):
         sample_update.message.text = msg
         bot.process(sample_update)
 
+
+def test_help_message_for():
+
+    def func():
+        """docstring"""
+        pass
+
+    assert botogram.utils.docstring_of(func) == "docstring"
+
+    @botogram.decorators.help_message_for(func)
+    def help_func():
+        return "function"
+
+    assert botogram.utils.docstring_of(func) == "function"
