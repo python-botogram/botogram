@@ -27,6 +27,27 @@ def format_docstr(docstring):
     return "\n".join(result)
 
 
+def docstring_of(func, bot=None):
+    """Get the docstring of a function"""
+    # Custom docstring
+    if hasattr(func, "botogram") and func.botogram.help_message:
+        if bot is not None:
+            docstring = bot._call(func.botogram.help_message)
+        else:
+            docstring = func.botogram.help_message()
+    # Standard default docstring
+    elif func.__doc__:
+        docstring = func.__doc__
+    # Put a default message
+    else:
+        if bot is not None:
+            docstring = bot._("No description available.")
+        else:
+            docstring = "No description available."
+
+    return format_docstr(docstring)
+
+
 class HookDetails:
     """Container for some details of user-provided hooks"""
 

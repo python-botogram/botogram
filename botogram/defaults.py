@@ -83,16 +83,7 @@ class DefaultComponent(components.Component):
                     continue
 
                 func = commands[name]
-                # Put a default docstring
-                if hasattr(func, "botogram") and func.botogram.help_message:
-                    original = bot._call(func.botogram.help_message)
-                elif func.__doc__:
-                    original = func.__doc__
-                else:
-                    original = bot._("No description available.")
-
-                docstring = utils.format_docstr(original).split("\n", 1)[0]
-
+                docstring = utils.docstring_of(func, bot).split("\n", 1)[0]
                 message.append("/%s - %s" % (name, docstring))
             message.append(bot._("You can also use '/help <command>' to get "
                                  "help about a specific command."))
@@ -117,19 +108,8 @@ class DefaultComponent(components.Component):
         message = []
 
         func = commands[command]
-        if hasattr(func, "botogram") and func.botogram.help_message:
-            original = bot._call(func.botogram.help_message)
-            docstring = utils.format_docstr(original)
-            message.append("/%s - %s" % (command, docstring))
-        elif func.__doc__:
-            docstring = utils.format_docstr(commands[command].__doc__)
-            message.append("/%s - %s" % (command, docstring))
-        elif hasattr(func, "botogram_help_message"):
-            docstring = utils.format_docstr(func.botogram_help_message())
-            message.append("/%s - %s" % (command, docstring))
-        else:
-            message.append(bot._("No help messages for the /%(command)s "
-                                 "command.", command=command))
+        docstring = utils.docstring_of(func, bot)
+        message.append("/%s - %s" % (command, docstring))
 
         # Show the owner informations
         if bot.owner:
