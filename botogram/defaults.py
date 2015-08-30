@@ -7,131 +7,150 @@
 """
 
 from . import utils
+from . import objects
+from . import components
+from . import decorators
 
 
-class StartCommand:
+class DefaultComponent(components.Component):
+    """This component contains all the goodies botogram provides by default"""
 
-    def __init__(self, bot):
-        self.bot = bot
-        self._ = bot._
+    component_name = "botogram"
 
-    def __call__(self, chat, message, args):
+    def __init__(self):
+        self.add_command("start", self.start_command)
+        self.add_command("help", self.help_command)
+
+        self._add_no_commands_hook(self.no_commands_hook)
+
+    # /start command
+
+    @decorators.pass_bot
+    def start_command(self, bot, chat, message, args):
         message = []
-        if self.bot.about:
-            message.append(self.bot.about)
-        message.append(self._("Use /help to get a list of all the commands."))
+        if bot.about:
+            message.append(bot.about)
+        message.append(bot._("Use /help to get a list of all the commands."))
 
         chat.send("\n".join(message))
 
-    def botogram_help_message(self):
-        """Get the help message of this command"""
+    @decorators.help_message_for(start_command)
+    @decorators.pass_bot
+    def _start_command_help(bot):
         return "\n".join([
-            self._("Start using the bot."),
-            self._("This shows a greeting message."),
+            bot._("Start using the bot."),
+            bot._("This shows a greeting message."),
         ])
 
+    # /help command
 
-class HelpCommand:
-
-    def __init__(self, bot):
-        self.bot = bot
-        self._ = bot._
-
-    def __call__(self, chat, message, args):
-        commands = self.bot._commands
+    @decorators.pass_bot
+    def help_command(self, bot, chat, message, args):
+        commands = bot._get_commands()
         if len(args) > 1:
-            message = [self._("Error: the /help command allows up to one "
-                              "argument.")]
+            message = [bot._("Error: the /help command allows up to one "
+                             "argument.")]
         elif len(args) == 1:
             if args[0] in commands:
-                message = self.command_message(commands, args[0])
+                message = self._help_command_message(bot, commands, args[0])
             else:
-                message = [self._("Unknow command: /%(name)s.", name=args[0]),
-                           self._("Use /help for a list of commands.")]
+                message = [bot._("Unknow command: /%(name)s.", name=args[0]),
+                           bot._("Use /help for a list of commands.")]
         else:
-            message = self.generic_message(commands)
+            message = self._help_generic_message(bot, commands)
 
         chat.send("\n".join(message))
 
-    def botogram_help_message(self):
-        """Get the help message of this command"""
-        return "\n".join([
-            self._("Show this help message."),
-            self._("You can also use '/help <command>' to get help about a "
-                   "specific command."),
-        ])
-
-    def generic_message(self, commands):
+    def _help_generic_message(self, bot, commands):
         """Generate an help message"""
         message = []
 
         # Show the about text
-        if self.bot.about:
-            message.append(self.bot.about)
+        if bot.about:
+            message.append(bot.about)
             message.append("")
 
-        if len(self.bot.before_help):
-            message += self.bot.before_help
+        if len(bot.before_help):
+            message += bot.before_help
             message.append("")
 
         # Show help on commands
         if len(commands) > 0:
-            message.append(self._("Available commands:"))
+            message.append(bot._("Available commands:"))
             for name in sorted(commands.keys()):
                 # Allow to hide commands in the help message
-                if name in self.bot.hide_commands:
+                if name in bot.hide_commands:
                     continue
 
                 func = commands[name]
-                # Put a default docstring
-                if func.__doc__:
-                    original = func.__doc__
-                elif hasattr(func, "botogram_help_message"):
-                    original = func.botogram_help_message()
-                else:
-                    original = self._("No description available.")
-
-                docstring = utils.format_docstr(original).split("\n", 1)[0]
-
+                docstring = utils.docstring_of(func, bot).split("\n", 1)[0]
                 message.append("/%s - %s" % (name, docstring))
-            message.append(self._("You can also use '/help <command>' to get "
-                                  "help about a specific command."))
+            message.append(bot._("You can also use '/help <command>' to get "
+                                 "help about a specific command."))
         else:
-            message.append(self._("No commands available."))
+            message.append(bot._("No commands available."))
 
-        if len(self.bot.after_help):
+        if len(bot.after_help):
             message.append("")
-            message += self.bot.after_help
+            message += bot.after_help
 
         # Show the owner informations
-        if self.bot.owner:
+        if bot.owner:
             message.append("")
-            message.append(self._("Please contact %(owner)s if you have "
-                                  "problems with this bot.",
-                                  owner=self.bot.owner))
+            message.append(bot._("Please contact %(owner)s if you have "
+                                 "problems with this bot.",
+                                 owner=bot.owner))
 
         return message
 
-    def command_message(self, commands, command):
+    def _help_command_message(self, bot, commands, command):
         """Generate a command's help message"""
         message = []
 
         func = commands[command]
-        if func.__doc__:
-            docstring = utils.format_docstr(commands[command].__doc__)
-            message.append("/%s - %s" % (command, docstring))
-        elif hasattr(func, "botogram_help_message"):
-            docstring = utils.format_docstr(func.botogram_help_message())
-            message.append("/%s - %s" % (command, docstring))
-        else:
-            message.append(self._("No help messages for the /%(command)s "
-                                  "command.", command=command))
+        docstring = utils.docstring_of(func, bot)
+        message.append("/%s - %s" % (command, docstring))
 
         # Show the owner informations
-        if self.bot.owner:
+        if bot.owner:
             message.append(" ")
-            message.append(self._("Please contact %(owner)s if you have "
-                                  "problems with this bot.",
-                                  owner=self.bot.owner))
+            message.append(bot._("Please contact %(owner)s if you have "
+                                 "problems with this bot.",
+                                 owner=bot.owner))
 
         return message
+
+    @decorators.help_message_for(help_command)
+    @decorators.pass_bot
+    def _help_command_help(bot):
+        """Get the help message of this command"""
+        return "\n".join([
+            bot._("Show this help message."),
+            bot._("You can also use '/help <command>' to get help about a "
+                  "specific command."),
+        ])
+
+    # An hook which displays "Command not found" if needed
+
+    @decorators.pass_bot
+    def no_commands_hook(self, bot, chat, message):
+        if message.text is None:
+            return
+
+        # First check if a command was invoked
+        match = bot._commands_re.match(message.text)
+        if not match:
+            return
+
+        command = match.group(1)
+        splitted = message.text.split(" ")
+        username = bot.itself.username
+
+        mentioned = splitted[0] == "/%s@%s" % (command, username)
+        single_user = isinstance(chat, objects.User)
+        if mentioned or single_user:
+            chat.send("\n".join([
+                bot._("Unknow command: /%(name)s", name=command),
+                bot._("Use /help for a list of commands"),
+            ]))
+            return True
