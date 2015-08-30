@@ -1,6 +1,8 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
+.. _custom-components:
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Creating custom components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -13,6 +15,8 @@ component your bot has.
 A bot has a default component, but it also has a stack of user-provided
 components. This way you can create isolated and reusable sets of functions,
 and you can distribute those or include them in every bot you want.
+
+.. _custom-components-conduct:
 
 ==========================
 Components code of conduct
@@ -35,6 +39,8 @@ simplifying the end-user experience:
   both to initialize the component with all the customizations, for a direct
   usage, and to initialize it without customizations, if they want to provide
   them later.
+
+.. _custom-components-example:
 
 ====================
 An example component
@@ -105,6 +111,8 @@ source code of the component is the following:
        def filter(self, chat, message):
            if message.from_.id not in self.allowed:
                return True  # Stop processing the update
+
+.. _custom-components-use:
 
 ========================
 Using a custom component
