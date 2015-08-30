@@ -171,3 +171,44 @@ def test_add_message_matches_hook(bot, sample_update):
     assert right_processed == True
     assert single_processed == 1
     assert multiple_processed == 3
+
+
+def test_add_command(bot, sample_update):
+    sample1_processed = False
+    sample2_processed = False
+    sample3_processed = False
+
+    def sample1(chat, message, args):
+        nonlocal sample1_processed
+        sample1_processed = True
+
+    def sample2(chat, message, args):
+        nonlocal sample2_processed
+        sample2_processed = True
+
+        assert chat.id == -1
+        assert message.text == "/sample2 a b c"
+        assert message.chat == chat
+        assert args == ["a", "b", "c"]
+
+    def sample3(chat, message, args):
+        nonlocal sample3_processed
+        sample3_processed = True
+
+        assert message.text == "/sample3@test_bot a b c"
+
+
+    comp = botogram.Component("test")
+    comp.add_command("sample1", sample1)
+    comp.add_command("sample2", sample2)
+    comp.add_command("sample3", sample3)
+
+    bot.use(comp)
+
+    for cmd in "sample1@another_bot", "sample2", "sample3@test_bot":
+        sample_update.message.text = "/%s a b c" % cmd
+        bot.process(sample_update)
+
+    assert sample1_processed == False
+    assert sample2_processed == True
+    assert sample3_processed == True
