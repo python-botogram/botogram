@@ -14,6 +14,7 @@ build/envs/build: requirements-build.txt
 	@rm -rf build/envs/build
 	@mkdir -p build/envs/build
 	virtualenv -p python3 build/envs/build
+	build/envs/build/bin/pip install -U pip
 	build/envs/build/bin/pip install -r requirements-build.txt
 
 build/packages/*.tar.gz: i18n build/envs/build botogram/** setup.py
@@ -39,6 +40,7 @@ build/envs/devel:
 	@rm -rf build/envs/devel
 	@mkdir -p build/envs/devel
 	virtualenv -p python3 build/envs/devel
+	build/envs/devel/bin/pip install -U pip
 
 botogram.egg-info: i18n build/envs/devel setup.py
 	build/envs/devel/bin/pip install -e .
@@ -81,6 +83,7 @@ build/envs/docs: requirements-docs.txt
 	@rm -rf build/envs/docs
 	@mkdir -p build/envs/docs
 	virtualenv -p python3 build/envs/docs
+	build/envs/docs/bin/pip install -U pip
 	build/envs/docs/bin/pip install -r requirements-docs.txt
 
 build/docs: build/envs/docs docs/**
@@ -97,6 +100,7 @@ build/envs/test: requirements-test.txt
 	@rm -rf build/envs/test
 	@mkdir -p build/envs/test
 	virtualenv -p python3 build/envs/test
+	build/envs/test/bin/pip install -U pip
 	build/envs/test/bin/pip install -r requirements-test.txt
 	build/envs/test/bin/pip install -e .
 
@@ -110,6 +114,7 @@ build/envs/lint: requirements-lint.txt
 	@rm -rf build/envs/lint
 	@mkdir -p build/envs/lint
 	@virtualenv -p python3 build/envs/lint
+	@build/envs/lint/bin/pip install -U pip
 	@build/envs/lint/bin/pip install -r requirements-lint.txt
 
 
