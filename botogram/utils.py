@@ -64,7 +64,6 @@ def usernames_in(message):
         if result.group(1):
             results.append(result.group(1))
 
-
     return results
 
 
