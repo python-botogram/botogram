@@ -55,7 +55,7 @@ Reference
 .. toctree::
    :maxdepth: 2
 
-   api
+   api/index
 
 ==========
 Side notes
