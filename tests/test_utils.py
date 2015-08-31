@@ -46,3 +46,14 @@ def test_docstring_of(bot):
         return STRANGE_DOCSTRING
 
     assert botogram.utils.docstring_of(func) == "a\n\nb"
+
+
+def test_usernames_in():
+    assert botogram.utils.usernames_in("Hi, what's up?") == []
+    assert botogram.utils.usernames_in("Hi @johndoe!") == ["johndoe"]
+
+    multiple = botogram.utils.usernames_in("Hi @johndoe, I'm @pietroalbini")
+    assert multiple == ["johndoe", "pietroalbini"]
+
+    command = botogram.utils.usernames_in("/say@saybot I'm @johndoe")
+    assert command == ["johndoe"]

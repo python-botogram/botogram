@@ -6,6 +6,11 @@
     Released under the MIT license
 """
 
+import re
+
+_username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
+_command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
+
 
 def format_docstr(docstring):
     """Prepare a docstring for /help"""
@@ -46,6 +51,21 @@ def docstring_of(func, bot=None):
             docstring = "No description available."
 
     return format_docstr(docstring)
+
+
+def usernames_in(message):
+    """Return all the matched usernames in the message"""
+    # Don't parse usernames in the commands
+    if _command_re.match(message.split(" ", 1)[0]):
+        message = message.split(" ", 1)[1]
+
+    results = []
+    for result in _username_re.finditer(message):
+        if result.group(1):
+            results.append(result.group(1))
+
+
+    return results
 
 
 class HookDetails:
