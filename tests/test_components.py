@@ -67,6 +67,51 @@ def test_add_process_message_hook(bot, sample_update):
     assert process_hook_processed
 
 
+def test_add_message_equals_hook(bot, sample_update):
+    # meanings: ins[ensitive], sen[sitive], rig[ht], wro[ng]
+    ins_wro_processed = False
+    ins_rig_processed = False
+    sen_wro_processed = False
+    sen_rig_processed = False
+
+    def ins_wro_hook(chat, message):
+        nonlocal ins_wro_processed
+        ins_wro_processed = True
+
+    def ins_rig_hook(chat, message):
+        nonlocal ins_rig_processed
+        ins_rig_processed = True
+
+        assert chat.id == -1
+        assert message.text == "test"
+
+    def sen_wro_hook(chat, message):
+        nonlocal sen_wro_processed
+        sen_wro_processed = True
+
+    def sen_rig_hook(chat, message):
+        nonlocal sen_rig_processed
+        sen_rig_processed = True
+
+    ins_comp = botogram.components.Component("ins")
+    ins_comp.add_message_equals_hook("hi", ins_wro_hook)
+    ins_comp.add_message_equals_hook("Test", ins_rig_hook)
+
+    sen_comp = botogram.components.Component("sen")
+    sen_comp.add_message_equals_hook("Test", sen_wro_hook, ignore_case=False)
+    sen_comp.add_message_equals_hook("test", sen_rig_hook, ignore_case=False)
+
+    for comp in ins_comp, sen_comp:
+        localbot = copy.copy(bot)
+        localbot.use(comp)
+        localbot.process(sample_update)
+
+    assert ins_wro_processed == False
+    assert sen_wro_processed == False
+    assert ins_rig_processed == True
+    assert sen_rig_processed == True
+
+
 def test_add_message_contains_hook(bot, sample_update):
     # meanings: ins[ensitive], sen[sitive], rig[ht], wro[ng]
     ins_wro_processed = False

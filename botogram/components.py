@@ -52,6 +52,27 @@ class Component:
 
         self.__processors.append(func)
 
+    def add_message_equals_hook(self, string, func, ignore_case=True):
+        """Add a message equals hook"""
+        if not callable(func):
+            raise ValueError("A message equals hook must be callable")
+
+        if ignore_case:
+            string = string.lower()
+
+        @functools.wraps(func)
+        @decorators.pass_bot
+        def wrapped(bot, chat, message):
+            text = message.text
+            if ignore_case:
+                text = text.lower()
+
+            if text != string:
+                return
+            return bot._call(func, chat, message)
+
+        self.add_process_message_hook(wrapped)
+
     def add_message_contains_hook(self, string, func, ignore_case=True,
                                   multiple=False):
         """Add a message contains hook"""

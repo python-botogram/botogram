@@ -94,6 +94,14 @@ class Bot:
         """Add a message processor hook"""
         return self._main_component.add_process_message_hook(func)
 
+    def message_equals(self, string, ignore_case=True):
+        """Add a message equals hook"""
+        def __(func):
+            self._main_component.add_message_equals_hook(string, func,
+                                                         ignore_case)
+            return func
+        return __
+
     def message_contains(self, string, ignore_case=True, multiple=False):
         """Add a message contains hook"""
         def __(func):

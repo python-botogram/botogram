@@ -65,6 +65,26 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       :param callable func: The function you want to add.
 
+   .. py:method:: add_message_equals_hook(string, func, [ignore_case=True])
+
+      The function provided to this method will be called only if the processed
+      message is equal to the ``string`` you provided. You may also define if
+      you want to ignore the casing. Provided functions will be called with two
+      parameters:
+
+      * A ``chat`` parameter with the representation of the chat in which the
+        message was sent (either an instance of :py:class:`botogram.User` or
+        :py:class:`botogram.GroupChat`)
+      * A ``message`` parameter witht the representation of the received
+        message (an instance of :py:class:`botogram.Message`).
+
+      If the function returns ``True``, then the message processing is stopped,
+      and no more functions will be called for that update.
+
+      :param str string: The string you want equals to the message
+      :param callable func: The function you want to use.
+      :param bool ignore_case: If the check should be ignore-case
+
    .. py:method:: add_message_contains_hook(string, func, [ignore_case=True, multiple=False])
 
       The function provided to this method will be called only if the
