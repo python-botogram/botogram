@@ -1,4 +1,7 @@
-pytest==2.7.2
+# Use this development version of pytest, since it works on Python 3.5
+https://github.com/Carreau/pytest/archive/4462b83.tar.gz#egg=pytest
+
+#pytest==2.7.2
 responses==0.4.0
 
 # This is because with pip < 6.0, installing in a virtualenv called "test"
