@@ -7,14 +7,15 @@
 Creating custom components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Components represent the foundation of botogram: they are containers which
-contain all the functions you wrote for your bot. For example, when you create
-a command and you add it to your bot, that command is added to the default
-component your bot has.
+Hopefully you'll get to a point when you've made a few bots. The problem is,
+there's an high chance parts of the code are duplicate in the bots. For
+example, if your bots are meant to be used only by some people, you'll have
+duplicate code which filters who can interact with the bot.
 
-A bot has a default component, but it also has a stack of user-provided
-components. This way you can create isolated and reusable sets of functions,
-and you can distribute those or include them in every bot you want.
+Components provides an easy and elegant way to solve the problem: instead of
+copy-pasting the shared code in each bot, they allow you to create isolated
+groups of hooks, commands and so on, then you can import and use them in each
+bot.
 
 .. _custom-components-conduct:
 
