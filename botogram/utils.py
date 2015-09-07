@@ -10,6 +10,7 @@ import re
 
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
+_email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
 
 
 def format_docstr(docstring):
@@ -58,6 +59,10 @@ def usernames_in(message):
     # Don't parse usernames in the commands
     if _command_re.match(message.split(" ", 1)[0]):
         message = message.split(" ", 1)[1]
+
+    # Strip email addresses from the message, in order to avoid matching the
+    # user's domain. This also happens to match username/passwords in URLs
+    message = _email_re.sub("", message)
 
     results = []
     for result in _username_re.finditer(message):

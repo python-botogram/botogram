@@ -57,3 +57,9 @@ def test_usernames_in():
 
     command = botogram.utils.usernames_in("/say@saybot I'm @johndoe")
     assert command == ["johndoe"]
+
+    email = botogram.utils.usernames_in("My address is john.doe@example.com")
+    assert email == []
+
+    username_url = botogram.utils.usernames_in("http://pwd:john@example.com")
+    assert username_url == []
