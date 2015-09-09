@@ -11,6 +11,16 @@ botogram ships with some functions and decorators aimed to simplify the bots
 development. Feel free to use them when you need them.
 
 
+.. py:function:: botogram.usernames_in(message)
+
+   Returns a list of usernames contained in the message you provide. The
+   function automatically excludes commands, email addresses and URLs. Remember
+   that returned usernames aren't prefixed with a ``@``.
+
+   :param str message: The message which contains the usernames.
+   :return: The list of usernames contained in the message.
+   :rtype: list of str
+
 .. py:decorator:: botogram.pass_bot
 
    Provide as first argument of the function the instance of the bot which
