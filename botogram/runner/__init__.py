@@ -10,84 +10,105 @@ import multiprocessing
 import time
 import atexit
 import signal
+import logging
 
 from . import processes
+from .. import utils
 
 
 class BotogramRunner:
     """A multi-process, scalable bot runner"""
 
-    def __init__(self, bot, workers=2):
-        self.bot = bot
-        self.processes = []
+    def __init__(self, *bots, workers=2):
+        self._bots = bots
+
+        self._updater_processes = []
+        self._worker_processes = []
+
         self.running = False
         self._stop = False
         self._started_at = None
 
         self._workers_count = workers
 
-        self._setup_shared()
+        self.logger = logging.getLogger("botogram.runner")
+        utils.configure_logger(self.logger)
 
-        # This is useful only on non-Windows platforms, since Windows doesn't
-        # catch properly the SIGINT signal
-        self._setup_signals()
+    def run(self):
+        """Run the runner"""
+        if self.running:
+            raise RuntimeError("Server already running")
 
-    def _setup_shared(self):
-        """Setup processes-shared things"""
-        self._updates_queue = multiprocessing.Queue()
-        self._updater_commands = multiprocessing.Queue()
+        self.logger.info("The botogram runner is booting up.")
+        self.logger.info("Press Ctrl+C to exit.")
 
-    def _setup_signals(self):
+        self.running = True
+        self._started_at = time.time()
+
+        self._enable_signals()
+        to_workers, to_updaters = self._boot_processes()
+
+        try:
+            # Main server loop
+            # This actually does nothing, sorry
+            while not self._stop:
+                time.sleep(0.2)
+        except (KeyboardInterrupt, InterruptedError):
+            pass
+
+        self._shutdown_processes(to_workers, to_updaters)
+
+        self.running = False
+        self._started_at = None
+
+    def stop(self, *__):
+        """Stop a running runner"""
+        self._stop = True
+
+    def _boot_processes(self):
+        """Start all the used processes"""
+        queue = multiprocessing.Queue()
+        upd_commands = multiprocessing.Queue()
+
+        # Boot up all the worker processes
+        for i in range(self._workers_count):
+            worker = processes.WorkerProcess(self, queue)
+            worker.start()
+
+            self._worker_processes.append(worker)
+
+        # Boot up all the updater processes
+        for i in range(len(self._bots)):
+            updater = processes.UpdaterProcess(self, i, queue, upd_commands)
+            updater.start()
+
+            self._updater_processes.append(updater)
+
+        return queue, upd_commands
+
+    def _shutdown_processes(self, to_workers, to_updaters):
+        """Shutdown all the opened processes"""
+        self.logger.info("Shutting down the runner...")
+
+        # Shutdown updaters before, and after the workers
+        # This way no update will be lost
+        for i in range(len(self._updater_processes)):
+            to_updaters.put("stop")
+        for process in self._updater_processes:
+            process.join()
+        self._updaters_processes = []
+
+        # Here, we tell each worker to shut down, and then we join it
+        for i in range(len(self._worker_processes)):
+            to_workers.put(None)
+        for worker in self._worker_processes:
+            worker.join()
+        self._worker_processes = []
+
+    def _enable_signals(self):
         """Setup signals handlers"""
         atexit.register(self.stop)
 
         # Register stop to all the signals
         for one in signal.SIGINT, signal.SIGTERM:
             signal.signal(one, self.stop)
-
-    def run(self):
-        """Run the runner"""
-        if self.running:
-            raise RuntimeError("Server already running")
-        self.running = True
-        self._started_at = time.time()
-
-        self._define_processes()
-
-        for process in self.processes:
-            process.start()
-
-        try:
-            # Main server loop
-            while not self._stop:
-                time.sleep(0.2)
-        except (KeyboardInterrupt, InterruptedError):
-            pass
-
-        for process in self.processes:
-            process.join()
-            self.processes.remove(process)
-
-        self.running = False
-        self._stop_signal = False
-        self._started_at = None
-
-    def stop(self, *__):
-        """Stop a running runner"""
-        # This will stop all the workers
-        for i in range(self._workers_count):
-            self._updates_queue.put(None)
-
-        self._updater_commands.put(None)
-        self._stop = True
-
-    def _define_processes(self):
-        """Define all the processes"""
-        updater = processes.UpdaterProcess(self, self._updates_queue, self.bot,
-                                           self._updater_commands)
-        self.processes.append(updater)
-
-        for i in range(self._workers_count):
-            self.processes.append(processes.WorkerProcess(self,
-                                                          self._updates_queue,
-                                                          self.bot))

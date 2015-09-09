@@ -19,6 +19,7 @@ from . import objects
 from . import runner
 from . import defaults
 from . import components
+from . import utils
 
 
 class Bot:
@@ -26,7 +27,7 @@ class Bot:
 
     def __init__(self, api_connection):
         self.logger = logging.getLogger("botogram")
-        self._configure_logger(self.logger)
+        utils.configure_logger(self.logger)
 
         self.api = api_connection
 
@@ -68,23 +69,6 @@ class Bot:
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
                                        self.itself.username+r')?( .*)?$')
-
-    def _configure_logger(self, logger):
-        """Configure a logger object"""
-        if "BOTOGRAM_DEBUG" in os.environ:
-            logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.INFO)
-
-        formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)-8s - %(message)s",
-            datefmt='%I:%M:%S'
-        )
-
-        handler = logging.StreamHandler()
-        handler.setFormatter(formatter)
-
-        logger.addHandler(handler)
 
     def before_processing(self, func):
         """Register a before processing hook"""
@@ -168,10 +152,7 @@ class Bot:
 
     def run(self, workers=2):
         """Run the bot with the multi-process runner"""
-        self.logger.info("The botogram runner is booting up.")
-        self.logger.info("Press Ctrl+C in order to exit.")
-
-        inst = runner.BotogramRunner(self, workers)
+        inst = runner.BotogramRunner(self, workers=workers)
         inst.run()
 
     def send(self, chat, message, preview=True, reply_to=None, extra=None):

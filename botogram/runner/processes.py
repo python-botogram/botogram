@@ -11,6 +11,7 @@ import os
 import traceback
 import queue
 
+from . import jobs
 from .. import objects
 from .. import api
 
@@ -18,12 +19,10 @@ from .. import api
 class BaseProcess(multiprocessing.Process):
     """Base class for all of the processes"""
 
-    def __init__(self, runner, updates, bot, *args):
+    def __init__(self, runner, *args):
         self.runner = runner
         self.stop = False
-        self.updates_queue = updates
-        self.bot = bot
-        self.logger = bot.logger
+        self.logger = runner.logger
 
         super(BaseProcess, self).__init__()
         self.setup(*args)
@@ -61,25 +60,27 @@ class WorkerProcess(BaseProcess):
 
     name = "Worker"
 
-    def setup(self):
+    def setup(self, queue):
+        self.queue = queue
         self.will_stop = False
 
     def loop(self):
         try:
-            update = self.updates_queue.get(True, 0.2)
+            job = self.queue.get(True, 0.1)
         except queue.Empty:
-            # If the worker should be stopped and no updates are in the queue,
+            # If the worker should be stopped and no jobs in the queue,
             # then gracefully stop
             if self.will_stop:
                 self.stop = True
             return
 
-        # If the update is None, stop the worker
-        if update is None:
+        # If the job is None, stop the worker
+        if job is None:
             self.stop = True
             return
 
-        self.bot.process(update)
+        # Run the wanted job
+        job.process(self.runner._bots)
 
     def on_stop(self):
         self.will_stop = True
@@ -90,21 +91,26 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, commands_queue):
-        self.last_id = -1
-        self.commands_queue = commands_queue
+    def setup(self, bot_id, to_workers, commands):
+        self.bot_id = bot_id
+        self.bot = self.runner._bots[bot_id]
+        self.to_workers = to_workers
+        self.commands = commands
+
         self.backlog_processed = False
+        self.last_id = -1
 
         # This will process the backlog if the programmer wants so
         if self.bot.process_backlog:
             self.backlog_processed = True
 
     def loop(self):
+        # This allows to control the process
         try:
-            command = self.commands_queue.get(False)
+            command = self.commands.get(False)
 
             # The None command will stop the process
-            if command is None:
+            if command == "stop":
                 self.stop = True
                 return
         except queue.Empty:
@@ -133,4 +139,11 @@ class UpdaterProcess(BaseProcess):
 
             self.logger.debug("Successifully queued update #%s!" %
                               update.update_id)
-            self.updates_queue.put(update)
+
+            # No dynamic data is left to the update
+            # The API will be re-added after
+            update.set_api(None)
+            job = jobs.Job(self.bot_id, jobs.process_update, {
+                "update": update,
+            })
+            self.to_workers.put(job)

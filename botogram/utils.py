@@ -7,6 +7,8 @@
 """
 
 import re
+import os
+import logging
 
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
@@ -70,6 +72,26 @@ def usernames_in(message):
             results.append(result.group(1))
 
     return results
+
+
+def configure_logger(logger):
+    """Configure a logger object"""
+    if "BOTOGRAM_DEBUG" in os.environ:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(levelname)-8s - %(message)s",
+        datefmt='%I:%M:%S'
+    )
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+
+    # Prevent adding the handler multiple times
+    if not logger.hasHandlers():
+        logger.addHandler(handler)
 
 
 class HookDetails:
