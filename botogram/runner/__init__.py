@@ -13,7 +13,6 @@ import signal
 import logbook
 
 from . import processes
-from .. import utils
 
 
 class BotogramRunner:

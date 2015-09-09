@@ -33,7 +33,7 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
-        self.logger.debug("%s process is ready! (pid: %s)" % ( self.name,
+        self.logger.debug("%s process is ready! (pid: %s)" % (self.name,
                           os.getpid()))
         while not self.stop:
             try:
