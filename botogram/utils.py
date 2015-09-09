@@ -8,11 +8,17 @@
 
 import re
 import os
-import logging
+import sys
+
+import logbook
 
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
 _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
+
+
+# This small piece of global state will track if logbook was configured
+_logger_configured = False
 
 
 def format_docstr(docstring):
@@ -74,24 +80,24 @@ def usernames_in(message):
     return results
 
 
-def configure_logger(logger):
+def configure_logger():
     """Configure a logger object"""
-    if "BOTOGRAM_DEBUG" in os.environ:
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.INFO)
+    global _logger_configured
 
-    formatter = logging.Formatter(
-        "%(asctime)s - %(levelname)-8s - %(message)s",
-        datefmt='%I:%M:%S'
-    )
+    # Don't configure the logger multiple times
+    if _logger_configured:
+        return
 
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
+    # The StreamHandler will log everything to stdout
+    min_level = 'DEBUG' if 'BOTOGRAM_DEBUG' in os.environ else 'INFO'
+    handler = logbook.StreamHandler(sys.stdout, level=min_level)
+    handler.format_string = '{record.time.hour:0>2}:{record.time.minute:0>2}' \
+                            '.{record.time.second:0>2} - ' \
+                            '{record.level_name:^9} - {record.message}'
+    handler.push_application()
 
-    # Prevent adding the handler multiple times
-    if not logger.hasHandlers():
-        logger.addHandler(handler)
+    # Don't reconfigure the logger, thanks
+    _logger_configured = True
 
 
 class HookDetails:

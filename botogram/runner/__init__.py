@@ -10,7 +10,7 @@ import multiprocessing
 import time
 import atexit
 import signal
-import logging
+import logbook
 
 from . import processes
 from .. import utils
@@ -31,8 +31,7 @@ class BotogramRunner:
 
         self._workers_count = workers
 
-        self.logger = logging.getLogger("botogram.runner")
-        utils.configure_logger(self.logger)
+        self.logger = logbook.Logger("botogram runner")
 
     def run(self):
         """Run the runner"""

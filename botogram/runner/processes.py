@@ -33,8 +33,8 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
-        self.logger.debug("%s process is ready! (pid: %s)", self.name,
-                          os.getpid())
+        self.logger.debug("%s process is ready! (pid: %s)" % ( self.name,
+                          os.getpid()))
         while not self.stop:
             try:
                 self.loop()
@@ -43,8 +43,8 @@ class BaseProcess(multiprocessing.Process):
             except:
                 traceback.print_exc()
 
-        self.logger.debug("%s process with pid %s just stopped", self.name,
-                          os.getpid())
+        self.logger.debug("%s process with pid %s just stopped" % (self.name,
+                          os.getpid()))
 
     def loop(self):
         """One single loop"""

@@ -23,6 +23,7 @@ setuptools.setup(
 
     install_requires = [
         "requests",
+        "logbook",
     ],
 
     include_package_data = True,

@@ -8,7 +8,7 @@
 
 import re
 import os
-import logging
+import logbook
 import gettext
 
 import pkg_resources
@@ -26,8 +26,8 @@ class Bot:
     """A botogram-made bot"""
 
     def __init__(self, api_connection):
-        self.logger = logging.getLogger("botogram")
-        utils.configure_logger(self.logger)
+        self.logger = logbook.Logger('botogram bot')
+        utils.configure_logger()
 
         self.api = api_connection
 
@@ -113,7 +113,7 @@ class Bot:
     def use(self, *components):
         """Use the provided components in the bot"""
         for component in components:
-            self.logger.debug("Component %s just loaded into the bot",
+            self.logger.debug("Component %s just loaded into the bot" %
                               component.component_name)
             self._components.append(component)
 
@@ -138,16 +138,16 @@ class Bot:
                 except AttributeError:
                     name = hook.__name__
 
-                self.logger.debug("Processing update #%s with the %s hook...",
-                                  update.update_id, name)
+                self.logger.debug("Processing update #%s with the %s hook..." %
+                                  (update.update_id, name))
 
                 result = self._call(hook, update.message.chat, update.message)
                 if result is True:
                     self.logger.debug("Update #%s was just processed by the "
-                                      "%s hook.", update.update_id, name)
+                                      "%s hook." % (update.update_id, name))
                     return
 
-        self.logger.debug("No hook actually processed the #%s update.",
+        self.logger.debug("No hook actually processed the #%s update." %
                           update.update_id)
 
     def run(self, workers=2):
