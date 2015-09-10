@@ -12,7 +12,7 @@ import botogram.utils
 def test_pass_bot(bot, sample_update):
     @botogram.decorators.pass_bot
     def func(local_bot, *args, **kwargs):
-        assert local_bot is bot
+        assert local_bot is frozen
 
     decorators = [
         bot.before_processing,
@@ -27,7 +27,11 @@ def test_pass_bot(bot, sample_update):
 
     for msg in "test1", "test2", "/test3":
         sample_update.message.text = msg
-        bot.process(sample_update)
+
+        # Directly create the frozen instance
+        # This way it's possible to check if it's the one passed by pass_bot
+        frozen = bot.freeze()
+        frozen.process(sample_update)
 
 
 def test_help_message_for():

@@ -19,7 +19,8 @@ class BotogramRunner:
     """A multi-process, scalable bot runner"""
 
     def __init__(self, *bots, workers=2):
-        self._bots = bots
+        # Only frozen instances, thanks
+        self._bots = [bot.freeze() for bot in bots]
 
         self._updater_processes = []
         self._worker_processes = []

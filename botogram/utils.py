@@ -9,7 +9,9 @@
 import re
 import os
 import sys
+import gettext
 
+import pkg_resources
 import logbook
 
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
@@ -78,6 +80,18 @@ def usernames_in(message):
             results.append(result.group(1))
 
     return results
+
+
+def get_language(lang):
+    """Get the GNUTranslations instance of a specific language"""
+    path = pkg_resources.resource_filename("botogram", "i18n/%s.mo" % lang)
+    if not os.path.exists(path):
+        raise ValueError('Language "%s" is not supported by botogram' % lang)
+
+    with open(path, "rb") as f:
+        gt = gettext.GNUTranslations(f)
+
+    return gt
 
 
 def configure_logger():

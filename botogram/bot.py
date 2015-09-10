@@ -7,11 +7,8 @@
 """
 
 import re
-import os
 import logbook
-import gettext
 
-import pkg_resources
 import requests.exceptions
 
 from . import api
@@ -20,9 +17,10 @@ from . import runner
 from . import defaults
 from . import components
 from . import utils
+from . import frozenbot
 
 
-class Bot:
+class Bot(frozenbot.FrozenBot):
     """A botogram-made bot"""
 
     def __init__(self, api_connection):
@@ -69,6 +67,10 @@ class Bot:
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
                                        self.itself.username+r')?( .*)?$')
+
+    def __reduce__(self):
+        # Use the standard __reduce__
+        return object.__reduce__(self)
 
     def before_processing(self, func):
         """Register a before processing hook"""
@@ -119,55 +121,36 @@ class Bot:
 
     def process(self, update):
         """Process an update object"""
-        if not isinstance(update, objects.Update):
-            raise ValueError("Only Update objects are allowed")
-
-        chain = self._main_component._get_hooks_chain()
-        for component in reversed(self._components):
-            current_chain = component._get_hooks_chain()
-            for i in range(len(chain)):
-                chain[i] += current_chain[i]
-
-        # Call all the hooks and processors
-        # If something returns True, then stop the processing
-        for one in chain:
-            for hook in one:
-                # Get the correct name of the hook
-                try:
-                    name = hook.botogram.name
-                except AttributeError:
-                    name = hook.__name__
-
-                self.logger.debug("Processing update #%s with the %s hook..." %
-                                  (update.update_id, name))
-
-                result = self._call(hook, update.message.chat, update.message)
-                if result is True:
-                    self.logger.debug("Update #%s was just processed by the "
-                                      "%s hook." % (update.update_id, name))
-                    return
-
-        self.logger.debug("No hook actually processed the #%s update." %
-                          update.update_id)
+        # Updates are always processed in a frozen instance
+        # This way there aren't inconsistencies between the runner and manual
+        # update processing
+        frozen = self.freeze()
+        return frozen.process(update)
 
     def run(self, workers=2):
         """Run the bot with the multi-process runner"""
         inst = runner.BotogramRunner(self, workers=workers)
         inst.run()
 
-    def send(self, chat, message, preview=True, reply_to=None, extra=None):
-        """Send a message in a chat"""
-        obj = objects.GenericChat({"id": chat}, self.api)
-        obj.send(message, preview, reply_to, extra)
+    def freeze(self):
+        """Return a frozen instance of the bot"""
+        # Get a list of all the chains
+        chains = self._main_component._get_hooks_chain()
+        for component in reversed(self._components):
+            current_chain = component._get_hooks_chain()
+            for i in range(len(chains)):
+                chains[i] += current_chain[i]
 
-    def send_photo(self, chat, path, caption="", reply_to=None, extra=None):
-        """Send a photo in a chat"""
-        obj = objects.GenericChat({"id": chat}, self.api)
-        obj.send_photo(path, caption, reply_to, extra)
+        # Finalize the hooks list
+        hooks = []
+        for chain in chains:
+            hooks += chain
 
-    def _(self, message, **args):
-        """Translate a string"""
-        return self._lang_inst.gettext(message) % args
+        return frozenbot.FrozenBot(self.api, self.about, self.owner,
+                                   self.hide_commands, self.before_help,
+                                   self.after_help, self.process_backlog,
+                                   self.lang, self.itself, self._commands_re,
+                                   self._get_commands(), hooks)
 
     @property
     def lang(self):
@@ -179,14 +162,7 @@ class Bot:
         if lang == self._lang:
             return
 
-        path = pkg_resources.resource_filename("botogram", "i18n/%s.mo" % lang)
-        if not os.path.exists(path):
-            raise ValueError("Language \"%s\" is not supported by botogram"
-                             % lang)
-
-        with open(path, "rb") as f:
-            self._lang_inst = gettext.GNUTranslations(f)
-
+        self._lang_inst = utils.get_language(lang)
         self._lang = lang
 
     def _get_commands(self):
@@ -197,14 +173,6 @@ class Bot:
         result.update(self._main_component._get_commands())
 
         return result
-
-    def _call(self, func, *args, **kwargs):
-        """Wrapper for calling user-provided functions"""
-        # Put the bot as first argument, if wanted
-        if hasattr(func, "botogram") and func.botogram.pass_bot:
-            args = (self,) + args
-
-        return func(*args, **kwargs)
 
 
 def create(api_key, *args, **kwargs):
