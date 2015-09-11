@@ -44,12 +44,12 @@ class FrozenBot:
         self.itself.set_api(api)
 
     def __reduce__(self):
-        args = [
+        args = (
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._commands,
             self._chain
-        ]
+        )
         return restore, args
 
     # All those methods do nothing, since you aren't allowed to change the
