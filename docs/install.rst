@@ -9,8 +9,8 @@ Installation of botogram
 
 botogram is available `on the Python Packages Index`_, so you can install it
 really easily with the `pip`_ command-line utility. Before installing it, be
-sure to have Python_ 3, pip_ and setuptools_ installed on your system. Then,
-issue the following command::
+sure to have Python_ 3.4 (or a newer version), pip_, virtualenv_ and setuptools_
+installed on your system. Then, issue the following command::
 
    $ pip3 install botogram
 

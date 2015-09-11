@@ -26,11 +26,14 @@ if __name__ == "__main__":
 
 You can find the documentation at [botogram.pietroalbini.io][2].
 
+**Supported Python versions**: 3.4, 3.5
+
 ### Installation
 
 botogram is currently in development, so a release doesn't exist yet.  
 But if you want to install it anyway, you can clone the repository and install
-it with setuptools. Be sure to have Python 3, pip and setuptools installed:
+it with setuptools. Be sure to have Python 3.4 (or a newer version), pip,
+virtualenv and setuptools installed:
 
     $ git clone https://github.com/pietroalbini/botogram.git
     $ cd botogram
