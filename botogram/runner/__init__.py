@@ -20,9 +20,9 @@ class BotogramRunner:
 
     def __init__(self, *bots, workers=2):
         # Only frozen instances, thanks
-        self._bots = [bot.freeze() for bot in bots]
+        self._bots = {bot._bot_id: bot.freeze() for bot in bots}
 
-        self._updater_processes = []
+        self._updater_processes = {}
         self._worker_processes = []
 
         self.running = False
@@ -77,11 +77,11 @@ class BotogramRunner:
             self._worker_processes.append(worker)
 
         # Boot up all the updater processes
-        for i in range(len(self._bots)):
-            updater = processes.UpdaterProcess(self, i, queue, upd_commands)
+        for id, bot in self._bots.items():
+            updater = processes.UpdaterProcess(self, id, queue, upd_commands)
             updater.start()
 
-            self._updater_processes.append(updater)
+            self._updater_processes[id] = updater
 
         return queue, upd_commands
 
@@ -93,9 +93,9 @@ class BotogramRunner:
         # This way no update will be lost
         for i in range(len(self._updater_processes)):
             to_updaters.put("stop")
-        for process in self._updater_processes:
+        for process in self._updater_processes.values():
             process.join()
-        self._updaters_processes = []
+        self._updaters_processes = {}
 
         # Here, we tell each worker to shut down, and then we join it
         for i in range(len(self._worker_processes)):
