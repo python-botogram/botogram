@@ -12,12 +12,19 @@ from . import utils
 from . import objects
 
 
+class FrozenBotError(Exception):
+    pass
+
+
 class FrozenBot:
     """A frozen version of botogram.Bot"""
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
                  components, object_id):
+        # This attribute should be added with the default setattr, because is
+        # needed by the custom setattr
+        object.__setattr__(self, "_frozen", False)
 
         # Restore original content
         self.api = api
@@ -57,6 +64,9 @@ class FrozenBot:
         self.itself = itself
         self.itself.set_api(api)
 
+        # No more changes allowed!
+        self._frozen = True
+
     def __reduce__(self):
         args = (
             self.api, self.about, self.owner, self.hide_commands,
@@ -65,6 +75,15 @@ class FrozenBot:
             self._botogram_object_id
         )
         return restore, args
+
+    def __setattr__(self, name, value):
+        # _frozen marks if the object is frozen or not
+        # This is useful because the init method needs to alter the object, but
+        # after that no one should
+        if self._frozen:
+            raise FrozenBotError("Can't alter a frozen bot")
+
+        return object.__setattr__(self, name, value)
 
     def __eq__(self, other):
         return self._botogram_object_id == other._botogram_object_id
@@ -75,27 +94,27 @@ class FrozenBot:
 
     def before_processing(self, func):
         """Register a before processing hook"""
-        raise RuntimeError("Can't add hooks to a bot at runtime")
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def process_message(self, func):
         """Register a message processor hook"""
-        raise RuntimeError("Can't add hooks to a bot at runtime")
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def message_equals(self, string, ignore_case=True):
         """Add a message equals hook"""
-        raise RuntimeError("Can't add hooks to a bot at runtime")
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def message_contains(self, string, ignore_case=True, multiple=False):
         """Add a message contains hook"""
-        raise RuntimeError("Can't add hooks to a bot at runtime")
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def message_matches(self, regex, flags=0, multiple=False):
         """Add a message matches hook"""
-        raise RuntimeError("Can't add hooks to a bot at runtime")
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def command(self, name):
         """Register a new command"""
-        raise RuntimeError("Can't add commands to a bot at runtime")
+        raise FrozenBotError("Can't add commands to a bot at runtime")
 
     # Those are shortcuts to send messages directly to someone
 

@@ -75,6 +75,10 @@ class Bot(frozenbot.FrozenBot):
         # Use the standard __reduce__
         return object.__reduce__(self)
 
+    def __setattr__(self, name, value):
+        # Use the standard __setattr__
+        return object.__setattr__(self, name, value)
+
     def before_processing(self, func):
         """Register a before processing hook"""
         return self._main_component.add_before_processing_hook(func)
