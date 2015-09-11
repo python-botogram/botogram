@@ -8,6 +8,7 @@
 
 import re
 import logbook
+import uuid
 
 import requests.exceptions
 
@@ -46,6 +47,8 @@ class Bot(frozenbot.FrozenBot):
 
         self._components = []
         self._main_component = components.Component("")
+
+        self._botogram_object_id = uuid.uuid4()
 
         self.use(defaults.DefaultComponent())
 
@@ -134,23 +137,12 @@ class Bot(frozenbot.FrozenBot):
 
     def freeze(self):
         """Return a frozen instance of the bot"""
-        # Get a list of all the chains
-        chains = self._main_component._get_hooks_chain()
-        for component in reversed(self._components):
-            current_chain = component._get_hooks_chain()
-            for i in range(len(chains)):
-                chains[i] += current_chain[i]
-
-        # Finalize the hooks list
-        hooks = []
-        for chain in chains:
-            hooks += chain
-
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self.hide_commands, self.before_help,
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
-                                   self._get_commands(), hooks)
+                                   self._components+[self._main_component],
+                                   self._botogram_object_id)
 
     @property
     def lang(self):

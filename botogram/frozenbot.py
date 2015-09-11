@@ -17,7 +17,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 commands, chain):
+                 components, object_id):
 
         # Restore original content
         self.api = api
@@ -29,8 +29,24 @@ class FrozenBot:
         self.process_backlog = process_backlog
         self.lang = lang
         self._commands_re = commands_re
-        self._commands = commands
-        self._chain = chain
+        self._components = components
+        self._botogram_object_id = object_id
+
+        # Rebuild the hooks chain and commands list
+        self._commands = components[-1]._get_commands()
+        self._chain = []
+        chains = components[-1]._get_hooks_chain()
+        for component in reversed(components[:-1]):
+            self._commands.update(component._get_commands())
+
+            comp_chain = component._get_hooks_chain()
+            for i in range(len(chains)):
+                chains[i] += comp_chain[i]
+
+        for chain in chains:
+            self._chain += chain
+
+        print(chains,self._chain)
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -47,10 +63,13 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
-            self.lang, self.itself, self._commands_re, self._commands,
-            self._chain
+            self.lang, self.itself, self._commands_re, self._components,
+            self._botogram_object_id
         )
         return restore, args
+
+    def __eq__(self, other):
+        return self._botogram_object_id == other._botogram_object_id
 
     # All those methods do nothing, since you aren't allowed to change the
     # hooks a bot has in a frozen instance

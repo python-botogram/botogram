@@ -56,3 +56,10 @@ def test_use_components(bot, sample_update):
 
     assert hook1_called
     assert hook2_called
+
+
+def test_bot_freeze(bot):
+    # Create the frozen bot instance
+    frozen = bot.freeze()
+
+    assert bot == frozen

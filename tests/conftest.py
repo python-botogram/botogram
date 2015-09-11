@@ -55,6 +55,11 @@ def bot(request):
 
 
 @pytest.fixture()
+def frozenbot(bot):
+    return bot.freeze()
+
+
+@pytest.fixture()
 def sample_update(request):
     return botogram.objects.Update({
         "update_id": 1,
