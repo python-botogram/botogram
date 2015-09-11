@@ -21,7 +21,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, object_id):
+                 components, bot_id):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -37,7 +37,7 @@ class FrozenBot:
         self.lang = lang
         self._commands_re = commands_re
         self._components = components
-        self._botogram_object_id = object_id
+        self._bot_id = bot_id
 
         # Rebuild the hooks chain and commands list
         self._commands = components[-1]._get_commands()
@@ -72,7 +72,7 @@ class FrozenBot:
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._components,
-            self._botogram_object_id
+            self._bot_id
         )
         return restore, args
 
@@ -86,7 +86,7 @@ class FrozenBot:
         return object.__setattr__(self, name, value)
 
     def __eq__(self, other):
-        return self._botogram_object_id == other._botogram_object_id
+        return self._bot_id == other._bot_id
 
     # All those methods do nothing, since you aren't allowed to change the
     # hooks a bot has in a frozen instance

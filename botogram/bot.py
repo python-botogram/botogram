@@ -48,7 +48,7 @@ class Bot(frozenbot.FrozenBot):
         self._components = []
         self._main_component = components.Component("")
 
-        self._botogram_object_id = uuid.uuid4()
+        self._bot_id = uuid.uuid4()
 
         self.use(defaults.DefaultComponent())
 
@@ -146,7 +146,7 @@ class Bot(frozenbot.FrozenBot):
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
                                    self._components+[self._main_component],
-                                   self._botogram_object_id)
+                                   self._bot_id)
 
     @property
     def lang(self):
