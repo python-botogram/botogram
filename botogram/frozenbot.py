@@ -46,8 +46,6 @@ class FrozenBot:
         for chain in chains:
             self._chain += chain
 
-        print(chains,self._chain)
-
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
         utils.configure_logger()
