@@ -225,3 +225,12 @@ components.
       put it before the method call.
 
       :param int workers: The number of updates workers you want to use
+
+   .. py:method:: freeze()
+
+      Return a frozen instance of the bot. A frozen instance is exactly the
+      same as the normal one, but you can't change the content of it. Frozen
+      instances are used by the runner and by the
+      :py:meth:`botogram.Bot.process` method.
+
+      :return: A frozen instance of the current bot.
