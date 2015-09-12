@@ -21,7 +21,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, bot_id):
+                 components, bot_id, shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -38,6 +38,7 @@ class FrozenBot:
         self._commands_re = commands_re
         self._components = components
         self._bot_id = bot_id
+        self._shared_memory = shared_memory
 
         # Rebuild the hooks chain and commands list
         self._commands = components[-1]._get_commands()
@@ -72,7 +73,7 @@ class FrozenBot:
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._components,
-            self._bot_id
+            self._bot_id, self._shared_memory
         )
         return restore, args
 
@@ -172,11 +173,33 @@ class FrozenBot:
 
     def _call(self, func, *args, **kwargs):
         """Wrapper for calling user-provided functions"""
-        # Put the bot as first argument, if wanted
-        if hasattr(func, "botogram") and func.botogram.pass_bot:
-            args = (self,) + args
+        funcid = id(func)
+
+        # This gets the real function ID if func is a bound method
+        if hasattr(func, "__func__"):
+            funcid = id(func.__func__)
+
+        # Add extra arguments, if wanted
+        if hasattr(func, "botogram") and funcid in func.botogram.pass_args:
+            args = self._call_arguments(func, funcid, args)
 
         return func(*args, **kwargs)
+
+    def _call_arguments(self, func, funcid, args):
+        """Get the correct arguments for a self._call call"""
+        # The for is used so arguments are applied in the order the bot
+        # developer wants
+        for arg in func.botogram.pass_args[funcid]:
+            # If the developer wants the bot instance
+            if arg == "bot":
+                args = (self,) + args
+
+            # If the developer wants the component's shared memory
+            elif arg == "shared":
+                shared = self._shared_memory.of(func.botogram.component)
+                args = (shared,) + args
+
+        return args
 
 
 def restore(*args):

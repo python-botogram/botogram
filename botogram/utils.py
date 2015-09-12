@@ -13,6 +13,7 @@ import gettext
 
 import pkg_resources
 import logbook
+import functools
 
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
@@ -21,6 +22,16 @@ _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False
+
+
+def wraps(func):
+    """Update a wrapper function to looks like the wrapped one"""
+    # Custom implementation of functools.wraps
+    # Needed because copying __dict__ causes some trouble with the pass_*
+    # decorators. Except for this it's the same
+    return functools.partial(functools.update_wrapper, wrapped=func,
+                             assigned=functools.WRAPPER_ASSIGNMENTS,
+                             updated=tuple())  # DON'T COPY __dict__
 
 
 def format_docstr(docstring):
@@ -121,7 +132,7 @@ class HookDetails:
         self._func = func
         self.name = ""
         self.component = None
-        self.pass_bot = False
+        self.pass_args = {}
         self.help_message = None
 
     def _default_help_message(self):

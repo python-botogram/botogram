@@ -7,7 +7,7 @@
 """
 
 import re
-import functools
+import uuid
 
 from . import utils
 from . import decorators
@@ -27,6 +27,8 @@ class Component:
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
+
+        self._component_id = str(uuid.uuid4())
 
         if cls.component_name is None:
             self.component_name = cls.__name__
@@ -60,7 +62,7 @@ class Component:
         if ignore_case:
             string = string.lower()
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def wrapped(bot, chat, message):
             text = message.text
@@ -82,7 +84,7 @@ class Component:
         regex = r'\b('+string+r')\b'
         flags = re.IGNORECASE if ignore_case else 0
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def wrapped(bot, chat, message, matches):
             return bot._call(func, chat, message)
@@ -94,7 +96,7 @@ class Component:
         if not callable(func):
             raise ValueError("A message matches hook must be callable")
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def processor(bot, chat, message):
             if message.text is None:
@@ -149,8 +151,8 @@ class Component:
     def __generate_commands_processors(self):
         """Generate a list of commands processors"""
         def base(name, func):
-            @functools.wraps(func)
             @decorators.pass_bot
+            @utils.wraps(func)
             def __(bot, chat, message):
                 # Commands must have a message
                 if message.text is None:

@@ -6,12 +6,12 @@
     Released under the MIT license
 """
 
-import functools
+from .. import utils
 
 
 def _require_api(func):
     """Decorator which forces to have the api on an object"""
-    @functools.wraps(func)
+    @utils.wraps(func)
     def __(self, *args, **kwargs):
         if not hasattr(self, "_api") or self._api is None:
             raise RuntimeError("An API instance must be provided")

@@ -17,7 +17,26 @@ def pass_bot(func):
     if not hasattr(func, "botogram"):
         func.botogram = utils.HookDetails(func)
 
-    func.botogram.pass_bot = True
+    if id(func) not in func.botogram.pass_args:
+        func.botogram.pass_args[id(func)] = []
+
+    func.botogram.pass_args[id(func)].append("bot")
+    return func
+
+
+def pass_shared(func):
+    """An handy decorator which passes the func's component's shared memory as
+    first argument.
+
+    Please note that the shared memory is passed only if the function is called
+    by the bot itself, for example in an hook."""
+    if not hasattr(func, "botogram"):
+        func.botogram = utils.HookDetails(func)
+
+    if id(func) not in func.botogram.pass_args:
+        func.botogram.pass_args[id(func)] = []
+
+    func.botogram.pass_args[id(func)].append("shared")
     return func
 
 

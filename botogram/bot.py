@@ -19,6 +19,7 @@ from . import defaults
 from . import components
 from . import utils
 from . import frozenbot
+from . import shared
 
 
 class Bot(frozenbot.FrozenBot):
@@ -45,10 +46,13 @@ class Bot(frozenbot.FrozenBot):
         # Set the default language to english
         self.lang = "en"
 
+        # Setup shared memory
+        self._shared_memory = shared.SharedMemory()
+
         self._components = []
         self._main_component = components.Component("")
 
-        self._bot_id = uuid.uuid4()
+        self._bot_id = str(uuid.uuid4())
 
         self.use(defaults.DefaultComponent())
 
@@ -146,7 +150,7 @@ class Bot(frozenbot.FrozenBot):
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
                                    self._components+[self._main_component],
-                                   self._bot_id)
+                                   self._bot_id, self._shared_memory)
 
     @property
     def lang(self):
