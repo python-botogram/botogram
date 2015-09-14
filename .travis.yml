@@ -1,11 +1,7 @@
 language: python
 python:
 - "3.4"
-- "3.5.0b3"
-
-matrix:
-  allow_failures:
-  - python: "3.5.0b3"
+- "3.5"
 
 sudo: false
 cache: pip
