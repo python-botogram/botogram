@@ -150,6 +150,7 @@ class Bot(frozenbot.FrozenBot):
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
                                    self._components+[self._main_component],
+                                   self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 
     @property

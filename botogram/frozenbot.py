@@ -21,7 +21,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, bot_id, shared_memory):
+                 components, main_component_id, bot_id, shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -37,6 +37,7 @@ class FrozenBot:
         self.lang = lang
         self._commands_re = commands_re
         self._components = components
+        self._main_component_id = main_component_id
         self._bot_id = bot_id
         self._shared_memory = shared_memory
 
@@ -73,7 +74,7 @@ class FrozenBot:
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._components,
-            self._bot_id, self._shared_memory
+            self._main_component_id, self._bot_id, self._shared_memory
         )
         return restore, args
 
@@ -196,7 +197,12 @@ class FrozenBot:
 
             # If the developer wants the component's shared memory
             elif arg == "shared":
-                shared = self._shared_memory.of(func.botogram.component)
+                if func.botogram.component is not None:
+                    compid = func.botogram.component._component_id
+                else:
+                    compid = self._main_component_id
+
+                shared = self._shared_memory.of(compid)
                 args = (shared,) + args
 
         return args

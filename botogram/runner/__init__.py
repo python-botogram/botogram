@@ -7,12 +7,14 @@
 """
 
 import multiprocessing
+import multiprocessing.managers
 import time
 import atexit
 import signal
 import logbook
 
 from . import processes
+from . import shared
 
 
 class BotogramRunner:
@@ -28,6 +30,12 @@ class BotogramRunner:
         self.running = False
         self._stop = False
         self._started_at = None
+
+        # Create a new memory manager and apply a new driver to all the bots
+        self._shared_memory = shared.SharedMemoryManager()
+        for bot_id, bot in self._bots.items():
+            driver = self._shared_memory.get_driver(bot_id)
+            bot._shared_memory.switch_driver(driver)
 
         self._workers_count = workers
 
@@ -45,17 +53,19 @@ class BotogramRunner:
         self._started_at = time.time()
 
         self._enable_signals()
+        self._shared_memory.start()
         to_workers, to_updaters = self._boot_processes()
 
         try:
             # Main server loop
-            # This actually does nothing, sorry
             while not self._stop:
-                time.sleep(0.2)
+                self._shared_memory.process_commands()
+                time.sleep(0.1)
         except (KeyboardInterrupt, InterruptedError):
             pass
 
         self._shutdown_processes(to_workers, to_updaters)
+        self._shared_memory.stop()
 
         self.running = False
         self._started_at = None
