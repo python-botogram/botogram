@@ -83,3 +83,17 @@ class MessageMixin:
     def reply_with_photo(self, path, caption, extra):
         """Reply with a photo to the current message"""
         self.chat.send_photo(path, caption, self.message_id, extra)
+
+
+class FileMixin:
+    """Add some methods for files"""
+
+    @_require_api
+    def save(self, path):
+        """Save the file to a particular path"""
+        response = self._api.call("getFile", {"file_id": self.file_id})
+
+        # Save the file to the wanted path
+        downloaded = self._api.file_content(response["result"]["file_path"])
+        with open(path, 'wb') as f:
+            f.write(downloaded)

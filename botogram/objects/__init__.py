@@ -51,7 +51,7 @@ class GroupChat(BaseObject, mixins.ChatMixin):
     }
 
 
-class PhotoSize(BaseObject):
+class PhotoSize(BaseObject, mixins.FileMixin):
     """Telegram API representation of a photo size
 
     https://core.telegram.org/bots/api#photosize
@@ -67,7 +67,7 @@ class PhotoSize(BaseObject):
     }
 
 
-class Audio(BaseObject):
+class Audio(BaseObject, mixins.FileMixin):
     """Telegram API representation of an audio track
 
     https://core.telegram.org/bots/api#audio
@@ -85,7 +85,7 @@ class Audio(BaseObject):
     }
 
 
-class Voice(BaseObject):
+class Voice(BaseObject, mixins.FileMixin):
     """Telegram API representation of a voice message
 
     https://core.telegram.org/bots/api#voice
@@ -101,7 +101,7 @@ class Voice(BaseObject):
     }
 
 
-class Document(BaseObject):
+class Document(BaseObject, mixins.FileMixin):
     """Telegram API representation of a document
 
     https://core.telegram.org/bots/api#document
@@ -135,7 +135,7 @@ class Sticker(BaseObject):
     }
 
 
-class Video(BaseObject):
+class Video(BaseObject, mixins.FileMixin):
     """Telegram API representation of a video
 
     https://core.telegram.org/bots/api#video
