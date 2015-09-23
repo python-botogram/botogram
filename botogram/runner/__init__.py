@@ -34,7 +34,7 @@ class BotogramRunner:
         # Create a new memory manager and apply a new driver to all the bots
         self._shared_memory = shared.SharedMemoryManager()
         for bot_id, bot in self._bots.items():
-            driver = self._shared_memory.get_driver(bot_id)
+            driver = self._shared_memory.get_driver()
             bot._shared_memory.switch_driver(driver)
 
         self._workers_count = workers

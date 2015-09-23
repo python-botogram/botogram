@@ -25,9 +25,9 @@ class SharedMemoryManager:
             self._memories[memory_id] = self._manager.dict()
         return self._memories[memory_id]
 
-    def get_driver(self, bot_id):
+    def get_driver(self):
         """Get a new driver for the shared memory"""
-        return MultiprocessingDriver(bot_id, *self._get_commands_queue())
+        return MultiprocessingDriver(*self._get_commands_queue())
 
     def _get_commands_queue(self):
         """Get a new queue for commands"""
@@ -67,15 +67,14 @@ class SharedMemoryManager:
 class MultiprocessingDriver:
     """This is a multiprocessing-ready driver for the shared memory"""
 
-    def __init__(self, bot_id, commands, responses):
-        self._bot_id = bot_id
+    def __init__(self, commands, responses):
         self._commands = commands
         self._responses = responses
         self._memories = {}
 
     def __reduce__(self):
         new_commands, new_responses = self._command("new_queue")
-        return rebuild_driver, (self._bot_id, new_commands, new_responses)
+        return rebuild_driver, (new_commands, new_responses)
 
     def _command(self, *args):
         """Send a command to the manager"""
@@ -85,7 +84,7 @@ class MultiprocessingDriver:
     def get(self, component):
         # Create the shared memory if it doens't exist
         if component not in self._memories:
-            memory = self._command("memory", self._bot_id+":"+component)
+            memory = self._command("memory", component)
             self._memories[component] = memory
 
         return self._memories[component]

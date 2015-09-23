@@ -42,9 +42,9 @@ class SharedMemory:
     def __reduce__(self):
         return rebuild, (self.driver,)
 
-    def of(self, component):
+    def of(self, bot, component):
         """Get the shared memory of a specific component"""
-        return self.driver.get(component)
+        return self.driver.get(bot+":"+component)
 
     def switch_driver(self, driver=None):
         """Use another driver for this shared memory"""

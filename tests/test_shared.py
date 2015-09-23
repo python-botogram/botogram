@@ -13,9 +13,9 @@ import botogram.shared
 def test_shared_memory_creation():
     shared = botogram.shared.SharedMemory()
 
-    comp1 = shared.of("comp1")
-    comp2 = shared.of("comp2")
-    comp1b = shared.of("comp1")
+    comp1 = shared.of("bot1", "comp1")
+    comp2 = shared.of("bot1", "comp2")
+    comp1b = shared.of("bot1", "comp1")
 
     comp1["test"] = "test"
 
@@ -27,24 +27,25 @@ def test_shared_memory_creation():
 
 def test_shared_memory_pickleable():
     shared = botogram.shared.SharedMemory()
-    shared.of("comp1")["test"] = "test"
+    shared.of("bot1", "comp1")["test"] = "test"
 
     pickled = pickle.loads(pickle.dumps(shared))
 
-    assert shared.of("comp1")["test"] == pickled.of("comp1")["test"]
+    original = shared.of("bot1", "comp1")["test"]
+    assert original == pickled.of("bot1", "comp1")["test"]
 
 
 def test_switch_driver():
     shared = botogram.shared.SharedMemory()
 
     # Initialize the memory with some dummy data
-    shared.of("test1")["a"] = "b"
-    shared.of("test2")["b"] = "c"
+    shared.of("bot1", "test1")["a"] = "b"
+    shared.of("bot1", "test2")["b"] = "c"
 
     # Create a new driver
     driver = botogram.shared.LocalDriver()
     shared.switch_driver(driver)
 
     assert shared.driver == driver
-    assert shared.of("test1")["a"] == "b"
-    assert shared.of("test2")["b"] == "c"
+    assert shared.of("bot1", "test1")["a"] == "b"
+    assert shared.of("bot1", "test2")["b"] == "c"

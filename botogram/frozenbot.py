@@ -202,7 +202,7 @@ class FrozenBot:
                 else:
                     compid = self._main_component_id
 
-                shared = self._shared_memory.of(compid)
+                shared = self._shared_memory.of(self._bot_id, compid)
                 args = (shared,) + args
 
         return args
