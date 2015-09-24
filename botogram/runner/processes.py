@@ -10,6 +10,9 @@ import multiprocessing
 import os
 import traceback
 import queue
+import time
+
+import logbook
 
 from . import jobs
 from .. import objects
@@ -19,10 +22,9 @@ from .. import api
 class BaseProcess(multiprocessing.Process):
     """Base class for all of the processes"""
 
-    def __init__(self, runner, *args):
-        self.runner = runner
+    def __init__(self, *args):
         self.stop = False
-        self.logger = runner.logger
+        self.logger = logbook.Logger("botogram subprocess")
 
         super(BaseProcess, self).__init__()
         self.setup(*args)
@@ -33,6 +35,8 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
+        self.before_start()
+
         self.logger.debug("%s process is ready! (pid: %s)" % (self.name,
                           os.getpid()))
         while not self.stop:
@@ -43,6 +47,8 @@ class BaseProcess(multiprocessing.Process):
             except:
                 traceback.print_exc()
 
+        self.after_stop()
+
         self.logger.debug("%s process with pid %s just stopped" % (self.name,
                           os.getpid()))
 
@@ -50,9 +56,40 @@ class BaseProcess(multiprocessing.Process):
         """One single loop"""
         pass
 
+    def before_start(self):
+        """Before the process starts"""
+        pass
+
+    def after_stop(self):
+        """After the process stops"""
+        pass
+
     def on_stop(self):
         """When the process is stopping"""
         self.stop = True
+
+
+class SharedMemoryProcess(BaseProcess):
+    """This process will manage commands for shared memory's drivers"""
+
+    name = "Shared"
+
+    def setup(self, manager):
+        self.manager = manager
+
+    def loop(self):
+        result = self.manager.process_commands()
+
+        # result == False means the process should stop
+        if result is False:
+            self.stop = True
+
+    def before_start(self):
+        self.manager.initialize()
+        self.manager.start()
+
+    def after_stop(self):
+        self.manager.stop()
 
 
 class WorkerProcess(BaseProcess):
@@ -60,7 +97,8 @@ class WorkerProcess(BaseProcess):
 
     name = "Worker"
 
-    def setup(self, queue):
+    def setup(self, bots, queue):
+        self.bots = bots
         self.queue = queue
         self.will_stop = False
 
@@ -80,7 +118,7 @@ class WorkerProcess(BaseProcess):
             return
 
         # Run the wanted job
-        job.process(self.runner._bots)
+        job.process(self.bots)
 
     def on_stop(self):
         self.will_stop = True
@@ -91,11 +129,13 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bot_id, to_workers, commands):
-        self.bot_id = bot_id
-        self.bot = self.runner._bots[bot_id]
+    def setup(self, bot, to_workers, commands):
+        self.bot = bot
+        self.bot_id = bot._bot_id
         self.to_workers = to_workers
         self.commands = commands
+
+        self.started_at = time.time()
 
         self.backlog_processed = False
         self.last_id = -1
@@ -131,7 +171,7 @@ class UpdaterProcess(BaseProcess):
             self.last_id = update.update_id
 
             if not self.backlog_processed:
-                if update.message.date < self.runner._started_at:
+                if update.message.date < self.started_at:
                     self.logger.debug("Update #%s skipped because it's coming "
                                       "from the backlog." % update.update_id)
                     continue

@@ -26,16 +26,22 @@ class BotogramRunner:
 
         self._updater_processes = {}
         self._worker_processes = []
+        self._shared_memory_process = None
 
         self.running = False
         self._stop = False
         self._started_at = None
 
-        # Create a new memory manager and apply a new driver to all the bots
+        # The manager created here will raise an exception if you try to get
+        # memories in the master process. It will run fine however in its own
+        # process.
         self._shared_memory = shared.SharedMemoryManager()
-        for bot_id, bot in self._bots.items():
-            driver = self._shared_memory.get_driver()
-            bot._shared_memory.switch_driver(driver)
+        for bot in self._bots.values():
+            bot._shared_memory.switch_driver(self._shared_memory.get_driver())
+
+        shared_memory_queues = self._shared_memory.get_commands_queue()
+        self._shared_memory_commands = shared_memory_queues[0]
+        self._shared_memory_responses = shared_memory_queues[1]
 
         self._workers_count = workers
 
@@ -53,19 +59,16 @@ class BotogramRunner:
         self._started_at = time.time()
 
         self._enable_signals()
-        self._shared_memory.start()
         to_workers, to_updaters = self._boot_processes()
 
         try:
             # Main server loop
             while not self._stop:
-                self._shared_memory.process_commands()
-                time.sleep(0.1)
+                time.sleep(0.2)
         except (KeyboardInterrupt, InterruptedError):
             pass
 
         self._shutdown_processes(to_workers, to_updaters)
-        self._shared_memory.stop()
 
         self.running = False
         self._started_at = None
@@ -79,16 +82,21 @@ class BotogramRunner:
         queue = multiprocessing.Queue()
         upd_commands = multiprocessing.Queue()
 
+        # Boot up the shared memory process
+        shared_memory = processes.SharedMemoryProcess(self._shared_memory)
+        shared_memory.start()
+        self._shared_memory_process = shared_memory
+
         # Boot up all the worker processes
         for i in range(self._workers_count):
-            worker = processes.WorkerProcess(self, queue)
+            worker = processes.WorkerProcess(self._bots, queue)
             worker.start()
 
             self._worker_processes.append(worker)
 
         # Boot up all the updater processes
-        for id, bot in self._bots.items():
-            updater = processes.UpdaterProcess(self, id, queue, upd_commands)
+        for bot in self._bots.values():
+            updater = processes.UpdaterProcess(bot, queue, upd_commands)
             updater.start()
 
             self._updater_processes[id] = updater
@@ -113,6 +121,10 @@ class BotogramRunner:
         for worker in self._worker_processes:
             worker.join()
         self._worker_processes = []
+
+        # And finally we stop the shared memory's manager
+        self._shared_memory_commands.put("stop")
+        self._shared_memory_process.join()
 
     def _enable_signals(self):
         """Setup signals handlers"""

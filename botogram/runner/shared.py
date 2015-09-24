@@ -17,19 +17,31 @@ class SharedMemoryManager:
     def __init__(self):
         self._memories = {}
         self._queues = []
+        self._manager = None
+
+    def __reduce__(self):
+        return rebuild_manager, (self._memories, self._queues)
+
+    def initialize(self):
+        """Initialize the manager"""
+        # This is on a different function, so we can initialize this in the
+        # process we want
         self._manager = multiprocessing.managers.SyncManager()
 
     def get(self, memory_id):
         """Get the shared memory of a given bot:component"""
+        if self._manager is None:
+            raise RuntimeError("Please call initialize() before")
+
         if memory_id not in self._memories:
             self._memories[memory_id] = self._manager.dict()
         return self._memories[memory_id]
 
     def get_driver(self):
         """Get a new driver for the shared memory"""
-        return MultiprocessingDriver(*self._get_commands_queue())
+        return MultiprocessingDriver(*self.get_commands_queue())
 
-    def _get_commands_queue(self):
+    def get_commands_queue(self):
         """Get a new queue for commands"""
         commands = multiprocessing.Queue()
         responses = multiprocessing.Queue()
@@ -52,15 +64,26 @@ class SharedMemoryManager:
 
             # new_queue
             elif message.startswith("new_queue"):
-                new_q = self._get_commands_queue()
+                new_q = self.get_commands_queue()
                 responses.put(new_q)
+
+            # Tell the process to stop
+            elif message.startswith("stop"):
+                return False
+
 
     def start(self):
         """Start the background process"""
+        if self._manager is None:
+            raise RuntimeError("Please call initialize() before")
+
         self._manager.start()
 
     def stop(self):
         """Stop the background process"""
+        if self._manager is None:
+            raise RuntimeError("Please call initialize() before")
+
         self._manager.shutdown()
 
 
@@ -103,5 +126,13 @@ class MultiprocessingDriver:
         return result
 
 
-def rebuild_driver(bot_id, commands, responses):
-    return MultiprocessingDriver(bot_id, commands, responses)
+def rebuild_manager(memories, queues):
+    obj = SharedMemoryManager()
+    obj._memories = memories
+    obj._queues = queues
+
+    return obj
+
+
+def rebuild_driver(commands, responses):
+    return MultiprocessingDriver(commands, responses)
