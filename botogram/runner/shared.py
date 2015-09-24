@@ -71,7 +71,6 @@ class SharedMemoryManager:
             elif message.startswith("stop"):
                 return False
 
-
     def start(self):
         """Start the background process"""
         if self._manager is None:
