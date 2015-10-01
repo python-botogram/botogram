@@ -73,6 +73,26 @@ class BaseProcess(multiprocessing.Process):
         self.stop = True
 
 
+class IPCProcess(BaseProcess):
+    """This process will handle IPC requests"""
+
+    name = "IPC"
+
+    def setup(self, ipc):
+        self.ipc = ipc
+
+    def loop(self):
+        self.ipc.run()
+
+        # This will stop running the loop
+        super(IPCProcess, self).on_stop()
+
+    def on_stop(self):
+        super(IPCProcess, self).on_stop()
+
+        self.ipc.stop = True
+
+
 class SharedMemoryProcess(BaseProcess):
     """This process will manage commands for shared memory's drivers"""
 

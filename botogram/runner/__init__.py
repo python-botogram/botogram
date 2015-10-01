@@ -15,6 +15,7 @@ import logbook
 
 from . import processes
 from . import shared
+from . import ipc
 
 
 class BotogramRunner:
@@ -27,10 +28,18 @@ class BotogramRunner:
         self._updater_processes = {}
         self._worker_processes = []
         self._shared_memory_process = None
+        self._ipc_process = None
+        self.ipc = None
 
         self.running = False
         self._stop = False
         self._started_at = None
+
+        # Start the IPC server
+        self._ipc_server = ipc.IPCServer()
+        self.ipc_port = self._ipc_server.port
+        self.ipc_auth_key = self._ipc_server.auth_key
+        self._ipc_stop_key = self._ipc_server.stop_key
 
         # The manager created here will raise an exception if you try to get
         # memories in the master process. It will run fine however in its own
@@ -54,6 +63,8 @@ class BotogramRunner:
 
         self.logger.info("The botogram runner is booting up.")
         self.logger.info("Press Ctrl+C to exit.")
+        self.logger.debug("IPC address: 127.0.0.1:%s" % self.ipc_port)
+        self.logger.debug("IPC auth key: %s" % self.ipc_auth_key)
 
         self.running = True
         self._started_at = time.time()
@@ -81,6 +92,20 @@ class BotogramRunner:
         """Start all the used processes"""
         queue = multiprocessing.Queue()
         upd_commands = multiprocessing.Queue()
+
+        # Boot up the IPC process
+        ipc_process = processes.IPCProcess(self._ipc_server)
+        ipc_process.start()
+        self._ipc_process = ipc_process
+
+        # And boot the client
+        # This will wait until the IPC server is started
+        while True:
+            try:
+                self.ipc = ipc.IPCClient(self.ipc_port, self.ipc_auth_key)
+                break
+            except ConnectionRefusedError:
+                time.sleep(0.1)
 
         # Boot up the shared memory process
         shared_memory = processes.SharedMemoryProcess(self._shared_memory)
@@ -125,6 +150,11 @@ class BotogramRunner:
         # And finally we stop the shared memory's manager
         self._shared_memory_commands.put("stop")
         self._shared_memory_process.join()
+
+        # And finally we stop the IPC process
+        self.ipc.command("__stop__", self._ipc_stop_key)
+        self._ipc_process.join()
+        self.ipc = None
 
     def _enable_signals(self):
         """Setup signals handlers"""
