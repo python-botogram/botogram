@@ -11,6 +11,7 @@ import os
 import traceback
 import queue
 import time
+import signal
 
 import logbook
 
@@ -35,6 +36,9 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
+        for one in signal.SIGINT, signal.SIGTERM:
+            signal.signal(one, _ignore_signal)
+
         self.before_start()
 
         self.logger.debug("%s process is ready! (pid: %s)" % (self.name,
@@ -187,3 +191,7 @@ class UpdaterProcess(BaseProcess):
                 "update": update,
             })
             self.to_workers.put(job)
+
+
+def _ignore_signal(*__):
+    pass
