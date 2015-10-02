@@ -111,3 +111,9 @@ class BotogramRunner:
         # Register stop to all the signals
         for one in signal.SIGINT, signal.SIGTERM:
             signal.signal(one, self.stop)
+
+
+def run(*bots, **options):
+    """Run multiple bots at once"""
+    runner = BotogramRunner(*bots, **options)
+    runner.run()

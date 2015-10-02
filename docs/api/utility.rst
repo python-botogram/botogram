@@ -11,6 +11,28 @@ botogram ships with some functions and decorators aimed to simplify the bots
 development. Feel free to use them when you need them.
 
 
+.. py:function:: botogram.run(*bots[, workers=2])
+
+   This function allows you to run multiple bots in the same runner. You just
+   need to provide all the bots you want to run, and the options you would
+   normally provide to the bot's run method.
+
+   Remember this function is blocking, so it prevents the execution of the code
+   after the call until the runner is closed. Use a thread or a process if you
+   want to execute things other than just running the runner.
+
+   .. code-block:: python
+
+      import botogram
+      from file1 import bot as bot1
+      from file2 import bot as bot2
+
+      if __name__ == "__main__":
+          botogram.run(bot1, bot2)
+
+   :param botogram.Bot \*bots: The bots you want to run.
+   :param int workers: The number of workers you want to use.
+
 .. py:function:: botogram.usernames_in(message)
 
    Returns a list of usernames contained in the message you provide. The
