@@ -235,7 +235,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: send(chat, message[, preview=True, reply_to=None, extra=None)
+   .. py:method:: send(chat, message[, preview=True, reply_to=None, extra=None])
 
       This method sends a message to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -257,7 +257,7 @@ components.
       :param int reply_to: The ID of the message this one is replying to.
       :param object extra: An extra object you want to attach (see above).
 
-   .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None)
+   .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None])
 
       This method sends a photo to a specific chat. The chat must be identified
       by its ID, and Telegram applies some restrictions on the chats allowed to
