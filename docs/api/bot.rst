@@ -234,3 +234,46 @@ components.
       :py:meth:`botogram.Bot.process` method.
 
       :return: A frozen instance of the current bot.
+
+   .. py:method:: send(chat, message[, preview=True, reply_to=None, extra=None)
+
+      This method sends a message to a specific chat. The chat must be
+      identified by its ID, and Telegram applies some restrictions on the chats
+      allowed to receive your message: only users who sent you a message in the
+      past are allowed, and also the group chats your bot is currently in.
+
+      You must provide a message, and you can define if a preview for links
+      should be showed (yes by default), the message ID of the message this one
+      is replying to, and an extra object. One of these objects can be provided
+      as the extra one:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param int chat: The ID of the chat which should receive the message.
+      :param str messgae: The message you want to send.
+      :param bool preview: If you want to show the link preview.
+      :param int reply_to: The ID of the message this one is replying to.
+      :param object extra: An extra object you want to attach (see above).
+
+   .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None)
+
+      This method sends a photo to a specific chat. The chat must be identified
+      by its ID, and Telegram applies some restrictions on the chats allowed to
+      receive your photo: only users who sent you a message in the past are
+      allowed, and also the group chats your bot is currently in.
+
+      You must provide the path to the photo, and you can specify a photo
+      caption, the message ID of the message this one is replying to, and an
+      extra object. One of these objects can be provided as the extra one:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param int chat: The ID of the chat which should receive the photo.
+      :param str path: The path to the photo you want to send.
+      :param str caption: An optional caption for the photo.
+      :param int reply_to: The ID of the message this one is replying to.
+      :param object extra: An extra object you want to attach (see above).
