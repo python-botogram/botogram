@@ -235,7 +235,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: send(chat, message[, preview=True, reply_to=None, extra=None])
+   .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None])
 
       This method sends a message to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -251,10 +251,17 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The syntax parameter contains how the message should be processed by
+      Telegram, and it can be either ``plain`` (no syntax) or ``markdown``. If
+      you don't provide it, botogram will try to guess which syntax to use by
+      parsing the message you want to send. This feature is not supported by
+      all the Telegram clients.
+
       :param int chat: The ID of the chat which should receive the message.
       :param str messgae: The message you want to send.
       :param bool preview: If you want to show the link preview.
       :param int reply_to: The ID of the message this one is replying to.
+      :param string syntax: The name of the syntax you used for the message.
       :param object extra: An extra object you want to attach (see above).
 
    .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None])

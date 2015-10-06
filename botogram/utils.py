@@ -18,6 +18,8 @@ _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
 _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
 
+_markdown_re = re.compile(r"(\*(.*)\*|_(.*)_|\[(.*)\]\((.*)\)|`(.*)`|"
+                          r"```(.*)```)")
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False
@@ -80,6 +82,11 @@ def usernames_in(message):
             results.append(result.group(1))
 
     return results
+
+
+def is_markdown(string):
+    """Check if a string is actually markdown"""
+    return bool(_markdown_re.match(string))
 
 
 def get_language(lang):

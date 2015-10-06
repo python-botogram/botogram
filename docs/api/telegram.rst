@@ -36,7 +36,7 @@ Here you can see all the available classes and objects.
 
       *This attribute can be None if it's not provided by Telegram.*
 
-   .. py:method:: send(message, [preview=True, reply_to=None, extra=None])
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
       Send a message to the user. You can also define if a preview for links
       should be showed (yes by default), the message ID of the message this one
@@ -47,9 +47,16 @@ Here you can see all the available classes and objects.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The syntax parameter contains how the message should be processed by
+      Telegram, and it can be either ``plain`` (no syntax) or ``markdown``. If
+      you don't provide it, botogram will try to guess which syntax to use by
+      parsing the message you want to send. This feature is not supported by
+      all the Telegram clients.
+
       :param str message: The message you want to send
       :param bool preview: Show the link preview
       :param int reply_to: The ID of the message this one is replying to
+      :param string syntax: The name of the syntax you used for the message.
       :param object extra: An extra object you want to attach (see above)
 
 .. py:class:: botogram.GroupChat
@@ -64,7 +71,7 @@ Here you can see all the available classes and objects.
 
       The title of the group chat
 
-   .. py:method:: send(message, [preview=True, reply_to=None, extra=None])
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
       Send a message to the group chat. You can also define if a preview for
       links should be showed (yes by default), the message ID of the message
@@ -75,7 +82,14 @@ Here you can see all the available classes and objects.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The syntax parameter contains how the message should be processed by
+      Telegram, and it can be either ``plain`` (no syntax) or ``markdown``. If
+      you don't provide it, botogram will try to guess which syntax to use by
+      parsing the message you want to send. This feature is not supported by
+      all the Telegram clients.
+
       :param str message: The message you want to send
       :param bool preview: Show the link preview
       :param int reply_to: The ID of the message this one is replying to
+      :param string syntax: The name of the syntax you used for the message.
       :param object extra: An extra object you want to attach (see above)

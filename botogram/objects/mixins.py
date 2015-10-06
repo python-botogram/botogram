@@ -8,6 +8,8 @@
 
 import functools
 
+from .. import utils
+
 
 def _require_api(func):
     """Decorator which forces to have the api on an object"""
@@ -23,11 +25,18 @@ class ChatMixin:
     """Add some methods for chats"""
 
     @_require_api
-    def send(self, message, preview=True, reply_to=None, extra=None):
+    def send(self, message, preview=True, reply_to=None, syntax=None,
+             extra=None):
         """Send a message"""
         # Convert instance of Message to ids in reply_to
         if hasattr(reply_to, "message_id"):
             reply_to = reply_to.message_id
+
+        # Use the correct syntax
+        if syntax is None:
+            syntax = "markdown" if utils.is_markdown(message) else "plain"
+        elif syntax not in ("plain", "markdown"):
+            raise ValueError("Invalid syntax type: %s")
 
         # Build API call arguments
         args = {"chat_id": self.id, "text": message,
@@ -36,6 +45,8 @@ class ChatMixin:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
             args["reply_markup"] = extra.serialize()
+        if syntax == "markdown":
+            args["parse_mode"] = "Markdown"
 
         self._api.call("sendMessage", args)
 
@@ -76,9 +87,9 @@ class MessageMixin:
         })
 
     @_require_api
-    def reply(self, message, preview=True, extra=None):
+    def reply(self, message, preview=True, syntax=None, extra=None):
         """Reply to the current message"""
-        self.chat.send(message, preview, self.message_id, extra)
+        self.chat.send(message, preview, self.message_id, syntax, extra)
 
     def reply_with_photo(self, path, caption, extra):
         """Reply with a photo to the current message"""
