@@ -16,6 +16,7 @@ import signal
 import logbook
 
 from . import jobs
+from . import ipc
 from .. import objects
 from .. import api
 
@@ -23,9 +24,13 @@ from .. import api
 class BaseProcess(multiprocessing.Process):
     """Base class for all of the processes"""
 
-    def __init__(self, *args):
+    def __init__(self, ipc_info, *args):
         self.stop = False
         self.logger = logbook.Logger("botogram subprocess")
+
+        self.ipc = None
+        if ipc_info is not None:
+            self.ipc = ipc.IPCClient(*ipc_info)
 
         super(BaseProcess, self).__init__()
         self.setup(*args)
@@ -53,6 +58,10 @@ class BaseProcess(multiprocessing.Process):
 
         self.after_stop()
 
+        # Be sure to close the IPC connection
+        if self.ipc:
+            self.ipc.close()
+
         self.logger.debug("%s process with pid %s just stopped" % (self.name,
                           os.getpid()))
 
@@ -79,10 +88,10 @@ class IPCProcess(BaseProcess):
     name = "IPC"
 
     def setup(self, ipc):
-        self.ipc = ipc
+        self.ipc_server = ipc
 
     def loop(self):
-        self.ipc.run()
+        self.ipc_server.run()
 
         # This will stop running the loop
         super(IPCProcess, self).on_stop()
@@ -90,7 +99,7 @@ class IPCProcess(BaseProcess):
     def on_stop(self):
         super(IPCProcess, self).on_stop()
 
-        self.ipc.stop = True
+        self.ipc_server.stop = True
 
 
 class SharedMemoryProcess(BaseProcess):

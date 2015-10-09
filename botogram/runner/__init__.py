@@ -94,34 +94,37 @@ class BotogramRunner:
         upd_commands = multiprocessing.Queue()
 
         # Boot up the IPC process
-        ipc_process = processes.IPCProcess(self._ipc_server)
+        ipc_process = processes.IPCProcess(None, self._ipc_server)
         ipc_process.start()
         self._ipc_process = ipc_process
 
         # And boot the client
         # This will wait until the IPC server is started
+        ipc_info = (self.ipc_port, self.ipc_auth_key)
         while True:
             try:
-                self.ipc = ipc.IPCClient(self.ipc_port, self.ipc_auth_key)
+                self.ipc = ipc.IPCClient(*ipc_info)
                 break
             except ConnectionRefusedError:
                 time.sleep(0.1)
 
         # Boot up the shared memory process
-        shared_memory = processes.SharedMemoryProcess(self._shared_memory)
+        shared_memory = processes.SharedMemoryProcess(ipc_info,
+                                                      self._shared_memory)
         shared_memory.start()
         self._shared_memory_process = shared_memory
 
         # Boot up all the worker processes
         for i in range(self._workers_count):
-            worker = processes.WorkerProcess(self._bots, queue)
+            worker = processes.WorkerProcess(ipc_info, self._bots, queue)
             worker.start()
 
             self._worker_processes.append(worker)
 
         # Boot up all the updater processes
         for bot in self._bots.values():
-            updater = processes.UpdaterProcess(bot, queue, upd_commands)
+            updater = processes.UpdaterProcess(ipc_info, bot, queue,
+                                               upd_commands)
             updater.start()
 
             self._updater_processes[id] = updater

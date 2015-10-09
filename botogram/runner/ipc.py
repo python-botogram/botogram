@@ -89,11 +89,11 @@ class IPCServer:
             # sending to the process the interruption signal
             # In this case, we'll just call the system call again
             try:
-                acceptable, *_ = select.select(read_from, [], [], 0)
+                readable, *_ = select.select(read_from, [], [])
             except InterruptedError:
                 continue
 
-            for conn in acceptable:
+            for conn in readable:
                 # If the connection we can read is the server one, accept the
                 # new connection and add it to the read_from list
                 if conn is self.conn:
@@ -204,6 +204,11 @@ class IPCClient:
 
         raise IPCError(response["data"])
 
+    def close(self):
+        """Close the connection to the IPC server"""
+        self.conn.shutdown(socket.SHUT_RDWR)
+        self.conn.close()
+
 
 def _read_from_socket(conn, length):
     """Read a chunk of data from a connection"""
@@ -216,7 +221,7 @@ def _read_from_socket(conn, length):
             chunk = READ_MAX_CHUNK
 
         resp = conn.recv(4)
-        if resp == 0:
+        if len(resp) == 0:
             raise EOFError("Broken socket!")
 
         chunks.append(resp)
