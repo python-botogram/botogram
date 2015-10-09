@@ -67,6 +67,7 @@ def sample_update(request):
             "message_id": 2,
             "chat": {
                 "id": -1,
+                "type": "group",
                 "title": "test",
             },
             "from": {

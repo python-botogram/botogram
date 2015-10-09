@@ -15,14 +15,6 @@ class EmptyObject(BaseObject):
     pass
 
 
-class GenericChat(BaseObject, mixins.ChatMixin):
-    """Internal representation of a generic chat"""
-
-    required = {
-        "id": int,
-    }
-
-
 class User(BaseObject, mixins.ChatMixin):
     """Telegram API representation of an user
 
@@ -39,15 +31,21 @@ class User(BaseObject, mixins.ChatMixin):
     }
 
 
-class GroupChat(BaseObject, mixins.ChatMixin):
-    """Telegram API representation of a group chat
+class Chat(BaseObject, mixins.ChatMixin):
+    """Telegram API representation of a chat
 
-    https://core.telegram.org/bots/api#groupchat
+    https://core.telegram.org/bots/api#chat
     """
 
     required = {
         "id": int,
+        "type": str,
+    }
+    optional = {
         "title": str,
+        "username": str,
+        "first_name": str,
+        "last_name": str,
     }
 
 
@@ -204,7 +202,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "message_id": int,
         "from": User,
         "date": int,
-        "chat": one_of(User, GroupChat),
+        "chat": Chat,
     }
     optional = {
         "forward_from": User,

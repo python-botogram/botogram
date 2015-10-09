@@ -121,12 +121,12 @@ class FrozenBot:
     def send(self, chat, message, preview=True, reply_to=None, syntax=None,
              extra=None):
         """Send a message in a chat"""
-        obj = objects.GenericChat({"id": chat}, self.api)
+        obj = objects.Chat({"id": chat, type: ""}, self.api)
         obj.send(message, preview, reply_to, syntax, extra)
 
     def send_photo(self, chat, path, caption="", reply_to=None, extra=None):
         """Send a photo in a chat"""
-        obj = objects.GenericChat({"id": chat}, self.api)
+        obj = objects.GenericChat({"id": chat, type: ""}, self.api)
         obj.send_photo(path, caption, reply_to, extra)
 
     # Let's process the messages
