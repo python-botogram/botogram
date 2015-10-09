@@ -102,6 +102,7 @@ class SharedMemoryProcess(BaseProcess):
         self.manager = manager
 
     def loop(self):
+        time.sleep(0.1)
         result = self.manager.process_commands()
 
         # result == False means the process should stop
