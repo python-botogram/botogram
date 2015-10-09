@@ -49,7 +49,7 @@ class Chat(BaseObject, mixins.ChatMixin):
     }
 
 
-class PhotoSize(BaseObject):
+class PhotoSize(BaseObject, mixins.FileMixin):
     """Telegram API representation of a photo size
 
     https://core.telegram.org/bots/api#photosize
@@ -65,7 +65,58 @@ class PhotoSize(BaseObject):
     }
 
 
-class Audio(BaseObject):
+class Photo(mixins.FileMixin):
+    """Custom representation of a photo
+
+    The current API provided by Telegram for photos sucks, so this tries to
+    provide a better one.
+    """
+
+    def __init__(self, data, api=None):
+        self._api = api
+        # Accept only lists of PhotoSize
+        if not isinstance(data, list):
+            raise ValueError("You must provide a list of PhotoSize")
+
+        # A photo without sizes is nothing
+        if len(data) == 0:
+            raise ValueError("No sizes passed...")
+
+        # Put all the sizes in an array
+        self.sizes = []
+        for size in data:
+            self.sizes.append(PhotoSize(size, api))
+
+        # Calculate the smaller and the biggest sizes
+        with_size = {}
+        for size in self.sizes:
+            with_size[size.height*size.width] = size
+        self.smallest = with_size[min(with_size.keys())]
+        self.biggest = with_size[max(with_size.keys())]
+
+        # Publish all the attributes of the biggest-size photo
+        attrs = list(PhotoSize.required.keys())+list(PhotoSize.optional.keys())
+        for attr in attrs:
+            setattr(self, attr, getattr(self.biggest, attr))
+
+    def set_api(self, api):
+        """Change the API instance"""
+        self._api = api
+
+        # Set the API on all the photo sizes
+        for size in self.sizes:
+            size.set_api(api)
+
+    def serialize(self):
+        """Serialize this object"""
+        result = []
+        for size in self.sizes:
+            result.append(size.serialize())
+
+        return result
+
+
+class Audio(BaseObject, mixins.FileMixin):
     """Telegram API representation of an audio track
 
     https://core.telegram.org/bots/api#audio
@@ -83,7 +134,7 @@ class Audio(BaseObject):
     }
 
 
-class Voice(BaseObject):
+class Voice(BaseObject, mixins.FileMixin):
     """Telegram API representation of a voice message
 
     https://core.telegram.org/bots/api#voice
@@ -99,7 +150,7 @@ class Voice(BaseObject):
     }
 
 
-class Document(BaseObject):
+class Document(BaseObject, mixins.FileMixin):
     """Telegram API representation of a document
 
     https://core.telegram.org/bots/api#document
@@ -133,7 +184,7 @@ class Sticker(BaseObject):
     }
 
 
-class Video(BaseObject):
+class Video(BaseObject, mixins.FileMixin):
     """Telegram API representation of a video
 
     https://core.telegram.org/bots/api#video
@@ -212,7 +263,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "audio": Audio,
         "voice": Voice,
         "document": Document,
-        "photo": multiple(PhotoSize),
+        "photo": Photo,
         "sticker": Sticker,
         "video": Video,
         "caption": str,
@@ -221,7 +272,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "new_chat_participant": User,
         "left_chat_participant": User,
         "new_chat_title": str,
-        "new_chat_photo": multiple(PhotoSize),
+        "new_chat_photo": Photo,
         "delete_chat_photo": bool,
         "group_chat_crated": bool,
     }
