@@ -79,3 +79,93 @@ Here you can see all the available classes and objects.
       :param bool preview: Show the link preview
       :param int reply_to: The ID of the message this one is replying to
       :param object extra: An extra object you want to attach (see above)
+
+.. py:class:: botogram.Photo
+
+   This class provides a representation of a photo sent to your bot by someone.
+
+   Photos are usually available in different resolutions, and this class
+   provides you the file with the biggest resolution available. You can also
+   get the :py:class:`botogram.PhotoSize` of every resolution available, and
+   the :py:class:`botogram.PhotoSize` of the files with the greatest and
+   lowest resolutions.
+
+   .. py:attribute:: file_id
+
+      The ID of the file with the greatest resolution available. You can use
+      this to uniquely reference a photo.
+
+   .. py:attribute:: width
+
+      The width of the photo, in the file with the greates resolution
+      available.
+
+   .. py:attribute:: height
+
+      The height of the photo, in the file with the greatest resolution
+      available.
+
+   .. py:attribute:: file_size
+
+      The size of the file with the greatest resolution available.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: biggest
+
+      This attribute contains a reference to the :py:class:`botogram.PhotoSize`
+      of the file with the greatest resolution available. You can use this if
+      you specifically wants the greatest resolution.
+
+   .. py:attribute:: smallest
+
+      This attribute contains a reference to the :py:class:`botogram.PhotoSize`
+      of the file with the lowest resolution available. You can use this if
+      you specifically wants the lowest resolution.
+
+   .. py:attribute:: sizes
+
+      This attribute contains a list of the :py:class:`botogram.PhotoSize` of
+      all the different resolutions available.
+
+   .. py:method:: save(path)
+
+      Save the photo to the provided path. The file with the greatest
+      resolution will be downloaded there. Please note that Telegram doesn't
+      provide the name of the original file the user sent, so you should
+      generate it by yourself.
+
+      :param str path: Where you want to save the file
+
+.. py:class:: botogram.PhotoSize
+
+   This class represents a single resolution of a photo received by your bot.
+   This means for each photo your bot will receive, you'll get multiple
+   instances of this object, one of each resolution available.
+
+   .. py:attribute:: file_id
+
+      The ID of the file. You can use this to uniquely reference a resolution
+      of a photo.
+
+   .. py:attribute:: width
+
+      The width of the file.
+
+   .. py:attribute:: height
+
+      The height of the file.
+
+   .. py:attribute:: file_size
+
+      The size of the file.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:method:: save(path)
+
+      Save the file to the provided path. The file will be downloaded there.
+      Please note that Telegram doesn't provide the name of the original file
+      the user sent, so you should generate it by yourself.
+
+      :param str path: Where you want to save the file
