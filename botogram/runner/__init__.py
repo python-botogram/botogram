@@ -27,7 +27,6 @@ class BotogramRunner:
 
         self._updater_processes = {}
         self._worker_processes = []
-        self._shared_memory_process = None
         self._ipc_process = None
         self.ipc = None
 
@@ -41,16 +40,9 @@ class BotogramRunner:
         self.ipc_auth_key = self._ipc_server.auth_key
         self._ipc_stop_key = self._ipc_server.stop_key
 
-        # The manager created here will raise an exception if you try to get
-        # memories in the master process. It will run fine however in its own
-        # process.
-        self._shared_memory = shared.SharedMemoryManager()
+        # Use the MultiprocessingDriver for all the shared memories
         for bot in self._bots.values():
-            bot._shared_memory.switch_driver(self._shared_memory.get_driver())
-
-        shared_memory_queues = self._shared_memory.get_commands_queue()
-        self._shared_memory_commands = shared_memory_queues[0]
-        self._shared_memory_responses = shared_memory_queues[1]
+            bot._shared_memory.switch_driver(shared.MultiprocessingDriver())
 
         self._workers_count = workers
 
@@ -107,12 +99,6 @@ class BotogramRunner:
             except ConnectionRefusedError:
                 time.sleep(0.1)
 
-        # Boot up the shared memory process
-        shared_memory = processes.SharedMemoryProcess(ipc_info,
-                                                      self._shared_memory)
-        shared_memory.start()
-        self._shared_memory_process = shared_memory
-
         # Boot up all the worker processes
         for i in range(self._workers_count):
             worker = processes.WorkerProcess(ipc_info, self._bots)
@@ -146,10 +132,6 @@ class BotogramRunner:
         for worker in self._worker_processes:
             worker.join()
         self._worker_processes = []
-
-        # And finally we stop the shared memory's manager
-        self._shared_memory_commands.put("stop")
-        self._shared_memory_process.join()
 
         # And finally we stop the IPC process
         self.ipc.command("__stop__", self._ipc_stop_key)

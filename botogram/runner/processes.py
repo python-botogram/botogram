@@ -16,6 +16,7 @@ import signal
 import logbook
 
 from . import jobs
+from . import shared
 from . import ipc
 from .. import objects
 from .. import api
@@ -96,7 +97,15 @@ class IPCProcess(BaseProcess):
         ipc.register_command("jobs.get", self.jobs_commands.get)
         ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
 
+        # Setup the shared commands
+        self.shared_commands = shared.SharedMemoryCommands()
+        ipc.register_command("shared.get", self.shared_commands.get)
+        ipc.register_command("shared.list", self.shared_commands.list)
+
     def loop(self):
+        # Start the shared memory manager
+        self.shared_commands.start()
+
         self.ipc_server.run()
 
         # This will stop running the loop
@@ -106,30 +115,6 @@ class IPCProcess(BaseProcess):
         super(IPCProcess, self).on_stop()
 
         self.ipc_server.stop = True
-
-
-class SharedMemoryProcess(BaseProcess):
-    """This process will manage commands for shared memory's drivers"""
-
-    name = "Shared"
-
-    def setup(self, manager):
-        self.manager = manager
-
-    def loop(self):
-        time.sleep(0.1)
-        result = self.manager.process_commands()
-
-        # result == False means the process should stop
-        if result is False:
-            self.stop = True
-
-    def before_start(self):
-        self.manager.initialize()
-        self.manager.start()
-
-    def after_stop(self):
-        self.manager.stop()
 
 
 class WorkerProcess(BaseProcess):
