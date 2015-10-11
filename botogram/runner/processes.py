@@ -102,10 +102,11 @@ class IPCProcess(BaseProcess):
         ipc.register_command("shared.get", self.shared_commands.get)
         ipc.register_command("shared.list", self.shared_commands.list)
 
-    def loop(self):
+    def before_start(self):
         # Start the shared memory manager
         self.shared_commands.start()
 
+    def loop(self):
         self.ipc_server.run()
 
         # This will stop running the loop

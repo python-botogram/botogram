@@ -108,7 +108,10 @@ class IPCServer:
                     # If the socket is broken, remove the connection
                     except EOFError:
                         read_from.remove(conn)
-                        conn.shutdown(socket.SHUT_RDWR)
+                        try:
+                            conn.shutdown(socket.SHUT_RDWR)
+                        except OSError:
+                            pass
                         conn.close()
                         continue
 
@@ -159,7 +162,10 @@ class IPCServer:
 
         # Gracefully close all the connections
         for conn in read_from:
-            conn.shutdown(socket.SHUT_RDWR)
+            try:
+                conn.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
             conn.close()
 
     def process(self, conn, request):
@@ -206,7 +212,10 @@ class IPCClient:
 
     def close(self):
         """Close the connection to the IPC server"""
-        self.conn.shutdown(socket.SHUT_RDWR)
+        try:
+            self.conn.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            pass
         self.conn.close()
 
 
