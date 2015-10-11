@@ -90,6 +90,12 @@ class IPCProcess(BaseProcess):
     def setup(self, ipc):
         self.ipc_server = ipc
 
+        # Setup the jobs commands
+        self.jobs_commands = jobs.JobsCommands()
+        ipc.register_command("jobs.put", self.jobs_commands.put)
+        ipc.register_command("jobs.get", self.jobs_commands.get)
+        ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
+
     def loop(self):
         self.ipc_server.run()
 
@@ -131,31 +137,24 @@ class WorkerProcess(BaseProcess):
 
     name = "Worker"
 
-    def setup(self, bots, queue):
+    def setup(self, bots):
         self.bots = bots
-        self.queue = queue
-        self.will_stop = False
 
     def loop(self):
+        # Request a new job
         try:
-            job = self.queue.get(True, 0.1)
-        except queue.Empty:
-            # If the worker should be stopped and no jobs in the queue,
-            # then gracefully stop
-            if self.will_stop:
-                self.stop = True
+            job = self.ipc.command("jobs.get", None)
+        except InterruptedError:
+            # This return acts as a continue
             return
 
         # If the job is None, stop the worker
-        if job is None:
+        if job == "__stop__":
             self.stop = True
             return
 
         # Run the wanted job
         job.process(self.bots)
-
-    def on_stop(self):
-        self.will_stop = True
 
 
 class UpdaterProcess(BaseProcess):
@@ -163,10 +162,9 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bot, to_workers, commands):
+    def setup(self, bot, commands):
         self.bot = bot
         self.bot_id = bot._bot_id
-        self.to_workers = to_workers
         self.commands = commands
 
         self.started_at = time.time()
@@ -220,7 +218,7 @@ class UpdaterProcess(BaseProcess):
             job = jobs.Job(self.bot_id, jobs.process_update, {
                 "update": update,
             })
-            self.to_workers.put(job)
+            self.ipc.command("jobs.put", job)
 
 
 def _ignore_signal(*__):

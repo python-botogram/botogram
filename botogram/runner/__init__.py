@@ -70,7 +70,7 @@ class BotogramRunner:
         self._started_at = time.time()
 
         self._enable_signals()
-        to_workers, to_updaters = self._boot_processes()
+        to_updaters = self._boot_processes()
 
         try:
             # Main server loop
@@ -79,7 +79,7 @@ class BotogramRunner:
         except (KeyboardInterrupt, InterruptedError):
             pass
 
-        self._shutdown_processes(to_workers, to_updaters)
+        self._shutdown_processes(to_updaters)
 
         self.running = False
         self._started_at = None
@@ -90,7 +90,6 @@ class BotogramRunner:
 
     def _boot_processes(self):
         """Start all the used processes"""
-        queue = multiprocessing.Queue()
         upd_commands = multiprocessing.Queue()
 
         # Boot up the IPC process
@@ -116,22 +115,21 @@ class BotogramRunner:
 
         # Boot up all the worker processes
         for i in range(self._workers_count):
-            worker = processes.WorkerProcess(ipc_info, self._bots, queue)
+            worker = processes.WorkerProcess(ipc_info, self._bots)
             worker.start()
 
             self._worker_processes.append(worker)
 
         # Boot up all the updater processes
         for bot in self._bots.values():
-            updater = processes.UpdaterProcess(ipc_info, bot, queue,
-                                               upd_commands)
+            updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
             updater.start()
 
             self._updater_processes[id] = updater
 
-        return queue, upd_commands
+        return upd_commands
 
-    def _shutdown_processes(self, to_workers, to_updaters):
+    def _shutdown_processes(self, to_updaters):
         """Shutdown all the opened processes"""
         self.logger.info("Shutting down the runner...")
 
@@ -144,8 +142,7 @@ class BotogramRunner:
         self._updaters_processes = {}
 
         # Here, we tell each worker to shut down, and then we join it
-        for i in range(len(self._worker_processes)):
-            to_workers.put(None)
+        self.ipc.command("jobs.shutdown", None)
         for worker in self._worker_processes:
             worker.join()
         self._worker_processes = []
