@@ -145,7 +145,6 @@ class Bot(frozenbot.FrozenBot):
             inits = component._get_shared_memory_inits()
             self._shared_memory.register_inits_list(compid, inits)
 
-
     def process(self, update):
         """Process an update object"""
         # Updates are always processed in a frozen instance
