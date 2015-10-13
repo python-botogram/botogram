@@ -22,8 +22,8 @@ project = "botogram"
 copyright = "2015 Pietro Albini"
 author = "Pietro Albini"
 
-version = "0.1"
-release = "0.1"
+version = "1.0"
+release = "1.0"
 
 language = None
 
