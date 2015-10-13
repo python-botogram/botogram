@@ -46,11 +46,16 @@ class Bot(frozenbot.FrozenBot):
         # Set the default language to english
         self.lang = "en"
 
+        self._components = []
+        self._main_component = components.Component("")
+
         # Setup shared memory
         self._shared_memory = shared.SharedMemory()
 
-        self._components = []
-        self._main_component = components.Component("")
+        # Register bot's shared memory initializers
+        inits = self._main_component._get_shared_memory_inits()
+        maincompid = self._main_component._component_id
+        self._shared_memory.register_inits_list(maincompid, inits)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -123,12 +128,23 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
+    def init_shared_memory(self, func):
+        """Register a shared memory's initializer"""
+        self._main_component.add_shared_memory_initializer(func)
+        return func
+
     def use(self, *components):
         """Use the provided components in the bot"""
         for component in components:
             self.logger.debug("Component %s just loaded into the bot" %
                               component.component_name)
             self._components.append(component)
+
+            # Register initializers for the shared memory
+            compid = component._component_id
+            inits = component._get_shared_memory_inits()
+            self._shared_memory.register_inits_list(compid, inits)
+
 
     def process(self, update):
         """Process an update object"""

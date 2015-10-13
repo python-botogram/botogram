@@ -118,6 +118,11 @@ class FrozenBot:
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
 
+    def init_shared_memory(self, func):
+        """Add a shared memory initializer"""
+        raise FrozenBotError("Can't register a shared memory initializer to a "
+                             "bot at runtime")
+
     # Those are shortcuts to send messages directly to someone
 
     def send(self, chat, message, preview=True, reply_to=None, extra=None):

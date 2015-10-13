@@ -18,10 +18,12 @@ class LocalDriver:
 
     def get(self, component):
         # Create the shared memory if it doesn't exist
+        new = False
         if component not in self._memories:
             self._memories[component] = {}
+            new = True
 
-        return self._memories[component]
+        return self._memories[component], new
 
     def import_data(self, data):
         self._memories = data
@@ -39,12 +41,40 @@ class SharedMemory:
             driver = LocalDriver()
         self.driver = driver
 
+        self._inits = {}
+
     def __reduce__(self):
         return rebuild, (self.driver,)
 
+    def _key_of(self, bot, component):
+        """Get the key for a specific bot:component combination"""
+        return bot+":"+component
+
+    def register_inits_list(self, component, inits):
+        """Register a new list to pick initializers from"""
+        # Ignore the request if a list was already registered
+        if component in self._inits:
+            return
+
+        self._inits[component] = inits
+
     def of(self, bot, component):
         """Get the shared memory of a specific component"""
-        return self.driver.get(bot+":"+component)
+        memory, is_new = self.driver.get(self._key_of(bot, component))
+
+        # Be sure to initialize the shared memory if it's needed
+        if is_new:
+            self.apply_inits(component, memory)
+
+        return memory
+
+    def apply_inits(self, component, memory):
+        """Apply all the inits of a component to a memory"""
+        if component not in self._inits:
+            return
+
+        for init in self._inits[component]:
+            init(memory)
 
     def switch_driver(self, driver=None):
         """Use another driver for this shared memory"""

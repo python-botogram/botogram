@@ -23,11 +23,13 @@ class SharedMemoryCommands:
 
     def get(self, memory_id, reply):
         """Get the shared memory which has the provided ID"""
+        new = False
         if memory_id not in self._memories:
             self._memories[memory_id] = self._manager.dict()
+            new = True
 
         # Send the shared memory to the process which requested it
-        reply(self._memories[memory_id])
+        reply((self._memories[memory_id], new))
 
     def list(self, memory_id, reply):
         """Get all the shared memories available"""
@@ -50,11 +52,12 @@ class MultiprocessingDriver:
 
     def get(self, memory_id):
         # Create the shared memory if it doens't exist
+        is_new = False
         if memory_id not in self._memories:
-            memory = self._command("shared.get", memory_id)
+            memory, is_new = self._command("shared.get", memory_id)
             self._memories[memory_id] = memory
 
-        return self._memories[memory_id]
+        return self._memories[memory_id], is_new
 
     def import_data(self, data):
         # This will merge the provided component with the shared memory

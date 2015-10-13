@@ -27,6 +27,7 @@ class Component:
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
+        self.__shared_inits = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -127,6 +128,13 @@ class Component:
 
         self.__commands[name] = func
 
+    def add_shared_memory_initializer(self, func):
+        """Add a new shared memory's initializer"""
+        if not callable(func):
+            raise ValueError("A shared memory initializer must be callable")
+
+        self.__shared_inits.append(func)
+
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
@@ -147,6 +155,10 @@ class Component:
     def _get_commands(self):
         """Get all the commands this component implements"""
         return self.__commands
+
+    def _get_shared_memory_inits(self):
+        """Get a list of all the shared memory initializers"""
+        return self.__shared_inits
 
     def __generate_commands_processors(self):
         """Generate a list of commands processors"""
