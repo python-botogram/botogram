@@ -47,6 +47,7 @@ Advanced topics
    :maxdepth: 2
 
    custom-components
+   deploy/index
 
 =========
 Reference
