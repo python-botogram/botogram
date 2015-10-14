@@ -156,3 +156,41 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       :param str name: The name of the command.
       :param callable func: The function you want to use.
+
+   .. py:method:: add_shared_memory_initializer(func)
+
+      The function provided to this method will be called the first time you
+      access your component's shared memory. This allows you to set the initial
+      state of the memory, without having to put initialization code in every
+      function which uses the shared memory. Please don't use this function as
+      a "when the component is added to a bot" hook, because it's not
+      guaranteed to be called if you don't use shared memory in all of your
+      hooks.
+
+      The provided function will be called providing as first argument a
+      dict-like object representing your bot's shared memory. Use it to
+      initialize the things you want in the shared memory.
+
+      .. code-block:: python
+
+         class CountComponent(botogram.Component):
+
+             component_name = "counter"
+
+             def __init__(self):
+                 self.add_shared_memory_initializer(self.initialize)
+                 self.add_process_message_hook(self.increment)
+                 self.add_command("count", self.count)
+
+             def initialize(self, shared):
+                 shared["messages"] = 0
+
+             @botogram.pass_shared
+             def increment(self, shared, chat, message):
+                 if message.text is None:
+                     return
+                 shared["messages"] += 1
+
+             @botogram.pass_shared
+             def count(self, shared, chat, message, args):
+                 chat.send("This bot received %s messages" % shared["messages"])

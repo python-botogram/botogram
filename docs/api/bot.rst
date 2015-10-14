@@ -197,6 +197,37 @@ components.
 
       :param str name: The name of the command.
 
+   .. py:decoratormethod:: init_shared_memory
+
+      The function decorated with this decorator will be called the first time
+      you access your bot's shared memory. This allows you to set the initial
+      state of the memory, without having to put initialization code in every
+      function which uses the shared memory. Please don't use this function as
+      a "when the bot is started" hook, because it's not guaranteed to be
+      called if you don't use shared memory.
+
+      The decorated function will be called providing as first argument a
+      dict-like object representing your bot's shared memory. Use it to
+      initialize the things you want in the shared memory.
+
+      .. code-block:: python
+
+         @bot.init_shared_memory
+         def initialize(shared):
+             shared["messages"] = 0
+
+         @bot.process_message
+         @botogram.pass_shared
+         def increment(shared, chat, message):
+             if message.text is None:
+                 return
+             shared["messages"] += 1
+
+         @bot.command("count")
+         @botogram.pass_shared
+         def count(shared, chat, message, args):
+             chat.send("This bot received %s messages" % shared["messages"])
+
    .. py:method:: use(component)
 
       Use the provided component in your bot, so the hooks the component

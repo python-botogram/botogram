@@ -7,7 +7,7 @@
 """
 
 import re
-import functools
+import uuid
 
 from . import utils
 from . import decorators
@@ -27,6 +27,9 @@ class Component:
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
+        self.__shared_inits = []
+
+        self._component_id = str(uuid.uuid4())
 
         if cls.component_name is None:
             self.component_name = cls.__name__
@@ -60,7 +63,7 @@ class Component:
         if ignore_case:
             string = string.lower()
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def wrapped(bot, chat, message):
             text = message.text
@@ -82,7 +85,7 @@ class Component:
         regex = r'\b('+string+r')\b'
         flags = re.IGNORECASE if ignore_case else 0
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def wrapped(bot, chat, message, matches):
             return bot._call(func, chat, message)
@@ -94,7 +97,7 @@ class Component:
         if not callable(func):
             raise ValueError("A message matches hook must be callable")
 
-        @functools.wraps(func)
+        @utils.wraps(func)
         @decorators.pass_bot
         def processor(bot, chat, message):
             if message.text is None:
@@ -123,7 +126,14 @@ class Component:
         if not callable(func):
             raise ValueError("A command processor must be callable")
 
-        self.__commands[name] = func
+        self.__commands[name] = self.__wrap_function(func)
+
+    def add_shared_memory_initializer(self, func):
+        """Add a new shared memory's initializer"""
+        if not callable(func):
+            raise ValueError("A shared memory initializer must be callable")
+
+        self.__shared_inits.append(self.__wrap_function(func))
 
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
@@ -146,11 +156,15 @@ class Component:
         """Get all the commands this component implements"""
         return self.__commands
 
+    def _get_shared_memory_inits(self):
+        """Get a list of all the shared memory initializers"""
+        return self.__shared_inits
+
     def __generate_commands_processors(self):
         """Generate a list of commands processors"""
         def base(name, func):
-            @functools.wraps(func)
             @decorators.pass_bot
+            @utils.wraps(func)
             def __(bot, chat, message):
                 # Commands must have a message
                 if message.text is None:

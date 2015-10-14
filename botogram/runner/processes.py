@@ -10,8 +10,14 @@ import multiprocessing
 import os
 import traceback
 import queue
+import time
+import signal
+
+import logbook
 
 from . import jobs
+from . import shared
+from . import ipc
 from .. import objects
 from .. import api
 
@@ -19,10 +25,13 @@ from .. import api
 class BaseProcess(multiprocessing.Process):
     """Base class for all of the processes"""
 
-    def __init__(self, runner, *args):
-        self.runner = runner
+    def __init__(self, ipc_info, *args):
         self.stop = False
-        self.logger = runner.logger
+        self.logger = logbook.Logger("botogram subprocess")
+
+        self.ipc = None
+        if ipc_info is not None:
+            self.ipc = ipc.IPCClient(*ipc_info)
 
         super(BaseProcess, self).__init__()
         self.setup(*args)
@@ -33,6 +42,11 @@ class BaseProcess(multiprocessing.Process):
 
     def run(self):
         """Run the process"""
+        for one in signal.SIGINT, signal.SIGTERM:
+            signal.signal(one, _ignore_signal)
+
+        self.before_start()
+
         self.logger.debug("%s process is ready! (pid: %s)" % (self.name,
                           os.getpid()))
         while not self.stop:
@@ -43,6 +57,12 @@ class BaseProcess(multiprocessing.Process):
             except:
                 traceback.print_exc()
 
+        self.after_stop()
+
+        # Be sure to close the IPC connection
+        if self.ipc:
+            self.ipc.close()
+
         self.logger.debug("%s process with pid %s just stopped" % (self.name,
                           os.getpid()))
 
@@ -50,9 +70,52 @@ class BaseProcess(multiprocessing.Process):
         """One single loop"""
         pass
 
+    def before_start(self):
+        """Before the process starts"""
+        pass
+
+    def after_stop(self):
+        """After the process stops"""
+        pass
+
     def on_stop(self):
         """When the process is stopping"""
         self.stop = True
+
+
+class IPCProcess(BaseProcess):
+    """This process will handle IPC requests"""
+
+    name = "IPC"
+
+    def setup(self, ipc):
+        self.ipc_server = ipc
+
+        # Setup the jobs commands
+        self.jobs_commands = jobs.JobsCommands()
+        ipc.register_command("jobs.put", self.jobs_commands.put)
+        ipc.register_command("jobs.get", self.jobs_commands.get)
+        ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
+
+        # Setup the shared commands
+        self.shared_commands = shared.SharedMemoryCommands()
+        ipc.register_command("shared.get", self.shared_commands.get)
+        ipc.register_command("shared.list", self.shared_commands.list)
+
+    def before_start(self):
+        # Start the shared memory manager
+        self.shared_commands.start()
+
+    def loop(self):
+        self.ipc_server.run()
+
+        # This will stop running the loop
+        super(IPCProcess, self).on_stop()
+
+    def on_stop(self):
+        super(IPCProcess, self).on_stop()
+
+        self.ipc_server.stop = True
 
 
 class WorkerProcess(BaseProcess):
@@ -60,30 +123,24 @@ class WorkerProcess(BaseProcess):
 
     name = "Worker"
 
-    def setup(self, queue):
-        self.queue = queue
-        self.will_stop = False
+    def setup(self, bots):
+        self.bots = bots
 
     def loop(self):
+        # Request a new job
         try:
-            job = self.queue.get(True, 0.1)
-        except queue.Empty:
-            # If the worker should be stopped and no jobs in the queue,
-            # then gracefully stop
-            if self.will_stop:
-                self.stop = True
+            job = self.ipc.command("jobs.get", None)
+        except InterruptedError:
+            # This return acts as a continue
             return
 
         # If the job is None, stop the worker
-        if job is None:
+        if job == "__stop__":
             self.stop = True
             return
 
         # Run the wanted job
-        job.process(self.runner._bots)
-
-    def on_stop(self):
-        self.will_stop = True
+        job.process(self.bots)
 
 
 class UpdaterProcess(BaseProcess):
@@ -91,11 +148,12 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bot_id, to_workers, commands):
-        self.bot_id = bot_id
-        self.bot = self.runner._bots[bot_id]
-        self.to_workers = to_workers
+    def setup(self, bot, commands):
+        self.bot = bot
+        self.bot_id = bot._bot_id
         self.commands = commands
+
+        self.started_at = time.time()
 
         self.backlog_processed = False
         self.last_id = -1
@@ -131,7 +189,7 @@ class UpdaterProcess(BaseProcess):
             self.last_id = update.update_id
 
             if not self.backlog_processed:
-                if update.message.date < self.runner._started_at:
+                if update.message.date < self.started_at:
                     self.logger.debug("Update #%s skipped because it's coming "
                                       "from the backlog." % update.update_id)
                     continue
@@ -146,4 +204,8 @@ class UpdaterProcess(BaseProcess):
             job = jobs.Job(self.bot_id, jobs.process_update, {
                 "update": update,
             })
-            self.to_workers.put(job)
+            self.ipc.command("jobs.put", job)
+
+
+def _ignore_signal(*__):
+    pass

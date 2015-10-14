@@ -19,6 +19,7 @@ from . import defaults
 from . import components
 from . import utils
 from . import frozenbot
+from . import shared
 
 
 class Bot(frozenbot.FrozenBot):
@@ -48,7 +49,15 @@ class Bot(frozenbot.FrozenBot):
         self._components = []
         self._main_component = components.Component("")
 
-        self._bot_id = uuid.uuid4()
+        # Setup shared memory
+        self._shared_memory = shared.SharedMemory()
+
+        # Register bot's shared memory initializers
+        inits = self._main_component._get_shared_memory_inits()
+        maincompid = self._main_component._component_id
+        self._shared_memory.register_inits_list(maincompid, inits)
+
+        self._bot_id = str(uuid.uuid4())
 
         self.use(defaults.DefaultComponent())
 
@@ -119,12 +128,22 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
+    def init_shared_memory(self, func):
+        """Register a shared memory's initializer"""
+        self._main_component.add_shared_memory_initializer(func)
+        return func
+
     def use(self, *components):
         """Use the provided components in the bot"""
         for component in components:
             self.logger.debug("Component %s just loaded into the bot" %
                               component.component_name)
             self._components.append(component)
+
+            # Register initializers for the shared memory
+            compid = component._component_id
+            inits = component._get_shared_memory_inits()
+            self._shared_memory.register_inits_list(compid, inits)
 
     def process(self, update):
         """Process an update object"""
@@ -146,7 +165,8 @@ class Bot(frozenbot.FrozenBot):
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
                                    self._components+[self._main_component],
-                                   self._bot_id)
+                                   self._main_component._component_id,
+                                   self._bot_id, self._shared_memory)
 
     @property
     def lang(self):

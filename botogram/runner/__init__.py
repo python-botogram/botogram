@@ -7,12 +7,15 @@
 """
 
 import multiprocessing
+import multiprocessing.managers
 import time
 import atexit
 import signal
 import logbook
 
 from . import processes
+from . import shared
+from . import ipc
 
 
 class BotogramRunner:
@@ -24,10 +27,22 @@ class BotogramRunner:
 
         self._updater_processes = {}
         self._worker_processes = []
+        self._ipc_process = None
+        self.ipc = None
 
         self.running = False
         self._stop = False
         self._started_at = None
+
+        # Start the IPC server
+        self._ipc_server = ipc.IPCServer()
+        self.ipc_port = self._ipc_server.port
+        self.ipc_auth_key = self._ipc_server.auth_key
+        self._ipc_stop_key = self._ipc_server.stop_key
+
+        # Use the MultiprocessingDriver for all the shared memories
+        for bot in self._bots.values():
+            bot._shared_memory.switch_driver(shared.MultiprocessingDriver())
 
         self._workers_count = workers
 
@@ -40,22 +55,23 @@ class BotogramRunner:
 
         self.logger.info("The botogram runner is booting up.")
         self.logger.info("Press Ctrl+C to exit.")
+        self.logger.debug("IPC address: 127.0.0.1:%s" % self.ipc_port)
+        self.logger.debug("IPC auth key: %s" % self.ipc_auth_key)
 
         self.running = True
         self._started_at = time.time()
 
         self._enable_signals()
-        to_workers, to_updaters = self._boot_processes()
+        to_updaters = self._boot_processes()
 
         try:
             # Main server loop
-            # This actually does nothing, sorry
             while not self._stop:
                 time.sleep(0.2)
         except (KeyboardInterrupt, InterruptedError):
             pass
 
-        self._shutdown_processes(to_workers, to_updaters)
+        self._shutdown_processes(to_updaters)
 
         self.running = False
         self._started_at = None
@@ -66,26 +82,40 @@ class BotogramRunner:
 
     def _boot_processes(self):
         """Start all the used processes"""
-        queue = multiprocessing.Queue()
         upd_commands = multiprocessing.Queue()
+
+        # Boot up the IPC process
+        ipc_process = processes.IPCProcess(None, self._ipc_server)
+        ipc_process.start()
+        self._ipc_process = ipc_process
+
+        # And boot the client
+        # This will wait until the IPC server is started
+        ipc_info = (self.ipc_port, self.ipc_auth_key)
+        while True:
+            try:
+                self.ipc = ipc.IPCClient(*ipc_info)
+                break
+            except ConnectionRefusedError:
+                time.sleep(0.1)
 
         # Boot up all the worker processes
         for i in range(self._workers_count):
-            worker = processes.WorkerProcess(self, queue)
+            worker = processes.WorkerProcess(ipc_info, self._bots)
             worker.start()
 
             self._worker_processes.append(worker)
 
         # Boot up all the updater processes
-        for id, bot in self._bots.items():
-            updater = processes.UpdaterProcess(self, id, queue, upd_commands)
+        for bot in self._bots.values():
+            updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
             updater.start()
 
             self._updater_processes[id] = updater
 
-        return queue, upd_commands
+        return upd_commands
 
-    def _shutdown_processes(self, to_workers, to_updaters):
+    def _shutdown_processes(self, to_updaters):
         """Shutdown all the opened processes"""
         self.logger.info("Shutting down the runner...")
 
@@ -98,11 +128,15 @@ class BotogramRunner:
         self._updaters_processes = {}
 
         # Here, we tell each worker to shut down, and then we join it
-        for i in range(len(self._worker_processes)):
-            to_workers.put(None)
+        self.ipc.command("jobs.shutdown", None)
         for worker in self._worker_processes:
             worker.join()
         self._worker_processes = []
+
+        # And finally we stop the IPC process
+        self.ipc.command("__stop__", self._ipc_stop_key)
+        self._ipc_process.join()
+        self.ipc = None
 
     def _enable_signals(self):
         """Setup signals handlers"""
