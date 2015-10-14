@@ -21,6 +21,16 @@ development. Feel free to use them when you need them.
    :return: The list of usernames contained in the message.
    :rtype: list of str
 
+
+.. py:decorator:: botogram.pass_shared
+
+   Provide a reference to the shared memory as first argument when the function
+   is called by botogram. This doesn't work if you call the function directly.
+
+   The first argument of the provided function will be a dict-like object,
+   unique to your bot and synchronized between different worker processes.
+   Because of that, you can only store `picklable objects`_ in it.
+
 .. py:decorator:: botogram.pass_bot
 
    Provide as first argument of the function the instance of the bot which
@@ -38,3 +48,6 @@ development. Feel free to use them when you need them.
    calculate it.
 
    :param callable func: The function which needs the help message.
+
+
+.. _picklable objects: https://docs.python.org/3/library/pickle.html#what-can-be-pickled-and-unpickled
