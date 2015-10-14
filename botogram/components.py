@@ -126,14 +126,14 @@ class Component:
         if not callable(func):
             raise ValueError("A command processor must be callable")
 
-        self.__commands[name] = func
+        self.__commands[name] = self.__wrap_function(func)
 
     def add_shared_memory_initializer(self, func):
         """Add a new shared memory's initializer"""
         if not callable(func):
             raise ValueError("A shared memory initializer must be callable")
 
-        self.__shared_inits.append(func)
+        self.__shared_inits.append(self.__wrap_function(func))
 
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
