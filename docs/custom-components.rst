@@ -31,10 +31,17 @@ simplifying the end-user experience:
   give the end-user a hint about when that thing was defined. Also, make sure
   your name isn't used by someone else, for example adding your nickname as a
   prefix.
+
 * **Don't assume your component will be used only by one bot**. Try to design
   your component in a way it can be used by multiple bots at once. This
   includes the use of :py:func:`botogram.pass_bot` when you need the bot
-  instance, and avoiding to store data of all the bots in the same place.
+  instance, and the use of shared memory.
+
+* **Store everything in the shared memory**. :ref:`Shared memory
+  <shared-memory>` provides a simple way to store your component's data,
+  synchronizes its content between multiple workers, and isolates automatically
+  multiple bots.
+
 * **Allow customizations both via the constructor and attributes**. Users
   should be able to use your bot the way they like, so you should allow them
   both to initialize the component with all the customizations, for a direct

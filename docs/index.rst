@@ -46,6 +46,7 @@ Advanced topics
 .. toctree::
    :maxdepth: 2
 
+   shared-memory
    custom-components
 
 =========
