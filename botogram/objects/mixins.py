@@ -8,8 +8,6 @@
 
 from .. import utils
 
-from .. import utils
-
 
 def _require_api(func):
     """Decorator which forces to have the api on an object"""
