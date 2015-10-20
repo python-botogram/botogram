@@ -89,7 +89,7 @@ class MessageMixin:
         """Reply to the current message"""
         self.chat.send(message, preview, self.message_id, syntax, extra)
 
-    def reply_with_photo(self, path, caption, extra):
+    def reply_with_photo(self, path, caption=None, extra=None):
         """Reply with a photo to the current message"""
         self.chat.send_photo(path, caption, self.message_id, extra)
 
