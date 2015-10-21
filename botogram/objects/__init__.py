@@ -163,7 +163,7 @@ class Document(BaseObject, mixins.FileMixin):
         "thumb": one_of(PhotoSize, EmptyObject),
         "file_name": str,
         "mime_type": str,
-        "file_size": str,
+        "file_size": int,
     }
 
 
