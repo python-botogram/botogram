@@ -12,9 +12,8 @@ import time
 class TimerJob:
     """Representation of a single job"""
 
-    def __init__(self, interval, bot_id, func):
+    def __init__(self, interval, func):
         self.interval = interval
-        self.bot_id = bot_id
         self.func = func
         self.last_run = -interval
 
@@ -32,9 +31,8 @@ class TimerJob:
 
         return res
 
-    def process(self, bots):
+    def process(self, bot):
         """Process the job"""
-        bot = bots[self.bot_id]
         return bot._call(self.func)
 
 
@@ -42,11 +40,19 @@ class Scheduler:
     """Schedule all the timers"""
 
     def __init__(self):
+        # Each component will add its own list here
+        self.jobs_lists = []
+
         self.jobs = []
+        self.jobs_lists.append(self.jobs)
 
     def add(self, job):
         """Add a job to the scheduler"""
         self.jobs.append(job)
+
+    def register_jobs_list(self, jobs):
+        """Register a new list of jobs"""
+        self.jobs_lists.append(jobs)
 
     def now(self, current=None):
         """Return which jobs should be scheduled now"""
@@ -55,7 +61,8 @@ class Scheduler:
             current = time.time()
 
         # Return all the jobs which should be executed now
-        for job in self.jobs:
-            if not job.now(current):
-                continue
-            yield job
+        for jobs in self.jobs_lists:
+            for job in jobs:
+                if not job.now(current):
+                    continue
+                yield job

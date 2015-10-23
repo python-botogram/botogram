@@ -21,7 +21,8 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, main_component_id, bot_id, shared_memory):
+                 components, scheduler, main_component_id, bot_id,
+                 shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -40,6 +41,7 @@ class FrozenBot:
         self._main_component_id = main_component_id
         self._bot_id = bot_id
         self._shared_memory = shared_memory
+        self._scheduler = scheduler
 
         # Rebuild the hooks chain and commands list
         self._commands = components[-1]._get_commands()
@@ -74,7 +76,8 @@ class FrozenBot:
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._components,
-            self._main_component_id, self._bot_id, self._shared_memory
+            self._scheduler, self._main_component_id, self._bot_id,
+            self._shared_memory,
         )
         return restore, args
 
@@ -117,6 +120,10 @@ class FrozenBot:
     def command(self, name):
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
+
+    def timer(self, interval):
+        """Register a new timer"""
+        raise FrozenBotError("Can't add timers to a bot at runtime")
 
     def init_shared_memory(self, func):
         """Add a shared memory initializer"""
@@ -165,6 +172,17 @@ class FrozenBot:
                           update.update_id)
 
         return False
+
+    def scheduled_jobs(self, current_time=None):
+        """Return a list of jobs scheduled for now"""
+        # This provides a better API for the users of the method
+        def wrap(job):
+            def process():
+                return job.process(self)
+            return process
+
+        # All the jobs returned are wrapped
+        return [wrap(job) for job in self._scheduler.now(current=current_time)]
 
     # This helper manages the translation
 
