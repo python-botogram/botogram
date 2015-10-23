@@ -129,17 +129,3 @@ def multiple(field_type):
 
         return _MultipleList([field_type(item) for item in objects])
     return __
-
-
-def one_of(*field_types):
-    """Accept one of these field types"""
-    def __(object):
-        # Try to use all of the types
-        for field_type in field_types:
-            try:
-                return field_type(object)
-            except ValueError:
-                pass
-        raise ValueError("The object is neither a %s"
-                         % ", ".format(field_types))
-    return __

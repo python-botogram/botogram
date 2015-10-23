@@ -6,13 +6,8 @@
     Released under the MIT license
 """
 
-from .base import BaseObject, multiple, one_of, _itself
+from .base import BaseObject, multiple, _itself
 from . import mixins
-
-
-class EmptyObject(BaseObject):
-    """Just an empty object"""
-    pass
 
 
 class User(BaseObject, mixins.ChatMixin):
@@ -160,7 +155,7 @@ class Document(BaseObject, mixins.FileMixin):
         "file_id": str,
     }
     optional = {
-        "thumb": one_of(PhotoSize, EmptyObject),
+        "thumb": PhotoSize,
         "file_name": str,
         "mime_type": str,
         "file_size": int,
@@ -179,7 +174,7 @@ class Sticker(BaseObject):
         "height": int,
     }
     optional = {
-        "thumb": one_of(PhotoSize, EmptyObject),
+        "thumb": PhotoSize,
         "file_size": int,
     }
 
@@ -197,7 +192,7 @@ class Video(BaseObject, mixins.FileMixin):
         "duration": int,
     }
     optional = {
-        "thumb": one_of(PhotoSize, EmptyObject),
+        "thumb": PhotoSize,
         "mime_type": str,
         "file_size": int,
     }
@@ -239,7 +234,7 @@ class UserProfilePhotos(BaseObject):
 
     required = {
         "total_count": int,
-        "photos": multiple(multiple(one_of(PhotoSize, EmptyObject))),
+        "photos": multiple(multiple(PhotoSize)),
     }
 
 

@@ -26,7 +26,7 @@ class ObjectToTest(objectsbase.BaseObject):
     optional = {
         "test3": str,
         "test4": objectsbase.multiple(AnObject),
-        "test5": objectsbase.one_of(AnObject, int),
+        "test5": AnObject,
     }
 
 
@@ -58,14 +58,6 @@ def test_object_creation():
     assert obj.test4[0].test1 == 1
     assert obj.test4[1].test1 == 2
     assert obj.test4[2].test1 == 3
-
-    # Multiple tests for multiple values
-    obj1 = ObjectToTest({"test1": 42, "test2": {"test1": 98}, "test5":
-                        {"test1": 98}})
-    obj2 = ObjectToTest({"test1": 42, "test2": {"test1": 98}, "test5": 1})
-    assert isinstance(obj1.test5, AnObject)
-    assert obj1.test5.test1 == 98
-    assert obj2.test5 == 1
 
 
 def test_provide_api(api):
