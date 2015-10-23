@@ -274,7 +274,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "new_chat_title": str,
         "new_chat_photo": Photo,
         "delete_chat_photo": bool,
-        "group_chat_crated": bool,
+        "group_chat_created": bool,
     }
     replace_keys = {
         "from": "from_",
