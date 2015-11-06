@@ -94,6 +94,7 @@ class IPCProcess(BaseProcess):
         # Setup the jobs commands
         self.jobs_commands = jobs.JobsCommands()
         ipc.register_command("jobs.put", self.jobs_commands.put)
+        ipc.register_command("jobs.bulk_put", self.jobs_commands.bulk_put)
         ipc.register_command("jobs.get", self.jobs_commands.get)
         ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
 

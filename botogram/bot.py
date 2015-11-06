@@ -64,6 +64,7 @@ class Bot(frozenbot.FrozenBot):
         self._bot_id = str(uuid.uuid4())
 
         self.use(defaults.DefaultComponent())
+        self.use(self._main_component, only_init=True)
 
         # Fetch the bot itself's object
         try:
@@ -144,12 +145,13 @@ class Bot(frozenbot.FrozenBot):
         self._main_component.add_shared_memory_initializer(func)
         return func
 
-    def use(self, *components):
+    def use(self, *components, only_init=False):
         """Use the provided components in the bot"""
         for component in components:
-            self.logger.debug("Component %s just loaded into the bot" %
-                              component.component_name)
-            self._components.append(component)
+            if not only_init:
+                self.logger.debug("Component %s just loaded into the bot" %
+                                  component.component_name)
+                self._components.append(component)
 
             # Register initializers for the shared memory
             compid = component._component_id
