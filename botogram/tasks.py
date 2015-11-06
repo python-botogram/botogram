@@ -9,13 +9,25 @@
 import time
 
 
-class TimerTask:
+class BaseTask:
+    """A basic task"""
+
+    def __init__(self, func):
+        self.func = func
+
+    def process(self, bot):
+        """Process the task"""
+        return bot._call(self.func)
+
+
+class TimerTask(BaseTask):
     """Representation of a single timer"""
 
     def __init__(self, interval, func):
         self.interval = interval
-        self.func = func
         self.last_run = -interval
+
+        super(TimerTask, self).__init__(func)
 
     def now(self, current=None):
         """Check if the timer should be ran now"""
@@ -30,10 +42,6 @@ class TimerTask:
             self.last_run = current
 
         return res
-
-    def process(self, bot):
-        """Process the task"""
-        return bot._call(self.func)
 
 
 class Scheduler:
