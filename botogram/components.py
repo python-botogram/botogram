@@ -11,7 +11,7 @@ import uuid
 
 from . import utils
 from . import decorators
-from . import timers
+from . import tasks
 
 
 class Component:
@@ -136,7 +136,7 @@ class Component:
             raise ValueError("A timer must be callable")
 
         wrapped = self.__wrap_function(func)
-        job = timers.TimerJob(interval, wrapped)
+        job = tasks.TimerTask(interval, wrapped)
 
         self.__timers.append(job)
 

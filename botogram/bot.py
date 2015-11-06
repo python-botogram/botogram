@@ -20,7 +20,7 @@ from . import components
 from . import utils
 from . import frozenbot
 from . import shared
-from . import timers
+from . import tasks
 
 
 class Bot(frozenbot.FrozenBot):
@@ -59,7 +59,7 @@ class Bot(frozenbot.FrozenBot):
         self._shared_memory.register_inits_list(maincompid, inits)
 
         # Setup the scheduler
-        self._scheduler = timers.Scheduler()
+        self._scheduler = tasks.Scheduler()
 
         self._bot_id = str(uuid.uuid4())
 
@@ -156,8 +156,8 @@ class Bot(frozenbot.FrozenBot):
             inits = component._get_shared_memory_inits()
             self._shared_memory.register_inits_list(compid, inits)
 
-            # Register timers
-            self._scheduler.register_jobs_list(component._get_timers())
+            # Register tasks
+            self._scheduler.register_tasks_list(component._get_timers())
 
     def process(self, update):
         """Process an update object"""

@@ -1,12 +1,12 @@
 """
-    Tests for botogram/timers.py
+    Tests for botogram/tasks.py
 
     Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
 import botogram
-import botogram.timers
+import botogram.tasks
 
 
 @botogram.pass_bot
@@ -15,7 +15,7 @@ def sample_timer(bot=None):
 
 
 def test_timer_now(bot):
-    timer = botogram.timers.TimerJob(5, sample_timer)
+    timer = botogram.tasks.TimerTask(5, sample_timer)
     assert timer.now(current=0) == True
     assert timer.now(current=3) == False
     assert timer.now(current=5) == True
@@ -25,15 +25,15 @@ def test_timer_now(bot):
 
 
 def test_timer_process(bot):
-    timer = botogram.timers.TimerJob(5, sample_timer)
+    timer = botogram.tasks.TimerTask(5, sample_timer)
     assert timer.process(bot) == bot
 
 
 def test_scheduler(bot):
-    timer1 = botogram.timers.TimerJob(5, sample_timer)
-    timer2 = botogram.timers.TimerJob(3, sample_timer)
+    timer1 = botogram.tasks.TimerTask(5, sample_timer)
+    timer2 = botogram.tasks.TimerTask(3, sample_timer)
 
-    scheduler = botogram.timers.Scheduler()
+    scheduler = botogram.tasks.Scheduler()
     scheduler.add(timer1)
     scheduler.add(timer2)
 

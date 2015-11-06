@@ -1,6 +1,6 @@
 """
-    botogram.timers
-    Core implementation of timers
+    botogram.tasks
+    Core implementation of tasks and timers
 
     Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
@@ -9,8 +9,8 @@
 import time
 
 
-class TimerJob:
-    """Representation of a single job"""
+class TimerTask:
+    """Representation of a single timer"""
 
     def __init__(self, interval, func):
         self.interval = interval
@@ -32,37 +32,37 @@ class TimerJob:
         return res
 
     def process(self, bot):
-        """Process the job"""
+        """Process the task"""
         return bot._call(self.func)
 
 
 class Scheduler:
-    """Schedule all the timers"""
+    """Schedule all the tasks"""
 
     def __init__(self):
         # Each component will add its own list here
-        self.jobs_lists = []
+        self.tasks_lists = []
 
-        self.jobs = []
-        self.jobs_lists.append(self.jobs)
+        self.tasks = []
+        self.tasks_lists.append(self.tasks)
 
-    def add(self, job):
-        """Add a job to the scheduler"""
-        self.jobs.append(job)
+    def add(self, task):
+        """Add a task to the scheduler"""
+        self.tasks.append(task)
 
-    def register_jobs_list(self, jobs):
-        """Register a new list of jobs"""
-        self.jobs_lists.append(jobs)
+    def register_tasks_list(self, tasks):
+        """Register a new list of tasks"""
+        self.tasks_lists.append(tasks)
 
     def now(self, current=None):
-        """Return which jobs should be scheduled now"""
+        """Return which tasks should be scheduled now"""
         # Allow to provide a dummy time
         if current is None:
             current = time.time()
 
-        # Return all the jobs which should be executed now
-        for jobs in self.jobs_lists:
-            for job in jobs:
-                if not job.now(current):
+        # Return all the tasks which should be executed now
+        for tasks in self.tasks_lists:
+            for task in tasks:
+                if not task.now(current):
                     continue
-                yield job
+                yield task
