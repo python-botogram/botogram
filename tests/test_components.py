@@ -289,7 +289,7 @@ def test_add_timer(bot):
     # This will simulate running the bot for 10 seconds
     now = 1420070400  # 01/01/2015
     for i in range(10):
-        scheduled = bot.scheduled_jobs(now+i)
+        scheduled = bot.scheduled_tasks(now+i)
         for job in scheduled:
             job()
 
