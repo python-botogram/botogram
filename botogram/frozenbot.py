@@ -173,16 +173,19 @@ class FrozenBot:
 
         return False
 
-    def scheduled_jobs(self, current_time=None):
-        """Return a list of jobs scheduled for now"""
+    def scheduled_tasks(self, current_time=None, wrap=True):
+        """Return a list of tasks scheduled for now"""
         # This provides a better API for the users of the method
-        def wrap(job):
+        def wrapper(task):
             def process():
-                return job.process(self)
+                return task.process(self)
             return process
 
-        # All the jobs returned are wrapped
-        return [wrap(job) for job in self._scheduler.now(current=current_time)]
+        # All the tasks returned are wrapped if wrap is True
+        tasks = self._scheduler.now(current=current_time)
+        if wrap:
+            return [wrapper(job) for job in tasks]
+        return list(tasks)
 
     # This helper manages the translation
 
