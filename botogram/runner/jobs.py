@@ -99,4 +99,6 @@ def process_update(bot, metadata):
 def process_task(bot, metadata):
     """Process a generic task"""
     task = metadata["task"]
+    bot.logger.debug("Processing task %s..." % task.func.botogram.name)
+
     task.process(bot)
