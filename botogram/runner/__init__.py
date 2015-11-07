@@ -53,8 +53,7 @@ class BotogramRunner:
         if self.running:
             raise RuntimeError("Server already running")
 
-        self.logger.info("The botogram runner is booting up.")
-        self.logger.info("Press Ctrl+C to exit.")
+        self.logger.debug("Booting up the botogram runner...")
         self.logger.debug("IPC address: 127.0.0.1:%s" % self.ipc_port)
         self.logger.debug("IPC auth key: %s" % self.ipc_auth_key)
 
@@ -63,6 +62,9 @@ class BotogramRunner:
 
         self._enable_signals()
         to_updaters = self._boot_processes()
+
+        self.logger.info("The botogram runner is ready!")
+        self.logger.info("Press Ctrl+C to exit.")
 
         try:
             # Main server loop
