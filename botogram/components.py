@@ -11,6 +11,7 @@ import uuid
 
 from . import utils
 from . import decorators
+from . import tasks
 
 
 class Component:
@@ -28,6 +29,7 @@ class Component:
         self.__no_commands = []
         self.__before_processors = []
         self.__shared_inits = []
+        self.__timers = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -128,6 +130,16 @@ class Component:
 
         self.__commands[name] = self.__wrap_function(func)
 
+    def add_timer(self, interval, func):
+        """Register a new timer"""
+        if not callable(func):
+            raise ValueError("A timer must be callable")
+
+        wrapped = self.__wrap_function(func)
+        job = tasks.TimerTask(interval, wrapped)
+
+        self.__timers.append(job)
+
     def add_shared_memory_initializer(self, func):
         """Add a new shared memory's initializer"""
         if not callable(func):
@@ -159,6 +171,10 @@ class Component:
     def _get_shared_memory_inits(self):
         """Get a list of all the shared memory initializers"""
         return self.__shared_inits
+
+    def _get_timers(self):
+        """Get a list of all the timers"""
+        return self.__timers
 
     def __generate_commands_processors(self):
         """Generate a list of commands processors"""

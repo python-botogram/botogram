@@ -47,6 +47,7 @@ Advanced topics
    :maxdepth: 2
 
    shared-memory
+   tasks
    custom-components
    deploy/index
 

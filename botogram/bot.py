@@ -20,6 +20,7 @@ from . import components
 from . import utils
 from . import frozenbot
 from . import shared
+from . import tasks
 
 
 class Bot(frozenbot.FrozenBot):
@@ -57,9 +58,13 @@ class Bot(frozenbot.FrozenBot):
         maincompid = self._main_component._component_id
         self._shared_memory.register_inits_list(maincompid, inits)
 
+        # Setup the scheduler
+        self._scheduler = tasks.Scheduler()
+
         self._bot_id = str(uuid.uuid4())
 
         self.use(defaults.DefaultComponent())
+        self.use(self._main_component, only_init=True)
 
         # Fetch the bot itself's object
         try:
@@ -128,22 +133,33 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
+    def timer(self, interval):
+        """Register a new timer"""
+        def __(func):
+            self._main_component.add_timer(interval, func)
+            return func
+        return __
+
     def init_shared_memory(self, func):
         """Register a shared memory's initializer"""
         self._main_component.add_shared_memory_initializer(func)
         return func
 
-    def use(self, *components):
+    def use(self, *components, only_init=False):
         """Use the provided components in the bot"""
         for component in components:
-            self.logger.debug("Component %s just loaded into the bot" %
-                              component.component_name)
-            self._components.append(component)
+            if not only_init:
+                self.logger.debug("Component %s just loaded into the bot" %
+                                  component.component_name)
+                self._components.append(component)
 
             # Register initializers for the shared memory
             compid = component._component_id
             inits = component._get_shared_memory_inits()
             self._shared_memory.register_inits_list(compid, inits)
+
+            # Register tasks
+            self._scheduler.register_tasks_list(component._get_timers())
 
     def process(self, update):
         """Process an update object"""
@@ -165,6 +181,7 @@ class Bot(frozenbot.FrozenBot):
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
                                    self._components+[self._main_component],
+                                   self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 

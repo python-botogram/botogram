@@ -18,12 +18,8 @@ class JobsCommands:
 
         self.stop = False
 
-    def put(self, job, reply):
-        """Put a job in the queue"""
-        if self.stop:
-            reply("No more jobs accepted", ok=False)
-            return
-
+    def _put(self, job):
+        """Internal implementation of putting a job into the queue"""
         # Directly send the job to the processes wanting it
         if len(self.waiting) > 0:
             try:
@@ -31,10 +27,27 @@ class JobsCommands:
             except EOFError:
                 pass
             else:
-                reply(None)
                 return
 
         self.queue.appendleft(job)
+
+    def put(self, job, reply):
+        """Put a job in the queue"""
+        if self.stop:
+            reply("No more jobs accepted", ok=False)
+            return
+
+        self._put(job)
+        reply(None)
+
+    def bulk_put(self, jobs, reply):
+        """Put multiple jobs in the queue"""
+        if self.stop:
+            reply("No more jobs accepted", ok=False)
+
+        # Add each provided job
+        for job in jobs:
+            self._put(job)
         reply(None)
 
     def get(self, _, reply):
@@ -81,3 +94,11 @@ def process_update(bot, metadata):
     # Restore the removed API object
     update.set_api(bot.api)
     bot.process(update)
+
+
+def process_task(bot, metadata):
+    """Process a generic task"""
+    task = metadata["task"]
+    bot.logger.debug("Processing task %s..." % task.func.botogram.name)
+
+    task.process(bot)

@@ -257,3 +257,42 @@ def test_add_command(bot, sample_update):
     assert sample1_processed == False
     assert sample2_processed == True
     assert sample3_processed == True
+
+
+def test_add_timer(bot):
+    timer1_calls = 0
+    timer2_calls = 0
+    timer3_calls = 0
+
+    def timer1():
+        nonlocal timer1_calls
+        timer1_calls += 1
+
+    def timer2():
+        nonlocal timer2_calls
+        timer2_calls += 1
+
+    @botogram.pass_bot
+    def timer3(local_bot):
+        nonlocal timer3_calls
+        timer3_calls += 1
+
+        assert local_bot == bot
+
+    comp = botogram.Component("test")
+    comp.add_timer(1, timer1)
+    comp.add_timer(3, timer2)
+    comp.add_timer(30, timer3)
+
+    bot.use(comp)
+
+    # This will simulate running the bot for 10 seconds
+    now = 1420070400  # 01/01/2015
+    for i in range(10):
+        scheduled = bot.scheduled_tasks(now+i)
+        for job in scheduled:
+            job()
+
+    assert timer1_calls == 10  # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+    assert timer2_calls == 4   # 0, 3, 6, 9
+    assert timer3_calls == 1   # 0

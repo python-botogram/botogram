@@ -197,6 +197,23 @@ components.
 
       :param str name: The name of the command.
 
+   .. py:decoratormethod:: timer(interval)
+
+      Execute the decorated function periodically, at the provided interval,
+      which must be in seconds. You can learn more in the :ref:`tasks-repeated`
+      section of the docs.
+
+      .. code-block:: python
+
+         USER_ID = 12345
+
+         @bot.timer(1)
+         @botogram.pass_bot
+         def spammer(bot):
+             bot.send(USER_ID, "Hey!")
+
+      :param int interval: The execution interval, in seconds.
+
    .. py:decoratormethod:: init_shared_memory
 
       The function decorated with this decorator will be called the first time

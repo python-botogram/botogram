@@ -16,6 +16,7 @@ import logbook
 from . import processes
 from . import shared
 from . import ipc
+from . import jobs
 
 
 class BotogramRunner:
@@ -33,6 +34,7 @@ class BotogramRunner:
         self.running = False
         self._stop = False
         self._started_at = None
+        self._last_scheduled_checks = -1
 
         # Start the IPC server
         self._ipc_server = ipc.IPCServer()
@@ -69,7 +71,8 @@ class BotogramRunner:
         try:
             # Main server loop
             while not self._stop:
-                time.sleep(0.2)
+                self._loop()
+                time.sleep(0.1)
         except (KeyboardInterrupt, InterruptedError):
             pass
 
@@ -77,6 +80,24 @@ class BotogramRunner:
 
         self.running = False
         self._started_at = None
+        self._last_scheduled_checks = -1
+
+    def _loop(self):
+        """The main loop"""
+        # Check for scheduled tasks
+        now = int(time.time())
+        if now > self._last_scheduled_checks:
+            self._last_scheduled_checks = now
+
+            jobs_list = []
+            for bot in self._bots.values():
+                for task in bot.scheduled_tasks(current_time=now, wrap=False):
+                    jobs_list.append(jobs.Job(bot._bot_id, jobs.process_task, {
+                        "task": task,
+                    }))
+            # Don't put jobs into the queue if there are no jobs
+            if jobs_list:
+                self.ipc.command("jobs.bulk_put", jobs_list)
 
     def stop(self, *__):
         """Stop a running runner"""
