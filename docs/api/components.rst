@@ -157,6 +157,31 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param str name: The name of the command.
       :param callable func: The function you want to use.
 
+   .. py:method:: add_timer(interval, func)
+
+      Execute the provided function periodically, at the provided interval,
+      which must be in seconds. You can learn more in the :ref:`tasks-repeated`
+      section of the docs.
+
+      .. code-block:: python
+
+         class SpammerComponent:
+
+             component_name = "spammer"
+
+             def __init__(self, user_id=None, message="Hey!"):
+                 self.user_id = user_id
+                 self.message = message
+
+                 self.add_timer(1, self.spam)
+
+             @botogram.pass_bot
+             def spam(self, bot):
+                 bot.send(self.user_id, self.message)
+
+      :param int interval: The execution interval, in seconds.
+      :param callable func: The function you want to use.
+
    .. py:method:: add_shared_memory_initializer(func)
 
       The function provided to this method will be called the first time you
