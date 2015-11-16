@@ -212,3 +212,11 @@ def create(api_key, *args, **kwargs):
     """Create a new bot"""
     conn = api.TelegramAPI(api_key)
     return Bot(conn, *args, **kwargs)
+
+
+def channel(name, api_key):
+    """Get a representation of a channel"""
+    conn = api.TelegramAPI(api_key)
+
+    obj = objects.Chat({"id": 0, "type": "channel", "username": name}, conn)
+    return obj

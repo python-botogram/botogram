@@ -36,8 +36,11 @@ class ChatMixin:
         elif syntax not in ("plain", "markdown"):
             raise ValueError("Invalid syntax type: %s")
 
+        # Get the correct chat_id
+        chat_id = self.username if self.type == "channel" else self.id
+
         # Build API call arguments
-        args = {"chat_id": self.id, "text": message,
+        args = {"chat_id": chat_id, "text": message,
                 "disable_web_page_preview": not preview}
         if reply_to is not None:
             args["reply_to_message_id"] = reply_to
@@ -55,8 +58,11 @@ class ChatMixin:
         if hasattr(reply_to, "message_id"):
             reply_to = reply_to.message_id
 
+        # Get the correct chat_id
+        chat_id = self.username if self.type == "channel" else self.id
+
         # Build API call arguments
-        args = {"chat_id": self.id}
+        args = {"chat_id": chat_id}
         if caption is not None:
             args["caption"] = caption
         if reply_to is not None:
