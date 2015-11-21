@@ -16,5 +16,6 @@ the development will be made trying to not break anything.
 
    utility
    bot
+   channels
    components
    telegram

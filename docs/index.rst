@@ -38,6 +38,7 @@ Introduction to botogram
 
    install
    tutorial/index
+   channels
 
 ===============
 Advanced topics
