@@ -28,7 +28,6 @@ class Bot(frozenbot.FrozenBot):
 
     def __init__(self, api_connection):
         self.logger = logbook.Logger('botogram bot')
-        utils.configure_logger()
 
         self.api = api_connection
 

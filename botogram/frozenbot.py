@@ -59,7 +59,6 @@ class FrozenBot:
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
-        utils.configure_logger()
 
         # Get a fresh Gettext instance
         self._lang_inst = utils.get_language(lang)

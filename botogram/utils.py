@@ -10,6 +10,7 @@ import re
 import os
 import sys
 import gettext
+import traceback
 
 import pkg_resources
 import logbook
@@ -24,6 +25,27 @@ _markdown_re = re.compile(r"(\*(.*)\*|_(.*)_|\[(.*)\]\((.*)\)|`(.*)`|"
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False
+
+
+deprecation_logger = logbook.Logger("botogram deprecations")
+
+
+def deprecated(name, removed_on, fix):
+    """Mark a function as deprecated"""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            # Frame -1 is the current, frame -2 is the one who called the
+            # deprecated function (damn!)
+            frame = traceback.extract_stack()[-2]
+
+            deprecation_logger.warn("%s will be removed in botogram %s." %
+                                    (name, removed_on))
+            deprecation_logger.warn("At: %s (line %s)" % (frame[0], frame[1]))
+            deprecation_logger.warn("Fix: %s\n" % fix)
+
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 
 def wraps(func):

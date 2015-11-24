@@ -5,6 +5,14 @@
     Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
+
+
+# Prepare the logger
+from .utils import configure_logger
+configure_logger()
+del configure_logger
+
+
 # flake8: noqa
 
 from .bot import Bot, create, channel
