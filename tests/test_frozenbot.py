@@ -7,6 +7,48 @@
 
 import pickle
 
+import pytest
+
+
+def test_calling_functions(frozenbot):
+    subset_called = False
+    all_called = False
+
+    # A subset of the arguments
+    def subset(bot, a):
+        nonlocal subset_called
+        subset_called = True
+
+        assert a == "foo"
+        assert bot == frozenbot
+
+    # All the arguments
+    def all(bot, a, shared, b):
+        nonlocal all_called
+        all_called = True
+
+        assert a == "foo"
+        assert b == 42
+        assert bot == frozenbot
+
+        # It's not possible to check from the public API if the shared instance
+        # is the right one
+        assert shared is not None
+
+    # One extra argument
+    def more(bot, a, c):
+        assert 2 + 2 == 5
+
+    for func in subset, all:
+        frozenbot._call(func, a="foo", b=42)
+
+    # More should raise a TypeError for the "c" argument
+    with pytest.raises(TypeError):
+        frozenbot._call(more, a="foo", b=42)
+
+    assert subset_called
+    assert all_called
+
 
 def test_pickle_frozenbot(frozenbot):
     # This will pickle and unpickle the frozen bot

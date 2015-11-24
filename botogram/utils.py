@@ -11,6 +11,7 @@ import os
 import sys
 import gettext
 import traceback
+import inspect
 
 import pkg_resources
 import logbook
@@ -50,12 +51,17 @@ def deprecated(name, removed_on, fix):
 
 def wraps(func):
     """Update a wrapper function to looks like the wrapped one"""
-    # Custom implementation of functools.wraps
-    # Needed because copying __dict__ causes some trouble with the pass_*
-    # decorators. Except for this it's the same
-    return functools.partial(functools.update_wrapper, wrapped=func,
-                             assigned=functools.WRAPPER_ASSIGNMENTS,
-                             updated=tuple())  # DON'T COPY __dict__
+    # A custom implementation of functools.wraps is needed because we need some
+    # more metadata on the returned function
+    def updater(original):
+        # Here the original signature is needed in order to call the function
+        # with the right set of arguments in Bot._call
+        original_signature = inspect.signature(original)
+
+        updated = functools.update_wrapper(original, func)
+        updated.botogram_original_signature = original_signature
+        return updated
+    return updater
 
 
 def format_docstr(docstring):
@@ -161,7 +167,6 @@ class HookDetails:
         self._func = func
         self.name = ""
         self.component = None
-        self.pass_args = {}
         self.help_message = None
 
     def _default_help_message(self):
