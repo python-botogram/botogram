@@ -65,7 +65,7 @@ class BotogramRunner:
         self._enable_signals()
         to_updaters = self._boot_processes()
 
-        self.logger.info("The botogram runner is ready!")
+        self.logger.info("Your bot is now running!")
         self.logger.info("Press Ctrl+C to exit.")
 
         try:
