@@ -10,7 +10,6 @@ import re
 import uuid
 
 from . import utils
-from . import decorators
 from . import tasks
 
 
