@@ -19,7 +19,7 @@ msgstr ""
 
 #: botogram/bot.py:271 botogram/defaults.py:50
 #, python-format
-msgid "Unknow command: /%(name)s."
+msgid "Unknown command: /%(name)s."
 msgstr "Comando sconosciuto: /%(name)s"
 
 #: botogram/bot.py:272 botogram/defaults.py:51

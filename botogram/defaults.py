@@ -54,7 +54,7 @@ class DefaultComponent(components.Component):
             if args[0] in commands:
                 message = self._help_command_message(bot, commands, args[0])
             else:
-                message = [bot._("Unknow command: /%(name)s.", name=args[0]),
+                message = [bot._("Unknown command: /%(name)s.", name=args[0]),
                            bot._("Use /help for a list of commands.")]
         else:
             message = self._help_generic_message(bot, commands)
@@ -150,7 +150,7 @@ class DefaultComponent(components.Component):
         single_user = isinstance(chat, objects.User)
         if mentioned or single_user:
             chat.send("\n".join([
-                bot._("Unknow command: /%(name)s", name=command),
+                bot._("Unknown command: /%(name)s", name=command),
                 bot._("Use /help for a list of commands"),
             ]))
             return True
