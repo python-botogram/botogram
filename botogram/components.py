@@ -10,7 +10,6 @@ import re
 import uuid
 
 from . import utils
-from . import decorators
 from . import tasks
 
 
@@ -66,7 +65,6 @@ class Component:
             string = string.lower()
 
         @utils.wraps(func)
-        @decorators.pass_bot
         def wrapped(bot, chat, message):
             text = message.text
             if ignore_case:
@@ -74,7 +72,7 @@ class Component:
 
             if text != string:
                 return
-            return bot._call(func, chat, message)
+            return bot._call(func, chat=chat, message=message)
 
         self.add_process_message_hook(wrapped)
 
@@ -88,9 +86,8 @@ class Component:
         flags = re.IGNORECASE if ignore_case else 0
 
         @utils.wraps(func)
-        @decorators.pass_bot
         def wrapped(bot, chat, message, matches):
-            return bot._call(func, chat, message)
+            return bot._call(func, chat=chat, message=message)
 
         self.add_message_matches_hook(regex, wrapped, flags, multiple)
 
@@ -100,7 +97,6 @@ class Component:
             raise ValueError("A message matches hook must be callable")
 
         @utils.wraps(func)
-        @decorators.pass_bot
         def processor(bot, chat, message):
             if message.text is None:
                 return
@@ -112,7 +108,8 @@ class Component:
             for result in results:
                 found = True
 
-                bot._call(func, chat, message, result.groups())
+                bot._call(func, chat=chat, message=message,
+                          matches=result.groups())
                 if not multiple:
                     break
 
@@ -179,7 +176,6 @@ class Component:
     def __generate_commands_processors(self):
         """Generate a list of commands processors"""
         def base(name, func):
-            @decorators.pass_bot
             @utils.wraps(func)
             def __(bot, chat, message):
                 # Commands must have a message
@@ -192,7 +188,7 @@ class Component:
                     return
 
                 args = message.text.split(" ")[1:]
-                bot._call(func, chat, message, args)
+                bot._call(func, chat=chat, message=message, args=args)
                 return True
             return __
 

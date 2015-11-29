@@ -208,7 +208,6 @@ components.
          USER_ID = 12345
 
          @bot.timer(1)
-         @botogram.pass_bot
          def spammer(bot):
              bot.send(USER_ID, "Hey!")
 
@@ -234,14 +233,12 @@ components.
              shared["messages"] = 0
 
          @bot.process_message
-         @botogram.pass_shared
          def increment(shared, chat, message):
              if message.text is None:
                  return
              shared["messages"] += 1
 
          @bot.command("count")
-         @botogram.pass_shared
          def count(shared, chat, message, args):
              chat.send("This bot received %s messages" % shared["messages"])
 

@@ -28,7 +28,6 @@ class Bot(frozenbot.FrozenBot):
 
     def __init__(self, api_connection):
         self.logger = logbook.Logger('botogram bot')
-        utils.configure_logger()
 
         self.api = api_connection
 
@@ -49,6 +48,7 @@ class Bot(frozenbot.FrozenBot):
 
         self._components = []
         self._main_component = components.Component("")
+        self._main_component_id = self._main_component._component_id
 
         # Setup shared memory
         self._shared_memory = shared.SharedMemory()

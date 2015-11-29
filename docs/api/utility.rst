@@ -46,20 +46,19 @@ development. Feel free to use them when you need them.
 
 .. py:decorator:: botogram.pass_shared
 
-   Provide a reference to the shared memory as first argument when the function
-   is called by botogram. This doesn't work if you call the function directly.
+   This decorator does nothing currently. If you still use it, just remove all
+   the references to it in your source code. Your bot will still work
+   flawlessy.
 
-   The first argument of the provided function will be a dict-like object,
-   unique to your bot and synchronized between different worker processes.
-   Because of that, you can only store `picklable objects`_ in it.
+   .. deprecated:: ae3314ed it will be removed in botogram 1.0
 
 .. py:decorator:: botogram.pass_bot
 
-   Provide as first argument of the function the instance of the bot which
-   called the function. This only works if the function is directly called from
-   the bot, for example an hook called while processing an update.
+   This decorator does nothing currently. If you still use it, just remove all
+   the references to it in your source code. Your bot will still work
+   flawlessy.
 
-   This can be useful if you need the bot instance but you can't access it.
+   .. deprecated:: ae3314ed it will be removed in botogram 1.0
 
 .. py:decorator:: botogram.help_message_for(func)
 

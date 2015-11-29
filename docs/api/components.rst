@@ -175,7 +175,6 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
                  self.add_timer(1, self.spam)
 
-             @botogram.pass_bot
              def spam(self, bot):
                  bot.send(self.user_id, self.message)
 
@@ -210,12 +209,10 @@ about how to create them in the ":ref:`custom-components`" chapter.
              def initialize(self, shared):
                  shared["messages"] = 0
 
-             @botogram.pass_shared
              def increment(self, shared, chat, message):
                  if message.text is None:
                      return
                  shared["messages"] += 1
 
-             @botogram.pass_shared
              def count(self, shared, chat, message, args):
                  chat.send("This bot received %s messages" % shared["messages"])

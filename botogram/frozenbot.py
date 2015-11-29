@@ -7,6 +7,7 @@
 """
 
 import logbook
+import inspect
 
 from . import utils
 from . import objects
@@ -59,7 +60,6 @@ class FrozenBot:
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
-        utils.configure_logger()
 
         # Get a fresh Gettext instance
         self._lang_inst = utils.get_language(lang)
@@ -162,7 +162,8 @@ class FrozenBot:
             self.logger.debug("Processing update #%s with the %s hook..." %
                               (update.update_id, name))
 
-            result = self._call(hook, update.message.chat, update.message)
+            result = self._call(hook, chat=update.message.chat,
+                                message=update.message)
             if result is True:
                 self.logger.debug("Update #%s was just processed by the %s "
                                   "hook." % (update.update_id, name))
@@ -199,40 +200,35 @@ class FrozenBot:
         """Get all the commands this bot implements"""
         return self._commands
 
-    def _call(self, func, *args, **kwargs):
+    def _call(self, func, **available):
         """Wrapper for calling user-provided functions"""
-        funcid = id(func)
+        # Get the function's component
+        if hasattr(func, "botogram") and func.botogram.component is not None:
+            component = func.botogram.component._component_id
+        else:
+            component = self._main_component_id
+        shared = self._shared_memory.of(self._bot_id, component)
 
-        # This gets the real function ID if func is a bound method
-        if hasattr(func, "__func__"):
-            funcid = id(func.__func__)
+        # Set some default available arguments
+        available.setdefault("bot", self)
+        available.setdefault("shared", shared)
 
-        # Add extra arguments, if wanted
-        if hasattr(func, "botogram") and funcid in func.botogram.pass_args:
-            args = self._call_arguments(func, funcid, args)
+        # Get the correct function signature
+        # botogram_original_signature is set while using @utils.wraps
+        if hasattr(func, "botogram_original_signature"):
+            signature = func.botogram_original_signature
+        else:
+            signature = inspect.signature(func)
 
-        return func(*args, **kwargs)
+        # Get the wanted arguments
+        kwargs = {}
+        for name in signature.parameters:
+            if name not in available:
+                raise TypeError("botogram doesn't know what to provide for %s"
+                                % name)
+            kwargs[name] = available[name]
 
-    def _call_arguments(self, func, funcid, args):
-        """Get the correct arguments for a self._call call"""
-        # The for is used so arguments are applied in the order the bot
-        # developer wants
-        for arg in func.botogram.pass_args[funcid]:
-            # If the developer wants the bot instance
-            if arg == "bot":
-                args = (self,) + args
-
-            # If the developer wants the component's shared memory
-            elif arg == "shared":
-                if func.botogram.component is not None:
-                    compid = func.botogram.component._component_id
-                else:
-                    compid = self._main_component_id
-
-                shared = self._shared_memory.of(self._bot_id, compid)
-                args = (shared,) + args
-
-        return args
+        return func(**kwargs)
 
 
 def restore(*args):

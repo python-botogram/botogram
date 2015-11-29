@@ -26,7 +26,7 @@ def test_add_before_processing_hook(bot, sample_update):
         assert message.chat == chat
 
     # This will test if the hook processing order is right
-    def process_message(*__):
+    def process_message():
         nonlocal process_hook_processed
         process_hook_processed = True
 
@@ -260,6 +260,8 @@ def test_add_command(bot, sample_update):
 
 
 def test_add_timer(bot):
+    global_bot = bot
+
     timer1_calls = 0
     timer2_calls = 0
     timer3_calls = 0
@@ -272,12 +274,12 @@ def test_add_timer(bot):
         nonlocal timer2_calls
         timer2_calls += 1
 
-    @botogram.pass_bot
-    def timer3(local_bot):
+    def timer3(bot):
         nonlocal timer3_calls
         timer3_calls += 1
 
-        assert local_bot == bot
+        # Here bot is the one local of the function, not the parent one
+        assert bot == global_bot
 
     comp = botogram.Component("test")
     comp.add_timer(1, timer1)

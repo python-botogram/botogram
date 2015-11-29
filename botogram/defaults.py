@@ -25,8 +25,7 @@ class DefaultComponent(components.Component):
 
     # /start command
 
-    @decorators.pass_bot
-    def start_command(self, bot, chat, message, args):
+    def start_command(self, bot, chat):
         message = []
         if bot.about:
             message.append(bot.about)
@@ -35,7 +34,6 @@ class DefaultComponent(components.Component):
         chat.send("\n".join(message))
 
     @decorators.help_message_for(start_command)
-    @decorators.pass_bot
     def _start_command_help(bot):
         return "\n".join([
             bot._("Start using the bot."),
@@ -44,8 +42,7 @@ class DefaultComponent(components.Component):
 
     # /help command
 
-    @decorators.pass_bot
-    def help_command(self, bot, chat, message, args):
+    def help_command(self, bot, chat, args):
         commands = bot._get_commands()
         if len(args) > 1:
             message = [bot._("Error: the /help command allows up to one "
@@ -121,7 +118,6 @@ class DefaultComponent(components.Component):
         return message
 
     @decorators.help_message_for(help_command)
-    @decorators.pass_bot
     def _help_command_help(bot):
         """Get the help message of this command"""
         return "\n".join([
@@ -132,7 +128,6 @@ class DefaultComponent(components.Component):
 
     # An hook which displays "Command not found" if needed
 
-    @decorators.pass_bot
     def no_commands_hook(self, bot, chat, message):
         if message.text is None:
             return

@@ -9,34 +9,17 @@
 from . import utils
 
 
+@utils.deprecated("@botogram.pass_bot", "1.0", "Just remove the decorator")
 def pass_bot(func):
-    """An handy decorator which passes the current bot as first argument.
-
-    Please note that the bot is passed only if the function is called by the
-    bot itself, for example in an hook."""
-    if not hasattr(func, "botogram"):
-        func.botogram = utils.HookDetails(func)
-
-    if id(func) not in func.botogram.pass_args:
-        func.botogram.pass_args[id(func)] = []
-
-    func.botogram.pass_args[id(func)].append("bot")
+    """This decorator is deprecated, and it does nothing"""
+    # What this decorator did is now done by default
     return func
 
 
+@utils.deprecated("@botogram.pass_shared", "1.0", "Just remove the decorator")
 def pass_shared(func):
-    """An handy decorator which passes the func's component's shared memory as
-    first argument.
-
-    Please note that the shared memory is passed only if the function is called
-    by the bot itself, for example in an hook."""
-    if not hasattr(func, "botogram"):
-        func.botogram = utils.HookDetails(func)
-
-    if id(func) not in func.botogram.pass_args:
-        func.botogram.pass_args[id(func)] = []
-
-    func.botogram.pass_args[id(func)].append("shared")
+    """This decorator is deprecated, and it does nothing"""
+    # What this decorator did is now done by default
     return func
 
 
