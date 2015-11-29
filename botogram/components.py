@@ -117,13 +117,18 @@ class Component:
 
         self.__processors.append(processor)
 
-    def add_command(self, name, func):
+    def add_command(self, name, func, _from_main=False):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
 
         if not callable(func):
             raise ValueError("A command processor must be callable")
+
+        if name[0] == "/":
+            go_back = -3 if _from_main else -2
+            utils.warn(go_back, "Command names shouldn't be prefixed with a "
+                       "slash. It's done automatically.")
 
         self.__commands[name] = self.__wrap_function(func)
 
