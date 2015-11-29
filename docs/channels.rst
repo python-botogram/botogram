@@ -82,7 +82,6 @@ cites botogram in a chat, you can do this:
 .. code-block:: python
 
    @bot.message_contains("botogram")
-   @botogram.pass_bot
    def we_are_famous(bot, chat, message):
        user = "Someone"
        if message.from_.username is not None:

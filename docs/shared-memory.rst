@@ -23,13 +23,14 @@ than your bot, so you don't need to worry about conflicts between components.
 How to use shared memory
 ========================
 
-botogram has an useful decorator, :py:func:`botogram.pass_shared`, which
-provides the shared memory's object as first argument of the function. You can
-then store everything in it, and those things will be synchronized for you.
+If your function requires the ``shared`` argument, botogram will fill it
+with your bot's shared memory object, which has the same API as the builtin
+``dict``. Then, you can store in it everything you want, and it will be
+synchronized between the processes.
 
-Please note that shared memory's object is provided only if the function is
-called by botogram itself: if you call it directly, that argument will be
-missing.
+Please note that the shared memory object is provided only if the function is
+called by botogram itself: if you call it directly, that argument won't be
+provided.
 
 .. note::
 
@@ -43,7 +44,6 @@ how much messages has been sent:
 .. code-block:: python
 
    @bot.process_message
-   @botogram.pass_shared
    def increment(shared, chat, message):
        if "messages" not in shared:
            shared["messages"] = 0
@@ -59,7 +59,6 @@ command which displays the current messages count calculated by the hook above:
 .. code-block:: python
 
    @bot.command("count")
-   @botogram.pass_shared
    def count(shared, chat, message, args):
        messages = 0
        if "messages" in shared:
@@ -90,14 +89,12 @@ For example, let's refactor the code above to use an initializer:
        shared["messages"] = 0
 
    @bot.process_message
-   @botogram.pass_shared
    def increment(shared, chat, message):
        if message.text is None:
            return
        shared["messages"] += 1
 
    @bot.command("count")
-   @botogram.pass_shared
    def count_command(shared, chat, message, args):
        chat.send("This bot received %s messages" % shared["messages"])
 

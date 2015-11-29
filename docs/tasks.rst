@@ -31,7 +31,6 @@ implement this, with a resolution of one second. Just use the
        shared["subs"] = []
 
    @bot.command("subscribe")
-   @botogram.pass_shared
    def subscribe_command(shared, chat, message, args):
        """Subscribe to the hourly BONG"""
        subs = shared["subs"]
@@ -39,8 +38,6 @@ implement this, with a resolution of one second. Just use the
        shared["subs"] = subs
 
    @bot.timer(3600)
-   @botogram.pass_bot
-   @botogram.pass_shared
    def BONG(bot, shared):
        for chat in shared["subs"]:
            bot.send(chat, "BONG")

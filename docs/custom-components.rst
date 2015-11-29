@@ -34,8 +34,8 @@ simplifying the end-user experience:
 
 * **Don't assume your component will be used only by one bot**. Try to design
   your component in a way it can be used by multiple bots at once. This
-  includes the use of :py:func:`botogram.pass_bot` when you need the bot
-  instance, and the use of shared memory.
+  includes :ref:`requesting the bot instance <tricks-dynamic-arguments>` via
+  arguments when you need it.
 
 * **Store everything in the shared memory**. :ref:`Shared memory
   <shared-memory>` provides a simple way to store your component's data,
