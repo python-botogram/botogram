@@ -28,25 +28,33 @@ _markdown_re = re.compile(r"(\*(.*)\*|_(.*)_|\[(.*)\]\((.*)\)|`(.*)`|"
 _logger_configured = False
 
 
-deprecation_logger = logbook.Logger("botogram deprecations")
+warn_logger = logbook.Logger("botogram's code warnings")
 
 
 def deprecated(name, removed_on, fix):
     """Mark a function as deprecated"""
     def decorator(func):
         def wrapper(*args, **kwargs):
-            # Frame -1 is the current, frame -2 is the one who called the
-            # deprecated function (damn!)
-            frame = traceback.extract_stack()[-2]
-
-            deprecation_logger.warn("%s will be removed in botogram %s." %
-                                    (name, removed_on))
-            deprecation_logger.warn("At: %s (line %s)" % (frame[0], frame[1]))
-            deprecation_logger.warn("Fix: %s\n" % fix)
+            before = "%s will be removed in botogram %s." % (name, removed_on)
+            after = "Fix: %s" % fix
+            warn(-1, before, after)
 
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def warn(stack_pos, before_message, after_message=None):
+    """Issue a warning caused by user code"""
+    frame = traceback.extract_stack()[stack_pos-1]
+    at_message = "At: %s (line %s)" % (frame[0], frame[1])
+
+    warn_logger.warn(before_message)
+    if after_message is not None:
+        warn_logger.warn(at_message)
+        warn_logger.warn(after_message+"\n")
+    else:
+        warn_logger.warn(at_message+"\n")
 
 
 def wraps(func):
