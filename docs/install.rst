@@ -25,12 +25,12 @@ Living on the edge
 
 If you don't mind having some instability or bugs, and you want the latest
 features not yet released, you can clone the `botogram git repository`_,
-`install virtualenv`_ and execute the installation from source::
+install `virtualenv <virtualenv-install>`_, `invoke`_ and execute the
+installation from source::
 
    $ git clone https://github.com/pietroalbini/botogram.git
    $ cd botogram
-   $ make
-   $ make install
+   $ invoke install
 
 Remember that something can change without notice, and even be removed, until
 the feature is released, so don't use a non-released version in production.
@@ -86,7 +86,7 @@ are allowed to do so::
 If you installed from source, you need to use this command instead of the last
 one::
 
-   $ sudo make install
+   $ sudo invoke install
 
 .. _on the Python Packages Index: https://pypi.python.org/pypi/botogram
 .. _pip: https://pip.pypa.io
@@ -94,4 +94,5 @@ one::
 .. _setuptools: https://setuptools.pypa.io
 .. _botogram git repository: https://github.com/pietroalbini/botogram
 .. _virtualenv: https://virtualenv.pypa.io
-.. _install virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+.. _virtualenv-install: https://virtualenv.pypa.io/en/latest/installation.html
+.. _invoke: https://www.pyinvoke.org

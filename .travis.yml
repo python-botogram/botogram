@@ -6,10 +6,13 @@ python:
 sudo: false
 cache: pip
 
+install:
+- pip install invoke
+
 script:
-- make build
-- make test
-- make lint
+- invoke build
+- invoke test
+- invoke lint
 
 notifications:
   email: false
