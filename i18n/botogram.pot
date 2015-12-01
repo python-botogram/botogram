@@ -1,18 +1,16 @@
-# Italian translations for botogram.
+# Translations template for botogram.
 # Copyright (C) 2015 Pietro Albini <pietro@pietroalbini.io>
 # This file is distributed under the same license as the botogram project.
-# Pietro Albini <pietro@pietroalbini.io>, 2015.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: botogram 1.0.dev0\n"
 "Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
 "POT-Creation-Date: 2015-12-01 15:29+0100\n"
-"PO-Revision-Date: 2015-08-01 17:06+0200\n"
-"Last-Translator: Pietro Albini <pietro@pietroalbini.io>\n"
-"Language: it\n"
-"Language-Team: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,60 +18,60 @@ msgstr ""
 
 #: botogram/defaults.py:32
 msgid "Use /help to get a list of all the commands."
-msgstr "Utilizza /help per ottenere la lista di tutti i comandi."
+msgstr ""
 
 #: botogram/defaults.py:39
 msgid "Start using the bot."
-msgstr "Inizia ad usare il bot."
+msgstr ""
 
 #: botogram/defaults.py:40
 msgid "This shows a greeting message."
-msgstr "Questo comando visualizza un messaggio di benvenuto."
+msgstr ""
 
 #: botogram/defaults.py:48
 msgid "Error: the /help command allows up to one argument."
-msgstr "Errore: il comando /help non accetta più di un argomento."
+msgstr ""
 
 #: botogram/defaults.py:54
 #, python-format
 msgid "Unknown command: /%(name)s."
-msgstr "Comando sconosciuto: /%(name)s"
+msgstr ""
 
 #: botogram/defaults.py:55
 msgid "Use /help for a list of commands."
-msgstr "Utilizza /help per la lista dei comandi."
+msgstr ""
 
 #: botogram/defaults.py:76
 msgid "Available commands:"
-msgstr "Comandi disponibili:"
+msgstr ""
 
 #: botogram/defaults.py:85 botogram/defaults.py:125
 msgid "You can also use '/help <command>' to get help about a specific command."
-msgstr "Puoi anche usare '/help <comando>' per ottenere aiuto su un comando."
+msgstr ""
 
 #: botogram/defaults.py:88
 msgid "No commands available."
-msgstr "Nessun comando disponibile."
+msgstr ""
 
 #: botogram/defaults.py:97 botogram/defaults.py:114
 #, python-format
 msgid "Please contact %(owner)s if you have problems with this bot."
-msgstr "Contatta %(owner)s se hai problemi con questo bot."
+msgstr ""
 
 #: botogram/defaults.py:124
 msgid "Show this help message."
-msgstr "Visualizza questo messaggio di aiuto."
+msgstr ""
 
 #: botogram/defaults.py:148
 #, python-format
 msgid "Unknown command: /%(name)s"
-msgstr "Comando sconosciuto: /%(name)s"
+msgstr ""
 
 #: botogram/defaults.py:149
 msgid "Use /help for a list of commands"
-msgstr "Utilizza /help per la lista dei comandi."
+msgstr ""
 
 #: botogram/utils.py:109
 msgid "No description available."
-msgstr "Nessuna descrizione disponibile."
+msgstr ""
 

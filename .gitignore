@@ -1,7 +1,6 @@
 /botogram.egg-info
 /build
 
-/i18n/botogram.pot
 /botogram/i18n/*.mo
 
 __pycache__
