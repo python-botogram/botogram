@@ -7,7 +7,7 @@ pytest==2.8.3
 requests==2.8.1
 responses==0.5.0
 six==1.10.0
-wheel==0.24.0
+wheel==0.26.0
 
 # This is because with pip < 6.0, installing in a virtualenv called "test"
 # packages in editable mode raises an exception
