@@ -6,8 +6,13 @@
     Released under the MIT license
 """
 
+import collections
 import multiprocessing
 import multiprocessing.managers
+
+
+class OverrideableDict(dict):
+    pass
 
 
 class SharedMemoryCommands:
@@ -16,6 +21,9 @@ class SharedMemoryCommands:
     def __init__(self):
         self._memories = {}
         self._manager = multiprocessing.managers.SyncManager()
+
+        self._locks = set()
+        self._locks_queues = {}
 
     def start(self):
         """Start the shared memory manager"""
@@ -34,6 +42,49 @@ class SharedMemoryCommands:
     def list(self, memory_id, reply):
         """Get all the shared memories available"""
         reply(list(self._memories.keys()))
+
+    def lock_acquire(self, lock_id, reply):
+        """Acquire a lock"""
+        # If the lock isn't acquired acquire it
+        if lock_id not in self._locks:
+            self._locks.add(lock_id)
+            return reply(None)
+
+        # Else ignore the request, and add the reply function to the queue
+        if lock_id not in self._locks_queues:
+            self._locks_queues[lock_id] = collections.deque()
+        self._locks_queues[lock_id].appendleft(reply)
+
+    def lock_release(self, lock_id, reply):
+        """Release a lock"""
+        # If the lock wasn't acquired, just return
+        if lock_id not in self._locks:
+            return reply(None)
+
+        self._locks.remove(lock_id)
+
+        # If there are processes waiting for this lock, wake up one of them
+        if lock_id in self._locks_queues:
+            self._locks_queues[lock_id].pop()(None)
+            # And clear up the queue if it's empty
+            if not len(self._locks_queues[lock_id]):
+                del self._locks_queues[lock_id]
+
+        reply(None)
+
+    def lock_status(self, lock_id, reply):
+        """Check if a lock was acquired"""
+        reply(lock_id in self._locks)
+
+    def lock_import(self, locks, reply):
+        """Bulk import all the locks"""
+        self._locks = set(locks)
+        self._locks_queues = {}
+        reply(None)
+
+    def lock_export(self, __, reply):
+        """Export all the locks"""
+        reply(self._locks)
 
 
 class MultiprocessingDriver:
@@ -59,16 +110,31 @@ class MultiprocessingDriver:
 
         return self._memories[memory_id], is_new
 
+    def lock_acquire(self, lock_id):
+        # This automagically blocks if the lock is already acquired
+        self._command("shared.lock_acquire", lock_id)
+
+    def lock_release(self, lock_id):
+        self._command("shared.lock_release", lock_id)
+
+    def lock_status(self, lock_id):
+        return self._command("shared.lock_status", lock_id)
+
     def import_data(self, data):
         # This will merge the provided component with the shared memory
-        for memory_id, memory in data.items():
+        for memory_id, memory in data["storage"].items():
             memory = self.get(memory_id)
             memory.update(data)
 
+        if len(data["locks"]):
+            self._command("shared.lock_import", data["locks"])
+
     def export_data(self):
-        result = {}
+        result = {"storage": {}}
         for memory_id, data in self._memories.items():
-            result[memory_id] = dict(data)
+            result["storage"][memory_id] = dict(data)
+
+        result["locks"] = self._command("shared.lock_export", None)
 
         return result
 

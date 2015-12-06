@@ -117,3 +117,39 @@ code: just use the :py:func:`botogram.pass_shared` decorator to get the shared
 memory instance as first argument. To add a shared memory initializer, you can
 instead provide the function to the
 :py:meth:`botogram.Component.add_shared_memory_initializer` method.
+
+.. _shared-memory-locks:
+
+Dealing with concurrency issues with locks
+==========================================
+
+Normally you don't need to worry about concurrency issues in botogram:
+everything is local to your process, and you can't interact with the other
+ones. But when you start dealing with shared memory this isn't true anymore,
+because two processes can write to the same key at the same time.
+
+If you need to protect yourself from concurrency issues, shared memory's locks
+are the way to go. They've the same API as the Python native ones, but they're
+also customized to fit better in botogram.
+
+In order to use locks you can call the ``lock`` method on shared memory's
+objects, providing to it the name of the lock. Then you can use it as a context
+manager in order to lock specific parts of your code:
+
+.. code-block:: python
+
+   @bot.command("count")
+   def count_command(shared, chat):
+       """Send the number of messages sent in this chat"""
+       chat.send("Number of messages: %s" % shared["messages"][chat.id])
+
+   @bot.process_message
+   def increment(shared, chat):
+       """Example command for locks"""
+       with shared.lock("update-messages"):
+           messages = shared["messages"]
+           messages[chat.id] += 1
+           shared["messages"] = messages
+
+Remember that lock names are unique to your bot/component, so you don't need to
+worry about naming conflicts.

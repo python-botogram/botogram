@@ -106,6 +106,16 @@ class IPCProcess(BaseProcess):
         self.shared_commands = shared.SharedMemoryCommands()
         ipc.register_command("shared.get", self.shared_commands.get)
         ipc.register_command("shared.list", self.shared_commands.list)
+        ipc.register_command("shared.lock_acquire",
+                             self.shared_commands.lock_acquire)
+        ipc.register_command("shared.lock_release",
+                             self.shared_commands.lock_release)
+        ipc.register_command("shared.lock_status",
+                             self.shared_commands.lock_status)
+        ipc.register_command("shared.lock_import",
+                             self.shared_commands.lock_import)
+        ipc.register_command("shared.lock_export",
+                             self.shared_commands.lock_export)
 
     def before_start(self):
         # Start the shared memory manager
