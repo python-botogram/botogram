@@ -52,6 +52,10 @@ class BaseProcess(multiprocessing.Process):
         while not self.stop:
             try:
                 self.loop()
+            except ipc.IPCServerCrashedError:
+                self.logger.error("The IPC server just crashed. Please kill "
+                                  "the runner.")
+                self.on_stop()
             except (KeyboardInterrupt, InterruptedError):
                 self.on_stop()
             except:

@@ -27,6 +27,10 @@ class IPCError(Exception):
     pass
 
 
+class IPCServerCrashedError(IPCError):
+    pass
+
+
 class IPCServer:
     """Main server for the IPC"""
 
@@ -202,7 +206,10 @@ class IPCClient:
     def command(self, command, data):
         """Send a command to the IPC server"""
         packet = {"command": command, "data": data}
-        write_packet(self.conn, packet)
+        try:
+            write_packet(self.conn, packet)
+        except BrokenPipeError:
+            raise IPCServerCrashedError("The IPC server just crashed")
 
         response = read_packet(self.conn)
         if response["ok"]:
