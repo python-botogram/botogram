@@ -115,7 +115,7 @@ Available Classes
 
    .. py:attribute:: type
 
-      The type of chat, either ``private``, ``group``, or ``channel``.
+      The type of chat, either ``private``, ``group``, ``supergroup`` or ``channel``.
 
    .. py:attribute:: title
 
@@ -339,6 +339,34 @@ Available Classes
 
       When ``True`` indicates that the group as represented by the chat to which
       this message belongs, has been created.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: supergroup_chat_created
+
+      When ``True`` indicates that the supergroup as represented by the chat to
+      which this message belongs, has been created.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: channel_chat_created
+
+      When ``True`` indicates that the channel as represented by the chat to
+      which this messag belongs, has been created.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: migrate_to_chat_id
+
+      The group has been migrated to the supergroup with the chat_id contained
+      in this attribute.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: migrate_from_chat_id
+
+      The supergroup has been migrated from the group with the chat_id
+      contained im this attribute.
 
       *This attribute can be None if it's not provided by Telegram.*
 

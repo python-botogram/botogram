@@ -270,6 +270,10 @@ class Message(BaseObject, mixins.MessageMixin):
         "new_chat_photo": Photo,
         "delete_chat_photo": bool,
         "group_chat_created": bool,
+        "supergroup_chat_created": bool,
+        "channel_chat_created": bool,
+        "migrate_to_chat_id": int,
+        "migrate_from_chat_id": int,
     }
     replace_keys = {
         "from": "from_",
