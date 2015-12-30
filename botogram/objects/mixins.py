@@ -74,6 +74,33 @@ class ChatMixin:
 
         self._api.call("sendPhoto", args, files)
 
+    @_require_api
+    def send_audio(self, path, duration=None, performer=None, title=None,
+                   reply_to=None, extra=None):
+        """Send an audio track"""
+        # Convert instance of Message to ids in reply_to
+        if hasattr(reply_to, "message_id"):
+            reply_to = reply_to.message_id
+
+        # Get the correct chat_id
+        chat_id = self.username if self.type == "channel" else self.id
+
+        args = {"chat_id": chat_id}
+        if duration is not None:
+            args["duration"] = duration
+        if performer is not None:
+            args["performer"] = performer
+        if title is not None:
+            args["title"] = title
+        if reply_to is not None:
+            args["reply_to_message_id"] = reply_to
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        files = {"audio": open(path, "rb")}
+
+        self._api.call("sendAudio", args, files)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -95,9 +122,17 @@ class MessageMixin:
         """Reply to the current message"""
         self.chat.send(message, preview, self.message_id, syntax, extra)
 
+    @_require_api
     def reply_with_photo(self, path, caption=None, extra=None):
         """Reply with a photo to the current message"""
         self.chat.send_photo(path, caption, self.message_id, extra)
+
+    @_require_api
+    def reply_with_audio(self, path, duration=None, performer=None, title=None,
+                         extra=None):
+        """Reply with an audio track to the current message"""
+        self.chat.send_audio(path, duration, performer, title, self.message_id,
+                             extra)
 
 
 class FileMixin:

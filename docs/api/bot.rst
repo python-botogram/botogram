@@ -329,3 +329,29 @@ components.
       :param str caption: An optional caption for the photo.
       :param int reply_to: The ID of the message this one is replying to.
       :param object extra: An extra object you want to attach (see above).
+
+   .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+
+      This method sends an audio track to a specific chat. The chat must be
+      identified by its ID, and Telegram applies some restrictions on the chats
+      allowed to receive your photo: only users who sent you a message in the
+      past are allowed, and also the group chats your bot is currently in.
+
+      You must provide the *path* to the audio track, and you may optionally
+      specify the *duration*, the *performer* and the *title* of the audio
+      track. If the audio track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+      *extra* is an optional object which specifies additional reply interface
+      options on the recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param int chat: The ID of the chat which should receive the photo.
+      :param str path: The path to the audio track
+      :param int duration: The track duration, in seconds
+      :param str performer: The name of the performer
+      :param str title: The title of the track
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach

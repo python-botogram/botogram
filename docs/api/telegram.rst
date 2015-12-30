@@ -104,6 +104,26 @@ Available Classes
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
 
+   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+
+      Send the audio track found in the *path* to the user. You may optionally
+      specify the *duration*, the *performer* and the *title* of the audio
+      track. If the audio track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+      *extra* is an optional object which specifies additional reply interface
+      options on the recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the audio track
+      :param int duration: The track duration, in seconds
+      :param str performer: The name of the performer
+      :param str title: The title of the track
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
 
 .. py:class:: botogram.Chat
 
@@ -185,6 +205,26 @@ Available Classes
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
+
+   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+
+      Send the audio track found in the *path* to the chat. You may optionally
+      specify the *duration*, the *performer* and the *title* of the audio
+      track. If the audio track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+      *extra* is an optional object which specifies additional reply interface
+      options on the recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the audio track
+      :param int duration: The track duration, in seconds
+      :param str performer: The name of the performer
+      :param str title: The title of the track
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
 
 
 .. py:class:: botogram.Message
@@ -414,6 +454,24 @@ Available Classes
       :param str path: The path to the photo.
       :param str caption: A caption for the photo.
       :param object extra: An extra reply interface object to attach.
+
+   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+
+      Reply with the audio track found in the *path* to the chat. You may
+      optionally specify the *duration*, the *performer* and the *title* of the
+      audio track. *extra* is an optional object which specifies additional
+      reply interface options on the recipient's end, and can be one of the
+      following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the audio track
+      :param int duration: The track duration, in seconds
+      :param str performer: The name of the performer
+      :param str title: The title of the track
+      :param object extra: An extra reply interface object to attach
 
 
 .. py:class:: botogram.Photo
