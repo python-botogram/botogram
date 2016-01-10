@@ -124,6 +124,24 @@ Available Classes
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
+   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None])
+
+      Send the voice message found in the *path* to the user. You may
+      optionally specify the *duration* of the voice message. If the voice
+      message you're sending is in reply to another message, set *reply_to* to
+      the ID of the other :py:class:`~botogram.Message`.  *extra* is an
+      optional object which specifies additional reply interface options on the
+      recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the voice message
+      :param int duration: The message duration, in seconds
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
 
 .. py:class:: botogram.Chat
 
@@ -223,6 +241,24 @@ Available Classes
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None])
+
+      Send the voice message found in the *path* to the chat. You may
+      optionally specify the *duration* of the voice message. If the voice
+      message you're sending is in reply to another message, set *reply_to* to
+      the ID of the other :py:class:`~botogram.Message`.  *extra* is an
+      optional object which specifies additional reply interface options on the
+      recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the voice message
+      :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
@@ -455,7 +491,7 @@ Available Classes
       :param str caption: A caption for the photo.
       :param object extra: An extra reply interface object to attach.
 
-   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None])
 
       Reply with the audio track found in the *path* to the chat. You may
       optionally specify the *duration*, the *performer* and the *title* of the
@@ -471,6 +507,21 @@ Available Classes
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None])
+
+      Send the voice message found in the *path* to the chat. You may
+      optionally specify the *duration* of the voice message. *extra* is an
+      optional object which specifies additional reply interface options on the
+      recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the voice message
+      :param int duration: The message duration, in seconds
       :param object extra: An extra reply interface object to attach
 
 

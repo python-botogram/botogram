@@ -149,6 +149,11 @@ class FrozenBot:
         obj = objects.Chat({"id": chat, "type": ""}, self.api)
         obj.send_audio(path, duration, performer, title, reply_to, extra)
 
+    def send_voice(self, chat, path, duration=None, reply_to=None, extra=None):
+        """Send a voice message in a chat"""
+        obj = objects.Chat({"id": chat, "type": ""}, self.api)
+        obj.send_voice(path, duration, reply_to, extra)
+
     # Let's process the messages
 
     def process(self, update):

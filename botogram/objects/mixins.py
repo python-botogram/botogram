@@ -101,6 +101,29 @@ class ChatMixin:
 
         self._api.call("sendAudio", args, files)
 
+    @_require_api
+    def send_voice(self, path, duration=None, title=None, reply_to=None,
+                   extra=None):
+        """Send a voice message"""
+        # Convert instance of Message to ids in reply_to
+        if hasattr(reply_to, "message_id"):
+            reply_to = reply_to.message_id
+
+        # Get the corret chat_id
+        chat_id = self.username if self.type == "channel" else self.id
+
+        args = {"chat_id": chat_id}
+        if duration is not None:
+            args["duration"] = duration
+        if reply_to is not None:
+            args["reply_to_message_id"] = reply_to
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        files = {"voice": open(path, "rb")}
+
+        self._api.call("sendVoice", args, files)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -133,6 +156,11 @@ class MessageMixin:
         """Reply with an audio track to the current message"""
         self.chat.send_audio(path, duration, performer, title, self.message_id,
                              extra)
+
+    @_require_api
+    def reply_with_voice(self, path, duration=None, extra=None):
+        """Reply with a voice message to the current message"""
+        self.chat.send_voice(path, duration, self.message_id, extra)
 
 
 class FileMixin:
