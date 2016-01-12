@@ -2,7 +2,7 @@
     botogram.utils
     Utilities used by the rest of the code
 
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
+    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
@@ -94,13 +94,15 @@ def format_docstr(docstring):
 
 def docstring_of(func, bot=None):
     """Get the docstring of a function"""
-    # Custom docstring
-    if hasattr(func, "botogram") and func.botogram.help_message:
+    # Get the correct function from the hook
+    if hasattr(func, "_botogram_hook"):
+        func = func.func
+
+    if hasattr(func, "_botogram_help_message"):
         if bot is not None:
-            docstring = bot._call(func.botogram.help_message)
+            docstring = bot._call(func._botogram_help_message)
         else:
-            docstring = func.botogram.help_message()
-    # Standard default docstring
+            docstring = func._botogram_help_message()
     elif func.__doc__:
         docstring = func.__doc__
     # Put a default message
@@ -166,16 +168,3 @@ def configure_logger():
 
     # Don't reconfigure the logger, thanks
     _logger_configured = True
-
-
-class HookDetails:
-    """Container for some details of user-provided hooks"""
-
-    def __init__(self, func):
-        self._func = func
-        self.name = ""
-        self.component = None
-        self.help_message = None
-
-    def _default_help_message(self):
-        return format_docstr(self._func.__doc__)

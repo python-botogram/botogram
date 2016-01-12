@@ -2,15 +2,15 @@
     botogram.components
     Definition of the components system
 
-    Copyright (c) 2015 Pietro Albini
+    Copyright (c) 2015-2016 Pietro Albini
     Released under the MIT license
 """
 
-import re
 import uuid
 
 from . import utils
 from . import tasks
+from . import hooks
 
 
 class Component:
@@ -47,34 +47,27 @@ class Component:
         if not callable(func):
             raise ValueError("A before processing hook must be callable")
 
-        self.__before_processors.append(func)
+        hook = hooks.BeforeProcessingHook(func, self)
+        self.__before_processors.append(hook)
 
     def add_process_message_hook(self, func):
         """Add a message processor hook"""
         if not callable(func):
             raise ValueError("A message processor must be callable")
 
-        self.__processors.append(func)
+        hook = hooks.ProcessMessageHook(func, self)
+        self.__processors.append(hook)
 
     def add_message_equals_hook(self, string, func, ignore_case=True):
         """Add a message equals hook"""
         if not callable(func):
             raise ValueError("A message equals hook must be callable")
 
-        if ignore_case:
-            string = string.lower()
-
-        @utils.wraps(func)
-        def wrapped(bot, chat, message):
-            text = message.text
-            if ignore_case:
-                text = text.lower()
-
-            if text != string:
-                return
-            return bot._call(func, chat=chat, message=message)
-
-        self.add_process_message_hook(wrapped)
+        hook = hooks.MessageEqualsHook(func, self, {
+            "ignore_case": ignore_case,
+            "string": string,
+        })
+        self.__processors.append(hook)
 
     def add_message_contains_hook(self, string, func, ignore_case=True,
                                   multiple=False):
@@ -82,40 +75,24 @@ class Component:
         if not callable(func):
             raise ValueError("A message contains hook must be callable")
 
-        regex = r'\b('+string+r')\b'
-        flags = re.IGNORECASE if ignore_case else 0
-
-        @utils.wraps(func)
-        def wrapped(bot, chat, message, matches):
-            return bot._call(func, chat=chat, message=message)
-
-        self.add_message_matches_hook(regex, wrapped, flags, multiple)
+        hook = hooks.MessageContainsHook(func, self, {
+            "ignore_case": ignore_case,
+            "multiple": multiple,
+            "string": string,
+        })
+        self.__processors.append(hook)
 
     def add_message_matches_hook(self, regex, func, flags=0, multiple=False):
         """Apply a message matches hook"""
         if not callable(func):
             raise ValueError("A message matches hook must be callable")
 
-        @utils.wraps(func)
-        def processor(bot, chat, message):
-            if message.text is None:
-                return
-
-            compiled = re.compile(regex, flags=flags)
-            results = compiled.finditer(message.text)
-
-            found = False
-            for result in results:
-                found = True
-
-                bot._call(func, chat=chat, message=message,
-                          matches=result.groups())
-                if not multiple:
-                    break
-
-            return found
-
-        self.__processors.append(processor)
+        hook = hooks.MessageMatchesHook(func, self, {
+            "flags": flags,
+            "multiple": multiple,
+            "regex": regex,
+        })
+        self.__processors.append(hook)
 
     def add_command(self, name, func, _from_main=False):
         """Register a new command"""
@@ -130,15 +107,18 @@ class Component:
             utils.warn(go_back, "Command names shouldn't be prefixed with a "
                        "slash. It's done automatically.")
 
-        self.__commands[name] = self.__wrap_function(func)
+        hook = hooks.CommandHook(func, self, {
+            "name": name,
+        })
+        self.__commands[name] = hook
 
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
             raise ValueError("A timer must be callable")
 
-        wrapped = self.__wrap_function(func)
-        job = tasks.TimerTask(interval, wrapped)
+        hook = hooks.TimerHook(func, self)
+        job = tasks.TimerTask(interval, hook)
 
         self.__timers.append(job)
 
@@ -147,24 +127,25 @@ class Component:
         if not callable(func):
             raise ValueError("A shared memory initializer must be callable")
 
-        self.__shared_inits.append(self.__wrap_function(func))
+        hook = hooks.SharedMemoryInitializerHook(func, self)
+        self.__shared_inits.append(hook)
 
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
             raise ValueError("A no commands hook must be callable")
 
-        self.__no_commands.append(func)
+        hook = hooks.NoCommandsHook(func, self)
+        self.__no_commands.append(hook)
 
     def _get_hooks_chain(self):
         """Get the full hooks chain for this component"""
-        chain = [
-            self.__before_processors,
-            self.__generate_commands_processors(),
-            self.__no_commands,
-            self.__processors,
+        return [
+            self.__before_processors[:],
+            [self.__commands[name] for name in sorted(self.__commands.keys())],
+            self.__no_commands[:],
+            self.__processors[:],
         ]
-        return [[self.__wrap_function(f) for f in c] for c in chain]
 
     def _get_commands(self):
         """Get all the commands this component implements"""
@@ -177,41 +158,3 @@ class Component:
     def _get_timers(self):
         """Get a list of all the timers"""
         return self.__timers
-
-    def __generate_commands_processors(self):
-        """Generate a list of commands processors"""
-        def base(name, func):
-            @utils.wraps(func)
-            def __(bot, chat, message):
-                # Commands must have a message
-                if message.text is None:
-                    return
-
-                # Must be this command
-                match = bot._commands_re.match(message.text)
-                if not match or match.group(1) != name:
-                    return
-
-                args = message.text.split(" ")[1:]
-                bot._call(func, chat=chat, message=message, args=args)
-                return True
-            return __
-
-        return [base(name, func) for name, func in self.__commands.items()]
-
-    def __wrap_function(self, func):
-        """Wrap a function, adding to it component-specific things"""
-        # This allows us to wrap methods
-        real_func = func
-        if hasattr(func, "__func__"):
-            func = func.__func__
-
-        if not hasattr(func, "botogram"):
-            func.botogram = utils.HookDetails(func)
-
-        prefix = self.component_name+"::" if self.component_name else ""
-
-        func.botogram.name = prefix+func.__name__
-        func.botogram.component = self
-
-        return real_func

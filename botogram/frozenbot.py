@@ -2,7 +2,7 @@
     botogram.frozenbot
     A frozen version of the real bot
 
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
+    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
@@ -165,16 +165,11 @@ class FrozenBot:
 
         for hook in self._chain:
             # Get the correct name of the hook
-            try:
-                name = hook.botogram.name
-            except AttributeError:
-                name = hook.__name__
-
+            name = hook.name
             self.logger.debug("Processing update #%s with the %s hook..." %
                               (update.update_id, name))
 
-            result = self._call(hook, chat=update.message.chat,
-                                message=update.message)
+            result = hook.call(self, update)
             if result is True:
                 self.logger.debug("Update #%s was just processed by the %s "
                                   "hook." % (update.update_id, name))

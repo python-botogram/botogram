@@ -2,7 +2,7 @@
     botogram.runner.jobs
     Definition of the jobs runner workers' can execute
 
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
+    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
@@ -99,6 +99,6 @@ def process_update(bot, metadata):
 def process_task(bot, metadata):
     """Process a generic task"""
     task = metadata["task"]
-    bot.logger.debug("Processing task %s..." % task.func.botogram.name)
+    bot.logger.debug("Processing task %s..." % task.hook.name)
 
     task.process(bot)

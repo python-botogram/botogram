@@ -2,7 +2,7 @@
     botogram.decorators
     Utility decorators used by the bot creators
 
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
+    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
@@ -27,9 +27,6 @@ def help_message_for(func):
     """The return of the decorated function will be the help message of the
     function provided as an argument."""
     def decorator(help_func):
-        if not hasattr(func, "botogram"):
-            func.botogram = utils.HookDetails(func)
-
-        func.botogram.help_message = help_func
+        func._botogram_help_message = help_func
         return help_func
     return decorator

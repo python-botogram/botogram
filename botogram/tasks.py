@@ -2,7 +2,7 @@
     botogram.tasks
     Core implementation of tasks and timers
 
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
+    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
@@ -12,22 +12,24 @@ import time
 class BaseTask:
     """A basic task"""
 
-    def __init__(self, func):
-        self.func = func
+    def __init__(self, hook):
+        self.hook = hook
 
     def process(self, bot):
         """Process the task"""
-        return bot._call(self.func)
+        if hasattr(self.hook, "call"):
+            return self.hook.call(bot)
+        return bot._call(self.hook)
 
 
 class TimerTask(BaseTask):
     """Representation of a single timer"""
 
-    def __init__(self, interval, func):
+    def __init__(self, interval, hook):
         self.interval = interval
         self.last_run = -interval
 
-        super(TimerTask, self).__init__(func)
+        super(TimerTask, self).__init__(hook)
 
     def now(self, current=None):
         """Check if the timer should be ran now"""
