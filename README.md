@@ -1,4 +1,4 @@
-## botogram [![Build Status](https://img.shields.io/travis/pietroalbini/botogram/master.svg)](https://travis-ci.org/pietroalbini/botogram)
+## botogram [![Build Status](https://img.shields.io/travis/pietroalbini/botogram/master.svg)](https://travis-ci.org/pietroalbini/botogram) [![News channel](https://img.shields.io/badge/telegram_channel-@botogram__framework-0d86d7.svg?style=flat)][channel]
 
 _A microframework for Telegram bots_
 
@@ -24,7 +24,8 @@ if __name__ == "__main__":
     bot.run()
 ```
 
-You can find the documentation at [botogram.pietroalbini.io][2].
+You can find the documentation at [botogram.pietroalbini.io][2]. Also, you can
+get all the news about botogram in its [Telegram channel][channel].
 
 **Supported Python versions**: 3.4, 3.5
 
@@ -45,3 +46,4 @@ On some Linux systems you might need to wrap the ``make install`` command with
 [1]: https://core.telegram.org/bots
 [2]: http://botogram.pietroalbini.io/docs
 [3]: http://www.pyinvoke.org
+[channel]: https://telegram.me/botogram_framework
