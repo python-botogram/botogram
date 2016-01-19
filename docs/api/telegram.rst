@@ -556,7 +556,7 @@ Available Classes
       :param int duration: The message duration, in seconds
       :param object extra: An extra reply interface object to attach
 
-   .. py:method:: send_file(path, [extra=None])
+   .. py:method:: reply_with_file(path, [extra=None])
 
       Reply with the generic file found in the *path* to the chat. If the file
       you're sending is in reply to another message, set *reply_to* to the ID
