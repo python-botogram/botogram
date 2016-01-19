@@ -154,6 +154,11 @@ class FrozenBot:
         obj = objects.Chat({"id": chat, "type": ""}, self.api)
         obj.send_voice(path, duration, reply_to, extra)
 
+    def send_file(self, chat, path, reply_to=None, extra=None):
+        """Send a generic file in a chat"""
+        obj = objects.Chat({"id": chat, "type": ""}, self.api)
+        obj.send_file(path, reply_to, extra)
+
     # Let's process the messages
 
     def process(self, update):

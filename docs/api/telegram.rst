@@ -142,6 +142,22 @@ Available Classes
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
+   .. py:method:: send_file(path, [reply_to=None, extra=None])
+
+      Send the generic file found in the *path* to the user. If the file you're
+      sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`.  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the file
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
 
 .. py:class:: botogram.Chat
 
@@ -259,6 +275,22 @@ Available Classes
 
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: send_file(path, [reply_to=None, extra=None])
+
+      Send the generic file found in the *path* to the chat. If the file you're
+      sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`.  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
@@ -522,6 +554,21 @@ Available Classes
 
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: send_file(path, [extra=None])
+
+      Reply with the generic file found in the *path* to the chat. If the file
+      you're sending is in reply to another message, set *reply_to* to the ID
+      of the other :py:class:`~botogram.Message`.  *extra* is an optional
+      object which specifies additional reply interface options on the
+      recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str path: The path to the file
       :param object extra: An extra reply interface object to attach
 
 

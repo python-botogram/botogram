@@ -124,6 +124,26 @@ class ChatMixin:
 
         self._api.call("sendVoice", args, files)
 
+    @_require_api
+    def send_file(self, path, reply_to=None, extra=None):
+        """Send a generic file"""
+        # Convert instances of Message to ids in reply_to
+        if hasattr(reply_to, "message_id"):
+            reply_to = reply_to.message_id
+
+        # Get the correct chat_id
+        chat_id = self.username if self.type == "channel" else self.id
+
+        args = {"chat_id": chat_id}
+        if reply_to is not None:
+            args["reply_to_message_id"] = reply_to
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        files = {"document": open(path, "rb")}
+
+        self._api.call("sendDocument", args, files)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -161,6 +181,11 @@ class MessageMixin:
     def reply_with_voice(self, path, duration=None, extra=None):
         """Reply with a voice message to the current message"""
         self.chat.send_voice(path, duration, self.message_id, extra)
+
+    @_require_api
+    def reply_with_file(self, path, extra=None):
+        """Reply with a generic file to the current chat"""
+        self.chat.send_file(path, self.message_id, extra)
 
 
 class FileMixin:
