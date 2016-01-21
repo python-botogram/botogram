@@ -1,52 +1,94 @@
 @charset "utf-8";
 
-@font-face {
-    font-family: 'Bitter';
-    font-style: normal;
-    font-weight: 700;
-    src: url('fonts/bitter.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'DejaVu';
-    font-style: normal;
-    font-weight: 400;
-    src: url('fonts/dejavu.ttf') format('truetype');
-}
-
 body {
-    font-family: 'DejaVu', sans-serif;
+    font-family: DejaVu Sans;
     color: #333;
     margin: 0;
 }
 
 div.wrapper {
-    width: 45em;
+    width: 50em;
     margin: auto;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 1em;
-    font-size: 2.5em;
-    font-family: 'Bitter', serif;
-    margin: 0.4em 0;
+div.row {
+    padding: 0.5em 0;
 }
 
 hr {
-    width: 40%;
-    margin: 1.5em auto;
     border: 0;
     border-bottom: 0.1em dotted #ccc;
+    margin: 0;
 }
 
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    font-family: 'Bitter', serif;
+    margin: 0.3em 0 0 0;
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.2em;
+    font-family: 'Bitter', serif;
+    font-weight: 400;
+    line-height: 1.3em;
+    word-spacing: 0.1em;
+    margin: 0.3em 0 1em 0;
+    color: #aaa;
+}
+
+
 p {
-    line-height: 1.4em;
+    line-height: 1.5em;
+}
+
+
+
+div.cleared:after {
+    content: "";
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+
+div.cleared div.left {
+    width: 48%;
+    float: left;
+}
+
+div.cleared div.right {
+    width: 48%;
+    float: right;
+}
+
+div.vcenter-text {
+    display: table;
+}
+
+div.vcenter-text > p {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+
+
+div.motto {
+    height: 13.4em;
+}
+
+div.motto p {
+    font-weight: 300;
+    font-size: 1.8em;
 }
 
 nav ul {
     text-align: center;
-    margin: 1em 0;
+    margin: 0;
     padding: 0;
 }
 
@@ -57,23 +99,21 @@ nav ul li {
 
 nav ul li a {
     color: #179cde;
-    padding: 0 0.7em;
+    padding: 0.5em 0.7em;
     display: block;
-    font-weight: bold;
     font-family: 'Bitter', serif;
     font-size: 1.2em;
-    text-align: center;
     text-decoration: none;
-    transition: .2s all ease-in-out;
-    border-radius: 3px;
+    word-spacing: 0.1em;
+    transition: .2s color ease-in-out;
 }
 
 nav ul li a:hover {
-    color: #555;
+    color: #54a9eb;
 }
 
 footer ul {
-    margin: 1em 0;
+    margin: 0 0 1em 0;
     text-align: center;
     padding: 0;
 }
@@ -81,7 +121,7 @@ footer ul {
 footer ul li {
     list-style: none;
     display: inline-block;
-    font-size: 0.85em;
+    font-size: 0.91em;
     color: #aaa;
     margin: 0 0.5em;
 }
@@ -96,20 +136,94 @@ footer ul li a:hover {
     border-bottom-color: #aaa;
 }
 
-@media all and (max-width: 47em) {
+
+
+pre {
+    font-family: "Hack", monospace;
+    font-size: 0.81em;
+    line-height: 1.4em;
+}
+
+pre span.ck {
+    font-weight: bold;
+    color: #179cde;
+}
+
+pre span.cs {
+    color: #00af00;
+}
+
+pre span.cc {
+    color: #888;
+}
+
+pre span.cd {
+    font-weight: bold;
+    color: #444;
+}
+
+pre span.less {
+    opacity: 0.4;
+    transition: .2s opacity ease-out;
+}
+
+pre:hover span.less {
+    opacity: 0.7;
+}
+
+
+
+@media all and (max-width: 52em) {
 
     div.wrapper {
         width: auto;
         padding: 0 1em;
     }
 
+    div.cleared div.left, div.cleared div.right {
+        float: none;
+        width: 100%;
+    }
+
+    div.pre-container {
+        text-align: center;
+        overflow-x: auto;
+        margin: 0 -1em;
+        padding: 0 1em;
+    }
+
+    div.pre-container pre {
+        display: inline-block;
+        text-align: left;
+    }
+
+    div.motto {
+        height: auto;
+        padding: 0.8em 0;
+    }
+
+    nav ul {
+        margin: 0.3em 0 0.7em 0;
+    }
+
     nav ul li, footer ul li {
-        display: block;
-        margin-bottom: 0.5em;
+        display: inline-block;
+    }
+
+    nav ul li a {
+        padding: 0.2em 0.7em;
     }
 
     nav ul li:last-child, footer ul li:last-child {
         margin-bottom: 0;
+    }
+
+    footer {
+        margin-bottom: 2em;
+    }
+
+    footer ul li {
+        margin: 0.3em 0.5em;
     }
 
 }
