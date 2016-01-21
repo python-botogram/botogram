@@ -63,13 +63,3 @@ def test_usernames_in():
 
     username_url = botogram.utils.usernames_in("http://pwd:john@example.com")
     assert username_url == []
-
-
-def test_is_markdown():
-    assert not botogram.utils.is_markdown("not markdown, sorry!")
-    assert not botogram.utils.is_markdown("*all [wonderfully](broken syntax`")
-    assert botogram.utils.is_markdown("*a*")
-    assert botogram.utils.is_markdown("_a_")
-    assert botogram.utils.is_markdown("[a](b)")
-    assert botogram.utils.is_markdown("`a`")
-    assert botogram.utils.is_markdown("```a```")

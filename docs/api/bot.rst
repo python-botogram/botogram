@@ -296,11 +296,9 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
-      The syntax parameter contains how the message should be processed by
-      Telegram, and it can be either ``plain`` (no syntax) or ``markdown``. If
-      you don't provide it, botogram will try to guess which syntax to use by
-      parsing the message you want to send. This feature is not supported by
-      all the Telegram clients.
+      The *syntax* parameter is for defining how the message text should be
+      processed by Telegram (:ref:`learn more about rich formatting
+      <tricks-messages-syntax>`).
 
       :param int chat: The ID of the chat which should receive the message.
       :param str messgae: The message you want to send.

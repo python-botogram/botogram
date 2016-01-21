@@ -68,13 +68,10 @@ Available Classes
       from generating a *preview* for any link included in the message. If the
       message you are sending is in reply to another, set *reply_to* to the ID
       of the other :py:class:`~botogram.Message`. The *syntax* parameter is for
-      defining how the message text should be processed by Telegram. Set it to
-      either ``plain`` (no syntax) or ``markdown`` (see Telegram's current
-      `Markdown support`_). By default botogram will try to guess which syntax
-      to use by parsing the message. This feature is not supported by all app
-      clients. *extra* is an optional object which specifies additional reply
-      interface options on the recipient's end, and can be one of the following
-      types:
+      defining how the message text should be processed by Telegram
+      (:ref:`learn more about rich formatting <tricks-messages-syntax>`).
+      *extra* is an optional object which specifies additional reply interface
+      options on the recipient's end, and can be one of the following types:
 
         * :py:class:`botogram.ReplyKeyboardMarkup`
         * :py:class:`botogram.ReplyKeyboardHide`
@@ -204,13 +201,10 @@ Available Classes
       from generating a *preview* for any link included in the message. If the
       message you are sending is in reply to another, set *reply_to* to the ID
       of the other :py:class:`~botogram.Message`. The *syntax* parameter is for
-      defining how the message text should be processed by Telegram. Set it to
-      either ``plain`` (no syntax) or ``markdown`` (see Telegram's current
-      `Markdown support`_). By default botogram will try to guess which syntax
-      to use by parsing the message. This feature is not supported by all app
-      clients. *extra* is an optional object which specifies additional reply
-      interface options on the recipient's end, and can be one of the following
-      types:
+      defining how the message text should be processed by Telegram
+      (:ref:`learn more about rich formatting <tricks-messages-syntax>`).
+      *extra* is an optional object which specifies additional reply interface
+      options on the recipient's end, and can be one of the following types:
 
         * :py:class:`botogram.ReplyKeyboardMarkup`
         * :py:class:`botogram.ReplyKeyboardHide`
@@ -492,12 +486,10 @@ Available Classes
       Reply with the textual *message* in regards to this message. You may
       optionally stop clients from generating a *preview* for any link included
       in the reply. The *syntax* parameter is for defining how the message text
-      should be processed by Telegram. Set it to either ``plain`` (no syntax) or
-      ``markdown`` (see Telegram's current `Markdown support`_). By default
-      botogram will try to guess which syntax to use by parsing the message.
-      This feature is not supported by all app clients. *extra* is an optional
-      object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      should be processed by Telegram (:ref:`learn more about rich formatting
+      <tricks-messages-syntax>`).  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
 
         * :py:class:`botogram.ReplyKeyboardMarkup`
         * :py:class:`botogram.ReplyKeyboardHide`
@@ -1048,4 +1040,3 @@ Available Classes
 .. _Telegram's Bot API: https://core.telegram.org/bots/api
 .. _API methods: https://core.telegram.org/bots/api#available-methods
 .. _API types: https://core.telegram.org/bots/api#available-types
-.. _Markdown support: https://core.telegram.org/bots/api#using-markdown

@@ -7,6 +7,7 @@
 """
 
 from .. import utils
+from .. import syntaxes
 
 
 def _require_api(func):
@@ -30,12 +31,6 @@ class ChatMixin:
         if hasattr(reply_to, "message_id"):
             reply_to = reply_to.message_id
 
-        # Use the correct syntax
-        if syntax is None:
-            syntax = "markdown" if utils.is_markdown(message) else "plain"
-        elif syntax not in ("plain", "markdown"):
-            raise ValueError("Invalid syntax type: %s")
-
         # Get the correct chat_id
         chat_id = self.username if self.type == "channel" else self.id
 
@@ -46,8 +41,10 @@ class ChatMixin:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
             args["reply_markup"] = extra.serialize()
-        if syntax == "markdown":
-            args["parse_mode"] = "Markdown"
+
+        syntax = syntaxes.guess_syntax(message, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         self._api.call("sendMessage", args)
 

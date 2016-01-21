@@ -44,3 +44,37 @@ botogram, without being directly provided by the decorator:
 
 * **shared**, which is an instance of the bot's
   :ref:`shared memory <shared-memory>`.
+
+.. _tricks-messages-syntax:
+
+=====================================
+Rich formatting with message syntaxes
+=====================================
+
+Plain text messages can be boring for your users, and also hard to read if
+those messages are full with information. Because of that, Telegram allows bots
+to use rich formatting in their messages. Currently Telegram only supports `a
+subset of`_ Markdown and HTML.
+
+In order to use rich formatting in your messages you don't need to do anything:
+botogram is smart enough to detect when a message uses rich formatting, and the
+used syntax. If for whatever reason that detection fails, you can specify the
+syntax you're using by providing it to the ``syntax`` parameter of the
+:py:meth:`~botogram.Chat.send` method:
+
+.. code-block:: python
+
+   chat.send("*This is Markdown!*", syntax="markdown")
+
+That parameter accepts the following values:
+
+* ``markdown``, or its aliases ``md`` and ``Markdown``
+* ``html``, or its alias ``HTML``
+
+.. note::
+
+   Support for rich formatting depends on your users' Telegram client. If
+   they're using the official ones there are no problems, but that might work
+   on unofficial clients.
+
+.. _a subset of: https://core.telegram.org/bots/api#formatting-options
