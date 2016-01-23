@@ -6,7 +6,23 @@
     Released under the MIT license
 """
 
+# Version check, ensure it's run with Python 3
+import sys
 import os
+if sys.version_info[0] < 3:
+    print("Hey! It seems you installed invoke for Python 2!")
+    print("Please make sure you installed it with Python 3, else this script "
+          "won't work.")
+    print("")
+    print("In order to fix the issue, please execute the following commands:")
+    if os.name == "nt":
+        print("  py -m pip uninstall invoke")
+        print("  py -3 -m pip install invoke")
+    else:
+        print("  python -m pip uninstall invoke")
+        print("  python3 -m pip install invoke")
+    exit(1)
+
 import shutil
 import glob
 import re
