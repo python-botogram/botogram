@@ -6,6 +6,11 @@ body {
     margin: 0;
 }
 
+div.color-bar {
+    height: 0.2em;
+    background: #179cde;
+}
+
 div.wrapper {
     width: 50em;
     margin: auto;
