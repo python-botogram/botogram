@@ -95,11 +95,13 @@ class Bot(frozenbot.FrozenBot):
 
     def before_processing(self, func):
         """Register a before processing hook"""
-        return self._main_component.add_before_processing_hook(func)
+        self._main_component.add_before_processing_hook(func)
+        return func
 
     def process_message(self, func):
         """Add a message processor hook"""
-        return self._main_component.add_process_message_hook(func)
+        self._main_component.add_process_message_hook(func)
+        return func
 
     def message_equals(self, string, ignore_case=True):
         """Add a message equals hook"""
