@@ -23,10 +23,8 @@ def _require_api(func):
 class ChatMixin:
     """Add some methods for chats"""
 
-    @_require_api
-    def send(self, message, preview=True, reply_to=None, syntax=None,
-             extra=None):
-        """Send a message"""
+    def _get_call_args(self, reply_to, extra):
+        """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
         if hasattr(reply_to, "message_id"):
             reply_to = reply_to.message_id
@@ -34,13 +32,21 @@ class ChatMixin:
         # Get the correct chat_id
         chat_id = self.username if self.type == "channel" else self.id
 
-        # Build API call arguments
-        args = {"chat_id": chat_id, "text": message,
-                "disable_web_page_preview": not preview}
+        args = {"chat_id": chat_id}
         if reply_to is not None:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
             args["reply_markup"] = extra.serialize()
+
+        return args
+
+    @_require_api
+    def send(self, message, preview=True, reply_to=None, syntax=None,
+             extra=None):
+        """Send a message"""
+        args = self._get_call_args(reply_to, extra)
+        args["text"] = message
+        args["disable_web_page_preview"] = not preview
 
         syntax = syntaxes.guess_syntax(message, syntax)
         if syntax is not None:
@@ -51,94 +57,45 @@ class ChatMixin:
     @_require_api
     def send_photo(self, path, caption=None, reply_to=None, extra=None):
         """Send a photo"""
-        # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
-
-        # Get the correct chat_id
-        chat_id = self.username if self.type == "channel" else self.id
-
-        # Build API call arguments
-        args = {"chat_id": chat_id}
+        args = self._get_call_args(reply_to, extra)
         if caption is not None:
             args["caption"] = caption
-        if reply_to is not None:
-            args["reply_to_message_id"] = reply_to
-        if extra is not None:
-            args["reply_markup"] = extra.serialize()
 
         files = {"photo": open(path, "rb")}
-
         self._api.call("sendPhoto", args, files)
 
     @_require_api
     def send_audio(self, path, duration=None, performer=None, title=None,
                    reply_to=None, extra=None):
         """Send an audio track"""
-        # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
-
-        # Get the correct chat_id
-        chat_id = self.username if self.type == "channel" else self.id
-
-        args = {"chat_id": chat_id}
+        args = self._get_call_args(reply_to, extra)
         if duration is not None:
             args["duration"] = duration
         if performer is not None:
             args["performer"] = performer
         if title is not None:
             args["title"] = title
-        if reply_to is not None:
-            args["reply_to_message_id"] = reply_to
-        if extra is not None:
-            args["reply_markup"] = extra.serialize()
 
         files = {"audio": open(path, "rb")}
-
         self._api.call("sendAudio", args, files)
 
     @_require_api
     def send_voice(self, path, duration=None, title=None, reply_to=None,
                    extra=None):
         """Send a voice message"""
-        # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
-
-        # Get the corret chat_id
-        chat_id = self.username if self.type == "channel" else self.id
-
-        args = {"chat_id": chat_id}
+        args = self._get_call_args(reply_to, extra)
         if duration is not None:
             args["duration"] = duration
-        if reply_to is not None:
-            args["reply_to_message_id"] = reply_to
-        if extra is not None:
-            args["reply_markup"] = extra.serialize()
 
         files = {"voice": open(path, "rb")}
-
         self._api.call("sendVoice", args, files)
 
     @_require_api
     def send_file(self, path, reply_to=None, extra=None):
         """Send a generic file"""
-        # Convert instances of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
-
-        # Get the correct chat_id
-        chat_id = self.username if self.type == "channel" else self.id
-
-        args = {"chat_id": chat_id}
-        if reply_to is not None:
-            args["reply_to_message_id"] = reply_to
-        if extra is not None:
-            args["reply_markup"] = extra.serialize()
+        args = self._get_call_args(reply_to, extra)
 
         files = {"document": open(path, "rb")}
-
         self._api.call("sendDocument", args, files)
 
 
