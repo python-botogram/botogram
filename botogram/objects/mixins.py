@@ -98,6 +98,15 @@ class ChatMixin:
         files = {"document": open(path, "rb")}
         self._api.call("sendDocument", args, files)
 
+    @_require_api
+    def send_location(self, latitude, longitude, reply_to=None, extra=None):
+        """Send a geographic location"""
+        args = self._get_call_args(reply_to, extra)
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+
+        self._api.call("sendLocation", args)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -140,6 +149,11 @@ class MessageMixin:
     def reply_with_file(self, path, extra=None):
         """Reply with a generic file to the current chat"""
         self.chat.send_file(path, self.message_id, extra)
+
+    @_require_api
+    def reply_with_location(self, latitude, longitude, extra=None):
+        """Reply with a geographic location to the current chat"""
+        self.chat.send_location(latitude, longitude, self.message_id, extra)
 
 
 class FileMixin:

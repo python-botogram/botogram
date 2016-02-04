@@ -155,6 +155,23 @@ Available Classes
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None])
+
+      Send the geographic location to the user. If the location you're sending
+      is in reply to another message, set *reply_to* to the ID of the other
+      :py:class:`~botogram.Message`.  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param float latitude: The latitude of the location
+      :param float longitude: The longitude of the location
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
 
 .. py:class:: botogram.Chat
 
@@ -285,6 +302,23 @@ Available Classes
       * :py:class:`botogram.ForceReply`
 
       :param str path: The path to the file
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None])
+
+      Send the geographic location to the chat. If the location you're sending
+      is in reply to another message, set *reply_to* to the ID of the other
+      :py:class:`~botogram.Message`.  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param float latitude: The latitude of the location
+      :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
@@ -561,6 +595,20 @@ Available Classes
       * :py:class:`botogram.ForceReply`
 
       :param str path: The path to the file
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: reply_with_location(latitude, longitude, [extra=None])
+
+      Send the geographic location to the user. *extra* is an optional object
+      which specifies additional reply interface options on the recipient's
+      end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param float latitude: The latitude of the location
+      :param float longitude: The longitude of the location
       :param object extra: An extra reply interface object to attach
 
 
