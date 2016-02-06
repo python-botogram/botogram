@@ -39,7 +39,7 @@ class Hook:
 
     def call(self, bot, update):
         """Call the hook"""
-        if self._only_texts and update.message is None:
+        if self._only_texts and update.message.text is None:
             return
         return self._call(bot, update)
 
