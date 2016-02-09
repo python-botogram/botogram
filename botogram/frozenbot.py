@@ -217,18 +217,13 @@ class FrozenBot:
         """Get all the commands this bot implements"""
         return self._commands
 
-    def _call(self, func, **available):
+    def _call(self, func, component=None, **available):
         """Wrapper for calling user-provided functions"""
-        # Get the function's component
-        if hasattr(func, "botogram") and func.botogram.component is not None:
-            component = func.botogram.component._component_id
-        else:
-            component = self._main_component_id
-        shared = self._shared_memory.of(self._bot_id, component)
-
         # Set some default available arguments
         available.setdefault("bot", self)
-        available.setdefault("shared", shared)
+        if component is not None:
+            shared = self._shared_memory.of(self._bot_id, component)
+            available.setdefault("shared", shared)
 
         # Get the correct function signature
         # botogram_original_signature is set while using @utils.wraps

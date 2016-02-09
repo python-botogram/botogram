@@ -19,7 +19,7 @@ class BaseTask:
         """Process the task"""
         if hasattr(self.hook, "call"):
             return self.hook.call(bot)
-        return bot._call(self.hook)
+        return self.hook(bot)
 
 
 class TimerTask(BaseTask):

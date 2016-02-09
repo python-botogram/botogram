@@ -89,7 +89,7 @@ def format_docstr(docstring):
     return "\n".join(result)
 
 
-def docstring_of(func, bot=None):
+def docstring_of(func, bot=None, component_id=None):
     """Get the docstring of a function"""
     # Get the correct function from the hook
     if hasattr(func, "_botogram_hook"):
@@ -97,7 +97,7 @@ def docstring_of(func, bot=None):
 
     if hasattr(func, "_botogram_help_message"):
         if bot is not None:
-            docstring = bot._call(func._botogram_help_message)
+            docstring = bot._call(func._botogram_help_message, component_id)
         else:
             docstring = func._botogram_help_message()
     elif func.__doc__:

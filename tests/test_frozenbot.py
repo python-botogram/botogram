@@ -40,11 +40,11 @@ def test_calling_functions(frozenbot):
         assert 2 + 2 == 5
 
     for func in subset, all:
-        frozenbot._call(func, a="foo", b=42)
+        frozenbot._call(func, "comptest", a="foo", b=42)
 
     # More should raise a TypeError for the "c" argument
     with pytest.raises(TypeError):
-        frozenbot._call(more, a="foo", b=42)
+        frozenbot._call(more, "comptest", a="foo", b=42)
 
     assert subset_called
     assert all_called

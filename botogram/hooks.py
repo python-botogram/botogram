@@ -23,6 +23,7 @@ class Hook:
         self.func = func
         self.name = prefix+func.__name__
         self.component = component
+        self.component_id = component._component_id
 
         self._args = args
         self._after_init(args)
@@ -46,7 +47,8 @@ class Hook:
     def _call(self, bot, update):
         """*Actually* call the hook"""
         message = update.message
-        return bot._call(self.func, chat=message.chat, message=message)
+        return bot._call(self.func, self.component_id, chat=message.chat,
+                         message=message)
 
 
 def rebuild(cls, func, component, args):
@@ -98,7 +100,8 @@ class MessageEqualsHook(Hook):
 
         if text != self._string:
             return
-        return bot._call(self.func, chat=message.chat, message=message)
+        return bot._call(self.func, self.component_id, chat=message.chat,
+                         message=message)
 
 
 class MessageContainsHook(MessageEqualsHook):
@@ -115,7 +118,8 @@ class MessageContainsHook(MessageEqualsHook):
             if one != self._string:
                 continue
 
-            result = bot._call(self.func, chat=message.chat, message=message)
+            result = bot._call(self.func, self.component_id, chat=message.chat,
+                               message=message)
             res.append(result)
             if not self._args["multiple"]:
                 break
@@ -139,8 +143,8 @@ class MessageMatchesHook(Hook):
         for result in results:
             found = True
 
-            bot._call(self.func, chat=message.chat, message=message,
-                      matches=result.groups())
+            bot._call(self.func, self.component_id, chat=message.chat,
+                      message=message, matches=result.groups())
             if not self._args["multiple"]:
                 break
 
@@ -172,7 +176,8 @@ class CommandHook(Hook):
             return
 
         args = message.text.split(" ")[1:]
-        bot._call(self.func, chat=message.chat, message=message, args=args)
+        bot._call(self.func, self.component_id, chat=message.chat,
+                  message=message, args=args)
         return True
 
 
@@ -180,4 +185,4 @@ class TimerHook(Hook):
     """Underlying hook for a timer"""
 
     def call(self, bot):
-        return bot._call(self.func)
+        return bot._call(self.func, self.component_id)
