@@ -259,6 +259,27 @@ def test_add_command(bot, sample_update):
     assert sample3_processed == True
 
 
+def test_add_shared_memory_initializer(bot, sample_update):
+    expected = "test"
+    actual = None
+
+    def initializer(shared):
+        shared["test"] = expected
+
+    def command(bot, shared):
+        nonlocal actual
+        actual = shared["test"]
+
+    comp = botogram.Component("test")
+    comp.add_shared_memory_initializer(initializer)
+    comp.add_process_message_hook(command)
+
+    bot.use(comp)
+    bot.process(sample_update)
+
+    assert actual == expected
+
+
 def test_add_timer(bot):
     global_bot = bot
 

@@ -137,7 +137,7 @@ class SharedMemory:
             return
 
         for init in self._inits[component]:
-            init(memory)
+            init.call(memory)
 
     def switch_driver(self, driver=None):
         """Use another driver for this shared memory"""

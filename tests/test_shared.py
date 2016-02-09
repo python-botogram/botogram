@@ -8,6 +8,7 @@
 import pickle
 
 import botogram.shared
+import botogram.hooks
 
 
 def test_shared_memory_creation():
@@ -37,8 +38,12 @@ def test_shared_memory_initialization():
     def init2(shared):
         shared["b"] = 1
 
-    shared.register_inits_list("comp1", [init1, init2])
-    shared.register_inits_list("comp2", [init1])
+    comp = botogram.Component()
+    init1_hook = botogram.hooks.SharedMemoryInitializerHook(init1, comp)
+    init2_hook = botogram.hooks.SharedMemoryInitializerHook(init2, comp)
+
+    shared.register_inits_list("comp1", [init1_hook, init2_hook])
+    shared.register_inits_list("comp2", [init1_hook])
 
     memory1 = shared.of("bot1", "comp1")
     memory2 = shared.of("bot1", "comp2")
