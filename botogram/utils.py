@@ -28,17 +28,44 @@ _logger_configured = False
 warn_logger = logbook.Logger("botogram's code warnings")
 
 
+def _deprecated_message(name, removed_on, fix, back):
+    before = "%s will be removed in botogram %s." % (name, removed_on)
+    after = "Fix: %s" % fix
+    warn(back-1, before, after)
+
+
 def deprecated(name, removed_on, fix):
     """Mark a function as deprecated"""
     def decorator(func):
         def wrapper(*args, **kwargs):
-            before = "%s will be removed in botogram %s." % (name, removed_on)
-            after = "Fix: %s" % fix
-            warn(-1, before, after)
-
+            _deprecated_message(name, removed_on, fix, -2)
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+class DeprecatedAttributes:
+    """Mark a class attribute as deprecated"""
+
+    _deprecated_ = {}
+
+    def __getattribute__(self, key):
+        def get(k):
+            return object.__getattribute__(self, k)
+
+        deprecated = get("_deprecated_")
+
+        if key in deprecated:
+            _deprecated_message(
+                get("__class__").__name__+"."+key,
+                deprecated[key]["removed_on"],
+                deprecated[key]["fix"],
+                -2,
+            )
+            if "callback" in deprecated[key]:
+                return deprecated[key]["callback"]()
+
+        return object.__getattribute__(self, key)
 
 
 def warn(stack_pos, before_message, after_message=None):
