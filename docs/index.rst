@@ -5,16 +5,17 @@
 botogram documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-*A microframework for Telegram bots.*
+*Just focus on your bots.*
 
-botogram is a MIT-licensed microframework, which aims to simplify the creation
-of `Telegram bots`_. It offers a concise, simple API, which allows you to spend
-all your creativity in the bot, without worrying about anything else.
+botogram is a Python framework, which allows you to focus just on creating your
+`Telegram bots`_, without worrying about the underlying Bots API.
 
-It also provides a robust, fully scalable bot runner process, which will be
-able to process fastly high workloads. And as if this isn't enough, it has
-builtin support for commands, with an automatically-generated ``/help``
-command.
+While most of the libraries for Telegram out there just wrap the Bots API,
+botogram focuses heavily on the development experience, aiming to provide you
+the best API possible. Most of the Telegram implementation details are managed
+by botogram, so you can just focus on your bot.
+
+botogram is released under the MIT license.
 
 ::
 
@@ -69,6 +70,7 @@ Side notes
 .. toctree::
    :maxdepth: 2
 
+   changelog
    license
 
 .. _Telegram bots: https://core.telegram.org/bots

@@ -19,11 +19,11 @@ source_suffix = ".rst"
 master_doc = "index"
 
 project = "botogram"
-copyright = "2015 Pietro Albini"
+copyright = "2015-2016 Pietro Albini"
 author = "Pietro Albini"
 
-version = "1.0"
-release = "1.0"
+version = "0.1"
+release = "0.1"
 
 language = None
 

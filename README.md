@@ -1,15 +1,14 @@
 ## botogram [![Build Status](https://img.shields.io/travis/pietroalbini/botogram/master.svg)](https://travis-ci.org/pietroalbini/botogram) [![News channel](https://img.shields.io/badge/telegram_channel-@botogram__framework-0d86d7.svg?style=flat)][channel]
 
-_A microframework for Telegram bots_
+_Just focus on your bots._
 
-botogram is a MIT-licensed microframework, which aims to simplify the creation
-of [Telegram bots][1]. It offers a concise, simple API, which allows you to
-spend all your creativity in the bot, without worrying about anything else.
+botogram is a Python framework, which allows you to focus just on creating your
+[Telegram bots][1], without worrying about the underlying Bots API.
 
-It also provides a robust, fully scalable bot runner process, which will be
-able to process fastly high workloads. And as if this isn't enough, it has
-builtin support for commands, with an automatically-generated ``/help``
-command.
+While most of the libraries for Telegram out there just wrap the Bots API,
+botogram focuses heavily on the development experience, aiming to provide you
+the best API possible. Most of the Telegram implementation details are managed
+by botogram, so you can just focus on your bot.
 
 ```python
 import botogram
@@ -27,14 +26,22 @@ if __name__ == "__main__":
 You can find the documentation at [botogram.pietroalbini.io][2]. Also, you can
 get all the news about botogram in its [Telegram channel][channel].
 
-**Supported Python versions**: 3.4, 3.5
+> Please note botogram currently doesn't support some of the upstream API
+> features. All of them will be implemented in botogram 1.0
+
+**Supported Python versions**: 3.4, 3.5  
+**License**: MIT
 
 ### Installation
 
-botogram is currently in development, so a release doesn't exist yet.  
-But if you want to install it anyway, you can clone the repository and install
-it with setuptools. Be sure to have Python 3.4 (or a newer version), pip,
-virtualenv, setuptools and [invoke][3] installed:
+You can install easily botogram with pip (be sure to have Python 3.4 or higher
+installed):
+
+    $ python3 -m pip install botogram
+
+If you want to install from the source code, you can clone the repository and
+install it with setuptools. Be sure to have Python 3.4 (or a newer version),
+pip, virtualenv, setuptools and [invoke][3] installed:
 
     $ git clone https://github.com/pietroalbini/botogram.git
     $ cd botogram
@@ -44,6 +51,6 @@ On some Linux systems you might need to wrap the ``make install`` command with
 ``sudo``, if you don't have root privileges.
 
 [1]: https://core.telegram.org/bots
-[2]: http://botogram.pietroalbini.io/docs
+[2]: https://botogram.pietroalbini.io/docs
 [3]: http://www.pyinvoke.org
 [channel]: https://telegram.me/botogram_framework

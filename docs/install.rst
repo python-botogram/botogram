@@ -9,10 +9,10 @@ Installation of botogram
 
 botogram is available `on the Python Packages Index`_, so you can install it
 really easily with the `pip`_ command-line utility. Before installing it, be
-sure to have Python_ 3.4 (or a newer version), pip_, virtualenv_ and setuptools_
-installed on your system. Then, issue the following command::
+sure to have Python_ 3.4 (or a newer version), pip_, virtualenv_ and
+setuptools_ installed on your system. Then, issue the following command::
 
-   $ pip3 install botogram
+   $ python3 -m pip install botogram
 
 Perfect, botogram is now installed! Now, you can follow the
 ":ref:`quickstart`" chapter if you want to create a bot right now!
@@ -25,8 +25,7 @@ Living on the edge
 
 If you don't mind having some instability or bugs, and you want the latest
 features not yet released, you can clone the `botogram git repository`_,
-install `virtualenv <virtualenv-install>`_, `invoke`_ and execute the
-installation from source::
+install `virtualenv`_, `invoke`_ and execute the installation from source::
 
    $ git clone https://github.com/pietroalbini/botogram.git
    $ cd botogram
@@ -94,5 +93,4 @@ one::
 .. _setuptools: https://setuptools.pypa.io
 .. _botogram git repository: https://github.com/pietroalbini/botogram
 .. _virtualenv: https://virtualenv.pypa.io
-.. _virtualenv-install: https://virtualenv.pypa.io/en/latest/installation.html
 .. _invoke: https://www.pyinvoke.org
