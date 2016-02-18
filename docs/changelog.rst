@@ -9,6 +9,15 @@ botogram changelog
 
 Here you can see what changed in every botogram release.
 
+.. _changelog-0.2:
+
+botogram 0.2
+=============
+
+*Alpha release, not released yet!*
+
+No changes yet.
+
 .. _changelog-0.1:
 
 botogram 0.1
