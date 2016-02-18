@@ -95,6 +95,19 @@ class ChatMixin:
         self._api.call("sendVoice", args, files)
 
     @_require_api
+    def send_video(self, path, duration=None, caption=None, reply_to=None,
+                   extra=None):
+        """Send a video"""
+        args = self._get_call_args(reply_to, extra)
+        if duration is not None:
+            args["duration"] = duration
+        if caption is not None:
+            args["caption"] = caption
+
+        files = {"video": open(path, "rb")}
+        self._api.call("sendVideo", args, files)
+
+    @_require_api
     def send_file(self, path, reply_to=None, extra=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra)
@@ -148,6 +161,11 @@ class MessageMixin:
     def reply_with_voice(self, path, duration=None, extra=None):
         """Reply with a voice message to the current message"""
         self.chat.send_voice(path, duration, self.message_id, extra)
+
+    @_require_api
+    def reply_with_video(self, path, duration=None, caption=None, extra=None):
+        """Reply with a video to the current message"""
+        self.chat.send_video(path, duration, caption, self.message_id, extra)
 
     @_require_api
     def reply_with_file(self, path, extra=None):

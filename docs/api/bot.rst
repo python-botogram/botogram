@@ -378,6 +378,31 @@ components.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
+   .. py:method:: send_video(chat, path, [duration=None, caption=None, reply_to=None, extra=None])
+
+      This method sends a video to a specific chat. The chat must be identified
+      by its ID, and Telegram applies some restrictions on the chats allowed to
+      receive your photo: only users who sent you a message in the past are
+      allowed, and also the group chats your bot is currently in.
+
+      You must provide the *path* to the video, and you may optionally specify
+      the *duration* and the *caption* of the video. If the video you're
+      sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`.  *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param int chat: The ID of the chat which should receive the video
+      :param str path: The path to the video
+      :param int duration: The video duration, in seconds
+      :param str caption The caption of the video
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
    .. py:method:: send_file(chat, path, [reply_to=None, extra=None])
 
       This method sends a generic file to a specific chat. The chat must be
