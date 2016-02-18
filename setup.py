@@ -26,7 +26,7 @@ details are managed by botogram, so you can just focus on your bot.
     if __name__ == "__main__":
         bot.run()
 
-Want to get started? `Go to the documentation_`
+Want to get started? `Go to the documentation`_
 
 .. _Telegram bots: https://core.telegram.org/bots
 .. _Go to the documentation: https://botogram.pietroalbini.io/docs
