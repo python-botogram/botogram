@@ -7,7 +7,6 @@
 """
 
 from . import utils
-from . import objects
 from . import components
 from . import decorators
 
@@ -142,7 +141,7 @@ class DefaultComponent(components.Component):
         username = bot.itself.username
 
         mentioned = splitted[0] == "/%s@%s" % (command, username)
-        single_user = isinstance(chat, objects.User)
+        single_user = chat.type == "private"
         if mentioned or single_user:
             chat.send("\n".join([
                 bot._("Unknown command: /%(name)s", name=command),
