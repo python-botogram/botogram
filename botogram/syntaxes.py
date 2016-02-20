@@ -9,15 +9,15 @@
 import re
 
 
-_markdown_re = re.compile(r"("
+_markdown_re = re.compile(r".*("
                           r"\*(.*)\*|"
                           r"_(.*)_|"
                           r"\[(.*)\]\((.*)\)|"
                           r"`(.*)`|"
                           r"```(.*)```"
-                          r")")
+                          r").*")
 
-_html_re = re.compile(r"("
+_html_re = re.compile(r".*("
                       r"<b>(.*)<\/b>|"
                       r"<strong>(.*)<\/strong>|"
                       r"<i>(.*)<\/i>|"
@@ -25,7 +25,7 @@ _html_re = re.compile(r"("
                       r"<a\shref=\"(.*)\">(.*)<\/a>|"
                       r"<code>(.*)<\/code>|"
                       r"<pre>(.*)<\/pre>"
-                      r")")
+                      r").*")
 
 
 def is_markdown(message):
