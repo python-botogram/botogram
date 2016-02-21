@@ -14,7 +14,7 @@ Here you can see what changed in every botogram release.
 botogram 0.1.1
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on February 21th, 2016*
 
 * Fix automatic syntax detector not working sometimes (`issue 26`_)
 * Fix "unknown command" message not showing up in private chats (`issue 25`_)
