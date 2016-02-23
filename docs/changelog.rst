@@ -18,6 +18,17 @@ botogram 0.2
 
 No changes yet.
 
+.. _changelog-0.1.2:
+
+botogram 0.1.2
+==============
+
+*Bugfix release, not yet released*
+
+* Fix automatic syntax detector recognizing markdown in URLs (`issue 28`_)
+
+.. _issue 28: https://github.com/pietroalbini/botogram/issues/28
+
 .. _changelog-0.1.1:
 
 botogram 0.1.1

@@ -8,6 +8,8 @@
 
 import re
 
+from . import utils
+
 
 _markdown_re = re.compile(r".*("
                           r"\*(.*)\*|"
@@ -30,11 +32,16 @@ _html_re = re.compile(r".*("
 
 def is_markdown(message):
     """Check if a string is actually markdown"""
+    # Don't mark part of URLs or email addresses as Markdown
+    message = utils.strip_urls(message)
+
     return bool(_markdown_re.match(message))
 
 
 def is_html(message):
     """Check if a string is actually HTML"""
+    # Here URLs are not stripped because no sane URL contains HTML tags in it,
+    # and for a few cases the speed penality is not worth
     return bool(_html_re.match(message))
 
 

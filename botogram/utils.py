@@ -17,9 +17,12 @@ import pkg_resources
 import logbook
 import functools
 
+# URLs regex created by http://twitter.com/imme_emosol
+
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
 _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
+_url_re = re.compile(r"https?://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?")
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False
@@ -139,6 +142,13 @@ def docstring_of(func, bot=None, component_id=None):
     return format_docstr(docstring)
 
 
+def strip_urls(string):
+    """Strip URLs and emails from a string"""
+    string = _url_re.sub("", string)
+    string = _email_re.sub("", string)
+    return string
+
+
 def usernames_in(message):
     """Return all the matched usernames in the message"""
     # Don't parse usernames in the commands
@@ -146,8 +156,8 @@ def usernames_in(message):
         message = message.split(" ", 1)[1]
 
     # Strip email addresses from the message, in order to avoid matching the
-    # user's domain. This also happens to match username/passwords in URLs
-    message = _email_re.sub("", message)
+    # user's domain. Also strip URLs, in order to avoid usernames in them.
+    message = strip_urls(message)
 
     results = []
     for result in _username_re.finditer(message):
