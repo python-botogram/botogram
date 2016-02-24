@@ -71,6 +71,13 @@ That parameter accepts the following values:
 * ``markdown``, or its aliases ``md`` and ``Markdown``
 * ``html``, or its alias ``HTML``
 
+Also, if you don't want to use any rich formatting but the detector spots
+something, you can disable it providing the special syntax ``plain`` to it:
+
+.. code-block:: python
+
+   chat.send("*I don't want this to be detected*", syntax="plain")
+
 .. note::
 
    Support for rich formatting depends on your users' Telegram client. If

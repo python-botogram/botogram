@@ -25,8 +25,10 @@ botogram 0.1.2
 
 *Bugfix release, not yet released*
 
+* Add a way to disable the syntax detector (`issue 27`_)
 * Fix automatic syntax detector recognizing markdown in URLs (`issue 28`_)
 
+.. _issue 27: https://github.com/pietroalbini/botogram/issues/27
 .. _issue 28: https://github.com/pietroalbini/botogram/issues/28
 
 .. _changelog-0.1.1:

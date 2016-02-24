@@ -55,7 +55,9 @@ def guess_syntax(message, provided):
         else:
             return None
 
-    if provided in ("md", "markdown", "Markdown"):
+    if provided in ("plain",):
+        return None
+    elif provided in ("md", "markdown", "Markdown"):
         return "Markdown"
     elif provided in ("html", "HTML"):
         return "HTML"

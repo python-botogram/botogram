@@ -41,6 +41,9 @@ def test_is_html():
 
 def test_guess_syntax():
     # Provided syntax name
+    for name in ("plain",):
+        assert botogram.syntaxes.guess_syntax("", name) is None
+
     for name in ("md", "markdown", "Markdown"):
         assert botogram.syntaxes.guess_syntax("", name) == "Markdown"
 
