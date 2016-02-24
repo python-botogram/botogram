@@ -34,7 +34,7 @@ requested only two of them, and botogram is able to provide only them in the
 right order.
 
 Please remember this will work only if a function is called directly by
-botogram (for example when a command is issued by an user). If you call it by
+botogram (for example when a command is issued by a user). If you call it by
 hand, you'll need to provide the arguments by hand.
 
 There are some extra arguments you can request from every function called by
@@ -57,10 +57,10 @@ to use rich formatting in their messages. Currently Telegram only supports `a
 subset of`_ Markdown and HTML.
 
 In order to use rich formatting in your messages you don't need to do anything:
-botogram is smart enough to detect when a message uses rich formatting, and the
-used syntax. If for whatever reason that detection fails, you can specify the
-syntax you're using by providing it to the ``syntax`` parameter of the
-:py:meth:`~botogram.Chat.send` method:
+botogram is smart enough to detect when a message uses rich formatting as well
+as which syntax is used. If for whatever reason that detection fails, you can
+specify the syntax you're using by providing it to the ``syntax`` parameter of
+the :py:meth:`~botogram.Chat.send` method:
 
 .. code-block:: python
 
@@ -73,8 +73,8 @@ That parameter accepts the following values:
 
 .. note::
 
-   Support for rich formatting depends on your users' Telegram client. If
-   they're using the official ones there are no problems, but that might work
-   on unofficial clients.
+   Support for rich formatting depends on your users' Telegram client. All
+   official clients are supported, where unofficial clients may not support
+   all or any rich formatting syntax.
 
 .. _a subset of: https://core.telegram.org/bots/api#formatting-options

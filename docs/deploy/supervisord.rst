@@ -7,7 +7,7 @@ Deploy with Supervisor
 
 Supervisor_ is a process management system written in Python, which allows you
 to run applications in a controlled and reliable way. It features running
-things in the background, rotation of the log files, and automatically restarts
+things in the background, rotation of the log files, and automatic restarts
 of crashed applications.
 
 Supervisor is the best choice for deploying botogram-powered bots, since it
@@ -53,7 +53,7 @@ init system.
 Preparation of the bot
 ======================
 
-First thing to do is to create an user which will own the bot. This allows your
+First thing to do is to create a user which will own the bot. This allows your
 bot to run in isolation from other processes, increasing the security of your
 deployment. The user will be called ``telegrambot`` (from **root**)::
 

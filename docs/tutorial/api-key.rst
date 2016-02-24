@@ -15,13 +15,13 @@ command::
 
    /newbot
 
-And follow the instructions it gives to you. When you've gave to it everything
+And follow the instructions it gives to you. When you've given it everything
 it needs to know, it will give you an API key, like this fake one::
 
    123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
-Write it down somewhere. You can customize a bit more the bot from that chat,
-check `the @botfather documentation`_ if you want to know something more.
+Write it down somewhere. You can further customize the bot from that chat,
+check `the @botfather documentation`_ if you want to know more.
 
 .. _@botfather: https://telegram.me/botfather
 .. _the @botfather documentation: https://core.telegram.org/bots/#botfather

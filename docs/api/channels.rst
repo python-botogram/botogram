@@ -15,7 +15,7 @@ just want to send messages to a channel, it's better if you use this.
 
    Create a new :py:class:`~botogram.Chat` object which points to the channel.
    You need to provide the channel name, prefixed with ``@``, and your bot's
-   API key. Please refer to the :ref:`channels-preparation <preparations>`
+   API key. Please refer to the :ref:`channels-preparation`
    section if you don't know how to get it.
 
    :param str name: The channel name.

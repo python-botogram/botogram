@@ -28,7 +28,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
    .. py:attribute:: component_name
 
       The name of the component. If you subclass the class in order to create a
-      custom component, be sure to set it to an appropiate value.
+      custom component, be sure to set it to an appropriate value.
 
    .. py:method:: add_before_processing_hook(func)
 
@@ -38,8 +38,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       Provided functions will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -55,8 +54,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -73,9 +71,8 @@ about how to create them in the ":ref:`custom-components`" chapter.
       parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
-      * A ``message`` parameter witht the representation of the received
+        message was sent (an instance of :py:class:`botogram.Chat`)
+      * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`).
 
       If the function returns ``True``, then the message processing is stopped,
@@ -94,8 +91,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       message. Provided functions will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -117,8 +113,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       be called with three parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * A ``matches`` parameter with a tuple containing the matched groups
@@ -140,8 +135,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       three parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * An ``args`` parameter with the list of parsed arguments

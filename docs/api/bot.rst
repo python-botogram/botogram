@@ -41,7 +41,7 @@ components.
 
       The username of the bot's owner, which will be displayed in the ``/help``
       command. This attribute will be sent directly to the user, so if you want
-      to insert an username be sure to prefix it with ``@``, so the Telegram
+      to insert a username be sure to prefix it with ``@``, so the Telegram
       client will make that text clickable.
 
    .. py:attribute:: before_help
@@ -84,8 +84,7 @@ components.
       parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -99,8 +98,7 @@ components.
       will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -122,9 +120,8 @@ components.
       called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
-      * A ``message`` parameter witht the representation of the received
+        message was sent (an instance of :py:class:`botogram.Chat`)
+      * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`).
 
       If the function returns ``True``, then the message processing is stopped,
@@ -142,8 +139,7 @@ components.
       message. Decorated functions will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -164,8 +160,7 @@ components.
       be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * A ``matches`` parameter with a tuple containing the matched groups
@@ -186,8 +181,7 @@ components.
       three parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * An ``args`` parameter with the list of parsed arguments

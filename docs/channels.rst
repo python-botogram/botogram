@@ -31,7 +31,7 @@ The final step is to add your bot as an administrator of the channel. Open your
 favourite Telegram client, and go to the administrators' section of your
 channel. From it you should add your bot, and then you're ready.
 
-.. _chanels-standalone:
+.. _channels-standalone:
 
 =========================
 Manage without a full bot
@@ -50,8 +50,8 @@ channel object:
 
 You need to replace ``@my_channel`` with your channel's public name, and
 ``YOUR_API_KEY`` with the key you got before. Then you can use all the methods
-of the :py:class:`~botogram.Chat` object with the instance you got. For
-example, if you want to send a text message you should do:
+of the :py:class:`~botogram.Chat` object with the instance you are returned.
+For example, if you want to send a text message you should do:
 
 .. code-block:: python
    :emphasize-lines: 2
@@ -88,3 +88,4 @@ cites botogram in a chat, you can do this:
            user = message.from_.username
 
        bot.send("@my_channel", "%s mentioned botogram!" % user)
+.. _@botfather: https://telegram.me/botfather

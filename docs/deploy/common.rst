@@ -5,7 +5,7 @@
 Common deployment information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Even if different deployments techniques are *really* different, all of them
+Even if different deployment techniques are *really* different, all of them
 have two essential things in common: server security and application
 configuration.
 
@@ -14,7 +14,7 @@ Server security considerations
 
 In a perfect world, you wouldn't need to worry about securing your servers,
 because no one would attempt to break them. Unfortunately, we don't live in
-that world, so you need to protect your server from the ones who loves breaking
+that world, so you need to protect your server from the ones who love breaking
 others' things.
 
 * **You need to have experience in servers management**. Servers aren't easy to
@@ -28,7 +28,7 @@ others' things.
   attacker won't be able to do too much damage on your system.
 
 * **Keeping services separated is a good idea**. In order to restrict even more
-  what an hypothetical attacker can do, you can created a separated user for
+  what an hypothetical attacker can do, you can create a separate user for
   *each* service you have on your server. This way an attacker can't even
   compromise other applications.
 
@@ -46,15 +46,15 @@ traffic (for example bots only for a single group chat) this might become
 annoying.
 
 The solution is to run multiple bots in a single runner, since adding bots to a
-runner is way more inexpensive instead of creating a runner per bot. Be warned
-that if you add too much bots in a single runner, the workers might not be able
+runner is way more inexpensive than creating a runner per bot. Be warned
+that if you add too many bots to a single runner, the workers might not be able
 to keep up with the incoming requests.
 
-In order to make this happening, you need to have each bot in an importable
+In order to make this happen, you need to have each bot in an importable
 Python file, and then create a file which calls :py:func:`botogram.run` with
 the bots' instances. For example, if you have two bots in ``mybot1.py`` and
 ``mybot2.py``, and the bot instance in all of them is called ``bot``, you can
-use this script to run all of them:
+use this script to run both of them in a single runner:
 
 .. code-block:: python
 

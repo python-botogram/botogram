@@ -8,35 +8,34 @@ A better help command
 ~~~~~~~~~~~~~~~~~~~~~
 
 When you previously ran the bot, you may have noticed botogram automatically
-generated the ``/help`` command, with all the commands you have registered and
-the builtin ones. That's one of the features of botogram, and you can obviusly
-customize it.
+generated the ``/help`` command along side any commands you have registered.
+That's one of the features of botogram, and you can obviously customize it.
 
 .. _tutorial-better-help-about:
 
-==========================
-Informations about the bot
-==========================
+=========================
+Information about the bot
+=========================
 
-When someone uses your bot, he might be wondering what it does, or what's the
-owner of it. botogram provides an easy way to add these two pieces of
-information to the bot's help message. Add these two lines of code just below
-the creation of the bot:
+When someone uses your bot, he might be wondering what it does, or who its
+owner is. botogram provides an easy way to add these two pieces of information
+to the bot's help message. Add these two lines of code just below the creation
+of the bot:
 
 .. code-block:: python
    :emphasize-lines: 2,3
 
    bot = botogram.create("YOUR-API-KEY")
-   bot.about = "This bot is just the one from the botogram's tutorial"
+   bot.about = "This bot is just the one from botogram's tutorial"
    bot.owner = "@yourusername"
 
 Feel free to change the about message and the owner's name as you want. If you
-try to run the bot now, you'll see these information when you issue the
+run the bot now, you'll see this information when you issue the ``/help``
 command.
 
 .. note::
 
-   The about message will be also automatically added to the ``/start``
+   The about message will also automatically be added to the ``/start``
    command.
 
 .. _tutorial-better-help-commands:
@@ -63,10 +62,10 @@ function:
        """
        chat.send("Hello world")
 
-The first non-empty line of the docstring will be showed in the commands list
-available issuing ``/help``, and the whole docstring will be showed only if
-someone asks more detailed help for a command, issuing ``/help`` with the
-command name as argument.
+The first non-empty line of the docstring will be shown in the commands list
+when issuing ``/help``, and the whole docstring will be shown only if
+someone asks for more detailed help on a command. For instance, issuing
+``/help hello``, with the command name as an argument.
 
 .. _tutorial-better-help-custom:
 
@@ -79,10 +78,10 @@ better to write what it does in the help message. In order to do so, you can
 append messages before and after the commands list, with either the
 :py:attr:`botogram.Bot.before_help` or :py:attr:`botogram.Bot.after_help`
 attributes. These attributes should contain a list of messages, and each
-message will be sent in one different line.
+message will be sent as one paragraph.
 
 In this case, we're going to add a message after the commands, which explains
-that the bot will also parse chat messages to send useful informations (we're
+that the bot will also parse chat messages to send useful information (we're
 going to implement this afterwards):
 
 .. code-block:: python
@@ -91,7 +90,7 @@ going to implement this afterwards):
    bot.owner = "@yourusername"
 
    bot.after_help = [
-      "This bot also parses the chat in order to send you useful informations.",
+      "This bot also parses the chat in order to send you useful information.",
    ]
 
 .. _tutorial-better-help-source:
@@ -105,11 +104,11 @@ Bot's source code until now
    import botogram
 
    bot = botogram.create("YOUR-API-KEY")
-   bot.about = "This bot is just the one from the botogram's tutorial"
+   bot.about = "This bot is just the one from botogram's tutorial"
    bot.owner = "@yourusername"
 
    bot.after_help = [
-      "This bot also parses the chat in order to send you useful informations.",
+      "This bot also parses the chat in order to send you useful information.",
    ]
 
    @bot.command("hello")

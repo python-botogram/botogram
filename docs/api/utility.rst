@@ -48,7 +48,7 @@ development. Feel free to use them when you need them.
 
    This decorator does nothing currently. If you still use it, just remove all
    the references to it in your source code. Your bot will still work
-   flawlessy.
+   flawlessly.
 
    .. deprecated:: ae3314ed it will be removed in botogram 1.0
 
@@ -56,7 +56,7 @@ development. Feel free to use them when you need them.
 
    This decorator does nothing currently. If you still use it, just remove all
    the references to it in your source code. Your bot will still work
-   flawlessy.
+   flawlessly.
 
    .. deprecated:: ae3314ed it will be removed in botogram 1.0
 

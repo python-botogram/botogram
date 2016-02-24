@@ -25,7 +25,7 @@ it:
 
 The first line imports the botogram microframework, allowing you to use it in
 the program. The second one will create a brand new bot, with ``YOUR-API-KEY``
-as the API key. Change that with the one you received in the previus step.
+as the API key. Change that with the one you received in the previous step.
 Finally, the third line will run the bot.
 
 Even if right now the bot does nothing, you can run it by executing its file::
