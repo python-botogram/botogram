@@ -23,7 +23,7 @@ No changes yet.
 botogram 0.1.2
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on February 25th, 2016*
 
 * Add a way to disable the syntax detector (`issue 27`_)
 * Fix automatic syntax detector recognizing markdown in URLs (`issue 28`_)
