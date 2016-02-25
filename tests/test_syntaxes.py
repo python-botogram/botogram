@@ -21,6 +21,9 @@ def test_is_markdown():
     assert botogram.syntaxes.is_markdown("[a](b)")
     assert botogram.syntaxes.is_markdown("![a](b)!")
 
+    assert not botogram.syntaxes.is_markdown("hey@this_is_awesome.com")
+    assert not botogram.syntaxes.is_markdown("https://www.this_is_awesome.com")
+
 
 def test_is_html():
     assert not botogram.syntaxes.is_html("not HTML, sorry!")
@@ -38,6 +41,9 @@ def test_is_html():
 
 def test_guess_syntax():
     # Provided syntax name
+    for name in ("plain",):
+        assert botogram.syntaxes.guess_syntax("", name) is None
+
     for name in ("md", "markdown", "Markdown"):
         assert botogram.syntaxes.guess_syntax("", name) == "Markdown"
 
