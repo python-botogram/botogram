@@ -26,7 +26,7 @@ def test_shared_memory_creation():
     assert comp1["test"] == comp1b["test"]
 
 
-def test_shared_memory_initialization():
+def test_shared_memory_preparers():
     shared = botogram.shared.SharedMemory()
 
     def init1(shared):
@@ -39,11 +39,11 @@ def test_shared_memory_initialization():
         shared["b"] = 1
 
     comp = botogram.Component()
-    init1_hook = botogram.hooks.SharedMemoryInitializerHook(init1, comp)
-    init2_hook = botogram.hooks.SharedMemoryInitializerHook(init2, comp)
+    init1_hook = botogram.hooks.MemoryPreparerHook(init1, comp)
+    init2_hook = botogram.hooks.MemoryPreparerHook(init2, comp)
 
-    shared.register_inits_list("comp1", [init1_hook, init2_hook])
-    shared.register_inits_list("comp2", [init1_hook])
+    shared.register_preparers_list("comp1", [init1_hook, init2_hook])
+    shared.register_preparers_list("comp2", [init1_hook])
 
     memory1 = shared.of("bot1", "comp1")
     memory2 = shared.of("bot1", "comp2")
