@@ -16,7 +16,15 @@ botogram 0.2
 
 *Alpha release, not yet released*
 
-No changes yet.
+* Renamed ``Bot.init_shared_memory`` to ``Bot.prepare_memory``
+* Renamed ``Component.add_shared_memory_initializer`` to
+  ``Component.add_memory_preparer``
+
+The following things are now **deprecated**:
+
+* ``Bot.init_shared_memory``, and it will be removed in botogram 1.0
+* ``Component.add_shared_memory_initializer``, and it will be removed in
+  botogram 1.0
 
 .. _changelog-0.1.2:
 
