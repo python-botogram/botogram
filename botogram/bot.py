@@ -54,9 +54,9 @@ class Bot(frozenbot.FrozenBot):
         self._shared_memory = shared.SharedMemory()
 
         # Register bot's shared memory initializers
-        inits = self._main_component._get_shared_memory_inits()
+        inits = self._main_component._get_memory_preparers()
         maincompid = self._main_component._component_id
-        self._shared_memory.register_inits_list(maincompid, inits)
+        self._shared_memory.register_preparers_list(maincompid, inits)
 
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
@@ -142,10 +142,16 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
-    def init_shared_memory(self, func):
-        """Register a shared memory's initializer"""
-        self._main_component.add_shared_memory_initializer(func)
+    def prepare_memory(self, func):
+        """Register a shared memory's preparer"""
+        self._main_component.add_memory_preparer(func)
         return func
+
+    @utils.deprecated("@bot.init_shared_memory", "1.0", "Rename the decorator "
+                      "to @bot.prepare_memory")
+    def init_shared_memory(self, func):
+        """This decorator is deprecated, and it calls @prepare_memory"""
+        return self.prepare_memory(func)
 
     def use(self, *components, only_init=False):
         """Use the provided components in the bot"""
@@ -157,8 +163,8 @@ class Bot(frozenbot.FrozenBot):
 
             # Register initializers for the shared memory
             compid = component._component_id
-            inits = component._get_shared_memory_inits()
-            self._shared_memory.register_inits_list(compid, inits)
+            preparers = component._get_memory_preparers()
+            self._shared_memory.register_preparers_list(compid, preparers)
 
             # Register tasks
             self._scheduler.register_tasks_list(component._get_timers())

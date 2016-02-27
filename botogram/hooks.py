@@ -66,8 +66,8 @@ class ProcessMessageHook(Hook):
     pass
 
 
-class SharedMemoryInitializerHook(Hook):
-    """Underlying hook for @bot.init_shared_memory"""
+class MemoryPreparerHook(Hook):
+    """Underlying hook for @bot.prepare_memory"""
 
     def call(self, memory):
         return self.func(memory)

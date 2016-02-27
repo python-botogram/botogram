@@ -207,7 +207,7 @@ components.
 
       :param int interval: The execution interval, in seconds.
 
-   .. py:decoratormethod:: init_shared_memory
+   .. py:decoratormethod:: prepare_memory
 
       The function decorated with this decorator will be called the first time
       you access your bot's shared memory. This allows you to set the initial
@@ -218,11 +218,11 @@ components.
 
       The decorated function will be called providing as first argument a
       dict-like object representing your bot's shared memory. Use it to
-      initialize the things you want in the shared memory.
+      prepare the things you want in the shared memory.
 
       .. code-block:: python
 
-         @bot.init_shared_memory
+         @bot.prepare_memory
          def initialize(shared):
              shared["messages"] = 0
 
@@ -235,6 +235,18 @@ components.
          @bot.command("count")
          def count(shared, chat, message, args):
              chat.send("This bot received %s messages" % shared["messages"])
+
+      .. versionchanged:: 0.2
+
+         Before it was called ``init_shared_memory``.
+
+   .. py:decoratormethod:: init_shared_memory
+
+      This decorator was renamed to
+      :py:meth:`~botogram.Bot.prepare_memory` in botogram 0.2.
+      Please use that instead of this.
+
+      .. deprecated:: 0.2 it will be removed in botogram 1.0
 
    .. py:method:: use(component)
 

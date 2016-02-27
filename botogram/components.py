@@ -27,7 +27,7 @@ class Component:
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
-        self.__shared_inits = []
+        self.__memory_preparers = []
         self.__timers = []
 
         self._component_id = str(uuid.uuid4())
@@ -122,13 +122,19 @@ class Component:
 
         self.__timers.append(job)
 
-    def add_shared_memory_initializer(self, func):
+    def add_memory_preparer(self, func):
         """Add a new shared memory's initializer"""
         if not callable(func):
-            raise ValueError("A shared memory initializer must be callable")
+            raise ValueError("A memory preparer must be callable")
 
-        hook = hooks.SharedMemoryInitializerHook(func, self)
-        self.__shared_inits.append(hook)
+        hook = hooks.MemoryPreparerHook(func, self)
+        self.__memory_preparers.append(hook)
+
+    @utils.deprecated("Component.add_shared_memory_initializer", "1.0",
+                      "Rename the method to Component.add_memory_preparer")
+    def add_shared_memory_initializer(self, func):
+        """This method is deprecated, and it calls add_memory_preparer"""
+        self.add_memory_preparer(func)
 
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
@@ -151,9 +157,9 @@ class Component:
         """Get all the commands this component implements"""
         return self.__commands
 
-    def _get_shared_memory_inits(self):
+    def _get_memory_preparers(self):
         """Get a list of all the shared memory initializers"""
-        return self.__shared_inits
+        return self.__memory_preparers
 
     def _get_timers(self):
         """Get a list of all the timers"""

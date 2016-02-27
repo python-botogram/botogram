@@ -125,10 +125,16 @@ class FrozenBot:
         """Register a new timer"""
         raise FrozenBotError("Can't add timers to a bot at runtime")
 
-    def init_shared_memory(self, func):
-        """Add a shared memory initializer"""
-        raise FrozenBotError("Can't register a shared memory initializer to a "
+    def prepare_memory(self, func):
+        """Add a shared memory preparer"""
+        raise FrozenBotError("Can't register a shared memory preparer to a "
                              "bot at runtime")
+
+    @utils.deprecated("@bot.init_shared_memory", "1.0", "Rename the decorator "
+                      "to @bot.prepare_memory")
+    def init_shared_memory(self, func):
+        """This decorator is deprecated, and it calls @prepare_memory"""
+        return self.prepare_memory(func)
 
     # Those are shortcuts to send messages directly to someone
 

@@ -175,7 +175,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param int interval: The execution interval, in seconds.
       :param callable func: The function you want to use.
 
-   .. py:method:: add_shared_memory_initializer(func)
+   .. py:method:: add_memory_preparer(func)
 
       The function provided to this method will be called the first time you
       access your component's shared memory. This allows you to set the initial
@@ -196,7 +196,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
              component_name = "counter"
 
              def __init__(self):
-                 self.add_shared_memory_initializer(self.initialize)
+                 self.add_memory_preparer(self.initialize)
                  self.add_process_message_hook(self.increment)
                  self.add_command("count", self.count)
 
@@ -210,3 +210,15 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
              def count(self, shared, chat, message, args):
                  chat.send("This bot received %s messages" % shared["messages"])
+
+      .. versionchanged:: 0.2
+
+         Before it was called ``add_shared_memory_initializer``.
+
+   .. py:method:: add_shared_memory_initializer(func)
+
+      This method was renamed to
+      :py:meth:`~botogram.Component.add_memory_preparer` in botogram 0.2.
+      Please use that instead of this.
+
+      .. deprecated:: 0.2 it will be removed in botogram 1.0

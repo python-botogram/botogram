@@ -68,24 +68,24 @@ command which displays the current messages count calculated by the hook above:
 
 .. _shared-memory-inits:
 
-Shared memory initializers
-==========================
+Shared memory preparers
+=======================
 
 In the example above, a big part of the code is just to handle the case when
 the shared memory doesn't contain the ``count`` key, and that's possible only
 at startup. In order to solve this problem, you can use the
-:py:meth:`botogram.Bot.init_shared_memory` decorator.
+:py:meth:`~botogram.Bot.prepare_memory` decorator.
 
 Functions decorated with that decorator will be called only the first time you
 require the shared memory. This means you can use them to set the initial value
 of all the keys you want to use in the shared memory.
 
-For example, let's refactor the code above to use an initializer:
+For example, let's refactor the code above to use a preparer:
 
 .. code-block:: python
 
-   @bot.init_shared_memory
-   def init_shared_memory(shared):
+   @bot.prepare_memory
+   def prepare_memory(shared):
        shared["messages"] = 0
 
    @bot.process_message
@@ -115,8 +115,8 @@ component is used by multiple bots.
 Using shared memory within a component is the same as using it in your bot's
 main code: just require the ``shared`` argument to your component's function
 and botogram will make sure it receives the component's shared memories. To
-add a shared memory initializer, you can instead provide the function to the
-:py:meth:`botogram.Component.add_shared_memory_initializer` method.
+add a shared memory preparer, you can instead provide the function to the
+:py:meth:`~botogram.Component.add_memory_preparer` method.
 
 .. _shared-memory-locks:
 
