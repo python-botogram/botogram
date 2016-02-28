@@ -19,12 +19,15 @@ botogram 0.2
 * Renamed ``Bot.init_shared_memory`` to ``Bot.prepare_memory``
 * Renamed ``Component.add_shared_memory_initializer`` to
   ``Component.add_memory_preparer``
+* Fix the syntax detector checking URLs with dashes in the domain (`issue 32`_)
 
 The following things are now **deprecated**:
 
 * ``Bot.init_shared_memory``, and it will be removed in botogram 1.0
 * ``Component.add_shared_memory_initializer``, and it will be removed in
   botogram 1.0
+
+.. _issue 32: https://github.com/pietroalbini/botogram/issues/32
 
 .. _changelog-0.1.2:
 

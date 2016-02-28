@@ -22,7 +22,7 @@ import functools
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
 _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
-_url_re = re.compile(r"https?://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?")
+_url_re = re.compile(r"https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?")
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False

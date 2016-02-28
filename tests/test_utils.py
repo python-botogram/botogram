@@ -17,6 +17,32 @@ STRANGE_DOCSTRING = """ a
 """
 
 
+def test_strip_urls():
+    # Standard HTTP url
+    assert botogram.utils.strip_urls("http://www.example.com") == ""
+
+    # Standard HTTPS url
+    assert botogram.utils.strip_urls("https://www.example.com") == ""
+
+    # HTTP url with dashes in the domain (issue #32)
+    assert botogram.utils.strip_urls("http://www.ubuntu-it.org") == ""
+
+    # HTTP url with a path
+    assert botogram.utils.strip_urls("http://example.com/~john/d/a.txt") == ""
+
+    # Standard email address
+    assert botogram.utils.strip_urls("john.doe@example.com") == ""
+
+    # Email address with a comment (+something)
+    assert botogram.utils.strip_urls("john.doe+botogram@example.com") == ""
+
+    # Email address with subdomains
+    assert botogram.utils.strip_urls("john.doe@something.example.com") == ""
+
+    # Email address with dashes in the domain name (issue #32)
+    assert botogram.utils.strip_urls("pietroalbini@ubuntu-it.org") == ""
+
+
 def test_format_docstr():
     # This docstring needs lots of cleanup...
     res = botogram.utils.format_docstr(STRANGE_DOCSTRING)
