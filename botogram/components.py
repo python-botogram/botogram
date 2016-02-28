@@ -144,23 +144,49 @@ class Component:
         hook = hooks.NoCommandsHook(func, self)
         self.__no_commands.append(hook)
 
-    def _get_hooks_chain(self):
+    def _get_chains(self):
         """Get the full hooks chain for this component"""
-        return [
+        messages = [
             self.__before_processors[:],
             [self.__commands[name] for name in sorted(self.__commands.keys())],
             self.__no_commands[:],
             self.__processors[:],
         ]
+        return {
+            "messages": messages,
+            "memory_preparers": [self.__memory_preparers],
+            "tasks": [self.__timers],
+        }
 
     def _get_commands(self):
         """Get all the commands this component implements"""
         return self.__commands
 
-    def _get_memory_preparers(self):
-        """Get a list of all the shared memory initializers"""
-        return self.__memory_preparers
 
-    def _get_timers(self):
-        """Get a list of all the timers"""
-        return self.__timers
+def merge_chains(main, *components):
+    """Merge multiple chains returned by the components"""
+    merged = {}
+    components = [main]+list(reversed(components))
+
+    # First of all, merge all the subchains of the different components
+    # together -- This is a separate step so the order is preserved
+    for component in components:
+        macrochains = component._get_chains()
+        for kind, chains in macrochains.items():
+            if kind not in merged:
+                merged[kind] = []
+
+            for i, chain in enumerate(chains):
+                try:
+                    merged[kind][i] += chain
+                except IndexError:
+                    merged[kind].append(chain[:])
+
+    # Then merge all the subchains together
+    result = {}
+    for kind, chains in merged.items():
+        result[kind] = []
+        for chain in chains:
+            result[kind] += chain
+
+    return result

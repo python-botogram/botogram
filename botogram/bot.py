@@ -54,7 +54,7 @@ class Bot(frozenbot.FrozenBot):
         self._shared_memory = shared.SharedMemory()
 
         # Register bot's shared memory initializers
-        inits = self._main_component._get_memory_preparers()
+        inits = self._main_component._get_chains()["memory_preparers"][0]
         maincompid = self._main_component._component_id
         self._shared_memory.register_preparers_list(maincompid, inits)
 
@@ -162,12 +162,13 @@ class Bot(frozenbot.FrozenBot):
                 self._components.append(component)
 
             # Register initializers for the shared memory
+            chains = component._get_chains()
             compid = component._component_id
-            preparers = component._get_memory_preparers()
+            preparers = chains["memory_preparers"][0]
             self._shared_memory.register_preparers_list(compid, preparers)
 
             # Register tasks
-            self._scheduler.register_tasks_list(component._get_timers())
+            self._scheduler.register_tasks_list(chains["tasks"][0])
 
     def process(self, update):
         """Process an update object"""
@@ -184,12 +185,14 @@ class Bot(frozenbot.FrozenBot):
 
     def freeze(self):
         """Return a frozen instance of the bot"""
+        chains = components.merge_chains(self._main_component,
+                                         *self._components)
+
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self.hide_commands, self.before_help,
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
-                                   self._components+[self._main_component],
-                                   self._scheduler,
+                                   chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 

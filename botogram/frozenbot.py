@@ -22,7 +22,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, scheduler, main_component_id, bot_id,
+                 chains, scheduler, main_component_id, bot_id,
                  shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
@@ -38,25 +38,11 @@ class FrozenBot:
         self.process_backlog = process_backlog
         self.lang = lang
         self._commands_re = commands_re
-        self._components = components
         self._main_component_id = main_component_id
         self._bot_id = bot_id
         self._shared_memory = shared_memory
         self._scheduler = scheduler
-
-        # Rebuild the hooks chain and commands list
-        self._commands = components[-1]._get_commands()
-        self._chain = []
-        chains = components[-1]._get_hooks_chain()
-        for component in reversed(components[:-1]):
-            self._commands.update(component._get_commands())
-
-            comp_chain = component._get_hooks_chain()
-            for i in range(len(chains)):
-                chains[i] += comp_chain[i]
-
-        for chain in chains:
-            self._chain += chain
+        self._chains = chains
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -75,7 +61,7 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
-            self.lang, self.itself, self._commands_re, self._components,
+            self.lang, self.itself, self._commands_re, self._chains,
             self._scheduler, self._main_component_id, self._bot_id,
             self._shared_memory,
         )
@@ -186,7 +172,7 @@ class FrozenBot:
 
         update.set_api(self.api)  # Be sure to use the correct API object
 
-        for hook in self._chain:
+        for hook in self._chains["messages"]:
             # Get the correct name of the hook
             name = hook.name
             self.logger.debug("Processing update #%s with the %s hook..." %
