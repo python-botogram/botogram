@@ -10,6 +10,67 @@ import pytest
 import botogram.objects
 
 
+def test_user_avatar(api, mock_req):
+    mock_req({
+        "getUserProfilePhotos": {
+            "ok": True,
+            "result": {
+                "total_count": 1,
+                "photos": [
+                    [
+                        {
+                            "file_id": "aaaaaa",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                        {
+                            "file_id": "bbbbbb",
+                            "width": 25,
+                            "height": 25,
+                            "file_size": 64,
+                        },
+                    ],
+                ],
+            },
+        },
+    })
+
+    # First of all, make sure the API wrapper is required to fetch avatars
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"})
+    with pytest.raises(RuntimeError):
+        user.avatar  # Access the avatar without an API wrapper
+
+    # Now use an API
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"}, api)
+
+    # Be sure the avatar isn't loaded yet
+    assert not hasattr(user, "_avatar")
+
+    # Now fetch the avatar
+    avatar = user.avatar
+    assert avatar.file_id == "aaaaaa"
+
+    # And be sure it's cached
+    assert hasattr(user, "_avatar")
+    assert user._avatar == avatar
+
+
+def test_user_avatar_with_no_photos(api, mock_req):
+    mock_req({
+        "getUserProfilePhotos": {
+            "ok": True,
+            "result": {
+                "total_count": 0,
+                "photos": [],
+            },
+        },
+    })
+
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"}, api)
+    assert user.avatar is None
+
+
 def test_photo_object():
     # The Photo object is custom-made, so it's better to ensure all it's
     # working as expected
