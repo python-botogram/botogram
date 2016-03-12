@@ -53,6 +53,7 @@ Narrative documentation
 .. toctree::
    :maxdepth: 2
 
+   bot-creation
    shared-memory
    tasks
    custom-components

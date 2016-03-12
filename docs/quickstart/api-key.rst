@@ -20,8 +20,10 @@ it needs to know, it will give you an API key, like this fake one::
 
    123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
-Write it down somewhere. You can further customize the bot from that chat,
-check `the @botfather documentation`_ if you want to know more.
+Write it down somewhere, but **be sure to keep it secret!** Everyone with your
+API key can take full control of your bot, and that's not a fun thing.
+
+If you want to learn more about creating and customizing bots, check the
+:ref:`bot creation <bot-creation>` chapter of this documentation.
 
 .. _@botfather: https://telegram.me/botfather
-.. _the @botfather documentation: https://core.telegram.org/bots/#botfather

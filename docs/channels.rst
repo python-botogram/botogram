@@ -18,17 +18,13 @@ With botogram you can easily do that, without even the need to run the bot.
 Preparation
 ===========
 
-In order to start working with channels, you need to get a bot's API key. If
-you already have a bot you can skip this step. First of all you need to contact
-the `@botfather`_ Telegram account, and then send to it the ``/newbot``
-command. After you provide all the information he needs, you will get an API
-key, which looks like this fake one::
+Before you can start working with channels, you need to create a bot which will
+be able to send messages to your channel. If you haven't done that already,
+check the :ref:`bot creation <bot-creation>` chapter of this documentation.
 
-   123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
-
-The final step is to add your bot as an administrator of the channel. Open your
-favourite Telegram client, and go to the administrators' section of your
-channel. From it you should add your bot, and then you're ready.
+After that you need to allow your bot to send messages to your channel. Open
+your favorite Telegram client, and go to the administrators' section of your
+channel. From there you should add your bot, and then you're ready.
 
 .. _channels-standalone:
 
