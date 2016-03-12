@@ -42,7 +42,6 @@ Introduction to botogram
 
    install
    quickstart/index
-   channels
    tricks
 
 .. _index-narrative:
@@ -58,6 +57,7 @@ Narrative documentation
    tasks
    custom-components
    deploy/index
+   channels
 
 .. _index-reference:
 
