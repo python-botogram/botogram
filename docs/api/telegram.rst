@@ -3,9 +3,9 @@
 
 .. _api-telegram:
 
-~~~~~~~~~~~~~~~~~~~~
+====================
 Telegram API wrapper
-~~~~~~~~~~~~~~~~~~~~
+====================
 
 As an advantage to using botogram's :ref:`higher level API<api-bot>` and bot
 runner, many distracting and tedious details of working with
@@ -15,9 +15,6 @@ conveniences. It is generally unnecessary to know anything about Telegram's own
 integrated into the classes presented here. These classes wrap Telegram's
 `API types`_ and detail the core objects your bot will deal with when going
 about its business.
-
-Available Classes
-=================
 
 * :py:class:`~botogram.User`
 * :py:class:`~botogram.Chat`

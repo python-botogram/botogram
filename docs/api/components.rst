@@ -3,9 +3,9 @@
 
 .. _api-components:
 
-~~~~~~~~~~~~~~~~~~~~~~~
+=======================
 Components creation API
-~~~~~~~~~~~~~~~~~~~~~~~
+=======================
 
 Creating components is one of the most useful features of botogram, since they
 allows you to reuse parts of your code in multiple bots. You can learn more

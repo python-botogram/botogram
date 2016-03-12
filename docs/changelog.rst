@@ -3,9 +3,9 @@
 
 .. _changelog:
 
-~~~~~~~~~~~~~~~~~~
+==================
 botogram changelog
-~~~~~~~~~~~~~~~~~~
+==================
 
 Here you can see what changed in every botogram release.
 

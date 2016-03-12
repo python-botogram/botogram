@@ -3,9 +3,9 @@
 
 .. api-bot::
 
-~~~~~~~~~~~~~~~~~
+=================
 Bots creation API
-~~~~~~~~~~~~~~~~~
+=================
 
 botogram is a microframework aimed to help you creating bots. It's obvious it
 has something to create them! Here is the reference of all the needed

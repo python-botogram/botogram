@@ -3,9 +3,9 @@
 
 .. _custom-components:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 Creating custom components
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 
 Hopefully you'll get to a point when you've made a few bots. The problem is,
 there's a high chance parts of the code are duplicated between the bots. For
@@ -19,7 +19,6 @@ bot.
 
 .. _custom-components-conduct:
 
-==========================
 Components code of conduct
 ==========================
 
@@ -52,7 +51,6 @@ simplifying the end-user experience:
 
 .. _custom-components-example:
 
-====================
 An example component
 ====================
 
@@ -124,7 +122,6 @@ source code of the component is the following:
 
 .. _custom-components-use:
 
-========================
 Using a custom component
 ========================
 

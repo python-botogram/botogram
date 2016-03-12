@@ -3,9 +3,9 @@
 
 .. _tutorial-api-key:
 
-~~~~~~~~~~~~~~~~~~~~
+====================
 Obtaining an API key
-~~~~~~~~~~~~~~~~~~~~
+====================
 
 Before diving in the source code of the bot, you need to create the bot in
 Telegram and get its API key. In order to do so, open your favourite Telegram

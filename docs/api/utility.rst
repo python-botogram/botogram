@@ -3,9 +3,9 @@
 
 .. api-utility::
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 Utility functions and decorators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 botogram ships with some functions and decorators aimed to simplify the bots
 development. Feel free to use them when you need them.

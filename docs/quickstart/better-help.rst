@@ -1,19 +1,18 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-.. _tutorial-better-help:
+.. _quickstart-better-help:
 
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 A better help command
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
 When you previously ran the bot, you may have noticed botogram automatically
 generated the ``/help`` command along side any commands you have registered.
 That's one of the features of botogram, and you can obviously customize it.
 
-.. _tutorial-better-help-about:
+.. _quickstart-better-help-about:
 
-=========================
 Information about the bot
 =========================
 
@@ -38,9 +37,8 @@ command.
    The about message will also automatically be added to the ``/start``
    command.
 
-.. _tutorial-better-help-commands:
+.. _quickstart-better-help-commands:
 
-===================
 Help about commands
 ===================
 
@@ -67,9 +65,8 @@ when issuing ``/help``, and the whole docstring will be shown only if
 someone asks for more detailed help on a command. For instance, issuing
 ``/help hello``, with the command name as an argument.
 
-.. _tutorial-better-help-custom:
+.. _quickstart-better-help-custom:
 
-====================
 Custom help messages
 ====================
 
@@ -93,9 +90,8 @@ going to implement this afterwards):
       "This bot also parses the chat in order to send you useful information.",
    ]
 
-.. _tutorial-better-help-source:
+.. _quickstart-better-help-source:
 
-===========================
 Bot's source code until now
 ===========================
 

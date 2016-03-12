@@ -1,11 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-.. _tutorial-skeleton:
+.. _quickstart-skeleton:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 Creating the skeleton of the bot
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 So, let's start with the actual creation of the bot. During this chapter, that
 file will be called ``mybot.py``, so if you want to call the program in a

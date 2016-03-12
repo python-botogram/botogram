@@ -3,9 +3,9 @@
 
 .. _shared-memory:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===============================
 Sharing objects between workers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===============================
 
 botogram's runner is fast because it's able to process multiple messages at
 once, and to archive this result botogram spawns multiple processes, called

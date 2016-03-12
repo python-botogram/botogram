@@ -1,9 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-~~~~~~~~~~~~~~~~~~~~~
+.. _quickstart-chat-messages:
+
+=====================
 Parsing chat messages
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
 Sometimes you need some pieces of information in a conversation, but you
 forgot about that *really* useful command. In these cases, allowing the bot to
@@ -25,7 +27,8 @@ parsers, which will improve your chat experience.
    especially in corporate or critical groups, so disable only when it's
    *really* necessary.
 
-============================
+.. _quickstart-chat-messages-contains:
+
 Search for words in messages
 ============================
 
@@ -66,7 +69,8 @@ Now we can simply send the GitHub link, like how we previously did in the
 Perfect, you can now run the bot and send to it the word "botogram":
 you should receive that link!
 
-=======================================
+.. _quickstart-chat-messages-matches:
+
 Match messages with regular expressions
 =======================================
 
@@ -125,7 +129,8 @@ That code will check whether the hypothetical issue URL exists (so the status
 code isn't ``404``), and if the URL exists the code will send it to the chat.
 Then Telegram will automatically show the preview to the user.
 
-=================================
+.. _quickstart-chat-messages-multiple:
+
 Matching more things in a message
 =================================
 
@@ -155,7 +160,8 @@ bot.
    :py:meth:`botogram.Bot.message_matches` and
    :py:meth:`botogram.Bot.message_contains`.
 
-===========================
+.. _quickstart-chat-messages-source:
+
 Bot's source code until now
 ===========================
 

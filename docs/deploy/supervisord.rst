@@ -1,9 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-~~~~~~~~~~~~~~~~~~~~~~
+.. _deploy-supervisor:
+
+======================
 Deploy with Supervisor
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 
 Supervisor_ is a process management system written in Python, which allows you
 to run applications in a controlled and reliable way. It features running
@@ -12,6 +14,8 @@ of crashed applications.
 
 Supervisor is the best choice for deploying botogram-powered bots, since it
 provides a cross-distro, reliable and simple way to do that.
+
+.. _deploy-supervisor-install:
 
 Installation of Supervisor
 ==========================
@@ -27,6 +31,8 @@ Instead, on the CentOS/Fedora land, you need this command (from **root**)::
 
 And you're good to go! Refer to your distribution's documentation for more
 information about this process.
+
+.. _deploy-supervisor-install-pip:
 
 Cross-distribution installation with pip
 ----------------------------------------
@@ -49,6 +55,8 @@ It's advisable to automatically run Supervisor at boot with your distribution's
 init process, which might vary from one distro to another. Refer to your
 distribution's documentation for more information about adding a process to the
 init system.
+
+.. _deploy-supervisor-bot:
 
 Preparation of the bot
 ======================
@@ -78,6 +86,8 @@ can execute the following commands to create and activate it it::
 After you've activated the virtualenv, you can :ref:`install botogram
 <install>` into it and exit with ``deactivate``. And finally place your bot's
 source code in the home directory (we'll suppose it's located on ``mybot.py``).
+
+.. _deploy-supervisor-config:
 
 Creation of the bot's configuration file
 ========================================
@@ -119,6 +129,8 @@ get the process up and running (from **root**)::
 
    $ supervisorctl reread
    $ supervisorctl update
+
+.. _deploy-supervisor-manage:
 
 Managing the runner
 ===================

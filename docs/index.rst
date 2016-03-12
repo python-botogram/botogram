@@ -1,9 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-~~~~~~~~~~~~~~~~~~~~~~
+.. _index:
+
+======================
 botogram documentation
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 
 *Just focus on your bots.*
 
@@ -30,7 +32,8 @@ botogram is released under the MIT license.
    if __name__ == "__main__":
        bot.run()
 
-========================
+.. _index-introduction:
+
 Introduction to botogram
 ========================
 
@@ -38,13 +41,14 @@ Introduction to botogram
    :maxdepth: 2
 
    install
-   tutorial/index
+   quickstart/index
    channels
    tricks
 
-===============
-Advanced topics
-===============
+.. _index-narrative:
+
+Narrative documentation
+=======================
 
 .. toctree::
    :maxdepth: 2
@@ -54,7 +58,8 @@ Advanced topics
    custom-components
    deploy/index
 
-=========
+.. _index-reference:
+
 Reference
 =========
 
@@ -63,7 +68,8 @@ Reference
 
    api/index
 
-==========
+.. _index-notes:
+
 Side notes
 ==========
 

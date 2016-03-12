@@ -3,9 +3,9 @@
 
 .. _tasks:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 Execute independent tasks
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 
 Unfortunately, not everything can be executed after a user input, especially
 if you need periodic execution, or background cleanup. In order to solve this,
@@ -14,7 +14,6 @@ independent tasks.
 
 .. _tasks-repeated:
 
-==================
 Repeated execution
 ==================
 

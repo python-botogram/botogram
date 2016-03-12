@@ -3,9 +3,9 @@
 
 .. _install:
 
-~~~~~~~~~~~~~~~~~~~~~~~~
+========================
 Installation of botogram
-~~~~~~~~~~~~~~~~~~~~~~~~
+========================
 
 botogram is available `on the Python Packages Index`_, so you can install it
 really easily with the `pip`_ command-line utility. Before installing it, be
@@ -19,7 +19,6 @@ Perfect, botogram is now installed! Now, you can follow the
 
 .. _install-edge:
 
-==================
 Living on the edge
 ==================
 
@@ -36,7 +35,6 @@ the feature is released, so don't use a non-released version in production.
 
 .. _install-venvs:
 
-==========================
 About virtual environments
 ==========================
 
@@ -65,7 +63,6 @@ exit by calling the ``deactivate`` command::
 
 .. _install-troubleshooting:
 
-===============
 Troubleshooting
 ===============
 

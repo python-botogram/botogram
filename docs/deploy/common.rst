@@ -1,13 +1,17 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _deploy-common:
+
+=============================
 Common deployment information
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================
 
 Even if different deployment techniques are *really* different, all of them
 have two essential things in common: server security and application
 configuration.
+
+.. _deploy-common-security:
 
 Server security considerations
 ==============================
@@ -36,6 +40,8 @@ others' things.
   SSH other servers isn't a good idea, right? botogram by default only needs to
   communicate to ``api.telegram.org`` with HTTPS. You can block everything else
   your bot doesn't use.
+
+.. _deploy-common-multiple:
 
 Running multiple bots in the same process
 =========================================

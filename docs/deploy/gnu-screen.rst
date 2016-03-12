@@ -1,9 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _deploy-screen:
+
+================================
 Quick deployment with GNU screen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 `GNU screen`_ is an handy tool which lets you create shell sessions detached
 from your current session. This means they will keep running even if you log

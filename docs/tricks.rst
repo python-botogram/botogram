@@ -3,9 +3,9 @@
 
 .. _tricks:
 
-~~~~~~~~~~~~~~~
+===============
 Tips and tricks
-~~~~~~~~~~~~~~~
+===============
 
 The whole point of botogram is to make your life easier when creating Telegram
 bots. In order to do so in a better way, there are some tricks you can use to
@@ -13,7 +13,6 @@ speed the development up.
 
 .. _tricks-dynamic-arguments:
 
-=================
 Dynamic arguments
 =================
 
@@ -47,7 +46,6 @@ botogram, without being directly provided by the decorator:
 
 .. _tricks-messages-syntax:
 
-=====================================
 Rich formatting with message syntaxes
 =====================================
 

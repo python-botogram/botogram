@@ -1,11 +1,11 @@
-.. Copyright (c) 2015 Pietro Albini
+.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-.. _tutorial-hello-world:
+.. _quickstart-hello-world:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 A simple Hello world command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 
 Every time a programmer learns a new programming language or a new framework,
 it's tradition to write a "hello world" program. In this case, we'll add a
@@ -47,9 +47,8 @@ Thankfully, there is an handy method on the chat object:
 Perfect, now the command is ready! Try to run the bot, and send it ``/hello``:
 it will reply with "Hello world".
 
-.. _tutorial-hello-world-source:
+.. _quickstart-hello-world-source:
 
-===========================
 Bot's source code until now
 ===========================
 

@@ -3,9 +3,9 @@
 
 .. _channels:
 
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 Working with channels
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
 Telegram Channels provides a way to broadcast a message to multiple users. You
 can manually send messages to them with your preferred Telegram client, but
@@ -15,7 +15,6 @@ With botogram you can easily do that, without even the need to run the bot.
 
 .. _channels-preparation:
 
-===========
 Preparation
 ===========
 
@@ -33,7 +32,6 @@ channel. From it you should add your bot, and then you're ready.
 
 .. _channels-standalone:
 
-=========================
 Manage without a full bot
 =========================
 
@@ -61,7 +59,6 @@ For example, if you want to send a text message you should do:
 
 .. _channels-bot:
 
-=========================
 Manage from a running bot
 =========================
 
@@ -88,4 +85,5 @@ cites botogram in a chat, you can do this:
            user = message.from_.username
 
        bot.send("@my_channel", "%s mentioned botogram!" % user)
+
 .. _@botfather: https://telegram.me/botfather

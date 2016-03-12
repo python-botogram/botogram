@@ -3,9 +3,9 @@
 
 .. _api-channels:
 
-~~~~~~~~~~~~
+============
 Channels API
-~~~~~~~~~~~~
+============
 
 The Channels API provides a lightweight way to interact with channels. If you
 just want to send messages to a channel, it's better if you use this.
