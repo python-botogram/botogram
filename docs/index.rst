@@ -53,6 +53,7 @@ Narrative documentation
    :maxdepth: 2
 
    bot-creation
+   bot-structure
    shared-memory
    tasks
    custom-components
