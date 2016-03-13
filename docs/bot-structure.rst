@@ -7,10 +7,9 @@
 Structure of a botogram bot
 ===========================
 
-.. TODO - Rewrite this
-
-As a framework, botogram requires you to code your bot in a specific way. This
-means, you must follow a simple structure, explained here.
+botogram isn't just a library you can integrate with your code, but it's a
+full framework which aims to help you creating bots, and to take full advantage
+of that you need to follow some simple rules while creating your bot.
 
 .. _bot-structure-skeleton:
 
