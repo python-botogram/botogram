@@ -16,6 +16,10 @@ botogram 0.2
 
 *Alpha release, not yet released*
 
+* Added the :py:attr:`~botogram.User.name` computed attribute on the
+  :py:class:`~botogram.User` objects
+* Added the :py:attr:`~botogram.Chat.name` computed attribute on the
+  :py:class:`~botogram.Chat` objects
 * Renamed ``Bot.init_shared_memory`` to ``Bot.prepare_memory``
 * Renamed ``Component.add_shared_memory_initializer`` to
   ``Component.add_memory_preparer``

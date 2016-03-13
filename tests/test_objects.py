@@ -47,3 +47,32 @@ def test_photo_object():
     # And the items inside a list must be PhotoSize
     with pytest.raises(ValueError):
         botogram.objects.Photo([{"This": "isn't", "a": "PhotoSize"}])
+
+
+def test_user_name():
+    # Create a dummy User object
+    user = botogram.objects.User({"id": 123, "first_name": "John"})
+
+    # With only the first name
+    assert user.name == "John"
+
+    # Also with a last name
+    user.last_name = "Doe"
+    assert user.name == "John Doe"
+
+
+def test_chat_name():
+    # Create a dummy Chat object
+    chat = botogram.objects.Chat({"id": 123, "type": "",
+                                  "title": "Test", "first_name": "John"})
+
+    # With a title
+    assert chat.name == "Test"
+
+    # Without a title
+    chat.title = None
+    assert chat.name == "John"
+
+    # Without a title and with a last name
+    chat.last_name = "Doe"
+    assert chat.name == "John Doe"

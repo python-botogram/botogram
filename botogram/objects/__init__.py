@@ -25,6 +25,15 @@ class User(BaseObject, mixins.ChatMixin):
         "username": str,
     }
 
+    @property
+    def name(self):
+        """Get the full name of the user"""
+        result = self.first_name
+        if self.last_name is not None:
+            result += " "+self.last_name
+
+        return result
+
 
 class Chat(BaseObject, mixins.ChatMixin):
     """Telegram API representation of a chat
@@ -42,6 +51,20 @@ class Chat(BaseObject, mixins.ChatMixin):
         "first_name": str,
         "last_name": str,
     }
+
+    @property
+    def name(self):
+        """Get the full name of the chat"""
+        result = None
+
+        if self.title is not None:
+            result = self.title
+        elif self.first_name is not None:
+            result = self.first_name
+            if self.last_name is not None:
+                result += " "+self.last_name
+
+        return result
 
 
 class PhotoSize(BaseObject, mixins.FileMixin):

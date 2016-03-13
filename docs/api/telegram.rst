@@ -59,6 +59,18 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: name
+
+      The computed name of the user. If someone has only the first name, this
+      attribute contains it, but if someone also has a last name, this
+      attribute contains the two merged.
+
+      You can't write to this attribute, but it automatically updates when you
+      change :py:attr:`~botogram.User.first_name` or
+      :py:attr:`~botogram.User.last_name`.
+
+      .. versionadded:: 0.2
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
       Send the textual *message* to the user. You may optionally stop clients
@@ -227,6 +239,20 @@ about its business.
       the channel.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: name
+
+      The computed name of the chat. If this chat has a title this attribute
+      contains it. If someone has only the first name, this attribute contains
+      it, but if someone also has a last name, this attribute contains the two
+      merged.
+
+      You can't write to this attribute, but it automatically updates when you
+      change :py:attr:`~botogram.Chat.title`,
+      :py:attr:`~botogram.Chat.first_name` or
+      :py:attr:`~botogram.Chat.last_name`.
+
+      .. versionadded:: 0.2
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
