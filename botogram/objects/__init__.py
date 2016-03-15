@@ -221,7 +221,7 @@ class Document(BaseObject, mixins.FileMixin):
     }
 
 
-class Sticker(BaseObject):
+class Sticker(BaseObject, mixins.FileMixin):
     """Telegram API representation of a sticker
 
     https://core.telegram.org/bots/api#sticker
