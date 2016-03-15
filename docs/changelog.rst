@@ -16,6 +16,8 @@ botogram 0.2
 
 *Alpha release, not yet released*
 
+* Added the :py:attr:`botogram.User.avatar` attribute
+* Added the :py:meth:`botogram.User.avatar_history` method
 * Renamed ``Bot.init_shared_memory`` to ``Bot.prepare_memory``
 * Renamed ``Component.add_shared_memory_initializer`` to
   ``Component.add_memory_preparer``
