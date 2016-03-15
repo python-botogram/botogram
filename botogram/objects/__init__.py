@@ -34,6 +34,43 @@ class User(BaseObject, mixins.ChatMixin):
 
         return result
 
+    @property
+    @mixins._require_api
+    def avatar(self):
+        """Get the avatar of the user"""
+        # This is lazy loaded and cached, so it won't affect performances if
+        # you don't need avatars
+        if not hasattr(self, "_avatar"):
+            avatars = self._api.call("getUserProfilePhotos", {
+                "user_id": self.id,
+                "limit": 1,
+            }, expect=UserProfilePhotos)
+
+            # If the user has no avatars just use None
+            self._avatar = None
+            if len(avatars.photos):
+                self._avatar = avatars.photos[0]  # Take the most recent one
+
+        return self._avatar
+
+    @mixins._require_api
+    def avatar_history(self):
+        """Get all the avatars of the user"""
+        avatars = []
+
+        while True:
+            chunk = self._api.call("getUserProfilePhotos", {
+                "user_id": self.id,
+                "offset": len(avatars),
+                "limit": 1,
+            }, expect=UserProfilePhotos)
+
+            avatars += chunk.photos
+            if len(avatars) >= chunk.total_count:
+                break
+
+        return avatars
+
 
 class Chat(BaseObject, mixins.ChatMixin):
     """Telegram API representation of a chat
@@ -257,7 +294,7 @@ class UserProfilePhotos(BaseObject):
 
     required = {
         "total_count": int,
-        "photos": multiple(multiple(PhotoSize)),
+        "photos": multiple(Photo),
     }
 
 

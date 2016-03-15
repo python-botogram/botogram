@@ -71,6 +71,26 @@ about its business.
 
       .. versionadded:: 0.2
 
+   .. py:attribute:: avatar
+
+      This attribute contains the user's avatar, represented as a
+      :py:class:`~botogram.Photo` object. If the user has no avatar, this
+      attribute will be ``None``.
+
+      In order to improve performances, this attribute's content is dynamically
+      requested to Telegram the first time you access it, so there will be some
+      delay.
+
+      .. versionadded:: 0.2
+
+   .. py:method:: avatar_history()
+
+      Get the user's avatar history. This returns a list of the current and all
+      the past avatars for the user, represented as :py:class:`~botogram.Photo`
+      objects. If the user has no avatars this returns an empty list.
+
+      .. versionadded:: 0.2
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
       Send the textual *message* to the user. You may optionally stop clients
