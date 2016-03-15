@@ -122,46 +122,8 @@ class FrozenBot:
         """This decorator is deprecated, and it calls @prepare_memory"""
         return self.prepare_memory(func)
 
-    # Those are shortcuts to send messages directly to someone
-
-    def send(self, chat, message, preview=True, reply_to=None, syntax=None,
-             extra=None):
-        """Send a message in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send(message, preview, reply_to, syntax, extra)
-
-    def send_photo(self, chat, path, caption="", reply_to=None, extra=None):
-        """Send a photo in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_photo(path, caption, reply_to, extra)
-
-    def send_audio(self, chat, path, duration=None, performer=None, title=None,
-                   reply_to=None, extra=None):
-        """Send an audio in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_audio(path, duration, performer, title, reply_to, extra)
-
-    def send_voice(self, chat, path, duration=None, reply_to=None, extra=None):
-        """Send a voice message in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_voice(path, duration, reply_to, extra)
-
-    def send_video(self, chat, path, duration=None, caption=None,
-                   reply_to=None, extra=None):
-        """Send a video in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_video(path, duration, caption, reply_to, extra)
-
-    def send_file(self, chat, path, reply_to=None, extra=None):
-        """Send a generic file in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_file(path, reply_to, extra)
-
-    def send_location(self, chat, latitude, longitude, reply_to=None,
-                      extra=None):
-        """Send a generic file in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_location(latitude, longitude, reply_to, extra)
+    # This class also contains methods to send messages to users
+    # They're defined dynamically out of the class body, see below
 
     # Let's process the messages
 
@@ -239,6 +201,35 @@ class FrozenBot:
             kwargs[name] = available[name]
 
         return func(**kwargs)
+
+
+# Those are shortcuts to send messages directly to someone
+# Create dynamic methods for each of the send methods. They're *really*
+# repetitive, so generating them with a for loop is not such a bad idea
+
+_proxied_sends = [
+    objects.Chat.send,
+    objects.Chat.send_photo,
+    objects.Chat.send_audio,
+    objects.Chat.send_voice,
+    objects.Chat.send_video,
+    objects.Chat.send_file,
+    objects.Chat.send_location,
+]
+
+for _proxy in _proxied_sends:
+    @utils.wraps(_proxy)
+    def _wrapper(self, chat, *args, __proxy=_proxy, **kwargs):
+        # String chats are channels
+        if type(chat) == str:
+            obj = objects.Chat({"id": 0, "type": "channel", "username": chat},
+                               self.api)
+        else:
+            obj = objects.Chat({"id": chat, "type": ""}, self.api)
+
+        __proxy(obj, *args, **kwargs)
+
+    setattr(FrozenBot, _proxy.__name__, _wrapper)
 
 
 def restore(*args):
