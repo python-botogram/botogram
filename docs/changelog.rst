@@ -24,6 +24,7 @@ botogram 0.2
 * Renamed ``Component.add_shared_memory_initializer`` to
   ``Component.add_memory_preparer``
 * Fix the syntax detector checking URLs with dashes in the domain (`issue 32`_)
+* Fix inability to send messages to channels from a running bot (`issue 35`_)
 
 The following things are now **deprecated**:
 
@@ -32,6 +33,7 @@ The following things are now **deprecated**:
   botogram 1.0
 
 .. _issue 32: https://github.com/pietroalbini/botogram/issues/32
+.. _issue 35: https://github.com/pietroalbini/botogram/issues/35
 
 .. _changelog-0.1.2:
 
