@@ -124,6 +124,14 @@ class ChatMixin:
 
         self._api.call("sendLocation", args)
 
+    @_require_api
+    def send_sticker(self, sticker, reply_to=None, extra=None):
+        """Send a sticker"""
+        args = self._get_call_args(reply_to, extra)
+
+        files = {"sticker": open(sticker, "rb")}
+        self._api.call("sendSticker", args, files)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -176,6 +184,11 @@ class MessageMixin:
     def reply_with_location(self, latitude, longitude, extra=None):
         """Reply with a geographic location to the current chat"""
         self.chat.send_location(latitude, longitude, self.message_id, extra)
+
+    @_require_api
+    def reply_with_sticker(self, sticker, extra=None):
+        """Reply with a sticker to the current message"""
+        self.chat.send_sticker(sticker, self.message_id, extra)
 
 
 class FileMixin:

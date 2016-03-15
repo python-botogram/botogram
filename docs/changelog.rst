@@ -26,6 +26,13 @@ botogram 1.0, and warnings are in place to notify you where to change what.
 New features
 ------------
 
+* Added the ability to send stickers
+
+   * New method :py:meth:`botogram.User.send_sticker`
+   * New method :py:meth:`botogram.Chat.send_sticker`
+   * New method :py:meth:`botogram.Bot.send_sticker`
+   * New method :py:meth:`botogram.Message.reply_with_sticker`
+
 * Added the :py:attr:`botogram.User.name` computed attribute
 * Added the :py:attr:`botogram.Chat.name` computed attribute
 * Added the :py:attr:`botogram.User.avatar` attribute

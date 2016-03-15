@@ -220,6 +220,22 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
+   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None])
+
+      Send the sticker to the user (in webp format). If the sticker you're
+      sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`. *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str sticker: The path to the webp-formatted sticker
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
 
 .. py:class:: botogram.Chat
 
@@ -400,6 +416,22 @@ about its business.
 
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None])
+
+      Send the sticker to the chat (in webp format). If the sticker you're
+      sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`. *extra* is an optional object which
+      specifies additional reply interface options on the recipient's end, and
+      can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str sticker: The path to the webp-formatted sticker
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
 
@@ -706,6 +738,19 @@ about its business.
 
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param object extra: An extra reply interface object to attach
+
+   .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None])
+
+      Reply with the sticker (in webp format) to the chat. *extra* is an
+      optional object which specifies additional reply interface options on the
+      recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      :param str sticker: The path to the webp-formatted sticker
       :param object extra: An extra reply interface object to attach
 
 

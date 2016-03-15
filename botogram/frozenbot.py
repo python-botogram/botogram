@@ -215,6 +215,7 @@ _proxied_sends = [
     objects.Chat.send_video,
     objects.Chat.send_file,
     objects.Chat.send_location,
+    objects.Chat.send_sticker,
 ]
 
 for _proxy in _proxied_sends:
