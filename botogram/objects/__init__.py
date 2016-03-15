@@ -62,7 +62,6 @@ class User(BaseObject, mixins.ChatMixin):
             chunk = self._api.call("getUserProfilePhotos", {
                 "user_id": self.id,
                 "offset": len(avatars),
-                "limit": 1,
             }, expect=UserProfilePhotos)
 
             avatars += chunk.photos
