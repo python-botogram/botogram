@@ -16,21 +16,41 @@ botogram 0.2
 
 *Alpha release, not yet released*
 
+botogram 0.2 is the second alpha release of botogram. It features an increased
+support for the upstream Telegram API, and also some bugfixes here and there.
+
+This release also does some cleanup in the API, providing better methods and
+deprecating the old ones. The deprecated methods will be available until
+botogram 1.0, and warnings are in place to notify you where to change what.
+
+New features
+------------
+
 * Added the :py:attr:`botogram.User.name` computed attribute
 * Added the :py:attr:`botogram.Chat.name` computed attribute
 * Added the :py:attr:`botogram.User.avatar` attribute
 * Added the :py:meth:`botogram.User.avatar_history` method
-* Renamed ``Bot.init_shared_memory`` to ``Bot.prepare_memory``
+
+Changes
+-------
+
+* Renamed ``Bot.init_shared_memory`` to :py:meth:`botogram.Bot.prepare_memory`
 * Renamed ``Component.add_shared_memory_initializer`` to
-  ``Component.add_memory_preparer``
+  :py:meth:`botogram.Component.add_memory_preparer`
+
+Bug fixes
+---------
+
 * Fix the syntax detector checking URLs with dashes in the domain (`issue 32`_)
 * Fix inability to send messages to channels from a running bot (`issue 35`_)
 
-The following things are now **deprecated**:
+Deprecated features
+-------------------
 
-* ``Bot.init_shared_memory``, and it will be removed in botogram 1.0
-* ``Component.add_shared_memory_initializer``, and it will be removed in
-  botogram 1.0
+Deprecated features will be removed in botogram 1.0!
+
+* ``Bot.init_shared_memory`` is now deprecated
+* ``Component.add_shared_memory_initializer`` is now deprecated
 
 .. _issue 32: https://github.com/pietroalbini/botogram/issues/32
 .. _issue 35: https://github.com/pietroalbini/botogram/issues/35
