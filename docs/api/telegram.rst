@@ -74,6 +74,14 @@ Available Classes
 
       .. versionadded:: 0.2
 
+   .. py:method:: avatar_history()
+
+      Get the user's avatar history. This returns a list of the current and all
+      the past avatars for the user, represented as :py:class:`~botogram.Photo`
+      objects. If the user has no avatars this returns an empty list.
+
+      .. versionadded:: 0.2
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
 
       Send the textual *message* to the user. You may optionally stop clients

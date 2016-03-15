@@ -44,6 +44,24 @@ class User(BaseObject, mixins.ChatMixin):
 
         return self._avatar
 
+    @mixins._require_api
+    def avatar_history(self):
+        """Get all the avatars of the user"""
+        avatars = []
+
+        while True:
+            chunk = self._api.call("getUserProfilePhotos", {
+                "user_id": self.id,
+                "offset": len(avatars),
+                "limit": 1,
+            }, expect=UserProfilePhotos)
+
+            avatars += chunk.photos
+            if len(avatars) >= chunk.total_count:
+                break
+
+        return avatars
+
 
 class Chat(BaseObject, mixins.ChatMixin):
     """Telegram API representation of a chat

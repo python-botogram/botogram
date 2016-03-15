@@ -71,6 +71,105 @@ def test_user_avatar_with_no_photos(api, mock_req):
     assert user.avatar is None
 
 
+def test_user_avatar_history(api, mock_req):
+    mock_req({
+        "getUserProfilePhotos": {
+            "ok": True,
+            "result": {
+                "total_count": 3,
+                "photos": [
+                    [
+                        {
+                            "file_id": "aaaaaa",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                    ],
+                    [
+                        {
+                            "file_id": "bbbbbb",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                    ],
+                    [
+                        {
+                            "file_id": "cccccc",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                    ],
+                ],
+            },
+        },
+    })
+
+    # First of all, make sure the API wrapper is required to fetch avatars
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"})
+    with pytest.raises(RuntimeError):
+        user.avatar_history()  # Access the avatar without an API wrapper
+
+    # Now use an API
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"}, api)
+
+    files = [avatar.file_id for avatar in user.avatar_history()]
+    assert files == ["aaaaaa", "bbbbbb", "cccccc"]
+
+
+def test_user_avatar_history_multiple_requests(api, mock_req):
+    mock_req({
+        "getUserProfilePhotos": {
+            "ok": True,
+            "result": {
+                # This is the double of the avatars provided with this request
+                # This simulates if the user has more than 100 avatars
+                "total_count": 4,
+                "photos": [
+                    [
+                        {
+                            "file_id": "aaaaaa",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                    ],
+                    [
+                        {
+                            "file_id": "bbbbbb",
+                            "width": 50,
+                            "height": 50,
+                            "file_size": 128,
+                        },
+                    ],
+                ],
+            },
+        },
+    })
+
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"}, api)
+
+    files = [avatar.file_id for avatar in user.avatar_history()]
+    assert files == ["aaaaaa", "bbbbbb", "aaaaaa", "bbbbbb"]
+
+
+def test_user_avatar_history_no_photos(api, mock_req):
+    mock_req({
+        "getUserProfilePhotos": {
+            "ok": True,
+            "result": {
+                "total_count": 0,
+                "photos": [],
+            },
+        },
+    })
+
+    user = botogram.objects.User({"id": 123, "first_name": "Bob"}, api)
+    assert user.avatar_history() == []
+
+
 def test_photo_object():
     # The Photo object is custom-made, so it's better to ensure all it's
     # working as expected
