@@ -149,46 +149,44 @@ class MessageMixin:
         })
 
     @_require_api
-    def reply(self, message, preview=True, syntax=None, extra=None):
+    def reply(self, *args, **kwargs):
         """Reply to the current message"""
-        self.chat.send(message, preview, self.message_id, syntax, extra)
+        self.chat.send(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_photo(self, path, caption=None, extra=None):
+    def reply_with_photo(self, *args, **kwargs):
         """Reply with a photo to the current message"""
-        self.chat.send_photo(path, caption, self.message_id, extra)
+        self.chat.send_photo(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_audio(self, path, duration=None, performer=None, title=None,
-                         extra=None):
+    def reply_with_audio(self, *args, **kwargs):
         """Reply with an audio track to the current message"""
-        self.chat.send_audio(path, duration, performer, title, self.message_id,
-                             extra)
+        self.chat.send_audio(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_voice(self, path, duration=None, extra=None):
+    def reply_with_voice(self, *args, **kwargs):
         """Reply with a voice message to the current message"""
-        self.chat.send_voice(path, duration, self.message_id, extra)
+        self.chat.send_voice(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_video(self, path, duration=None, caption=None, extra=None):
+    def reply_with_video(self, *args, **kwargs):
         """Reply with a video to the current message"""
-        self.chat.send_video(path, duration, caption, self.message_id, extra)
+        self.chat.send_video(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_file(self, path, extra=None):
+    def reply_with_file(self, *args, **kwargs):
         """Reply with a generic file to the current chat"""
-        self.chat.send_file(path, self.message_id, extra)
+        self.chat.send_file(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_location(self, latitude, longitude, extra=None):
+    def reply_with_location(self, *args, **kwargs):
         """Reply with a geographic location to the current chat"""
-        self.chat.send_location(latitude, longitude, self.message_id, extra)
+        self.chat.send_location(*args, reply_to=self, **kwargs)
 
     @_require_api
-    def reply_with_sticker(self, sticker, extra=None):
+    def reply_with_sticker(self, *args, **kwargs):
         """Reply with a sticker to the current message"""
-        self.chat.send_sticker(sticker, self.message_id, extra)
+        self.chat.send_sticker(*args, reply_to=self, **kwargs)
 
 
 class FileMixin:
