@@ -22,7 +22,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 chains, scheduler, main_component_id, bot_id,
+                 commands, chains, scheduler, main_component_id, bot_id,
                  shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
@@ -43,6 +43,7 @@ class FrozenBot:
         self._shared_memory = shared_memory
         self._scheduler = scheduler
         self._chains = chains
+        self._commands = commands
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -61,9 +62,9 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
-            self.lang, self.itself, self._commands_re, self._chains,
-            self._scheduler, self._main_component_id, self._bot_id,
-            self._shared_memory,
+            self.lang, self.itself, self._commands_re, self._commands,
+            self._chains, self._scheduler, self._main_component_id,
+            self._bot_id, self._shared_memory,
         )
         return restore, args
 

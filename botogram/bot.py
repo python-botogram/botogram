@@ -188,11 +188,17 @@ class Bot(frozenbot.FrozenBot):
         chains = components.merge_chains(self._main_component,
                                          *self._components)
 
+        # Get the list of commands for the bot
+        commands = self._components[-1]._get_commands()
+        for component in reversed(self._components[:-1]):
+            commands.update(component._get_commands())
+        commands.update(self._main_component._get_commands())
+
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self.hide_commands, self.before_help,
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
-                                   chains, self._scheduler,
+                                   commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 
