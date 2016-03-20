@@ -49,6 +49,8 @@ Bug fixes
 ---------
 
 * Fix the syntax detector checking URLs with dashes in the domain (`issue 32`_)
+* Fix the syntax detector checking only the first line of a message (`issue
+  40`_)
 * Fix inability to send messages to channels from a running bot (`issue 35`_)
 * Fix inability to download stickers (`issue 36`_)
 
@@ -63,6 +65,7 @@ Deprecated features will be removed in botogram 1.0!
 .. _issue 32: https://github.com/pietroalbini/botogram/issues/32
 .. _issue 35: https://github.com/pietroalbini/botogram/issues/35
 .. _issue 36: https://github.com/pietroalbini/botogram/issues/36
+.. _issue 40: https://github.com/pietroalbini/botogram/issues/40
 
 .. _changelog-0.1.2:
 
