@@ -232,15 +232,15 @@ def test_add_command(bot, sample_update):
         sample2_processed = True
 
         assert chat.id == -1
-        assert message.text == "/sample2 a b c"
+        assert message.text == "/sample2 a b c\nd\te"
         assert message.chat == chat
-        assert args == ["a", "b", "c"]
+        assert args == ["a", "b", "c", "d", "e"]
 
     def sample3(chat, message, args):
         nonlocal sample3_processed
         sample3_processed = True
 
-        assert message.text == "/sample3@test_bot a b c"
+        assert message.text == "/sample3@test_bot a b c\nd\te"
 
 
     comp = botogram.Component("test")
@@ -251,7 +251,7 @@ def test_add_command(bot, sample_update):
     bot.use(comp)
 
     for cmd in "sample1@another_bot", "sample2", "sample3@test_bot":
-        sample_update.message.text = "/%s a b c" % cmd
+        sample_update.message.text = "/%s a b c\nd\te" % cmd
         bot.process(sample_update)
 
     assert sample1_processed == False

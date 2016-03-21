@@ -169,15 +169,16 @@ class CommandHook(Hook):
 
     def _call(self, bot, update):
         message = update.message
+        text = message.text.replace("\n", " ").replace("\t", " ")
 
         # Must be the correct command for the correct bot
-        match = self._regex.match(message.text)
+        match = self._regex.match(text)
         if not match:
             return
         if match.group(1) and match.group(1) != "@"+bot.itself.username:
             return
 
-        args = message.text.split(" ")[1:]
+        args = text.split(" ")[1:]
         bot._call(self.func, self.component_id, chat=message.chat,
                   message=message, args=args)
         return True
