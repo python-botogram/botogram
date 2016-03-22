@@ -55,6 +55,7 @@ Bug fixes
 * Fix inability to download stickers (`issue 36`_)
 * Fix commands with newlines in the arguments not recognized as such (`issue
   41`_)
+* Remove empty items from the commands' arguments (`issue 42`_)
 
 Deprecated features
 -------------------
@@ -69,6 +70,7 @@ Deprecated features will be removed in botogram 1.0!
 .. _issue 36: https://github.com/pietroalbini/botogram/issues/36
 .. _issue 40: https://github.com/pietroalbini/botogram/issues/40
 .. _issue 41: https://github.com/pietroalbini/botogram/issues/41
+.. _issue 42: https://github.com/pietroalbini/botogram/issues/42
 
 .. _changelog-0.1.2:
 

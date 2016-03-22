@@ -153,6 +153,9 @@ class MessageMatchesHook(Hook):
         return found
 
 
+_command_args_split_re = re.compile(r' +')
+
+
 class CommandHook(Hook):
     """Underlying hook for @bot.command"""
 
@@ -178,7 +181,7 @@ class CommandHook(Hook):
         if match.group(1) and match.group(1) != "@"+bot.itself.username:
             return
 
-        args = text.split(" ")[1:]
+        args = _command_args_split_re.split(text)[1:]
         bot._call(self.func, self.component_id, chat=message.chat,
                   message=message, args=args)
         return True
