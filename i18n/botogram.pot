@@ -1,20 +1,20 @@
 # Translations template for botogram.
-# Copyright (C) 2015 Pietro Albini <pietro@pietroalbini.io>
+# Copyright (C) 2016 Pietro Albini <pietro@pietroalbini.io>
 # This file is distributed under the same license as the botogram project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: botogram 1.0.dev0\n"
 "Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
-"POT-Creation-Date: 2015-12-01 15:29+0100\n"
+"POT-Creation-Date: 2016-03-22 22:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.1.1\n"
+"Generated-By: Babel 2.2.0\n"
 
 #: botogram/defaults.py:32
 msgid "Use /help to get a list of all the commands."
@@ -29,49 +29,40 @@ msgid "This shows a greeting message."
 msgstr ""
 
 #: botogram/defaults.py:48
-msgid "Error: the /help command allows up to one argument."
+msgid "*Error!* The `/help` command allows up to one argument."
 msgstr ""
 
-#: botogram/defaults.py:54
+#: botogram/defaults.py:54 botogram/defaults.py:151
 #, python-format
-msgid "Unknown command: /%(name)s."
+msgid "*Unknown command:* `/%(name)s`"
 msgstr ""
 
-#: botogram/defaults.py:55
-msgid "Use /help for a list of commands."
+#: botogram/defaults.py:56 botogram/defaults.py:152
+msgid "Use /help to get a list of the commands."
 msgstr ""
 
-#: botogram/defaults.py:76
-msgid "Available commands:"
+#: botogram/defaults.py:77
+msgid "*This bot supports those commands:*"
 msgstr ""
 
-#: botogram/defaults.py:85 botogram/defaults.py:125
-msgid "You can also use '/help <command>' to get help about a specific command."
+#: botogram/defaults.py:88 botogram/defaults.py:128
+msgid "You can also use `/help <command>` to get help about a specific command."
 msgstr ""
 
-#: botogram/defaults.py:88
-msgid "No commands available."
+#: botogram/defaults.py:91
+msgid "_This bot has no commands._"
 msgstr ""
 
-#: botogram/defaults.py:97 botogram/defaults.py:114
+#: botogram/defaults.py:100 botogram/defaults.py:117
 #, python-format
 msgid "Please contact %(owner)s if you have problems with this bot."
 msgstr ""
 
-#: botogram/defaults.py:124
+#: botogram/defaults.py:127
 msgid "Show this help message."
 msgstr ""
 
-#: botogram/defaults.py:148
-#, python-format
-msgid "Unknown command: /%(name)s"
-msgstr ""
-
-#: botogram/defaults.py:149
-msgid "Use /help for a list of commands"
-msgstr ""
-
-#: botogram/utils.py:109
+#: botogram/utils.py:138
 msgid "No description available."
 msgstr ""
 

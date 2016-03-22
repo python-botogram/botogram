@@ -44,6 +44,7 @@ Changes
 * Renamed ``Bot.init_shared_memory`` to :py:meth:`botogram.Bot.prepare_memory`
 * Renamed ``Component.add_shared_memory_initializer`` to
   :py:meth:`botogram.Component.add_memory_preparer`
+* Changed default messages to include rich formatting
 
 Bug fixes
 ---------

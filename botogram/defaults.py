@@ -28,6 +28,7 @@ class DefaultComponent(components.Component):
         message = []
         if bot.about:
             message.append(bot.about)
+            message.append("")
         message.append(bot._("Use /help to get a list of all the commands."))
 
         chat.send("\n".join(message))
@@ -44,14 +45,15 @@ class DefaultComponent(components.Component):
     def help_command(self, bot, chat, args):
         commands = bot._get_commands()
         if len(args) > 1:
-            message = [bot._("Error: the /help command allows up to one "
+            message = [bot._("*Error!* The `/help` command allows up to one "
                              "argument.")]
         elif len(args) == 1:
             if args[0] in commands:
                 message = self._help_command_message(bot, commands, args[0])
             else:
-                message = [bot._("Unknown command: /%(name)s.", name=args[0]),
-                           bot._("Use /help for a list of commands.")]
+                message = [bot._("*Unknown command:* `/%(name)s`",
+                                 name=args[0]),
+                           bot._("Use /help to get a list of the commands.")]
         else:
             message = self._help_generic_message(bot, commands)
 
@@ -72,19 +74,21 @@ class DefaultComponent(components.Component):
 
         # Show help on commands
         if len(commands) > 0:
-            message.append(bot._("Available commands:"))
+            message.append(bot._("*This bot supports those commands:*"))
             for name in sorted(commands.keys()):
                 # Allow to hide commands in the help message
                 if name in bot.hide_commands:
                     continue
 
                 func = commands[name]
-                docstring = utils.docstring_of(func, bot).split("\n", 1)[0]
-                message.append("/%s - %s" % (name, docstring))
-            message.append(bot._("You can also use '/help <command>' to get "
+                docstring = utils.docstring_of(func, bot, format=True) \
+                                 .split("\n", 1)[0]
+                message.append("/%s `-` %s" % (name, docstring))
+            message.append("")
+            message.append(bot._("You can also use `/help <command>` to get "
                                  "help about a specific command."))
         else:
-            message.append(bot._("No commands available."))
+            message.append(bot._("_This bot has no commands._"))
 
         if len(bot.after_help):
             message.append("")
@@ -104,8 +108,8 @@ class DefaultComponent(components.Component):
         message = []
 
         func = commands[command]
-        docstring = utils.docstring_of(func, bot)
-        message.append("/%s - %s" % (command, docstring))
+        docstring = utils.docstring_of(func, bot, format=True)
+        message.append("/%s `-` %s" % (command, docstring))
 
         # Show the owner informations
         if bot.owner:
@@ -121,7 +125,7 @@ class DefaultComponent(components.Component):
         """Get the help message of this command"""
         return "\n".join([
             bot._("Show this help message."),
-            bot._("You can also use '/help <command>' to get help about a "
+            bot._("You can also use `/help <command>` to get help about a "
                   "specific command."),
         ])
 
@@ -144,7 +148,7 @@ class DefaultComponent(components.Component):
         single_user = chat.type == "private"
         if mentioned or single_user:
             chat.send("\n".join([
-                bot._("Unknown command: /%(name)s", name=command),
-                bot._("Use /help for a list of commands"),
+                bot._("*Unknown command:* `/%(name)s`", name=command),
+                bot._("Use /help to get a list of the commands."),
             ]))
             return True
