@@ -91,7 +91,7 @@ about its business.
 
       .. versionadded:: 0.2
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       Send the textual *message* to the user. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -106,13 +106,17 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str message: The textual message to be sent.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None])
+   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
       Send a photo found at *path* to the user. You may optionally specify a
       *caption* for the photo being sent. If the photo you are sending is in
@@ -125,12 +129,16 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
       Send the audio track found in the *path* to the user. You may optionally
       specify the *duration*, the *performer* and the *title* of the audio
@@ -143,14 +151,18 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the audio track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None])
+   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the user. You may
       optionally specify the *duration* of the voice message. If the voice
@@ -163,12 +175,16 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None])
+   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
       Send the video found in the *path* to the user. You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
@@ -181,13 +197,17 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_file(path, [reply_to=None, extra=None])
+   .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
       Send the generic file found in the *path* to the user. If the file you're
       sending is in reply to another message, set *reply_to* to the ID of the
@@ -199,11 +219,15 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None])
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
       Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
@@ -215,12 +239,16 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None])
+   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Send the sticker to the user (in webp format). If the sticker you're
       sending is in reply to another message, set *reply_to* to the ID of the
@@ -232,9 +260,13 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str sticker: The path to the webp-formatted sticker
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
 
 .. py:class:: botogram.Chat
@@ -290,7 +322,7 @@ about its business.
 
       .. versionadded:: 0.2
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None])
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -305,13 +337,17 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str message: The textual message to be sent.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None])
+   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
       Send a photo found at *path* to the chat. You may optionally specify a
       *caption* for the photo being sent. If the photo you are sending is in
@@ -324,12 +360,16 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
       Send the audio track found in the *path* to the chat. You may optionally
       specify the *duration*, the *performer* and the *title* of the audio
@@ -342,14 +382,18 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the audio track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None])
+   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
       optionally specify the *duration* of the voice message. If the voice
@@ -362,12 +406,16 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None])
+   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
       Send the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
@@ -380,13 +428,17 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_file(path, [reply_to=None, extra=None])
+   .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
       Send the generic file found in the *path* to the chat. If the file you're
       sending is in reply to another message, set *reply_to* to the ID of the
@@ -398,11 +450,15 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None])
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
       Send the geographic location to the chat. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
@@ -414,12 +470,16 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None])
+   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Send the sticker to the chat (in webp format). If the sticker you're
       sending is in reply to another message, set *reply_to* to the ID of the
@@ -431,10 +491,13 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str sticker: The path to the webp-formatted sticker
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
-
+      :param bool notify: If you want to trigger the client notification.
 
 .. py:class:: botogram.Message
 
@@ -619,16 +682,20 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
-   .. py:method:: forward_to(to)
+   .. py:method:: forward_to(to[, notify=True])
 
       Forward this message *to* another chat or user by specifying their ID. One
       may also simply pass in the :py:class:`~botogram.Chat` or
       :py:class:`~botogram.User` object without the need to reference the
       object's ID.
 
-      :param int to: The ID of the chat or user this message should forward to.
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
 
-   .. py:method:: reply(message, [preview=True, syntax=None, extra=None])
+      :param int to: The ID of the chat or user this message should forward to.
+      :param bool notify: If you want to trigger the client notification.
+
+   .. py:method:: reply(message, [preview=True, syntax=None, extra=None, notify=True])
 
       Reply with the textual *message* in regards to this message. You may
       optionally stop clients from generating a *preview* for any link included
@@ -642,12 +709,16 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str message: The textual message to reply with.
       :param bool preview: Whether to show link previews.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_photo(path, [caption=None, extra=None])
+   .. py:method:: reply_with_photo(path, [caption=None, extra=None, notify=True])
 
       Reply with a photo found at *path* in regards to this message. You may
       optionally specify a *caption* for the photo being sent in reply. *extra*
@@ -658,11 +729,15 @@ about its business.
         * :py:class:`botogram.ReplyKeyboardHide`
         * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the photo.
       :param str caption: A caption for the photo.
       :param object extra: An extra reply interface object to attach.
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None])
+   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None, notify=True])
 
       Reply with the audio track found in the *path* to the chat. You may
       optionally specify the *duration*, the *performer* and the *title* of the
@@ -674,13 +749,17 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the audio track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None])
+   .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
       optionally specify the *duration* of the voice message. *extra* is an
@@ -691,11 +770,15 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_video(path, [duration=None, caption=None, extra=None])
+   .. py:method:: send_video(path, [duration=None, caption=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video. *extra* is an
@@ -706,12 +789,16 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_file(path, [extra=None])
+   .. py:method:: reply_with_file(path, [extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
       you're sending is in reply to another message, set *reply_to* to the ID
@@ -723,10 +810,14 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str path: The path to the file
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_location(latitude, longitude, [extra=None])
+   .. py:method:: reply_with_location(latitude, longitude, [extra=None, notify=True])
 
       Send the geographic location to the user. *extra* is an optional object
       which specifies additional reply interface options on the recipient's
@@ -736,11 +827,15 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None])
+   .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Reply with the sticker (in webp format) to the chat. *extra* is an
       optional object which specifies additional reply interface options on the
@@ -750,8 +845,12 @@ about its business.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param str sticker: The path to the webp-formatted sticker
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
 
 .. py:class:: botogram.Photo
