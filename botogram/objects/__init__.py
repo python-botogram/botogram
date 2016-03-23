@@ -8,6 +8,7 @@
 
 from .base import BaseObject, multiple, _itself
 from . import mixins
+from .. import utils
 
 
 class User(BaseObject, mixins.ChatMixin):
@@ -303,6 +304,12 @@ class Message(BaseObject, mixins.MessageMixin):
     https://core.telegram.org/bots/api#message
     """
 
+    @property
+    @utils.deprecated("Message.from_", "1.0",
+                      "Rename property to Message.sender")
+    def from_(self):
+        return self.sender
+
     required = {
         "message_id": int,
         "from": User,
@@ -335,7 +342,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "migrate_from_chat_id": int,
     }
     replace_keys = {
-        "from": "from_",
+        "from": "sender",
     }
 
 

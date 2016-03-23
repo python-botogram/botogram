@@ -95,7 +95,7 @@ the :py:meth:`botogram.Component.add_before_processing_hook` method:
            self.add_before_processing_hook(self.filter)
 
        def filter(self, chat, message):
-           if message.from_.id not in self.allowed:
+           if message.sender.id not in self.allowed:
                return True  # Stop processing the update
 
 And the component is complete! The filter simply checks if the message
@@ -117,7 +117,7 @@ source code of the component is the following:
            self.add_before_processing_hook(self.filter)
 
        def filter(self, chat, message):
-           if message.from_.id not in self.allowed:
+           if message.sender.id not in self.allowed:
                return True  # Stop processing the update
 
 .. _custom-components-use:

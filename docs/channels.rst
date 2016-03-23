@@ -77,8 +77,8 @@ cites botogram in a chat, you can do this:
    @bot.message_contains("botogram")
    def we_are_famous(bot, chat, message):
        user = "Someone"
-       if message.from_.username is not None:
-           user = message.from_.username
+       if message.sender.username is not None:
+           user = message.sender.username
 
        bot.send("@my_channel", "%s mentioned botogram!" % user)
 
