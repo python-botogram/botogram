@@ -508,12 +508,25 @@ about its business.
 
       The integer ID of the message.
 
+   .. py:attribute:: sender
+
+      The sending :py:class:`~botogram.User` of the message. Note the trailing
+      underscore, needed due to 'from' being a python keyword.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+      .. versionchanged:: 0.2
+
+      Before it was called ``from_``.
+
    .. py:attribute:: from_
 
       The sending :py:class:`~botogram.User` of the message. Note the trailing
       underscore, needed due to 'from' being a python keyword.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+      .. deprecated:: 0.2 It will be removed in botogram 1.0
 
    .. py:attribute:: date
 
