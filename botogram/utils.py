@@ -73,6 +73,12 @@ class DeprecatedAttributes:
 
 def warn(stack_pos, before_message, after_message=None):
     """Issue a warning caused by user code"""
+    # This is a workaround for http://bugs.python.org/issue25108
+    # In Python 3.5.0, traceback.extract_stack returns an additional internal
+    # stack frame, which causes a lot of trouble around there.
+    if sys.version_info[:3] == (3, 5, 0):
+        stack_pos -= 1
+
     frame = traceback.extract_stack()[stack_pos-1]
     at_message = "At: %s (line %s)" % (frame[0], frame[1])
 
