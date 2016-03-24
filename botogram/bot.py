@@ -83,7 +83,7 @@ class Bot(frozenbot.FrozenBot):
 
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
-                                       self.itself.username+r')?( .*)?$')
+                                       self.itself.username + r')?( .*)?$')
 
     def __reduce__(self):
         # Use the standard __reduce__

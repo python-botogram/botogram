@@ -34,7 +34,7 @@ warn_logger = logbook.Logger("botogram's code warnings")
 def _deprecated_message(name, removed_on, fix, back):
     before = "%s will be removed in botogram %s." % (name, removed_on)
     after = "Fix: %s" % fix
-    warn(back-1, before, after)
+    warn(back - 1, before, after)
 
 
 def deprecated(name, removed_on, fix):
@@ -60,7 +60,7 @@ class DeprecatedAttributes:
 
         if key in deprecated:
             _deprecated_message(
-                get("__class__").__name__+"."+key,
+                get("__class__").__name__ + "." + key,
                 deprecated[key]["removed_on"],
                 deprecated[key]["fix"],
                 -2,
@@ -79,15 +79,15 @@ def warn(stack_pos, before_message, after_message=None):
     if sys.version_info[:3] == (3, 5, 0):
         stack_pos -= 1
 
-    frame = traceback.extract_stack()[stack_pos-1]
+    frame = traceback.extract_stack()[stack_pos - 1]
     at_message = "At: %s (line %s)" % (frame[0], frame[1])
 
     warn_logger.warn(before_message)
     if after_message is not None:
         warn_logger.warn(at_message)
-        warn_logger.warn(after_message+"\n")
+        warn_logger.warn(after_message + "\n")
     else:
-        warn_logger.warn(at_message+"\n")
+        warn_logger.warn(at_message + "\n")
 
 
 def wraps(func):

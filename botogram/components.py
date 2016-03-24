@@ -166,7 +166,7 @@ class Component:
 def merge_chains(main, *components):
     """Merge multiple chains returned by the components"""
     merged = {}
-    components = [main]+list(reversed(components))
+    components = [main] + list(reversed(components))
 
     # First of all, merge all the subchains of the different components
     # together -- This is a separate step so the order is preserved

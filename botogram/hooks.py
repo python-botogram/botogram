@@ -18,10 +18,10 @@ class Hook:
     def __init__(self, func, component, args=None):
         prefix = ""
         if component.component_name:
-            prefix = component.component_name+"::"
+            prefix = component.component_name + "::"
 
         self.func = func
-        self.name = prefix+func.__name__
+        self.name = prefix + func.__name__
         self.component = component
         self.component_id = component._component_id
 
@@ -32,7 +32,7 @@ class Hook:
         return rebuild, (self.__class__, self.func, self.component, self._args)
 
     def __repr__(self):
-        return "<"+self.__class__.__name__+" \""+self.name+"\">"
+        return "<" + self.__class__.__name__ + " \"" + self.name + "\">"
 
     def _after_init(self, args):
         """Prepare the object"""
@@ -167,7 +167,7 @@ class CommandHook(Hook):
             raise ValueError("Invalid command name: %s" % args["name"])
 
         # This regex will match all commands pointed to this bot
-        self._regex = re.compile(r'^\/'+args["name"]+r'(@[a-zA-Z0-9_]+)?'
+        self._regex = re.compile(r'^\/' + args["name"] + r'(@[a-zA-Z0-9_]+)?'
                                  r'( .*)?$')
 
     def _call(self, bot, update):
@@ -178,7 +178,7 @@ class CommandHook(Hook):
         match = self._regex.match(text)
         if not match:
             return
-        if match.group(1) and match.group(1) != "@"+bot.itself.username:
+        if match.group(1) and match.group(1) != "@" + bot.itself.username:
             return
 
         args = _command_args_split_re.split(text)[1:]

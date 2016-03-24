@@ -31,7 +31,7 @@ class User(BaseObject, mixins.ChatMixin):
         """Get the full name of the user"""
         result = self.first_name
         if self.last_name is not None:
-            result += " "+self.last_name
+            result += " " + self.last_name
 
         return result
 
@@ -99,7 +99,7 @@ class Chat(BaseObject, mixins.ChatMixin):
         elif self.first_name is not None:
             result = self.first_name
             if self.last_name is not None:
-                result += " "+self.last_name
+                result += " " + self.last_name
 
         return result
 
@@ -145,12 +145,12 @@ class Photo(mixins.FileMixin):
         # Calculate the smaller and the biggest sizes
         with_size = {}
         for size in self.sizes:
-            with_size[size.height*size.width] = size
+            with_size[size.height * size.width] = size
         self.smallest = with_size[min(with_size.keys())]
         self.biggest = with_size[max(with_size.keys())]
 
         # Publish all the attributes of the biggest-size photo
-        attrs = list(PhotoSize.required.keys())+list(PhotoSize.optional.keys())
+        attrs = list(PhotoSize.required.keys()) + list(PhotoSize.optional.keys())
         for attr in attrs:
             setattr(self, attr, getattr(self.biggest, attr))
 

@@ -191,7 +191,7 @@ class UpdaterProcess(BaseProcess):
 
         try:
             updates = self.bot.api.call("getUpdates", {
-                "offset": self.last_id+1,
+                "offset": self.last_id + 1,
                 "timeout": 1,
             }, expect=objects.Updates)
         except (api.APIError, ValueError, TypeError) as e:

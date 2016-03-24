@@ -58,7 +58,7 @@ class BaseObject:
         self._api = api
 
         # Recursively set the API
-        for key in list(self.required.keys())+list(self.optional.keys()):
+        for key in list(self.required.keys()) + list(self.optional.keys()):
             # Be sure to use the right key
             if key in self.replace_keys:
                 key = self.replace_keys[key]

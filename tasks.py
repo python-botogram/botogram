@@ -276,4 +276,4 @@ def deps_compile():
 
     for file in glob.glob(os.path.join(BASE, "requirements-*.in")):
         invoke.run("%s/bin/pip-compile %s > %s" % (env, os.path.abspath(file),
-                   os.path.abspath(file)[:-3]+".txt"))
+                   os.path.abspath(file)[:-3] + ".txt"))
