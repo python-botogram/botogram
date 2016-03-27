@@ -26,6 +26,13 @@ botogram 1.0, and warnings are in place to notify you where to change what.
 New features
 ------------
 
+* Added the ability to send messages without notifying the user
+
+  * New argument ``notify`` on multiple methods of :py:class:`botogram.User`
+  * New argument ``notify`` on multiple methods of :py:class:`botogram.Chat`
+  * New argument ``notify`` on multiple methods of :py:class:`botogram.Message`
+  * New argument ``notify`` on multiple methods of :py:class:`botogram.Bot`
+
 * Added the ability to send stickers
 
    * New method :py:meth:`botogram.User.send_sticker`
@@ -41,6 +48,7 @@ New features
 Changes
 -------
 
+* Renamed ``Message.from_`` to :py:attr:`botogram.Message.sender`
 * Renamed ``Bot.init_shared_memory`` to :py:meth:`botogram.Bot.prepare_memory`
 * Renamed ``Component.add_shared_memory_initializer`` to
   :py:meth:`botogram.Component.add_memory_preparer`
@@ -63,6 +71,7 @@ Deprecated features
 
 Deprecated features will be removed in botogram 1.0!
 
+* ``Message.from_`` is now deprecated
 * ``Bot.init_shared_memory`` is now deprecated
 * ``Component.add_shared_memory_initializer`` is now deprecated
 
