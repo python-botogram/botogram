@@ -515,9 +515,7 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
-      .. versionchanged:: 0.2
-
-      Before it was called ``from_``.
+      .. versionchanged:: 0.2 Before it was called ``from_``.
 
    .. py:attribute:: from_
 
