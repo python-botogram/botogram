@@ -14,7 +14,7 @@ Here you can see what changed in every botogram release.
 botogram 0.2
 =============
 
-*Alpha release, not yet released*
+*Alpha release, released on March 27th, 2016*
 
 botogram 0.2 is the second alpha release of botogram. It features an increased
 support for the upstream Telegram API, and also some bugfixes here and there.
