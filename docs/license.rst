@@ -1,9 +1,11 @@
 .. Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-~~~~~~~~~~~~~~~
+.. _license:
+
+===============
 The MIT license
-~~~~~~~~~~~~~~~
+===============
 
 botogram is released under the MIT license. This means you can use it as you
 want, change it and redistribute it, but you must keep the following copyright

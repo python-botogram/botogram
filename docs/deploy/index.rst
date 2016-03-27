@@ -1,9 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-~~~~~~~~~~~~~~~
+.. _deploy:
+
+===============
 Deploy your bot
-~~~~~~~~~~~~~~~
+===============
 
 Well, you've created your first bot. It works perfectly, your friends are
 loving it, and you are happy about what you've done. The problem is, you

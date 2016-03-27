@@ -222,6 +222,7 @@ def test_add_command(bot, sample_update):
     sample1_processed = False
     sample2_processed = False
     sample3_processed = False
+    sample4_processed = False
 
     def sample1(chat, message, args):
         nonlocal sample1_processed
@@ -232,31 +233,42 @@ def test_add_command(bot, sample_update):
         sample2_processed = True
 
         assert chat.id == -1
-        assert message.text == "/sample2 a b c"
+        assert message.text == "/sample2 a b  c\n\nd\t\t\te"
         assert message.chat == chat
-        assert args == ["a", "b", "c"]
+        assert args == ["a", "b", "c", "d", "e"]
 
     def sample3(chat, message, args):
         nonlocal sample3_processed
         sample3_processed = True
 
-        assert message.text == "/sample3@test_bot a b c"
+        assert message.text == "/sample3@test_bot a b  c\n\nd\t\t\te"
+
+    def sample4(chat, message, args):
+        nonlocal sample4_processed
+        sample4_processed = True
+
+        assert args == []
 
 
     comp = botogram.Component("test")
     comp.add_command("sample1", sample1)
     comp.add_command("sample2", sample2)
     comp.add_command("sample3", sample3)
+    comp.add_command("sample4", sample4)
 
     bot.use(comp)
 
     for cmd in "sample1@another_bot", "sample2", "sample3@test_bot":
-        sample_update.message.text = "/%s a b c" % cmd
+        sample_update.message.text = "/%s a b  c\n\nd\t\t\te" % cmd
         bot.process(sample_update)
+
+    sample_update.message.text = "/sample4"
+    bot.process(sample_update)
 
     assert sample1_processed == False
     assert sample2_processed == True
     assert sample3_processed == True
+    assert sample4_processed == True
 
 
 def test_add_shared_memory_initializer(bot, sample_update):

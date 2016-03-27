@@ -250,7 +250,7 @@ def _write_on_socket(conn, data):
     """Write a chunk of data on a connection"""
     remaining = len(data)
     while remaining > 0:
-        sent = conn.send(data[len(data)-remaining:])
+        sent = conn.send(data[len(data) - remaining:])
         if sent == 0:
             raise EOFError("Broken socket!")
 

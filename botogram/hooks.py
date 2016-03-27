@@ -18,10 +18,10 @@ class Hook:
     def __init__(self, func, component, args=None):
         prefix = ""
         if component.component_name:
-            prefix = component.component_name+"::"
+            prefix = component.component_name + "::"
 
         self.func = func
-        self.name = prefix+func.__name__
+        self.name = prefix + func.__name__
         self.component = component
         self.component_id = component._component_id
 
@@ -32,7 +32,7 @@ class Hook:
         return rebuild, (self.__class__, self.func, self.component, self._args)
 
     def __repr__(self):
-        return "<"+self.__class__.__name__+" \""+self.name+"\">"
+        return "<" + self.__class__.__name__ + " \"" + self.name + "\">"
 
     def _after_init(self, args):
         """Prepare the object"""
@@ -66,8 +66,8 @@ class ProcessMessageHook(Hook):
     pass
 
 
-class SharedMemoryInitializerHook(Hook):
-    """Underlying hook for @bot.init_shared_memory"""
+class MemoryPreparerHook(Hook):
+    """Underlying hook for @bot.prepare_memory"""
 
     def call(self, memory):
         return self.func(memory)
@@ -153,6 +153,9 @@ class MessageMatchesHook(Hook):
         return found
 
 
+_command_args_split_re = re.compile(r' +')
+
+
 class CommandHook(Hook):
     """Underlying hook for @bot.command"""
 
@@ -164,20 +167,21 @@ class CommandHook(Hook):
             raise ValueError("Invalid command name: %s" % args["name"])
 
         # This regex will match all commands pointed to this bot
-        self._regex = re.compile(r'^\/'+args["name"]+r'(@[a-zA-Z0-9_]+)?'
+        self._regex = re.compile(r'^\/' + args["name"] + r'(@[a-zA-Z0-9_]+)?'
                                  r'( .*)?$')
 
     def _call(self, bot, update):
         message = update.message
+        text = message.text.replace("\n", " ").replace("\t", " ")
 
         # Must be the correct command for the correct bot
-        match = self._regex.match(message.text)
+        match = self._regex.match(text)
         if not match:
             return
-        if match.group(1) and match.group(1) != "@"+bot.itself.username:
+        if match.group(1) and match.group(1) != "@" + bot.itself.username:
             return
 
-        args = message.text.split(" ")[1:]
+        args = _command_args_split_re.split(text)[1:]
         bot._call(self.func, self.component_id, chat=message.chat,
                   message=message, args=args)
         return True

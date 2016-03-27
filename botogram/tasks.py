@@ -37,7 +37,7 @@ class TimerTask(BaseTask):
         if current is None:
             current = time.time()
 
-        res = self.last_run+self.interval <= current
+        res = self.last_run + self.interval <= current
 
         # Increment the last_run if the result is True
         if res:

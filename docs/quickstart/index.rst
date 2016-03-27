@@ -1,13 +1,13 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-.. _tutorial:
+.. _quickstart:
 
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 Create your first bot
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
-In this chapter, you'll create a brand new bot, which will use all the
+In this chapter, you'll create a brand new bot, which will use a lot of the
 botogram capabilities. Be sure to have botogram installed, otherwise be sure to
 check the ":ref:`install`" chapter.
 

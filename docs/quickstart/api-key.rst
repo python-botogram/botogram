@@ -3,9 +3,9 @@
 
 .. _tutorial-api-key:
 
-~~~~~~~~~~~~~~~~~~~~
+====================
 Obtaining an API key
-~~~~~~~~~~~~~~~~~~~~
+====================
 
 Before diving in the source code of the bot, you need to create the bot in
 Telegram and get its API key. In order to do so, open your favourite Telegram
@@ -15,13 +15,15 @@ command::
 
    /newbot
 
-And follow the instructions it gives to you. When you've gave to it everything
+And follow the instructions it gives to you. When you've given it everything
 it needs to know, it will give you an API key, like this fake one::
 
    123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
-Write it down somewhere. You can customize a bit more the bot from that chat,
-check `the @botfather documentation`_ if you want to know something more.
+Write it down somewhere, but **be sure to keep it secret!** Everyone with your
+API key can take full control of your bot, and that's not a fun thing.
+
+If you want to learn more about creating and customizing bots, check the
+:ref:`bot creation <bot-creation>` chapter of this documentation.
 
 .. _@botfather: https://telegram.me/botfather
-.. _the @botfather documentation: https://core.telegram.org/bots/#botfather

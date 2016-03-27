@@ -22,7 +22,7 @@ import functools
 _username_re = re.compile(r"\@([a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)")
 _command_re = re.compile(r"^\/[a-zA-Z0-9_]+(\@[a-zA-Z0-9_]{5}[a-zA-Z0-9_]*)?$")
 _email_re = re.compile(r"[a-zA-Z0-9_\.\+\-]+\@[a-zA-Z0-9_\.\-]+\.[a-zA-Z]+")
-_url_re = re.compile(r"https?://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?")
+_url_re = re.compile(r"https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?")
 
 # This small piece of global state will track if logbook was configured
 _logger_configured = False
@@ -34,7 +34,7 @@ warn_logger = logbook.Logger("botogram's code warnings")
 def _deprecated_message(name, removed_on, fix, back):
     before = "%s will be removed in botogram %s." % (name, removed_on)
     after = "Fix: %s" % fix
-    warn(back-1, before, after)
+    warn(back - 1, before, after)
 
 
 def deprecated(name, removed_on, fix):
@@ -60,7 +60,7 @@ class DeprecatedAttributes:
 
         if key in deprecated:
             _deprecated_message(
-                get("__class__").__name__+"."+key,
+                get("__class__").__name__ + "." + key,
                 deprecated[key]["removed_on"],
                 deprecated[key]["fix"],
                 -2,
@@ -73,15 +73,21 @@ class DeprecatedAttributes:
 
 def warn(stack_pos, before_message, after_message=None):
     """Issue a warning caused by user code"""
-    frame = traceback.extract_stack()[stack_pos-1]
+    # This is a workaround for http://bugs.python.org/issue25108
+    # In Python 3.5.0, traceback.extract_stack returns an additional internal
+    # stack frame, which causes a lot of trouble around there.
+    if sys.version_info[:3] == (3, 5, 0):
+        stack_pos -= 1
+
+    frame = traceback.extract_stack()[stack_pos - 1]
     at_message = "At: %s (line %s)" % (frame[0], frame[1])
 
     warn_logger.warn(before_message)
     if after_message is not None:
         warn_logger.warn(at_message)
-        warn_logger.warn(after_message+"\n")
+        warn_logger.warn(after_message + "\n")
     else:
-        warn_logger.warn(at_message+"\n")
+        warn_logger.warn(at_message + "\n")
 
 
 def wraps(func):
@@ -119,7 +125,7 @@ def format_docstr(docstring):
     return "\n".join(result)
 
 
-def docstring_of(func, bot=None, component_id=None):
+def docstring_of(func, bot=None, component_id=None, format=False):
     """Get the docstring of a function"""
     # Get the correct function from the hook
     if hasattr(func, "_botogram_hook"):
@@ -138,6 +144,9 @@ def docstring_of(func, bot=None, component_id=None):
             docstring = bot._("No description available.")
         else:
             docstring = "No description available."
+
+        if format:
+            docstring = "_%s_" % docstring
 
     return format_docstr(docstring)
 

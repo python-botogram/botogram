@@ -3,11 +3,11 @@
 
 .. _api:
 
-~~~~~~~~~~~~~
+=============
 API reference
-~~~~~~~~~~~~~
+=============
 
-This section will cover the full reference of the botogram's public API. The
+This section will cover the full reference of botogram's public API. The
 API will be kept backward compatible for at least the next release, even if
 the development will be made trying to not break anything.
 

@@ -3,34 +3,35 @@
 
 .. _custom-components:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 Creating custom components
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 
 Hopefully you'll get to a point when you've made a few bots. The problem is,
-there's an high chance parts of the code are duplicate in the bots. For
+there's a high chance parts of the code are duplicated between the bots. For
 example, if your bots are meant to be used only by some people, you'll have
 duplicate code which filters who can interact with the bot.
 
-Components provides an easy and elegant way to solve the problem: instead of
+Components provide an easy and elegant way to solve the problem: instead of
 copy-pasting the shared code in each bot, they allow you to create isolated
 groups of hooks, commands and so on, then you can import and use them in each
 bot.
 
 .. _custom-components-conduct:
 
-==========================
 Components code of conduct
 ==========================
 
 If you want to distribute your components, you should follow these simple rules
-while coding it. This way all components will adhere to the same standars,
+while coding them. This way all components will adhere to the same standards,
 simplifying the end-user experience:
 
-* **Give appropiate names to your components**. Component names are used to
-  give the end-user a hint about when that thing was defined. Also, make sure
-  your name isn't used by someone else, for example adding your nickname as a
-  prefix.
+* **Give appropriate names to your components**. Naming your component
+  appropriately will help users identify runtime actions involving your
+  component, such as when the component is loaded into their bot, or if a hook
+  defined by your component is called (when running in debug mode). Also, to
+  be sure your component's name isn't used by someone else, consider adding
+  your nickname as a prefix.
 
 * **Don't assume your component will be used only by one bot**. Try to design
   your component in a way it can be used by multiple bots at once. This
@@ -50,7 +51,6 @@ simplifying the end-user experience:
 
 .. _custom-components-example:
 
-====================
 An example component
 ====================
 
@@ -95,7 +95,7 @@ the :py:meth:`botogram.Component.add_before_processing_hook` method:
            self.add_before_processing_hook(self.filter)
 
        def filter(self, chat, message):
-           if message.from_.id not in self.allowed:
+           if message.sender.id not in self.allowed:
                return True  # Stop processing the update
 
 And the component is complete! The filter simply checks if the message
@@ -117,19 +117,18 @@ source code of the component is the following:
            self.add_before_processing_hook(self.filter)
 
        def filter(self, chat, message):
-           if message.from_.id not in self.allowed:
+           if message.sender.id not in self.allowed:
                return True  # Stop processing the update
 
 .. _custom-components-use:
 
-========================
 Using a custom component
 ========================
 
 If you want to use a component you created in your bots, you need to initialize
 its object and apply it to each bot you want. We're going to apply the
 ``myacl`` component we wrote before, which should be in a separated file, to
-the hello world you can find in the index of the docs:
+the hello world bot you can find in the index of the docs:
 
 .. code-block:: python
 

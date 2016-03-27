@@ -54,9 +54,9 @@ class Bot(frozenbot.FrozenBot):
         self._shared_memory = shared.SharedMemory()
 
         # Register bot's shared memory initializers
-        inits = self._main_component._get_shared_memory_inits()
+        inits = self._main_component._get_chains()["memory_preparers"][0]
         maincompid = self._main_component._component_id
-        self._shared_memory.register_inits_list(maincompid, inits)
+        self._shared_memory.register_preparers_list(maincompid, inits)
 
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
@@ -83,7 +83,7 @@ class Bot(frozenbot.FrozenBot):
 
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
-                                       self.itself.username+r')?( .*)?$')
+                                       self.itself.username + r')?( .*)?$')
 
     def __reduce__(self):
         # Use the standard __reduce__
@@ -142,10 +142,16 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
-    def init_shared_memory(self, func):
-        """Register a shared memory's initializer"""
-        self._main_component.add_shared_memory_initializer(func)
+    def prepare_memory(self, func):
+        """Register a shared memory's preparer"""
+        self._main_component.add_memory_preparer(func)
         return func
+
+    @utils.deprecated("@bot.init_shared_memory", "1.0", "Rename the decorator "
+                      "to @bot.prepare_memory")
+    def init_shared_memory(self, func):
+        """This decorator is deprecated, and it calls @prepare_memory"""
+        return self.prepare_memory(func)
 
     def use(self, *components, only_init=False):
         """Use the provided components in the bot"""
@@ -156,12 +162,13 @@ class Bot(frozenbot.FrozenBot):
                 self._components.append(component)
 
             # Register initializers for the shared memory
+            chains = component._get_chains()
             compid = component._component_id
-            inits = component._get_shared_memory_inits()
-            self._shared_memory.register_inits_list(compid, inits)
+            preparers = chains["memory_preparers"][0]
+            self._shared_memory.register_preparers_list(compid, preparers)
 
             # Register tasks
-            self._scheduler.register_tasks_list(component._get_timers())
+            self._scheduler.register_tasks_list(chains["tasks"][0])
 
     def process(self, update):
         """Process an update object"""
@@ -178,12 +185,20 @@ class Bot(frozenbot.FrozenBot):
 
     def freeze(self):
         """Return a frozen instance of the bot"""
+        chains = components.merge_chains(self._main_component,
+                                         *self._components)
+
+        # Get the list of commands for the bot
+        commands = self._components[-1]._get_commands()
+        for component in reversed(self._components[:-1]):
+            commands.update(component._get_commands())
+        commands.update(self._main_component._get_commands())
+
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self.hide_commands, self.before_help,
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
-                                   self._components+[self._main_component],
-                                   self._scheduler,
+                                   commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 

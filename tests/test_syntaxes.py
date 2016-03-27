@@ -17,9 +17,14 @@ def test_is_markdown():
     for delimiter in "*", "_", "`", "```":
         assert botogram.syntaxes.is_markdown(delimiter+"a"+delimiter)
         assert botogram.syntaxes.is_markdown("!"+delimiter+"a"+delimiter+"!")
+        assert botogram.syntaxes.is_markdown("a\n"+delimiter+"a"+delimiter)
+        assert botogram.syntaxes.is_markdown("a"+delimiter+"a\na"+delimiter)
 
     assert botogram.syntaxes.is_markdown("[a](b)")
     assert botogram.syntaxes.is_markdown("![a](b)!")
+    assert botogram.syntaxes.is_markdown("a\n[a](b)")
+    assert botogram.syntaxes.is_markdown("a[a\na](b)")
+    assert botogram.syntaxes.is_markdown("a[a](b\nb)")
 
     assert not botogram.syntaxes.is_markdown("hey@this_is_awesome.com")
     assert not botogram.syntaxes.is_markdown("https://www.this_is_awesome.com")
@@ -32,11 +37,16 @@ def test_is_html():
     for tag in "b", "strong", "i", "em", "pre", "code":
         assert botogram.syntaxes.is_html("<"+tag+">a</"+tag+">")
         assert botogram.syntaxes.is_html("!<"+tag+">a</"+tag+">!")
+        assert botogram.syntaxes.is_html("a\n<"+tag+">a</"+tag+">")
+        assert botogram.syntaxes.is_html("a<"+tag+">a\na</"+tag+">")
 
     assert not botogram.syntaxes.is_html("<a>a</a>")
     assert not botogram.syntaxes.is_html("<a test=\"b\">a</a>")
     assert botogram.syntaxes.is_html("<a href=\"b\">a</a>")
     assert botogram.syntaxes.is_html("!<a href=\"b\">a</a>!")
+    assert botogram.syntaxes.is_html("a\n<a href=\"b\">a</a>")
+    assert botogram.syntaxes.is_html("a<a href=\"b\">a\na</a>")
+    assert botogram.syntaxes.is_html("a<a href=\"b\nb\">a</a>")
 
 
 def test_guess_syntax():

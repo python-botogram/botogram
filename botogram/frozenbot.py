@@ -22,7 +22,7 @@ class FrozenBot:
 
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
-                 components, scheduler, main_component_id, bot_id,
+                 commands, chains, scheduler, main_component_id, bot_id,
                  shared_memory):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
@@ -38,25 +38,12 @@ class FrozenBot:
         self.process_backlog = process_backlog
         self.lang = lang
         self._commands_re = commands_re
-        self._components = components
         self._main_component_id = main_component_id
         self._bot_id = bot_id
         self._shared_memory = shared_memory
         self._scheduler = scheduler
-
-        # Rebuild the hooks chain and commands list
-        self._commands = components[-1]._get_commands()
-        self._chain = []
-        chains = components[-1]._get_hooks_chain()
-        for component in reversed(components[:-1]):
-            self._commands.update(component._get_commands())
-
-            comp_chain = component._get_hooks_chain()
-            for i in range(len(chains)):
-                chains[i] += comp_chain[i]
-
-        for chain in chains:
-            self._chain += chain
+        self._chains = chains
+        self._commands = commands
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -75,9 +62,9 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self.hide_commands,
             self.before_help, self.after_help, self.process_backlog,
-            self.lang, self.itself, self._commands_re, self._components,
-            self._scheduler, self._main_component_id, self._bot_id,
-            self._shared_memory,
+            self.lang, self.itself, self._commands_re, self._commands,
+            self._chains, self._scheduler, self._main_component_id,
+            self._bot_id, self._shared_memory,
         )
         return restore, args
 
@@ -125,51 +112,19 @@ class FrozenBot:
         """Register a new timer"""
         raise FrozenBotError("Can't add timers to a bot at runtime")
 
-    def init_shared_memory(self, func):
-        """Add a shared memory initializer"""
-        raise FrozenBotError("Can't register a shared memory initializer to a "
+    def prepare_memory(self, func):
+        """Add a shared memory preparer"""
+        raise FrozenBotError("Can't register a shared memory preparer to a "
                              "bot at runtime")
 
-    # Those are shortcuts to send messages directly to someone
+    @utils.deprecated("@bot.init_shared_memory", "1.0", "Rename the decorator "
+                      "to @bot.prepare_memory")
+    def init_shared_memory(self, func):
+        """This decorator is deprecated, and it calls @prepare_memory"""
+        return self.prepare_memory(func)
 
-    def send(self, chat, message, preview=True, reply_to=None, syntax=None,
-             extra=None):
-        """Send a message in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send(message, preview, reply_to, syntax, extra)
-
-    def send_photo(self, chat, path, caption="", reply_to=None, extra=None):
-        """Send a photo in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_photo(path, caption, reply_to, extra)
-
-    def send_audio(self, chat, path, duration=None, performer=None, title=None,
-                   reply_to=None, extra=None):
-        """Send an audio in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_audio(path, duration, performer, title, reply_to, extra)
-
-    def send_voice(self, chat, path, duration=None, reply_to=None, extra=None):
-        """Send a voice message in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_voice(path, duration, reply_to, extra)
-
-    def send_video(self, chat, path, duration=None, caption=None,
-                   reply_to=None, extra=None):
-        """Send a video in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_video(path, duration, caption, reply_to, extra)
-
-    def send_file(self, chat, path, reply_to=None, extra=None):
-        """Send a generic file in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_file(path, reply_to, extra)
-
-    def send_location(self, chat, latitude, longitude, reply_to=None,
-                      extra=None):
-        """Send a generic file in a chat"""
-        obj = objects.Chat({"id": chat, "type": ""}, self.api)
-        obj.send_location(latitude, longitude, reply_to, extra)
+    # This class also contains methods to send messages to users
+    # They're defined dynamically out of the class body, see below
 
     # Let's process the messages
 
@@ -180,7 +135,7 @@ class FrozenBot:
 
         update.set_api(self.api)  # Be sure to use the correct API object
 
-        for hook in self._chain:
+        for hook in self._chains["messages"]:
             # Get the correct name of the hook
             name = hook.name
             self.logger.debug("Processing update #%s with the %s hook..." %
@@ -247,6 +202,36 @@ class FrozenBot:
             kwargs[name] = available[name]
 
         return func(**kwargs)
+
+
+# Those are shortcuts to send messages directly to someone
+# Create dynamic methods for each of the send methods. They're *really*
+# repetitive, so generating them with a for loop is not such a bad idea
+
+_proxied_sends = [
+    objects.Chat.send,
+    objects.Chat.send_photo,
+    objects.Chat.send_audio,
+    objects.Chat.send_voice,
+    objects.Chat.send_video,
+    objects.Chat.send_file,
+    objects.Chat.send_location,
+    objects.Chat.send_sticker,
+]
+
+for _proxy in _proxied_sends:
+    @utils.wraps(_proxy)
+    def _wrapper(self, chat, *args, __proxy=_proxy, **kwargs):
+        # String chats are channels
+        if type(chat) == str:
+            obj = objects.Chat({"id": 0, "type": "channel", "username": chat},
+                               self.api)
+        else:
+            obj = objects.Chat({"id": chat, "type": ""}, self.api)
+
+        __proxy(obj, *args, **kwargs)
+
+    setattr(FrozenBot, _proxy.__name__, _wrapper)
 
 
 def restore(*args):

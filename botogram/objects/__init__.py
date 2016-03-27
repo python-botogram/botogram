@@ -8,6 +8,7 @@
 
 from .base import BaseObject, multiple, _itself
 from . import mixins
+from .. import utils
 
 
 class User(BaseObject, mixins.ChatMixin):
@@ -24,6 +25,51 @@ class User(BaseObject, mixins.ChatMixin):
         "last_name": str,
         "username": str,
     }
+
+    @property
+    def name(self):
+        """Get the full name of the user"""
+        result = self.first_name
+        if self.last_name is not None:
+            result += " " + self.last_name
+
+        return result
+
+    @property
+    @mixins._require_api
+    def avatar(self):
+        """Get the avatar of the user"""
+        # This is lazy loaded and cached, so it won't affect performances if
+        # you don't need avatars
+        if not hasattr(self, "_avatar"):
+            avatars = self._api.call("getUserProfilePhotos", {
+                "user_id": self.id,
+                "limit": 1,
+            }, expect=UserProfilePhotos)
+
+            # If the user has no avatars just use None
+            self._avatar = None
+            if len(avatars.photos):
+                self._avatar = avatars.photos[0]  # Take the most recent one
+
+        return self._avatar
+
+    @mixins._require_api
+    def avatar_history(self):
+        """Get all the avatars of the user"""
+        avatars = []
+
+        while True:
+            chunk = self._api.call("getUserProfilePhotos", {
+                "user_id": self.id,
+                "offset": len(avatars),
+            }, expect=UserProfilePhotos)
+
+            avatars += chunk.photos
+            if len(avatars) >= chunk.total_count:
+                break
+
+        return avatars
 
 
 class Chat(BaseObject, mixins.ChatMixin):
@@ -42,6 +88,20 @@ class Chat(BaseObject, mixins.ChatMixin):
         "first_name": str,
         "last_name": str,
     }
+
+    @property
+    def name(self):
+        """Get the full name of the chat"""
+        result = None
+
+        if self.title is not None:
+            result = self.title
+        elif self.first_name is not None:
+            result = self.first_name
+            if self.last_name is not None:
+                result += " " + self.last_name
+
+        return result
 
 
 class PhotoSize(BaseObject, mixins.FileMixin):
@@ -85,12 +145,12 @@ class Photo(mixins.FileMixin):
         # Calculate the smaller and the biggest sizes
         with_size = {}
         for size in self.sizes:
-            with_size[size.height*size.width] = size
+            with_size[size.height * size.width] = size
         self.smallest = with_size[min(with_size.keys())]
         self.biggest = with_size[max(with_size.keys())]
 
         # Publish all the attributes of the biggest-size photo
-        attrs = list(PhotoSize.required.keys())+list(PhotoSize.optional.keys())
+        attrs = list(PhotoSize.required.keys()) + list(PhotoSize.optional.keys())
         for attr in attrs:
             setattr(self, attr, getattr(self.biggest, attr))
 
@@ -162,7 +222,7 @@ class Document(BaseObject, mixins.FileMixin):
     }
 
 
-class Sticker(BaseObject):
+class Sticker(BaseObject, mixins.FileMixin):
     """Telegram API representation of a sticker
 
     https://core.telegram.org/bots/api#sticker
@@ -234,7 +294,7 @@ class UserProfilePhotos(BaseObject):
 
     required = {
         "total_count": int,
-        "photos": multiple(multiple(PhotoSize)),
+        "photos": multiple(Photo),
     }
 
 
@@ -243,6 +303,12 @@ class Message(BaseObject, mixins.MessageMixin):
 
     https://core.telegram.org/bots/api#message
     """
+
+    @property
+    @utils.deprecated("Message.from_", "1.0",
+                      "Rename property to Message.sender")
+    def from_(self):
+        return self.sender
 
     required = {
         "message_id": int,
@@ -276,7 +342,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "migrate_from_chat_id": int,
     }
     replace_keys = {
-        "from": "from_",
+        "from": "sender",
     }
 
 

@@ -3,9 +3,9 @@
 
 .. _channels:
 
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 Working with channels
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
 Telegram Channels provides a way to broadcast a message to multiple users. You
 can manually send messages to them with your preferred Telegram client, but
@@ -15,25 +15,19 @@ With botogram you can easily do that, without even the need to run the bot.
 
 .. _channels-preparation:
 
-===========
 Preparation
 ===========
 
-In order to start working with channels, you need to get a bot's API key. If
-you already have a bot you can skip this step. First of all you need to contact
-the `@botfather`_ Telegram account, and then send to it the ``/newbot``
-command. After you provide all the information he needs, you will get an API
-key, which looks like this fake one::
+Before you can start working with channels, you need to create a bot which will
+be able to send messages to your channel. If you haven't done that already,
+check the :ref:`bot creation <bot-creation>` chapter of this documentation.
 
-   123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
+After that you need to allow your bot to send messages to your channel. Open
+your favorite Telegram client, and go to the administrators' section of your
+channel. From there you should add your bot, and then you're ready.
 
-The final step is to add your bot as an administrator of the channel. Open your
-favourite Telegram client, and go to the administrators' section of your
-channel. From it you should add your bot, and then you're ready.
+.. _channels-standalone:
 
-.. _chanels-standalone:
-
-=========================
 Manage without a full bot
 =========================
 
@@ -50,8 +44,8 @@ channel object:
 
 You need to replace ``@my_channel`` with your channel's public name, and
 ``YOUR_API_KEY`` with the key you got before. Then you can use all the methods
-of the :py:class:`~botogram.Chat` object with the instance you got. For
-example, if you want to send a text message you should do:
+of the :py:class:`~botogram.Chat` object with the instance you are returned.
+For example, if you want to send a text message you should do:
 
 .. code-block:: python
    :emphasize-lines: 2
@@ -61,7 +55,6 @@ example, if you want to send a text message you should do:
 
 .. _channels-bot:
 
-=========================
 Manage from a running bot
 =========================
 
@@ -84,7 +77,9 @@ cites botogram in a chat, you can do this:
    @bot.message_contains("botogram")
    def we_are_famous(bot, chat, message):
        user = "Someone"
-       if message.from_.username is not None:
-           user = message.from_.username
+       if message.sender.username is not None:
+           user = message.sender.username
 
        bot.send("@my_channel", "%s mentioned botogram!" % user)
+
+.. _@botfather: https://telegram.me/botfather

@@ -3,9 +3,9 @@
 
 .. api-bot::
 
-~~~~~~~~~~~~~~~~~
+=================
 Bots creation API
-~~~~~~~~~~~~~~~~~
+=================
 
 botogram is a microframework aimed to help you creating bots. It's obvious it
 has something to create them! Here is the reference of all the needed
@@ -41,7 +41,7 @@ components.
 
       The username of the bot's owner, which will be displayed in the ``/help``
       command. This attribute will be sent directly to the user, so if you want
-      to insert an username be sure to prefix it with ``@``, so the Telegram
+      to insert a username be sure to prefix it with ``@``, so the Telegram
       client will make that text clickable.
 
    .. py:attribute:: before_help
@@ -84,8 +84,7 @@ components.
       parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -99,8 +98,7 @@ components.
       will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -122,9 +120,8 @@ components.
       called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
-      * A ``message`` parameter witht the representation of the received
+        message was sent (an instance of :py:class:`botogram.Chat`)
+      * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`).
 
       If the function returns ``True``, then the message processing is stopped,
@@ -142,8 +139,7 @@ components.
       message. Decorated functions will be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
 
@@ -164,8 +160,7 @@ components.
       be called with two parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * A ``matches`` parameter with a tuple containing the matched groups
@@ -186,8 +181,7 @@ components.
       three parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (either an instance of :py:class:`botogram.User` or
-        :py:class:`botogram.GroupChat`)
+        message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * An ``args`` parameter with the list of parsed arguments
@@ -213,7 +207,7 @@ components.
 
       :param int interval: The execution interval, in seconds.
 
-   .. py:decoratormethod:: init_shared_memory
+   .. py:decoratormethod:: prepare_memory
 
       The function decorated with this decorator will be called the first time
       you access your bot's shared memory. This allows you to set the initial
@@ -224,11 +218,11 @@ components.
 
       The decorated function will be called providing as first argument a
       dict-like object representing your bot's shared memory. Use it to
-      initialize the things you want in the shared memory.
+      prepare the things you want in the shared memory.
 
       .. code-block:: python
 
-         @bot.init_shared_memory
+         @bot.prepare_memory
          def initialize(shared):
              shared["messages"] = 0
 
@@ -241,6 +235,18 @@ components.
          @bot.command("count")
          def count(shared, chat, message, args):
              chat.send("This bot received %s messages" % shared["messages"])
+
+      .. versionchanged:: 0.2
+
+         Before it was called ``init_shared_memory``.
+
+   .. py:decoratormethod:: init_shared_memory
+
+      This decorator was renamed to
+      :py:meth:`~botogram.Bot.prepare_memory` in botogram 0.2.
+      Please use that instead of this.
+
+      .. deprecated:: 0.2 it will be removed in botogram 1.0
 
    .. py:method:: use(component)
 
@@ -280,7 +286,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None])
+   .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       This method sends a message to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -300,14 +306,18 @@ components.
       processed by Telegram (:ref:`learn more about rich formatting
       <tricks-messages-syntax>`).
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the message.
       :param str messgae: The message you want to send.
       :param bool preview: If you want to show the link preview.
       :param int reply_to: The ID of the message this one is replying to.
       :param string syntax: The name of the syntax you used for the message.
       :param object extra: An extra object you want to attach (see above).
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None])
+   .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None, notify=True])
 
       This method sends a photo to a specific chat. The chat must be identified
       by its ID, and Telegram applies some restrictions on the chats allowed to
@@ -322,13 +332,17 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the photo you want to send.
       :param str caption: An optional caption for the photo.
       :param int reply_to: The ID of the message this one is replying to.
       :param object extra: An extra object you want to attach (see above).
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None])
+   .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
       This method sends an audio track to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -346,6 +360,9 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the audio track
       :param int duration: The track duration, in seconds
@@ -353,8 +370,9 @@ components.
       :param str title: The title of the track
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None])
+   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       This method sends a voice message to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -372,13 +390,17 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_video(chat, path, [duration=None, caption=None, reply_to=None, extra=None])
+   .. py:method:: send_video(chat, path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
       This method sends a video to a specific chat. The chat must be identified
       by its ID, and Telegram applies some restrictions on the chats allowed to
@@ -396,14 +418,18 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the video
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption The caption of the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_file(chat, path, [reply_to=None, extra=None])
+   .. py:method:: send_file(chat, path, [reply_to=None, extra=None, notify=True])
 
       This method sends a generic file to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -420,12 +446,16 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the file
       :param str path: The path to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
 
-   .. py:method:: send_location(chat, latitude, longitude, [reply_to=None, extra=None])
+   .. py:method:: send_location(chat, latitude, longitude, [reply_to=None, extra=None, notify=True])
 
       This method sends a geographic location to a specific chat. The chat must
       be identified by its ID, and Telegram applies some restrictions on the
@@ -442,8 +472,38 @@ components.
       * :py:class:`botogram.ReplyKeyboardHide`
       * :py:class:`botogram.ForceReply`
 
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
       :param int chat: The ID of the chat which should receive the location
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+
+   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
+
+      This method sends a sticker to a specific chat chat (in webp format). The
+      chat must be identified by its ID, and Telegram applies some restrictions
+      on the chats allowed to receive your locations: only users who sent you a
+      message in the past are allowed, and also the group chats your bot is
+      currently in.
+
+      If the sticker you're sending is in reply to another message, set
+      *reply_to* to the ID of the other :py:class:`~botogram.Message`. *extra*
+      is an optional object which specifies additional reply interface options
+      on the recipient's end, and can be one of the following types:
+
+      * :py:class:`botogram.ReplyKeyboardMarkup`
+      * :py:class:`botogram.ReplyKeyboardHide`
+      * :py:class:`botogram.ForceReply`
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param int chat: The ID of the chat which should receive the location
+      :param str sticker: The path to the webp-formatted sticker
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.

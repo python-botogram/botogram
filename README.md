@@ -47,7 +47,7 @@ pip, virtualenv, setuptools and [invoke][3] installed:
     $ cd botogram
     $ invoke install
 
-On some Linux systems you might need to wrap the ``make install`` command with
+On some Linux systems you might need to wrap the ``invoke install`` command with
 ``sudo``, if you don't have root privileges.
 
 [1]: https://core.telegram.org/bots

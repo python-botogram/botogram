@@ -3,24 +3,23 @@
 
 .. _tasks:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~
-Execute indipendent tasks
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
+Execute independent tasks
+=========================
 
-Unfortunately, not everything can be executed after an user input, especially
+Unfortunately, not everything can be executed after a user input, especially
 if you need periodic execution, or background cleanup. In order to solve this,
-botogram provides you the tasks system, which allows the execution of
-indipended tasks.
+botogram provides you the tasks system, which allows for the execution of
+independent tasks.
 
 .. _tasks-repeated:
 
-==================
 Repeated execution
 ==================
 
 There might be the case when you need to execute a specific function
 periodically. For example if you want to implement alerts, or if you need to do
-some internal cleanup in your bot. Timers offers an easy and reliable way to
+some internal cleanup in your bot. Timers offer an easy and reliable way to
 implement this, with a resolution of one second. Just use the
 :py:meth:`~botogram.Bot.timer` decorator:
 

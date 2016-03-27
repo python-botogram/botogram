@@ -102,7 +102,7 @@ class SharedMemory:
             driver = LocalDriver()
         self.driver = driver
 
-        self._inits = {}
+        self._preparers = {}
 
     def __reduce__(self):
         return rebuild, (self.driver,)
@@ -111,13 +111,13 @@ class SharedMemory:
         """Get the key for a shared item"""
         return ":".join(parts)
 
-    def register_inits_list(self, component, inits):
-        """Register a new list to pick initializers from"""
+    def register_preparers_list(self, component, inits):
+        """Register a new list to pick preparers from"""
         # Ignore the request if a list was already registered
-        if component in self._inits:
+        if component in self._preparers:
             return
 
-        self._inits[component] = inits
+        self._preparers[component] = inits
 
     def of(self, bot, component):
         """Get the shared memory of a specific component"""
@@ -125,19 +125,19 @@ class SharedMemory:
 
         # Be sure to initialize the shared memory if it's needed
         if is_new:
-            self.apply_inits(component, memory)
+            self.apply_preparers(component, memory)
 
         # Add the lock method to the object
         memory.lock = functools.partial(self.lock, bot, component)
         return memory
 
-    def apply_inits(self, component, memory):
-        """Apply all the inits of a component to a memory"""
-        if component not in self._inits:
+    def apply_preparers(self, component, memory):
+        """Apply all the preparers of a component to a memory"""
+        if component not in self._preparers:
             return
 
-        for init in self._inits[component]:
-            init.call(memory)
+        for preparer in self._preparers[component]:
+            preparer.call(memory)
 
     def switch_driver(self, driver=None):
         """Use another driver for this shared memory"""

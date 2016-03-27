@@ -225,9 +225,10 @@ def test():
 @invoke.task
 def lint():
     """Lint the source code"""
+    FLAKE8_OPTIONS = "--select=E226"
     env = create_env("lint", requirements=True)
 
-    invoke.run("%s/bin/flake8 %s" % (env, PROJECT))
+    invoke.run("%s/bin/flake8 %s %s" % (env, FLAKE8_OPTIONS, PROJECT))
 
 
 #
@@ -246,3 +247,33 @@ def docs():
 
     invoke.run("%s/bin/buildthedocs %s/buildthedocs.yml -o %s" %
                (env, docs_dir, build_dir))
+
+
+#
+# Pinned dependencies management
+#
+
+
+@invoke.task(name="deps-sync")
+def deps_sync():
+    """Sync dependencies versions"""
+    env = create_env("tools", requirements=True)
+
+    for env_name in os.listdir(os.path.join(BASE, "build", "envs")):
+        req = os.path.join(BASE, "requirements-%s.txt" % env_name)
+        if not os.path.exists(req):
+            continue
+
+        sub_env = os.path.join(BASE, "build", "envs", env_name)
+        invoke.run("VIRTUAL_ENV=%s %s/bin/pip-sync %s/requirements-%s.txt"
+                   % (sub_env, env, BASE, env_name), pty=True)
+
+
+@invoke.task(name="deps-compile")
+def deps_compile():
+    """Compile new requirements-*.txt"""
+    env = create_env("tools", requirements=True)
+
+    for file in glob.glob(os.path.join(BASE, "requirements-*.in")):
+        invoke.run("%s/bin/pip-compile %s > %s" % (env, os.path.abspath(file),
+                   os.path.abspath(file)[:-3] + ".txt"))

@@ -36,7 +36,7 @@ class TelegramAPI:
 
     def call(self, method, params=None, files=None, expect=None):
         """Call a method of the API"""
-        url = self._endpoint+"bot%s/%s" % (self._api_key, method)
+        url = self._endpoint + "bot%s/%s" % (self._api_key, method)
         response = requests.get(url, params=params, files=files)
         content = response.json()
 
@@ -55,7 +55,7 @@ class TelegramAPI:
 
     def file_content(self, path):
         """Get the content of an user-submitted file"""
-        url = self._endpoint+"file/bot%s/%s" % (self._api_key, path)
+        url = self._endpoint + "file/bot%s/%s" % (self._api_key, path)
         response = requests.get(url)
 
         return response.content

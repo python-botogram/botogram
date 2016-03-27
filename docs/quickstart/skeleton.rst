@@ -1,11 +1,11 @@
 .. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
    Released under the MIT license
 
-.. _tutorial-skeleton:
+.. _quickstart-skeleton:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 Creating the skeleton of the bot
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 So, let's start with the actual creation of the bot. During this chapter, that
 file will be called ``mybot.py``, so if you want to call the program in a
@@ -25,7 +25,7 @@ it:
 
 The first line imports the botogram microframework, allowing you to use it in
 the program. The second one will create a brand new bot, with ``YOUR-API-KEY``
-as the API key. Change that with the one you received in the previus step.
+as the API key. Change that with the one you received in the previous step.
 Finally, the third line will run the bot.
 
 Even if right now the bot does nothing, you can run it by executing its file::
