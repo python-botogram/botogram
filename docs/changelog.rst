@@ -9,6 +9,18 @@ botogram changelog
 
 Here you can see what changed in every botogram release.
 
+.. _changelog-0.2.1:
+
+botogram 0.2.1
+==============
+
+*Bugfix release, not yet released*
+
+* Fix ``/help`` command crash if using markdown bits in the docstring (`issue
+  51`_)
+
+.. _issue 51: https://github.com/pietroalbini/botogram/issues/51
+
 .. _changelog-0.2:
 
 botogram 0.2

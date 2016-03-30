@@ -31,7 +31,7 @@ class DefaultComponent(components.Component):
             message.append("")
         message.append(bot._("Use /help to get a list of all the commands."))
 
-        chat.send("\n".join(message))
+        chat.send("\n".join(message), syntax="html")
 
     @decorators.help_message_for(start_command)
     def _start_command_help(bot):
@@ -45,19 +45,20 @@ class DefaultComponent(components.Component):
     def help_command(self, bot, chat, args):
         commands = bot._get_commands()
         if len(args) > 1:
-            message = [bot._("*Error!* The `/help` command allows up to one "
-                             "argument.")]
+            message = [bot._("<b>Error!</b> The <code>/help</code> command "
+                             "allows up to one argument.")]
         elif len(args) == 1:
             if args[0] in commands:
                 message = self._help_command_message(bot, commands, args[0])
             else:
-                message = [bot._("*Unknown command:* `/%(name)s`",
+                message = [bot._("<b>Unknown command:</b> "
+                                 "<code>/%(name)s</code>",
                                  name=args[0]),
                            bot._("Use /help to get a list of the commands.")]
         else:
             message = self._help_generic_message(bot, commands)
 
-        chat.send("\n".join(message))
+        chat.send("\n".join(message), syntax="html")
 
     def _help_generic_message(self, bot, commands):
         """Generate an help message"""
@@ -74,7 +75,7 @@ class DefaultComponent(components.Component):
 
         # Show help on commands
         if len(commands) > 0:
-            message.append(bot._("*This bot supports those commands:*"))
+            message.append(bot._("<b>This bot supports those commands:</b>"))
             for name in sorted(commands.keys()):
                 # Allow to hide commands in the help message
                 if name in bot.hide_commands:
@@ -83,12 +84,13 @@ class DefaultComponent(components.Component):
                 func = commands[name]
                 docstring = utils.docstring_of(func, bot, format=True) \
                                  .split("\n", 1)[0]
-                message.append("/%s `-` %s" % (name, docstring))
+                message.append("/%s <code>-</code> %s" % (name, docstring))
             message.append("")
-            message.append(bot._("You can also use `/help <command>` to get "
-                                 "help about a specific command."))
+            message.append(bot._("You can also use <code>/help &lt;command&gt;"
+                                 "</code> to get help about a specific "
+                                 "command."))
         else:
-            message.append(bot._("_This bot has no commands._"))
+            message.append(bot._("<i>This bot has no commands.</i>"))
 
         if len(bot.after_help):
             message.append("")
@@ -109,7 +111,7 @@ class DefaultComponent(components.Component):
 
         func = commands[command]
         docstring = utils.docstring_of(func, bot, format=True)
-        message.append("/%s `-` %s" % (command, docstring))
+        message.append("/%s <code>-</code> %s" % (command, docstring))
 
         # Show the owner informations
         if bot.owner:
@@ -125,8 +127,8 @@ class DefaultComponent(components.Component):
         """Get the help message of this command"""
         return "\n".join([
             bot._("Show this help message."),
-            bot._("You can also use `/help <command>` to get help about a "
-                  "specific command."),
+            bot._("You can also use <code>/help &lt;command&gt;</code> to get "
+                  "help about a specific command."),
         ])
 
     # An hook which displays "Command not found" if needed
@@ -148,7 +150,8 @@ class DefaultComponent(components.Component):
         single_user = chat.type == "private"
         if mentioned or single_user:
             chat.send("\n".join([
-                bot._("*Unknown command:* `/%(name)s`", name=command),
+                bot._("<b>Unknown command:</b> <code>/%(name)s</code>",
+                      name=command),
                 bot._("Use /help to get a list of the commands."),
-            ]))
+            ]), syntax="html")
             return True
