@@ -146,7 +146,7 @@ def docstring_of(func, bot=None, component_id=None, format=False):
             docstring = "No description available."
 
         if format:
-            docstring = "_%s_" % docstring
+            docstring = "<i>%s</i>" % docstring
 
     return format_docstr(docstring)
 
