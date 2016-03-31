@@ -14,7 +14,7 @@ Here you can see what changed in every botogram release.
 botogram 0.2.1
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on March 31th, 2016*
 
 * Fix ``/help`` command crash if using markdown bits in the docstring (`issue
   51`_)
