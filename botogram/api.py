@@ -48,6 +48,10 @@ class ChatUnavailableError(APIError):
 
         if reason == "blocked":
             msg = "The user with ID %s blocked your bot" % chat_id
+        elif reason == "account_deleted":
+            msg = "The user with ID %s deleted his account" % chat_id
+        elif reason == "not_contacted":
+            msg = "The user with ID %s didn't contact you before" % chat_id
         elif reason == "not_found":
             msg = "The chat with ID %s doesn't exist" % chat_id
         elif reason == "kicked":
@@ -84,6 +88,11 @@ class TelegramAPI:
                 reason = None
                 if status == 403 and "blocked" in message:
                     reason = "blocked"
+                elif status == 403 and "deleted user" in message:
+                    reason = "account_deleted"
+                elif status == 400 and "PEER_ID_INVALID" in message:
+                    # What, this error is an identifier and not a sentence :/
+                    reason = "not_contacted"
                 elif status == 400 and "not found" in message:
                     reason = "not_found"
                 elif status == 403 and "kicked" in message:

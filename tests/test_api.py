@@ -55,6 +55,12 @@ def test_unavailable_chats(api, mock_req):
         "sendVideo": {
             "ok": False, "error_code": 403, "description": "I was kicked!",
         },
+        "sendLocation": {
+            "ok": False, "error_code": 400, "description": "PEER_ID_INVALID",
+        },
+        "sendVoice": {
+            "ok": False, "error_code": 403, "description": "a deleted user",
+        },
         "getMe": {
             "ok": False, "error_code": 403, "description": "blocked test",
         },
@@ -98,6 +104,20 @@ def test_unavailable_chats(api, mock_req):
         api.call("sendVideo", {"chat_id": 123})
     assert e.value.chat_id == 123
     assert e.value.reason == "kicked"
+
+    # Test a failed request with matching error code and description to an user
+    # which hasn't contacted your bot yet
+    with pytest.raises(botogram.api.ChatUnavailableError) as e:
+        api.call("sendLocation", {"chat_id": 123})
+    assert e.value.chat_id == 123
+    assert e.value.reason == "not_contacted"
+
+    # Test a failed request with matching error code and description to an user
+    # which deleted its account
+    with pytest.raises(botogram.api.ChatUnavailableError) as e:
+        api.call("sendVoice", {"chat_id": 123})
+    assert e.value.chat_id == 123
+    assert e.value.reason == "account_deleted"
 
     # Test a failed request with right error code and descriptio to the wrong
     # method (not a method which sends things to users)
