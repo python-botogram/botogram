@@ -11,6 +11,7 @@ import inspect
 
 from . import utils
 from . import objects
+from . import api as api_module
 
 
 class FrozenBotError(Exception):
@@ -122,6 +123,10 @@ class FrozenBot:
         """This decorator is deprecated, and it calls @prepare_memory"""
         return self.prepare_memory(func)
 
+    def chat_unavailable(self, func):
+        """Add a chat unavailable hook"""
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
+
     # Those are shortcuts to send messages directly to someone
 
     def send(self, chat, message, preview=True, reply_to=None, syntax=None,
@@ -172,20 +177,34 @@ class FrozenBot:
 
         update.set_api(self.api)  # Be sure to use the correct API object
 
-        for hook in self._chains["messages"]:
-            # Get the correct name of the hook
-            name = hook.name
-            self.logger.debug("Processing update #%s with the %s hook..." %
-                              (update.update_id, name))
+        try:
+            for hook in self._chains["messages"]:
+                # Get the correct name of the hook
+                name = hook.name
+                self.logger.debug("Processing update #%s with the %s hook..." %
+                                  (update.update_id, name))
 
-            result = hook.call(self, update)
-            if result is True:
-                self.logger.debug("Update #%s was just processed by the %s "
-                                  "hook." % (update.update_id, name))
-                return True
+                result = hook.call(self, update)
+                if result is True:
+                    self.logger.debug("Update #%s was just processed by the "
+                                      "%s hook." % (update.update_id, name))
+                    return True
 
-        self.logger.debug("No hook actually processed the #%s update." %
-                          update.update_id)
+            self.logger.debug("No hook actually processed the #%s update." %
+                              update.update_id)
+
+        except api_module.ChatUnavailableError as e:
+            # Do some sane logging
+            self.logger.warning("Chat %s is not available to your bot:" %
+                                e.chat_id)
+            self.logger.warning(str(e))
+            self.logger.warning("Update #%s processing aborted!" %
+                                update.update_id)
+
+            for hook in self._chains["chat_unavalable_hooks"]:
+                self.logger.debug("Executing %s for chat %s..." % (hook.name,
+                                  e.chat_id))
+                hook.call(self, e.chat_id, e.reason)
 
         return False
 
