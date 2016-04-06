@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-tools.in
 #
-click==6.3                # via pip-tools
+click==6.6                # via pip-tools
 first==2.0.1              # via pip-tools
 pip-tools==1.6
 six==1.10.0               # via pip-tools

@@ -7,15 +7,15 @@
 alabaster==0.7.7          # via sphinx
 babel==2.2.0              # via sphinx
 buildthedocs==1.0.3
-click==6.3                # via buildthedocs
+click==6.6                # via buildthedocs
 docutils==0.12            # via sphinx
+imagesize==0.7.0          # via sphinx
 jinja2==2.8               # via buildthedocs, sphinx
-markupsafe==0.23          # via jinja2
+MarkupSafe==0.23          # via jinja2
 pietroalbini-sphinx-themes==1.3.1
-pygments==2.1.1           # via sphinx
-pytz==2015.7              # via babel
+Pygments==2.1.3           # via sphinx
+pytz==2016.3              # via babel
 pyyaml==3.11              # via buildthedocs
 six==1.10.0               # via sphinx
 snowballstemmer==1.2.1    # via sphinx
-sphinx-rtd-theme==0.1.9   # via sphinx
-sphinx==1.3.5             # via buildthedocs, pietroalbini-sphinx-themes, sphinx-rtd-theme
+sphinx==1.4               # via buildthedocs, pietroalbini-sphinx-themes
