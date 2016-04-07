@@ -49,6 +49,7 @@ Advanced topics
 .. toctree::
    :maxdepth: 2
 
+   unavailable-chats
    shared-memory
    tasks
    custom-components
