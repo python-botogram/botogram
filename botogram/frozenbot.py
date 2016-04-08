@@ -197,26 +197,16 @@ class FrozenBot:
         """Wrapper for calling user-provided functions"""
         # Set some default available arguments
         available.setdefault("bot", self)
+
+        # Add the `shared` argument only if a component was provided
         if component is not None:
-            shared = self._shared_memory.of(self._bot_id, component)
-            available.setdefault("shared", shared)
+            # It's lazily loaded so it won't make an IPC call on the runner
+            def lazy_shared():
+                return self._shared_memory.of(self._bot_id, component)
 
-        # Get the correct function signature
-        # botogram_original_signature is set while using @utils.wraps
-        if hasattr(func, "botogram_original_signature"):
-            signature = func.botogram_original_signature
-        else:
-            signature = inspect.signature(func)
+            available.setdefault("shared", utils.CallLazyArgument(lazy_shared))
 
-        # Get the wanted arguments
-        kwargs = {}
-        for name in signature.parameters:
-            if name not in available:
-                raise TypeError("botogram doesn't know what to provide for %s"
-                                % name)
-            kwargs[name] = available[name]
-
-        return func(**kwargs)
+        return utils.call(func, **available)
 
 
 # Those are shortcuts to send messages directly to someone
