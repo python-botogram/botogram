@@ -9,6 +9,24 @@ botogram changelog
 
 Here you can see what changed in every botogram release.
 
+.. _changelog-0.3:
+
+botogram 0.3
+============
+
+*Alpha release, not yet released*
+
+Release description not yet written.
+
+New features
+------------
+
+* Added the ability to react :ref:`when a chat is not available
+  <unavailable-chats>`.
+
+  * New decorator :py:meth:`botogram.Bot.chat_unavailable`
+  * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
+
 .. _changelog-0.2.1:
 
 botogram 0.2.1
