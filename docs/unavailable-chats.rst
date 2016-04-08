@@ -80,3 +80,32 @@ component:
        def remove_user(self, chat_id, reason):
            """Remove the user from the database"""
            self.db.query("DELETE FROM users WHERE id = ?", chat_id)
+
+.. _unavailable-chats-catch:
+
+Directly catch the exception while processing the update
+========================================================
+
+The global :py:meth:`~botogram.Bot.chat_unavailable` decorator is handy because
+you don't have to deal with unavailable chats everytime you send a message. The
+bad thing is, it aborts the update processing, so it's not suitable to use if
+you're sending bulk messages to multiple users.
+
+In those cases, you can directly catch the exception raised by botogram, so you
+can take action without aborting the update processing:
+
+.. code-block:: python
+
+   @bot.command("send")
+   def send_command(bot, chat, message, args):
+       """Send a messages to a list of users"""
+       message = " ".join(args)
+       users = [12345, 67890, 54321]
+
+       for user in users:
+           try:
+               bot.send(user, message)
+           except botogram.ChatUnavailableError as e:
+               print("Can't send messages to %s (reason: %s)" %
+                     (e.chat_id, e.reason))
+               users.remove(user)
