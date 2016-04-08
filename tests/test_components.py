@@ -280,6 +280,45 @@ def test_add_shared_memory_initializer(bot, sample_update):
     assert actual == expected
 
 
+def test_add_chat_unavailable_hook(mock_req, bot, sample_update):
+    mock_req({
+        "sendMessage": {"ok": True, "result":{}},
+        "forwardMessage": {
+            "ok": False, "error_code": 403, "description": "blocked test",
+        },
+    })
+
+    chat_unavailable_called = False
+
+    def command1(chat):
+        chat.send("Hey")
+
+    def command2(chat, message):
+        message.forward_to(chat.id)
+
+    def chat_unavailable(chat_id, reason):
+        nonlocal chat_unavailable_called
+        chat_unavailable_called = True
+
+        assert chat_id == -1
+        assert reason == "blocked"
+
+    comp = botogram.Component("test")
+    comp.add_command("command1", command1)
+    comp.add_command("command2", command2)
+    comp.add_chat_unavailable_hook(chat_unavailable)
+
+    bot.use(comp)
+
+    sample_update.message.text = "/command1"
+    bot.process(sample_update)
+    assert not chat_unavailable_called
+
+    sample_update.message.text = "/command2"
+    bot.process(sample_update)
+    assert chat_unavailable_called
+
+
 def test_add_timer(bot):
     global_bot = bot
 
