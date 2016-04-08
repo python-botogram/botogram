@@ -9,6 +9,22 @@
 import requests
 
 
+# These API methods sends something to a chat
+# This list is used to filter which method to check for unavailable chats
+SEND_TO_CHAT_METHODS = (
+    "sendMessage",
+    "forwardMessage",
+    "sendPhoto",
+    "sendAudio",
+    "sendDocument",
+    "sendSticker",
+    "sendVideo",
+    "sendVoice",
+    "sendLocation",
+    "sendChatAction",
+)
+
+
 class APIError(Exception):
     """Something went wrong with the API"""
 
@@ -21,6 +37,29 @@ class APIError(Exception):
         )
 
         super(APIError, self).__init__(msg)
+
+
+class ChatUnavailableError(APIError):
+    """A chat is unavailable, which means you can't send messages to it"""
+
+    def __init__(self, reason, chat_id):
+        self.reason = reason
+        self.chat_id = chat_id
+
+        if reason == "blocked":
+            msg = "The user with ID %s blocked your bot" % chat_id
+        elif reason == "account_deleted":
+            msg = "The user with ID %s deleted his account" % chat_id
+        elif reason == "not_contacted":
+            msg = "The user with ID %s didn't contact you before" % chat_id
+        elif reason == "not_found":
+            msg = "The chat with ID %s doesn't exist" % chat_id
+        elif reason == "kicked":
+            msg = "The bot was kicked from the group with ID %s" % chat_id
+        else:
+            raise ValueError("Unknown reason: %s" % reason)
+
+        Exception.__init__(self, msg)
 
 
 class TelegramAPI:
@@ -41,6 +80,27 @@ class TelegramAPI:
         content = response.json()
 
         if not content["ok"]:
+            status = content["error_code"]
+            message = content["description"]
+
+            # Special handling for unavailable chats
+            if method in SEND_TO_CHAT_METHODS:
+                reason = None
+                if status == 403 and "blocked" in message:
+                    reason = "blocked"
+                elif status == 403 and "deleted user" in message:
+                    reason = "account_deleted"
+                elif status == 400 and "PEER_ID_INVALID" in message:
+                    # What, this error is an identifier and not a sentence :/
+                    reason = "not_contacted"
+                elif status == 400 and "not found" in message:
+                    reason = "not_found"
+                elif status == 403 and "kicked" in message:
+                    reason = "kicked"
+
+                if reason is not None:
+                    raise ChatUnavailableError(reason, params["chat_id"])
+
             raise APIError(content)
 
         # If no special object is expected, return the decoded json.

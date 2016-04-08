@@ -151,6 +151,23 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param str name: The name of the command.
       :param callable func: The function you want to use.
 
+   .. py:method:: add_chat_unavailable_hook(func)
+
+      The provided function is called when you try to send a message to a chat
+      you can't send messages to. There are currently multiple reasons why that
+      can happen, and you can see all of them :ref:`in the narrative
+      documentation <unavailable-chats-reasons>`.
+
+      The provided function will be called with the following parameters:
+
+      * **chat_id**: the ID of the chat which you can’t contact.
+      * **reason**: the reason why you can’t contact the chat, as a string.
+
+      If you want to learn more about unavailable chats check out :ref:`their
+      documentation <unavailable-chats>`.
+
+      :param callable func: The function you want to use.
+
    .. py:method:: add_timer(interval, func)
 
       Execute the provided function periodically, at the provided interval,

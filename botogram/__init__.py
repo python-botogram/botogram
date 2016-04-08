@@ -15,6 +15,7 @@ del configure_logger
 
 # flake8: noqa
 
+from .api import APIError, ChatUnavailableError
 from .bot import Bot, create, channel
 from .frozenbot import FrozenBotError
 from .components import Component

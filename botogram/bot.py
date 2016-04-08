@@ -153,6 +153,11 @@ class Bot(frozenbot.FrozenBot):
         """This decorator is deprecated, and it calls @prepare_memory"""
         return self.prepare_memory(func)
 
+    def chat_unavailable(self, func):
+        """Add a chat unavailable hook"""
+        self._main_component.add_chat_unavailable_hook(func)
+        return func
+
     def use(self, *components, only_init=False):
         """Use the provided components in the bot"""
         for component in components:

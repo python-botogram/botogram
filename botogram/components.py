@@ -29,6 +29,7 @@ class Component:
         self.__before_processors = []
         self.__memory_preparers = []
         self.__timers = []
+        self.__chat_unavailable_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -136,6 +137,14 @@ class Component:
         """This method is deprecated, and it calls add_memory_preparer"""
         self.add_memory_preparer(func)
 
+    def add_chat_unavailable_hook(self, func):
+        """Add a new chat unavailable hook"""
+        if not callable(func):
+            raise ValueError("A chat unavailable hook must be callable")
+
+        hook = hooks.ChatUnavailableHook(func, self)
+        self.__chat_unavailable_hooks.append(hook)
+
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
@@ -156,6 +165,7 @@ class Component:
             "messages": messages,
             "memory_preparers": [self.__memory_preparers],
             "tasks": [self.__timers],
+            "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
         }
 
     def _get_commands(self):

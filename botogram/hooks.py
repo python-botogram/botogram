@@ -187,6 +187,14 @@ class CommandHook(Hook):
         return True
 
 
+class ChatUnavailableHook(Hook):
+    """Underlying hook for @bot.chat_unavailable"""
+
+    def call(self, bot, chat_id, reason):
+        return bot._call(self.func, self.component_id, chat_id=chat_id,
+                         reason=reason)
+
+
 class TimerHook(Hook):
     """Underlying hook for a timer"""
 
