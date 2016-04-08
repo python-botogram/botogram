@@ -17,6 +17,7 @@ def test_shared_memory_creation():
     comp1 = shared.of("bot1", "comp1")
     comp2 = shared.of("bot1", "comp2")
     comp1b = shared.of("bot1", "comp1")
+    comp1sub = shared.of("bot1", "comp1", "sub")
 
     comp1["test"] = "test"
 
@@ -24,6 +25,11 @@ def test_shared_memory_creation():
     assert "test" in comp1b
     assert not comp2  # empty
     assert comp1["test"] == comp1b["test"]
+    assert not comp1sub  # empty
+
+    # memory3sub has more than two parts in a name, so special shared memory
+    # methods should not have been applied
+    assert not hasattr(comp1sub, "lock")
 
 
 def test_shared_memory_preparers():
@@ -48,6 +54,7 @@ def test_shared_memory_preparers():
     memory1 = shared.of("bot1", "comp1")
     memory2 = shared.of("bot1", "comp2")
     memory3 = shared.of("bot2", "comp1")
+    memory3sub = shared.of("bot2", "comp1", "sub")
 
     assert memory1["a"] == 0
     assert memory1["b"] == 1
@@ -55,6 +62,10 @@ def test_shared_memory_preparers():
     assert "b" not in memory2
     # memory3["a"] should be 1 if the initializer was called multiple times
     assert memory3["a"] == 0
+
+    # memory3sub has more than two parts in a name, so no preparer should have
+    # been applied
+    assert "a" not in memory3sub
 
     # memory1b["a"] should be 1 if the initializer was called multiple times
     memory1b = shared.of("bot1", "comp1")

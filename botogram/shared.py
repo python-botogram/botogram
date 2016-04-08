@@ -119,16 +119,19 @@ class SharedMemory:
 
         self._preparers[component] = inits
 
-    def of(self, bot, component):
+    def of(self, bot, component, *other):
         """Get the shared memory of a specific component"""
-        memory, is_new = self.driver.get(self._key_of(bot, component))
+        memory, is_new = self.driver.get(self._key_of(bot, component, *other))
 
-        # Be sure to initialize the shared memory if it's needed
-        if is_new:
-            self.apply_preparers(component, memory)
+        # Treat as a standard shared memory only if no other names are provided
+        if not other:
+            # Be sure to initialize the shared memory if it's needed
+            if is_new:
+                self.apply_preparers(component, memory)
 
-        # Add the lock method to the object
-        memory.lock = functools.partial(self.lock, bot, component)
+            # Add the lock method to the object
+            memory.lock = functools.partial(self.lock, bot, component)
+
         return memory
 
     def apply_preparers(self, component, memory):
