@@ -191,6 +191,21 @@ components.
 
       :param str name: The name of the command.
 
+   .. py:decoratormethod:: chat_unavailable
+
+      The decorated function is called when you try to send a message to a chat
+      you can't send messages to. There are currently multiple reasons why that
+      can happen, and you can see all of them :ref:`in the narrative
+      documentation <unavailable-chats-reasons>`.
+
+      The decorated function will be called with the following parameters:
+
+      * **chat_id**: the ID of the chat which you can’t contact.
+      * **reason**: the reason why you can’t contact the chat, as a string.
+
+      If you want to learn more about unavailable chats check out :ref:`their
+      documentation <unavailable-chats>`.
+
    .. py:decoratormethod:: timer(interval)
 
       Execute the decorated function periodically, at the provided interval,
