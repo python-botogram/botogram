@@ -31,15 +31,6 @@ class JobsCommands:
 
         self.queue.appendleft(job)
 
-    def put(self, job, reply):
-        """Put a job in the queue"""
-        if self.stop:
-            reply("No more jobs accepted", ok=False)
-            return
-
-        self._put(job)
-        reply(None)
-
     def bulk_put(self, jobs, reply):
         """Put multiple jobs in the queue"""
         if self.stop:

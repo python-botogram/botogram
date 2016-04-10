@@ -20,6 +20,7 @@ from . import shared
 from . import ipc
 from .. import objects
 from .. import api
+from .. import updates as updates_module
 
 
 class BaseProcess(multiprocessing.Process):
@@ -97,7 +98,6 @@ class IPCProcess(BaseProcess):
 
         # Setup the jobs commands
         self.jobs_commands = jobs.JobsCommands()
-        ipc.register_command("jobs.put", self.jobs_commands.put)
         ipc.register_command("jobs.bulk_put", self.jobs_commands.bulk_put)
         ipc.register_command("jobs.get", self.jobs_commands.get)
         ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
@@ -168,14 +168,7 @@ class UpdaterProcess(BaseProcess):
         self.bot_id = bot._bot_id
         self.commands = commands
 
-        self.started_at = time.time()
-
-        self.backlog_processed = False
-        self.last_id = -1
-
-        # This will process the backlog if the programmer wants so
-        if self.bot.process_backlog:
-            self.backlog_processed = True
+        self.fetcher = updates_module.UpdatesFetcher(bot)
 
     def loop(self):
         # This allows to control the process
@@ -190,36 +183,33 @@ class UpdaterProcess(BaseProcess):
             pass
 
         try:
-            updates = self.bot.api.call("getUpdates", {
-                "offset": self.last_id + 1,
-                "timeout": 1,
-            }, expect=objects.Updates)
-        except (api.APIError, ValueError, TypeError) as e:
+            updates, backlog = self.fetcher.fetch()
+        except api.APIError as e:
             self.logger.error("An error occured while fetching updates!")
             self.logger.debug("Exception type: %s" % e.__class__.__name__)
             self.logger.debug("Exception content: %s" % str(e))
             return
 
-        for update in updates:
-            self.last_id = update.update_id
+        if backlog:
+            if len(backlog) == 1:
+                self.logger.debug("Skipped update #%s because it's coming "
+                                  "from the backlog" % backlog[0].update_id)
+            else:
+                self.logger.debug("Skipped updates #%s to #%s because they're "
+                                  "coming from the backlog" % (
+                                      backlog[0].update_id,
+                                      backlog[-1].update_id
+                                  ))
 
-            if not self.backlog_processed:
-                if update.message.date < self.started_at:
-                    self.logger.debug("Update #%s skipped because it's coming "
-                                      "from the backlog." % update.update_id)
-                    continue
-                self.backlog_processed = True
+        if updates:
+            result = []
+            for update in updates:
+                update.set_api(None)
+                result.append(jobs.Job(self.bot_id, jobs.process_update, {
+                    "update": update,
+                }))
 
-            self.logger.debug("Successifully queued update #%s!" %
-                              update.update_id)
-
-            # No dynamic data is left to the update
-            # The API will be re-added after
-            update.set_api(None)
-            job = jobs.Job(self.bot_id, jobs.process_update, {
-                "update": update,
-            })
-            self.ipc.command("jobs.put", job)
+            self.ipc.command("jobs.bulk_put", result)
 
 
 def _ignore_signal(*__):
