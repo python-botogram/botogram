@@ -8,6 +8,7 @@
 import pickle
 
 import botogram.shared
+import botogram.shared.drivers
 import botogram.hooks
 
 
@@ -90,7 +91,7 @@ def test_switch_driver():
     shared.of("bot1", "test2")["b"] = "c"
 
     # Create a new driver
-    driver = botogram.shared.LocalDriver()
+    driver = botogram.shared.drivers.LocalDriver()
     shared.switch_driver(driver)
 
     assert shared.driver == driver
