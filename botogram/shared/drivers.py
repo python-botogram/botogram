@@ -8,6 +8,12 @@
 
 import builtins
 import threading
+import uuid
+import functools
+
+
+# This is used as the default argument for some methods of DictProxy
+_None = object()
 
 
 class dict(builtins.dict):
@@ -16,24 +22,117 @@ class dict(builtins.dict):
     pass
 
 
+class SharedObject:
+
+    def __init__(self, type):
+        self.type = type
+        self.children = {}
+
+        if type == "dict":
+            self.value = dict()
+
+    def add_children(self, object):
+        """Register a new children"""
+        self.children.add(object)
+
+
 class LocalDriver:
     """Local driver for the shared memory"""
 
     def __init__(self):
-        self._memories = {}
+        self._objects = {}
         self._locks = {}
 
     def __reduce__(self):
         return rebuild_local_driver, (self.export_data(),)
 
-    def get(self, component):
-        # Create the shared memory if it doesn't exist
-        new = False
-        if component not in self._memories:
-            self._memories[component] = dict()
-            new = True
+    def create_object(self, type, id=None, parent=None):
+        """Create a new object"""
+        if id is None:
+            id = uuid.uuid4()
 
-        return self._memories[component], new
+        self._objects[id] = SharedObject(type)
+        if parent is not None:
+            self._objects[parent].add_children(id)
+
+        return self._objects[id]
+
+    def delete_object(self, id):
+        """Delete an object"""
+        obj = self._objects.pop(id)
+
+        # Recursively delete every children
+        for child in obj.children:
+            self.delete_object(child)
+
+    def _ensure_object(type):
+        """Ensure the object exists and it's of that type"""
+        def decorator(f):
+            @functools.wraps(f)
+            def wrapper(self, object_id, *args, **kwargs):
+                if object_id not in self._objects:
+                    raise ValueError("Object doesn't exist: %s" % object_id)
+
+                obj = self._objects[object_id]
+                if obj.type != type:
+                    raise TypeError("Operation not supported on the %s type" %
+                                    obj.type)
+
+                return f(self, obj.value, *args, **kwargs)
+            return wrapper
+        return decorator
+
+    ############################
+    #   dicts implementation   #
+    ############################
+
+    @_ensure_object("dict")
+    def dict_length(self, obj):
+        return len(obj)
+
+    @_ensure_object("dict")
+    def dict_item_get(self, obj, key):
+        return obj[key]
+
+    @_ensure_object("dict")
+    def dict_item_set(self, obj, key, value):
+        obj[key] = value
+
+    @_ensure_object("dict")
+    def dict_item_delete(self, obj, key):
+        del obj[key]
+
+    @_ensure_object("dict")
+    def dict_contains(self, obj, key):
+        return key in obj
+
+    @_ensure_object("dict")
+    def dict_keys(self, obj):
+        return tuple(obj.keys())
+
+    @_ensure_object("dict")
+    def dict_values(self, obj):
+        return tuple(obj.values())
+
+    @_ensure_object("dict")
+    def dict_items(self, obj):
+        return tuple(obj.items())
+
+    @_ensure_object("dict")
+    def dict_clear(self, obj):
+        obj.clear()
+
+    @_ensure_object("dict")
+    def dict_pop(self, obj, key=_None):
+        # If no keys are provided pop a random item
+        if key is _None:
+            return obj.popitem()
+        else:
+            return obj.pop(key)
+
+    ############################
+    #   Locks implementation   #
+    ############################
 
     def lock_acquire(self, lock_id):
         # Create a new lock if it doesn't exist yet
@@ -56,8 +155,19 @@ class LocalDriver:
 
         return self._locks[lock_id]["acquired"]
 
+    ###############################
+    #   Importing and exporting   #
+    ###############################
+
     def import_data(self, data):
-        self._memories = dict(data["storage"])
+        # Rebuild the objects
+        self._objects = {}
+        for id, value in data["objects"]:
+            if type(value) == dict:
+                self._objects[id] = SharedObject("dict")
+                self._objects[id].value = value
+            else:
+                raise ValueError("Unsupported type: %s" % type(value))
 
         # Rebuild the locks
         self._locks = {}
@@ -65,8 +175,10 @@ class LocalDriver:
             self.lock_acquire(lock_id)
 
     def export_data(self):
+        objects = {id: obj.value for id, obj in self._objects.items()}
         locks = [lock_id for lock_id, d in self._locks if not d["acquired"]]
-        return {"storage": self._memories.copy(), "locks": locks}
+
+        return {"storage": objects, "locks": locks}
 
 
 def rebuild_local_driver(memories):
