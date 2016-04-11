@@ -25,15 +25,24 @@ class dict(builtins.dict):
 class SharedObject:
 
     def __init__(self, type):
+        self.id = id
         self.type = type
-        self.children = {}
+        self.children = set()
+        self.parents = set()
 
         if type == "dict":
             self.value = dict()
 
-    def add_children(self, object):
-        """Register a new children"""
-        self.children.add(object)
+    def add_child(self, id):
+        """Register a new child"""
+        self.children.add(id)
+
+    def remove_child(self, id):
+        """Remove a child"""
+        try:
+            self.children.remove(id)
+        except KeyError:
+            pass
 
 
 class LocalDriver:
@@ -41,7 +50,6 @@ class LocalDriver:
 
     def __init__(self):
         self._objects = {}
-        self._locks = {}
 
     def __reduce__(self):
         return rebuild_local_driver, (self.export_data(),)
@@ -51,9 +59,12 @@ class LocalDriver:
         if id is None:
             id = uuid.uuid4()
 
-        self._objects[id] = SharedObject(type)
+        self._objects[id] = SharedObject(id, type)
         if parent is not None:
-            self._objects[parent].add_children(id)
+            self._objects[parent].add_child(id)
+            self._objects[id].add_parent(parent)
+        else:
+            self._objects[id].add_parent(None)
 
         return self._objects[id]
 
@@ -175,7 +186,12 @@ class LocalDriver:
             self.lock_acquire(lock_id)
 
     def export_data(self):
-        objects = {id: obj.value for id, obj in self._objects.items()}
+        # Get an exportable format for both objects and locks
+        objects = {id: {
+            "value": obj.value,
+            "children": obj.children,
+        } for id, obj in self._objects.items()}
+
         locks = [lock_id for lock_id, d in self._locks if not d["acquired"]]
 
         return {"storage": objects, "locks": locks}

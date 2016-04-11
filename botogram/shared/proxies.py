@@ -13,6 +13,34 @@ import copy
 _None = object()
 
 
+class LockProxy:
+    """Lock backed by the botogram's shared memory"""
+
+    def __init__(self, object_id, driver):
+        self._object_id = object_id
+        self._driver = driver
+
+    def __repr__(self):
+        return '<LockProxy for lock "%s">' % self._object_id
+
+    @property
+    def acquired(self):
+        return self._driver.lock_status(self._object_id)
+
+    def acquire(self):
+        """Acquire the lock"""
+        self._driver.lock_acquire(self._object_id)
+
+    def release(self):
+        """Release the lock"""
+        self._driver.lock_release(self._object_id)
+
+    __enter__ = acquire
+
+    def __exit__(self, *__):
+        self.release()
+
+
 class DictProxy:
     """A proxy for dictionaries"""
 
@@ -110,7 +138,7 @@ class DictProxy:
             self[key] = default
             return default
 
-    def update(self, other=_None, **kwargs)
+    def update(self, other=_None, **kwargs):
         """Update the dictionary with the key/value pairs from other,
         overwriting existing keys. Return None.
 

@@ -9,31 +9,7 @@
 import functools
 
 from . import drivers
-
-
-class Lock:
-    """Lock backed by the botogram's shared memory"""
-
-    def __init__(self, parent, lock_id):
-        self._parent = parent
-        self._lock_id = lock_id
-
-    @property
-    def acquired(self):
-        return self._parent.driver.lock_status(self._lock_id)
-
-    def acquire(self):
-        """Acquire the lock"""
-        self._parent.driver.lock_acquire(self._lock_id)
-
-    def release(self):
-        """Release the lock"""
-        self._parent.driver.lock_release(self._lock_id)
-
-    __enter__ = acquire
-
-    def __exit__(self, *__):
-        self.release()
+from . import proxies
 
 
 class SharedMemory:
@@ -88,7 +64,7 @@ class SharedMemory:
     def switch_driver(self, driver=None):
         """Use another driver for this shared memory"""
         if driver is None:
-            driver = LocalDriver()
+            driver = drivers.LocalDriver()
 
         driver.import_data(self.driver.export_data())
         self.driver = driver
