@@ -56,6 +56,9 @@ class ChatUnavailableError(APIError):
             msg = "The chat with ID %s doesn't exist" % chat_id
         elif reason == "kicked":
             msg = "The bot was kicked from the group with ID %s" % chat_id
+        elif reason == "chat_moved":
+            msg = "The chat with ID %s moved, and the old ID is no longer " \
+                  "valid" % chat_id
         else:
             raise ValueError("Unknown reason: %s" % reason)
 
@@ -97,6 +100,8 @@ class TelegramAPI:
                     reason = "not_found"
                 elif status == 403 and "kicked" in message:
                     reason = "kicked"
+                elif status == 400 and "deactivated" in message:
+                    reason = "chat_moved"
 
                 if reason is not None:
                     raise ChatUnavailableError(reason, params["chat_id"])

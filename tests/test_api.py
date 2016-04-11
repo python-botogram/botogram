@@ -124,3 +124,21 @@ def test_unavailable_chats(api, mock_req):
     with pytest.raises(botogram.api.APIError) as e:
         api.call("getMe", {"chat_id": 123})
     assert e.type != botogram.api.ChatUnavailableError
+
+
+def test_unavailable_chats_take2(api, mock_req):
+    # I just finished the list of methods I can mock in the previous test, lol
+    # A bunch of mocked requests for the API
+    mock_req({
+        "sendMessage": {"ok": True, "result": {}},
+        "forwardMessage": {
+            "ok": False, "error_code": 400, "description": "chat deactivated",
+        },
+    })
+
+    # Test a failed request with matching error code and description to a group
+    # chat which was converted to a supergroup
+    with pytest.raises(botogram.api.ChatUnavailableError) as e:
+        api.call("forwardMessage", {"chat_id": 123})
+    assert e.value.chat_id == 123
+    assert e.value.reason == "chat_moved"
