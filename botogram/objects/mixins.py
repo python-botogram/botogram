@@ -185,6 +185,36 @@ class MessageMixin:
                               expect=_objects().Message)
 
     @_require_api
+    def edit(self, text, syntax=None, preview=True, extra=None):
+        """Edit this message"""
+        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args["text"] = text
+
+        syntax = syntaxes.guess_syntax(text, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
+
+        if not preview:
+            args["disable_web_page_preview"] = True
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        self._api.call("editMessageText", args)
+        self.text = text
+
+    @_require_api
+    def edit_caption(self, caption, extra=None):
+        """Edit this message's caption"""
+        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args["caption"] = caption
+
+        if extra is not None:
+            args["reply_markup"] = extra.serialize()
+
+        self._api.call("editMessageCaption", args)
+        self.caption = caption
+
+    @_require_api
     def reply(self, *args, **kwargs):
         """Reply to the current message"""
         return self.chat.send(*args, reply_to=self, **kwargs)

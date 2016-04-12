@@ -301,6 +301,38 @@ components.
 
       :return: A frozen instance of the current bot.
 
+   .. py:method:: edit(chat, message, text, [syntax=None, preview=True, extra=None])
+
+      With this method you can edit the text of a message the user already
+      received. This allows you to do a lot of interesting things, like
+      live-updating information or showing paginated results: you just need to
+      provide the id of the **message**, the id of the **chat** in which the
+      message was sent, the new **text** of the message, and if you want to
+      show the **preview**. The **syntax** parameter is for defining how the
+      message text should be processed by Telegram (:ref:`learn more about rich
+      formatting <tricks-messages-syntax>`).
+
+      Please remember you can only edit messages your bot sent to the user.
+
+      :param int chat: ID of the chat in which the message was sent
+      :param int message: ID of the message you want to edit
+      :param str text: The new text of the message
+      :param bool preview: Whether to show link previews.
+      :param str syntax: The name of the syntax used for the message.
+      :param object extra: An extra reply interface object to attach.
+
+   .. py:method:: edit_caption(caption, [extra=None])
+
+      With this method you can edit the caption of the media attached to a
+      message the user already received. This allows you to do a lot of
+      interesting things, like live-updating information or showing dynamic
+      subtitles: you just need to provide the new **caption**.
+
+      Please remember you can only edit messages your bot sent to the user.
+
+      :param str caption: The new caption of the media file.
+      :param object extra: An extra reply interface object to attach.
+
    .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       This method sends a message to a specific chat. The chat must be

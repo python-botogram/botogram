@@ -127,6 +127,40 @@ class FrozenBot:
     # This class also contains methods to send messages to users
     # They're defined dynamically out of the class body, see below
 
+    # Edit messages already sent
+
+    def _edit_create_fake_message_object(self, chat, message):
+        """Helper method for edit_message and edit_caption"""
+        # Also accept objects
+        if hasattr(message, "message_id"):
+            message = message_id
+        if hasattr(chat, "id"):
+            chat = chat.id
+
+        return objects.Message({
+            "message_id": message,
+            "from": {
+                "id": self.itself.id,
+                "first_name": "",
+            },
+            "date": 0,
+            "chat": {
+                "id": chat,
+                "type": "",
+            },
+        }, self.api)
+
+    def edit_message(self, chat, message, text, syntax=None, preview=True,
+                     extra=None):
+        """Edit a message already sent to the user"""
+        msg = self._edit_create_fake_message_object(chat, message)
+        msg.edit(text, syntax, preview, extra)
+
+    def edit_caption(self, chat, message, caption, extra=None):
+        """Edit the caption of a media already sent to the user"""
+        msg = self._edit_create_fake_message_object(chat, message)
+        msg.edit_caption(caption, extra)
+
     # Let's process the messages
 
     def process(self, update):

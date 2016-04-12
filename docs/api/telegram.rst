@@ -751,6 +751,35 @@ about its business.
 
          It will be removed in botogram 1.0
 
+   .. py:method:: edit(text, [syntax=None, preview=True, extra=None])
+
+      With this method you can edit the text of a message the user already
+      received. This allows you to do a lot of interesting things, like
+      live-updating information or showing paginated results: you just need to
+      provide the new **text** of the message, and if you want to show the
+      **preview**. The **syntax** parameter is for defining how the message text
+      should be processed by Telegram (:ref:`learn more about rich formatting
+      <tricks-messages-syntax>`).
+
+      Please remember you can only edit messages your bot sent to the user.
+
+      :param str text: The new text of the message
+      :param bool preview: Whether to show link previews.
+      :param str syntax: The name of the syntax used for the message.
+      :param object extra: An extra reply interface object to attach.
+
+   .. py:method:: edit_caption(caption, [extra=None])
+
+      With this method you can edit the caption of the media attached to a
+      message the user already received. This allows you to do a lot of
+      interesting things, like live-updating information or showing dynamic
+      subtitles: you just need to provide the new **caption**.
+
+      Please remember you can only edit messages your bot sent to the user.
+
+      :param str caption: The new caption of the media file.
+      :param object extra: An extra reply interface object to attach.
+
    .. py:method:: forward_to(to[, notify=True])
 
       Forward this message *to* another chat or user by specifying their ID. One
