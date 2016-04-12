@@ -115,6 +115,8 @@ about its business.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
@@ -137,6 +139,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -161,6 +165,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
@@ -183,6 +189,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -206,6 +214,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
@@ -226,6 +236,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -247,6 +259,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
@@ -267,6 +281,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
 
 .. py:class:: botogram.Chat
@@ -346,6 +362,8 @@ about its business.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
@@ -368,6 +386,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -392,6 +412,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
@@ -414,6 +436,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -437,6 +461,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
@@ -457,6 +483,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -478,6 +506,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
@@ -498,6 +528,8 @@ about its business.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
 .. py:class:: botogram.Message
 
@@ -731,6 +763,8 @@ about its business.
 
       :param int to: The ID of the chat or user this message should forward to.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply(message, [preview=True, syntax=None, extra=None, notify=True])
 
@@ -754,6 +788,8 @@ about its business.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_photo(path, [caption=None, extra=None, notify=True])
 
@@ -773,6 +809,8 @@ about its business.
       :param str caption: A caption for the photo.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None, notify=True])
 
@@ -795,6 +833,8 @@ about its business.
       :param str title: The title of the track
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None, notify=True])
 
@@ -814,6 +854,8 @@ about its business.
       :param int duration: The message duration, in seconds
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: send_video(path, [duration=None, caption=None, extra=None, notify=True])
 
@@ -834,6 +876,8 @@ about its business.
       :param str caption: The caption of the video
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_file(path, [extra=None, notify=True])
 
@@ -853,6 +897,8 @@ about its business.
       :param str path: The path to the file
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_location(latitude, longitude, [extra=None, notify=True])
 
@@ -871,6 +917,8 @@ about its business.
       :param float longitude: The longitude of the location
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
    .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
@@ -888,6 +936,8 @@ about its business.
       :param str sticker: The path to the webp-formatted sticker
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
 
 
 .. py:class:: botogram.Photo

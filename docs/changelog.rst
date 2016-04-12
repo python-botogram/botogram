@@ -27,6 +27,9 @@ New features
   * New decorator :py:meth:`botogram.Bot.chat_unavailable`
   * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
 
+* Every method which sends something to a chat now returns the sent
+  :py:class:`~botogram.Message`
+
 Changes
 -------
 

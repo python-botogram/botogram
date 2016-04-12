@@ -6,8 +6,24 @@
     Released under the MIT license
 """
 
+import importlib
+import types
+
 from .. import utils
 from .. import syntaxes
+
+
+_objects_module = None
+
+
+def _objects():
+    global _objects_module
+
+    # This is lazily loaded to avoid circular dependencies
+    if _objects_module is None:
+        _objects_module = importlib.import_module("..objects", __package__)
+
+    return _objects_module
 
 
 def _require_api(func):
@@ -58,7 +74,7 @@ class ChatMixin:
         if syntax is not None:
             args["parse_mode"] = syntax
 
-        self._api.call("sendMessage", args)
+        return self._api.call("sendMessage", args, expect=_objects().Message)
 
     @_require_api
     def send_photo(self, path, caption=None, reply_to=None, extra=None,
@@ -69,7 +85,9 @@ class ChatMixin:
             args["caption"] = caption
 
         files = {"photo": open(path, "rb")}
-        self._api.call("sendPhoto", args, files)
+
+        return self._api.call("sendPhoto", args, files,
+                              expect=_objects().Message)
 
     @_require_api
     def send_audio(self, path, duration=None, performer=None, title=None,
@@ -84,7 +102,9 @@ class ChatMixin:
             args["title"] = title
 
         files = {"audio": open(path, "rb")}
-        self._api.call("sendAudio", args, files)
+
+        return self._api.call("sendAudio", args, files,
+                              expect=_objects().Message)
 
     @_require_api
     def send_voice(self, path, duration=None, title=None, reply_to=None,
@@ -95,7 +115,9 @@ class ChatMixin:
             args["duration"] = duration
 
         files = {"voice": open(path, "rb")}
-        self._api.call("sendVoice", args, files)
+
+        return self._api.call("sendVoice", args, files,
+                              expect=_objects().Message)
 
     @_require_api
     def send_video(self, path, duration=None, caption=None, reply_to=None,
@@ -108,7 +130,9 @@ class ChatMixin:
             args["caption"] = caption
 
         files = {"video": open(path, "rb")}
-        self._api.call("sendVideo", args, files)
+
+        return self._api.call("sendVideo", args, files,
+                              expect=_objects().Message)
 
     @_require_api
     def send_file(self, path, reply_to=None, extra=None, notify=True):
@@ -116,7 +140,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, notify)
 
         files = {"document": open(path, "rb")}
-        self._api.call("sendDocument", args, files)
+
+        return self._api.call("sendDocument", args, files,
+                              expect=_objects().Message)
 
     @_require_api
     def send_location(self, latitude, longitude, reply_to=None, extra=None,
@@ -126,7 +152,8 @@ class ChatMixin:
         args["latitude"] = latitude
         args["longitude"] = longitude
 
-        self._api.call("sendLocation", args)
+        return self._api.call("sendLocation", args,
+                              expect=_objects().Message)
 
     @_require_api
     def send_sticker(self, sticker, reply_to=None, extra=None, notify=True):
@@ -134,7 +161,8 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, notify)
 
         files = {"sticker": open(sticker, "rb")}
-        self._api.call("sendSticker", args, files)
+        return self._api.call("sendSticker", args, files,
+                              expect=_objects().Message)
 
 
 class MessageMixin:
@@ -153,47 +181,48 @@ class MessageMixin:
         if not notify:
             args["disable_notification"] = True
 
-        self._api.call("forwardMessage", args)
+        return self._api.call("forwardMessage", args,
+                              expect=_objects().Message)
 
     @_require_api
     def reply(self, *args, **kwargs):
         """Reply to the current message"""
-        self.chat.send(*args, reply_to=self, **kwargs)
+        return self.chat.send(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_photo(self, *args, **kwargs):
         """Reply with a photo to the current message"""
-        self.chat.send_photo(*args, reply_to=self, **kwargs)
+        return self.chat.send_photo(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_audio(self, *args, **kwargs):
         """Reply with an audio track to the current message"""
-        self.chat.send_audio(*args, reply_to=self, **kwargs)
+        return self.chat.send_audio(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_voice(self, *args, **kwargs):
         """Reply with a voice message to the current message"""
-        self.chat.send_voice(*args, reply_to=self, **kwargs)
+        return self.chat.send_voice(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_video(self, *args, **kwargs):
         """Reply with a video to the current message"""
-        self.chat.send_video(*args, reply_to=self, **kwargs)
+        return self.chat.send_video(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_file(self, *args, **kwargs):
         """Reply with a generic file to the current chat"""
-        self.chat.send_file(*args, reply_to=self, **kwargs)
+        return self.chat.send_file(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_location(self, *args, **kwargs):
         """Reply with a geographic location to the current chat"""
-        self.chat.send_location(*args, reply_to=self, **kwargs)
+        return self.chat.send_location(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_sticker(self, *args, **kwargs):
         """Reply with a sticker to the current message"""
-        self.chat.send_sticker(*args, reply_to=self, **kwargs)
+        return self.chat.send_sticker(*args, reply_to=self, **kwargs)
 
 
 class FileMixin:

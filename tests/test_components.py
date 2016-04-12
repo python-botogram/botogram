@@ -294,7 +294,10 @@ def test_add_shared_memory_initializer(bot, sample_update):
 
 def test_add_chat_unavailable_hook(mock_req, bot, sample_update):
     mock_req({
-        "sendMessage": {"ok": True, "result":{}},
+        "sendMessage": {"ok": True, "result": {
+            "message_id": 1234, "from": {"id": 321, "first_name": "Bobt"},
+            "date": 0, "chat": {"type": "group", "id": 12345, "title": "A"},
+        }},
         "forwardMessage": {
             "ok": False, "error_code": 403, "description": "blocked test",
         },

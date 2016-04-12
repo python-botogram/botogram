@@ -234,7 +234,7 @@ for _proxy in _proxied_sends:
         else:
             obj = objects.Chat({"id": chat, "type": ""}, self.api)
 
-        __proxy(obj, *args, **kwargs)
+        return __proxy(obj, *args, **kwargs)
 
     setattr(FrozenBot, _proxy.__name__, _wrapper)
 
