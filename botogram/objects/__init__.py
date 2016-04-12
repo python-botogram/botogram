@@ -330,8 +330,8 @@ class Message(BaseObject, mixins.MessageMixin):
         "caption": str,
         "contact": Contact,
         "location": Location,
-        "new_chat_participant": User,
-        "left_chat_participant": User,
+        "new_chat_member": User,
+        "left_chat_member": User,
         "new_chat_title": str,
         "new_chat_photo": Photo,
         "delete_chat_photo": bool,
@@ -344,6 +344,18 @@ class Message(BaseObject, mixins.MessageMixin):
     replace_keys = {
         "from": "sender",
     }
+
+    @property
+    @utils.deprecated("Message.new_chat_participant", "1.0",
+                      "Rename property to Message.new_chat_member")
+    def new_chat_participant(self):
+        return self.new_chat_member
+
+    @property
+    @utils.deprecated("Message.left_chat_participant", "1.0",
+                      "Rename property ot Message.left_chat_member")
+    def left_chat_participant(self):
+        return self.left_chat_member
 
 
 class ReplyKeyboardMarkup(BaseObject):

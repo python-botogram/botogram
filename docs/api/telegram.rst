@@ -624,19 +624,27 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
-   .. py:attribute:: new_chat_participant
+   .. py:attribute:: new_chat_member
 
-      A :py:class:`~botogram.User` object representing a new participant to a
-      group chat. This user may be a bot.
+      A :py:class:`~botogram.User` object representing a new member of a group
+      chat. This user may be a bot.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+      .. versionchanged:: 0.3
+
+         Before it was called ``new_chat_participant``
+
+   .. py:attribute:: left_chat_member
+
+      A :py:class:`~botogram.User` object representing a member of a group chat
+      that has been removed from the group. This user may be a bot.
 
       *This attribute can be None if it's not provided by Telegram.*
 
-   .. py:attribute:: left_chat_participant
+      .. versionchanged:: 0.3
 
-      A :py:class:`~botogram.User` object representing a participant in a group
-      chat that has been removed from the group. This user may be a bot.
-
-      *This attribute can be None if it's not provided by Telegram.*
+         Before it was called ``left_chat_participant``
 
    .. py:attribute:: new_chat_title
 
@@ -692,6 +700,24 @@ about its business.
       contained im this attribute.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: new_chat_participant
+
+      Old name for the :py:attr:`~botogram.Message.new_chat_member` attribute.
+      Check out its documentation.
+
+      .. deprecated:: 0.3
+
+         It will be removed in botogram 1.0
+
+   .. py:attribute:: left_chat_participant
+
+      Old name for the :py:attr:`~botogram.Message.left_chat_member` attribute.
+      Check out its documentation.
+
+      .. deprecated:: 0.3
+
+         It will be removed in botogram 1.0
 
    .. py:method:: forward_to(to[, notify=True])
 

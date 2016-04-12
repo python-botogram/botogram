@@ -27,6 +27,22 @@ New features
   * New decorator :py:meth:`botogram.Bot.chat_unavailable`
   * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
 
+Changes
+-------
+
+* Renamed ``Message.new_chat_participant`` to
+  :py:meth:`botogram.Message.new_chat_member`
+* Renamed ``Message.left_chat_participant`` to
+  :py:meth:`botogram.Message.left_chat_member`
+
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* ``Message.new_chat_participant`` is now deprecated
+* ``Message.left_chat_participant`` is now deprecated
+
 .. _changelog-0.2.1:
 
 botogram 0.2.1
