@@ -321,6 +321,8 @@ components.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
 
+      .. versionadded:: 0.3
+
    .. py:method:: edit_caption(caption, [extra=None])
 
       With this method you can edit the caption of the media attached to a
@@ -332,6 +334,8 @@ components.
 
       :param str caption: The new caption of the media file.
       :param object extra: An extra reply interface object to attach.
+
+      .. versionadded:: 0.3
 
    .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
@@ -366,6 +370,10 @@ components.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None, notify=True])
 
       This method sends a photo to a specific chat. The chat must be identified
@@ -392,6 +400,10 @@ components.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -425,6 +437,10 @@ components.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       This method sends a voice message to a specific chat. The chat must be
@@ -454,6 +470,10 @@ components.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_video(chat, path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -486,6 +506,10 @@ components.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_file(chat, path, [reply_to=None, extra=None, notify=True])
 
       This method sends a generic file to a specific chat. The chat must be
@@ -513,6 +537,10 @@ components.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_location(chat, latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -543,6 +571,10 @@ components.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       This method sends a sticker to a specific chat chat (in webp format). The
@@ -570,3 +602,7 @@ components.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message

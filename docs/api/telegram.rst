@@ -118,6 +118,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
       Send a photo found at *path* to the user. You may optionally specify a
@@ -141,6 +145,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -168,6 +176,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the user. You may
@@ -191,6 +203,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -217,6 +233,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
       Send the generic file found in the *path* to the user. If the file you're
@@ -238,6 +258,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -262,6 +286,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Send the sticker to the user (in webp format). If the sticker you're
@@ -283,6 +311,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
 
 .. py:class:: botogram.Chat
@@ -365,6 +397,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
 
       Send a photo found at *path* to the chat. You may optionally specify a
@@ -388,6 +424,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -415,6 +455,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
@@ -438,6 +482,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -464,6 +512,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
 
       Send the generic file found in the *path* to the chat. If the file you're
@@ -485,6 +537,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -509,6 +565,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Send the sticker to the chat (in webp format). If the sticker you're
@@ -530,6 +590,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
 .. py:class:: botogram.Message
 
@@ -777,6 +841,8 @@ about its business.
       :param str syntax: The name of the syntax used for the message.
       :param object extra: An extra reply interface object to attach.
 
+      .. versionadded:: 0.3
+
    .. py:method:: edit_caption(caption, [extra=None])
 
       With this method you can edit the caption of the media attached to a
@@ -788,6 +854,8 @@ about its business.
 
       :param str caption: The new caption of the media file.
       :param object extra: An extra reply interface object to attach.
+
+      .. versionadded:: 0.3
 
    .. py:method:: forward_to(to[, notify=True])
 
@@ -803,6 +871,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: reply(message, [preview=True, syntax=None, extra=None, notify=True])
 
@@ -829,6 +901,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: reply_with_photo(path, [caption=None, extra=None, notify=True])
 
       Reply with a photo found at *path* in regards to this message. You may
@@ -849,6 +925,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None, notify=True])
 
@@ -874,6 +954,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
@@ -894,6 +978,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
    .. py:method:: send_video(path, [duration=None, caption=None, extra=None, notify=True])
 
@@ -917,6 +1005,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: reply_with_file(path, [extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
@@ -938,6 +1030,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: reply_with_location(latitude, longitude, [extra=None, notify=True])
 
       Send the geographic location to the user. *extra* is an optional object
@@ -958,6 +1054,10 @@ about its business.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
+
    .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Reply with the sticker (in webp format) to the chat. *extra* is an
@@ -976,6 +1076,10 @@ about its business.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. versionchanged:: 0.3
+
+         Now the method returns the sent message
 
 
 .. py:class:: botogram.Photo
