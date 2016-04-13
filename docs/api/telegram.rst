@@ -733,6 +733,15 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: pinned_message
+
+      The supergroup has a new pinned :py:class:`~botogram.Message`, which is
+      contained in this attribute.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+      .. versionadded:: 0.3
+
    .. py:attribute:: new_chat_participant
 
       Old name for the :py:attr:`~botogram.Message.new_chat_member` attribute.
