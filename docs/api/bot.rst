@@ -301,7 +301,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: edit(chat, message, text, [syntax=None, preview=True, extra=None])
+   .. py:method:: edit_message(chat, message, text, [syntax=None, preview=True, extra=None])
 
       With this method you can edit the text of a message the user already
       received. This allows you to do a lot of interesting things, like
