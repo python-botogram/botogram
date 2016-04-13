@@ -34,6 +34,7 @@ New features
   * New method :py:meth:`botogram.Bot.edit_message`
   * New method :py:meth:`botogram.Bot.edit_caption`
 
+* Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`
 
