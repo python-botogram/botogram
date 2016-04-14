@@ -46,6 +46,11 @@ Changes
 * Renamed ``Message.left_chat_participant`` to
   :py:meth:`botogram.Message.left_chat_member`
 
+Performance improvements
+------------------------
+
+* Updates initial filtering and queueing performance improved
+
 Deprecated features
 -------------------
 
