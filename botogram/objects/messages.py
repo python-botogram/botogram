@@ -43,12 +43,23 @@ class ParsedTextEntity(BaseObject):
     }
     replace_keys = {
         "url": "_url",  # Dynamically implemented
+        "type": "_type",  # Dynamically implemented
 
         # Private attributes, use the ``text`` one
         "offset": "_offset",
         "length": "_length",
     }
 
+    # Bring some sanity to the Bot API
+    replace_types = {
+        "bot_command": "command",
+        "text_link": "link",
+        "url": "link",
+    }
+    replace_types_inverse = {
+        "command": "bot_command",
+        "link": "text_link",
+    }
 
     def __init__(self, data, api=None, message=None):
         super().__init__(data, api)
@@ -76,6 +87,32 @@ class ParsedTextEntity(BaseObject):
         self._message = message
 
     @property
+    def type(self):
+        """Get the type of the entity"""
+        # Bring some sanity to the Bot API
+        if self._type in self.replace_types:
+            return self.replace_types[self._type]
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        """Set the type of the entity"""
+        # Special check for link, because two original types points to it
+        if value == "link":
+            # If the URL is not set or it's the same as the text, then it's a
+            # normal URL, else it has a label
+            if self.text == self._url or self._url is None:
+                self._type = "url"
+            else:
+                self._type = "text_link"
+            return
+
+        if value in self.replace_types_inverse:
+            self._type = self.replace_types_inverse[value]
+        else:
+            self._type = value
+
+    @property
     @_require_message
     def text(self):
         """Get the text of the message"""
@@ -98,7 +135,7 @@ class ParsedTextEntity(BaseObject):
         if self._url is not None:
             return self._url
 
-        if self.type == "url":
+        if self.type == "link":
             # Standard URLs
             return self.text
         elif self.type == "mention":

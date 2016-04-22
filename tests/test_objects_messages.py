@@ -40,7 +40,7 @@ def test_parsed_text_entity():
         "offset": 12,
         "length": 14,
     })
-    assert entity.type == "url"
+    assert entity.type == "link"
     # Those attributes requires a Message instance
     with pytest.raises(RuntimeError):
         entity.url
@@ -51,6 +51,81 @@ def test_parsed_text_entity():
     entity.set_message(msg)
     assert entity.url == "http://url.com"
     assert entity.text == "http://url.com"
+
+
+def test_parsed_text_entity_type():
+    # Basic entity
+    entity = botogram.objects.messages.ParsedTextEntity({
+        "type": "",
+        "offset": 0,
+        "length": 23,
+    })
+
+    #################################
+    #  A type which doesn't mutate  #
+    #################################
+
+    msg = get_dummy_message("#aaaaaaaaaaaaaaaaaaaaaaa")
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "hashtag"
+    assert entity.type == "hashtag"
+
+    # Setter
+    entity.type = "hashtag"
+    assert entity._type == "hashtag"
+
+    #########################
+    #  A type which mutate  #
+    #########################
+
+    msg = get_dummy_message("/aaaaaaaaaaaaaaaaaaaaaaa")
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "bot_command"
+    assert entity.type == "command"
+
+    # Setter
+    entity.type = "command"
+    assert entity._type == "bot_command"
+
+    #####################################
+    #  A link (which mutates as "url")  #
+    #####################################
+
+    msg = get_dummy_message("https://www.example.com")
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "url"
+    assert entity.type == "link"
+
+    # Setter without URL explicitly defined
+    entity.type = "link"
+    assert entity._type == "url"
+
+    # Setter with URL explicitly defined
+    entity._url = "https://www.example.com"
+    entity.type = "link"
+    assert entity._type == "url"
+
+    ###########################################
+    #  A link (which mutates as "text_link")  #
+    ###########################################
+
+    msg = get_dummy_message("This is a labelled link")
+    entity._url = "https://www.example.com"
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "text_link"
+    assert entity.type == "link"
+
+    # Setter
+    entity.type = "link"
+    assert entity._type == "text_link"
 
 
 def test_parsed_text_entity_url():

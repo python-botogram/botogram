@@ -663,9 +663,9 @@ about its business.
 
       * **hashtag**: an hashtag (for example ``#pythonftw``)
 
-      * **bot_command**: a command sent to a bot (for example ``/help``)
+      * **command**: a command sent to a bot (for example ``/help``)
 
-      * **url**: a textual URL (for example ``https://pietroalbini.io``)
+      * **url**: a link (the text can contain its label)
 
       * **email**: an email address (for example ``pietro@pietroalbini.io``)
 
@@ -676,8 +676,6 @@ about its business.
       * **code**: a monospace-formatted text
 
       * **pre**: a monospace-formatted block
-
-      * **text_link**: a link with a label
 
    .. py:attribute:: text
 
