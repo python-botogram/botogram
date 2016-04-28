@@ -30,11 +30,11 @@ class Message(BaseObject, mixins.MessageMixin):
 
     required = {
         "message_id": int,
-        "from": User,
         "date": int,
         "chat": Chat,
     }
     optional = {
+        "from": User,
         "forward_from": User,
         "forward_date": int,
         "reply_to_message": _itself,
