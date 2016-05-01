@@ -34,6 +34,12 @@ New features
   * New method :py:meth:`botogram.Bot.edit_message`
   * New method :py:meth:`botogram.Bot.edit_caption`
 
+* Added support for working with parsed text in a message:
+
+   * New attribute :py:attr:`botogram.Message.parsed_text`
+   * New class :py:class:`botogram.ParsedText`
+   * New class :py:class:`botogram.ParsedTextEntity`
+
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`

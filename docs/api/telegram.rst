@@ -595,6 +595,99 @@ about its business.
 
          Now the method returns the sent message
 
+.. py:class:: botogram.ParsedText
+
+   This class contains the parsed representation of the text of a received
+   message. This allows you to work with the rich-formatted text the user sent,
+   in addition to the plaintext provided by the :py:class:`~botogram.Message`
+   class.
+
+   This class behaves as a list of :py:class:`~botogram.ParsedTextEntity`, so
+   you can access its items as you would do with any other list (indexed
+   access, iteration...), but it also provides some other utility tools.
+
+   .. versionadded:: 0.3
+
+   .. describe:: type in parsed
+
+      Check if a given entity type is contained in the message. For example,
+      with the following code you can check if the user sent links in his
+      message:
+
+      .. code-block:: python
+
+         if "url" in message.parsed_text:
+             chat.send("Hey, you sent me a link!")
+
+   .. py:method:: filter(\*types, [exclude=False])
+
+      This method returns a list of all the
+      :py:class:`~botogram.ParsedTextEntity` in a message of a given
+      type. This allows you to get only some types of entities, and exclude the
+      other ones in a simple way. You can also just **exclude** from the result
+      the types you provide.
+
+      .. code-block:: python
+
+         # Get only the URLs
+         urls = message.parsed_text.filter("url")
+
+         # Get usernames and hashtags
+         usernames_hashtags = message.parsed_text.filter("mention", "hashtag")
+
+         # Exclude plaintext
+         entities = message.parsed_text.filter("plaintext", exclude=True)
+
+.. py:class:: botogram.ParsedTextEntity
+
+   This class represent a single entity contained in a text message.
+
+   .. versionadded:: 0.3
+
+   .. describe:: str(entity)
+
+      An handy alias for the :py:attr:`~botogram.ParsedTextEntity.text`
+      attribute.
+
+   .. describe:: len(entity)
+
+      Return the length of the entity.
+
+   .. py:attribute:: type
+
+      The type of the entity. This can be one of those:
+
+      * **plain**: a plain string (with no formatting or special meaning)
+
+      * **mention**: a mention to another user (for example ``@pietroalbini``)
+
+      * **hashtag**: an hashtag (for example ``#pythonftw``)
+
+      * **command**: a command sent to a bot (for example ``/help``)
+
+      * **url**: a link (the text can contain its label)
+
+      * **email**: an email address (for example ``pietro@pietroalbini.io``)
+
+      * **bold**: a bold-formatted text
+
+      * **italic**: an italic-formatted text
+
+      * **code**: a monospace-formatted text
+
+      * **pre**: a monospace-formatted block
+
+   .. py:attribute:: text
+
+      Return the plaintext content of the entity. In pair with the type you can
+      recreate the original formatting of the entity.
+
+   .. py:attribute:: url
+
+      The attached URL for the entity. This includes the raw URL for the
+      **url** and **text_link** types, the ``telegram.me`` link for the
+      **mention** type, and the ``mailto:`` link for **email** type.
+
 .. py:class:: botogram.Message
 
    This class represents messages received by and sent from your bot. Messages
@@ -657,6 +750,15 @@ about its business.
       The UTF-8 text for when this message is a text message.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: parsed_text
+
+      The :py:class:`~botogram.ParsedText` representation of the text of this
+      message.
+
+      *This attribute is None if the text attribute is also None.*
+
+      .. versionaddedd: 0.3
 
    .. py:attribute:: audio
 
