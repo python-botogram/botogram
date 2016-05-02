@@ -25,7 +25,7 @@ implement this, with a resolution of one second. Just use the
 
 .. code-block:: python
 
-   @bot.init_shared_memory
+   @bot.prepare_memory
    def init(shared):
        shared["subs"] = []
 
