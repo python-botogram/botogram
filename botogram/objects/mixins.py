@@ -8,6 +8,7 @@
 
 import importlib
 import types
+import json
 
 from .. import utils
 from .. import syntaxes
@@ -56,7 +57,7 @@ class ChatMixin:
         if reply_to is not None:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
-            args["reply_markup"] = extra.serialize()
+            args["reply_markup"] = json.dumps(extra.serialize())
         if not notify:
             args["disable_notification"] = True
 
