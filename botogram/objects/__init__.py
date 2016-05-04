@@ -6,6 +6,8 @@
     Released under the MIT license
 """
 
+# flake8: noqa
+
 from .chats     import User, Chat, UserProfilePhotos
 from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
                        Video, Contact, Location

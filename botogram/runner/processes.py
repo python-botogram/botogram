@@ -10,7 +10,6 @@ import multiprocessing
 import os
 import traceback
 import queue
-import time
 import signal
 
 import logbook
@@ -18,7 +17,6 @@ import logbook
 from . import jobs
 from . import shared
 from . import ipc
-from .. import objects
 from .. import api
 from .. import updates as updates_module
 

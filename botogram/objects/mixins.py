@@ -7,7 +7,6 @@
 """
 
 import importlib
-import types
 import json
 
 from .. import utils

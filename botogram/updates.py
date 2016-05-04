@@ -37,7 +37,7 @@ class UpdatesFetcher:
                 "offset": self._last_id + 1,
                 "timeout": timeout,
             }, expect=objects.Updates)
-        except ValueError as e:
+        except ValueError:
             raise FetchError("Got an invalid response from Telegram!")
 
         # If there are no updates just ignore this block

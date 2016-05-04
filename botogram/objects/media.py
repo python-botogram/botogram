@@ -56,7 +56,8 @@ class Photo(mixins.FileMixin):
         self.biggest = with_size[max(with_size.keys())]
 
         # Publish all the attributes of the biggest-size photo
-        attrs = list(PhotoSize.required.keys()) + list(PhotoSize.optional.keys())
+        attrs = list(PhotoSize.required.keys())
+        attrs += list(PhotoSize.optional.keys())
         for attr in attrs:
             setattr(self, attr, getattr(self.biggest, attr))
 

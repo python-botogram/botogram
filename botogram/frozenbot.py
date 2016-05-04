@@ -7,7 +7,6 @@
 """
 
 import logbook
-import inspect
 
 from . import utils
 from . import objects
@@ -133,7 +132,7 @@ class FrozenBot:
         """Helper method for edit_message and edit_caption"""
         # Also accept objects
         if hasattr(message, "message_id"):
-            message = message_id
+            message = message.message_id
         if hasattr(chat, "id"):
             chat = chat.id
 

@@ -13,7 +13,7 @@ from .. import utils
 
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
-                   Location
+    Location
 
 
 def _require_message(func):
@@ -147,6 +147,7 @@ class ParsedTextEntity(BaseObject):
         else:
             # Sorry!
             return None
+
 
 class ParsedText:
     """Collection of ParsedTextEntity.
