@@ -225,7 +225,7 @@ def test():
 @invoke.task
 def lint():
     """Lint the source code"""
-    FLAKE8_OPTIONS = "--select=E226"
+    FLAKE8_OPTIONS = "--select=E,W,F,C9,N8"
     env = create_env("lint", requirements=True)
 
     invoke.run("%s/bin/flake8 %s %s" % (env, FLAKE8_OPTIONS, PROJECT))
