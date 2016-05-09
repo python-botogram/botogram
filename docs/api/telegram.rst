@@ -1401,6 +1401,13 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: emoji
+
+      The unicode emoji related to the sticker. This is set by the author of
+      the sticker, and it's completly arbitrary.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: file_size
 
       The integer size of the file represented.

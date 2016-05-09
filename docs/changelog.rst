@@ -41,6 +41,7 @@ New features
    * New class :py:class:`botogram.ParsedTextEntity`
 
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
+* Added new attribute :py:attr:`botogram.Sticker.emoji`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`
 

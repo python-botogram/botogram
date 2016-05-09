@@ -142,6 +142,7 @@ class Sticker(BaseObject, mixins.FileMixin):
     }
     optional = {
         "thumb": PhotoSize,
+        "emoji": str,
         "file_size": int,
     }
 
