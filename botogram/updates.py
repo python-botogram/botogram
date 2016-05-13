@@ -123,7 +123,7 @@ class UpdatesFetcher:
 
         while checks_count < treshold:
             # This provides an artificial end to the blocking
-            if when_stop():
+            if when_stop is not None and when_stop():
                 return False
 
             try:
