@@ -168,20 +168,28 @@ class UpdaterProcess(BaseProcess):
 
         self.fetcher = updates_module.UpdatesFetcher(bot)
 
-    def loop(self):
-        # This allows to control the process
+    def should_stop(self):
+        """Check if the process should stop"""
         try:
             command = self.commands.get(False)
-
-            # The None command will stop the process
-            if command == "stop":
-                self.stop = True
-                return
         except queue.Empty:
-            pass
+            val = False
+        else:
+            val = command == "stop"
+
+        self.stop = val
+        return val
+
+    def loop(self):
+        # This allows to control the process
+        if self.should_stop():
+            return
 
         try:
             updates, backlog = self.fetcher.fetch()
+        except updates_module.AnotherInstanceRunningError:
+            self.handle_another_instance()
+            return
         except api.APIError as e:
             self.logger.error("An error occured while fetching updates!")
             self.logger.debug("Exception type: %s" % e.__class__.__name__)
@@ -208,6 +216,22 @@ class UpdaterProcess(BaseProcess):
                 }))
 
             self.ipc.command("jobs.bulk_put", result)
+
+    def handle_another_instance(self):
+        """Code run when another instance of the bot is running"""
+        # Tell the user what's happening
+        self.logger.error("Another instance of this bot is running!")
+        self.logger.error("Please close any other instance of the bot, and "
+                          "this one will start working again")
+        self.logger.error("If you can't find other instances just revoke the "
+                          "API token")
+
+        # Wait until the other instances are closed
+        result = self.fetcher.block_until_alone(when_stop=self.should_stop)
+
+        if result:
+            self.logger.info("This instance is now the only one. The bot is "
+                             "working again")
 
 
 def _ignore_signal(*__):
