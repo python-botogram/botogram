@@ -37,11 +37,11 @@ def _deprecated_message(name, removed_on, fix, back):
     warn(back - 1, before, after)
 
 
-def deprecated(name, removed_on, fix):
+def deprecated(name, removed_on, fix, back=0):
     """Mark a function as deprecated"""
     def decorator(func):
         def wrapper(*args, **kwargs):
-            _deprecated_message(name, removed_on, fix, -2)
+            _deprecated_message(name, removed_on, fix, -2 - back)
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -103,52 +103,6 @@ def wraps(func):
         updated._botogram_original_signature = original_signature
         return updated
     return updater
-
-
-def format_docstr(docstring):
-    """Prepare a docstring for /help"""
-    result = []
-    for line in docstring.split("\n"):
-        stripped = line.strip()
-
-        # Allow only a blank line
-        if stripped == "" and len(result) and result[-1] == "":
-            continue
-
-        result.append(line.strip())
-
-    # Remove empty lines at the end or at the start of the docstring
-    for pos in 0, -1:
-        if result[pos] == "":
-            result.pop(pos)
-
-    return "\n".join(result)
-
-
-def docstring_of(func, bot=None, component_id=None, format=False):
-    """Get the docstring of a function"""
-    # Get the correct function from the hook
-    if hasattr(func, "_botogram_hook"):
-        func = func.func
-
-    if hasattr(func, "_botogram_help_message"):
-        if bot is not None:
-            docstring = bot._call(func._botogram_help_message, component_id)
-        else:
-            docstring = func._botogram_help_message()
-    elif func.__doc__:
-        docstring = func.__doc__
-    # Put a default message
-    else:
-        if bot is not None:
-            docstring = bot._("No description available.")
-        else:
-            docstring = "No description available."
-
-        if format:
-            docstring = "<i>%s</i>" % docstring
-
-    return format_docstr(docstring)
 
 
 def strip_urls(string):

@@ -127,7 +127,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param bool multiple: If the function should be called multiple times on
          multiple matches.
 
-   .. py:method:: add_command(name, func)
+   .. py:method:: add_command(name, func, [hidden=False])
 
       This function registers a new command, and calls the provided function
       when someone issues the command in a chat. The command will also be added
@@ -143,6 +143,9 @@ about how to create them in the ":ref:`custom-components`" chapter.
       If you put a docstring on the provided function, that will be used as
       extended description of the command in the ``/help`` command.
 
+      Also, if you don't want this command to appear in the ``/help``, you can
+      set the ``hidden`` argument to ``True``.
+
       .. note::
 
          Commands defined in custom components can be overridden by other
@@ -150,6 +153,11 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       :param str name: The name of the command.
       :param callable func: The function you want to use.
+      :param bool hidden: If the command should be hidden from ``/help``
+
+      .. versionchanged:: 0.3
+
+         Added the ``hidden`` argument.
 
    .. py:method:: add_chat_unavailable_hook(func)
 

@@ -32,7 +32,7 @@ class FrozenBot:
         self.api = api
         self.about = about
         self.owner = owner
-        self.hide_commands = hide_commands
+        self._hide_commands = hide_commands
         self.before_help = before_help
         self.after_help = after_help
         self.process_backlog = process_backlog
@@ -43,7 +43,8 @@ class FrozenBot:
         self._shared_memory = shared_memory
         self._scheduler = scheduler
         self._chains = chains
-        self._commands = commands
+        self._commands = {name: command.for_bot(self)
+                          for name, command in commands.items()}
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -60,7 +61,7 @@ class FrozenBot:
 
     def __reduce__(self):
         args = (
-            self.api, self.about, self.owner, self.hide_commands,
+            self.api, self.about, self.owner, self._hide_commands,
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._commands,
             self._chains, self._scheduler, self._main_component_id,
@@ -104,7 +105,7 @@ class FrozenBot:
         """Add a message matches hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")
 
-    def command(self, name):
+    def command(self, name, hidden=False):
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
 
@@ -222,9 +223,13 @@ class FrozenBot:
 
     # And some internal methods used by botogram
 
-    def _get_commands(self):
-        """Get all the commands this bot implements"""
-        return self._commands
+    def available_commands(self, all=False):
+        """Get a list of the commands this bot implements"""
+        for command in self._commands.values():
+            # Remove `or command.name in self.hide_commands` in botogram 1.0
+            is_hidden = command.hidden or command.name in self._hide_commands
+            if all or not is_hidden:
+                yield command
 
     def _call(self, func, component=None, **available):
         """Wrapper for calling user-provided functions"""
@@ -240,6 +245,14 @@ class FrozenBot:
             available.setdefault("shared", utils.CallLazyArgument(lazy_shared))
 
         return utils.call(func, **available)
+
+    # This function allows to use the old, deprecated bot.hide_commands
+
+    @utils.deprecated("bot.hide_commands", "1.0", "Use @bot.command(\"name\", "
+                      "hidden=True) instead")
+    @property
+    def hide_commands(self):
+        return self._hide_commands
 
 
 # Those are shortcuts to send messages directly to someone

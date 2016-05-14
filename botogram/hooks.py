@@ -170,6 +170,11 @@ class CommandHook(Hook):
         self._regex = re.compile(r'^\/' + args["name"] + r'(@[a-zA-Z0-9_]+)?'
                                  r'( .*)?$')
 
+        self._name = args["name"]
+        self._hidden = False
+        if "hidden" in args:
+            self._hidden = args["hidden"]
+
     def _call(self, bot, update):
         message = update.message
         text = message.text.replace("\n", " ").replace("\t", " ")

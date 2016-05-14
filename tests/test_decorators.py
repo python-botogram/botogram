@@ -6,19 +6,21 @@
 """
 
 import botogram.decorators
-import botogram.utils
 
 
-def test_help_message_for():
+def test_help_message_for(bot):
 
+    @bot.command("test")
     def func():
         """docstring"""
         pass
 
-    assert botogram.utils.docstring_of(func) == "docstring"
+    cmd = {cmd.name: cmd for cmd in bot.available_commands()}["test"]
+
+    assert cmd.raw_docstring == "docstring"
 
     @botogram.decorators.help_message_for(func)
     def help_func():
         return "function"
 
-    assert botogram.utils.docstring_of(func) == "function"
+    assert cmd.raw_docstring == "function"
