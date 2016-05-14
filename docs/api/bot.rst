@@ -54,16 +54,6 @@ components.
       A list of strings to be inserted in the ``/help`` messages. These ones
       will be inserted after the commands list.
 
-   .. py:attribute:: hide_commands
-
-      A list of all the commands you want to hide from ``/help``. These
-      commands won't be showed in the general ``/help``, but they will still be
-      available for use or detailed help.
-
-      This is useful if you want to keep some bot's commands private. It
-      contains by default the ``/start`` command, and you shouldn't prepend the
-      slash.
-
    .. py:attribute:: process_backlog
 
       A boolean representing if the backlog should be processed. Backlog is
@@ -173,7 +163,7 @@ components.
       :param bool multiple: If the function should be called multiple times on
          multiple matches.
 
-   .. py:decoratormethod:: command(name)
+   .. py:decoratormethod:: command(name, [hidden=False])
 
       This decorator register a new command, and calls the decorated function
       when someone issues the command in a chat. The command will also be added
@@ -187,9 +177,16 @@ components.
       * An ``args`` parameter with the list of parsed arguments
 
       If you put a docstring on the decorated function, that will be used as
-      extended description of the command in the ``/help`` command.
+      extended description of the command in the ``/help`` command. Also, if
+      you don't want this command to appear in the ``/help``, you can set the
+      ``hidden`` argument to ``True``.
 
       :param str name: The name of the command.
+      :param bool hidden: If the command should be hidden from ``/help``
+
+      .. versionchanged:: 0.3
+
+         Added the ``hidden`` argument.
 
    .. py:decoratormethod:: chat_unavailable
 
@@ -606,3 +603,16 @@ components.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+   .. py:attribute:: hide_commands
+
+      This attribute is now deprecated, use the ``hidden`` argument of the
+      method you use to register commands (for example the
+      :py:meth:`~botogram.Bot.command` decorator or the
+      :py:meth:`~botogram.Component.add_command` method of your component).
+
+      A list of all the commands you want to hide from ``/help``. These
+      commands won't be showed in the general ``/help``, but they will still be
+      available for use or detailed help.
+
+      .. deprecated:: 0.3 it will be removed in botogram 1.0

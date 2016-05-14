@@ -11,6 +11,7 @@ import uuid
 from . import utils
 from . import tasks
 from . import hooks
+from . import commands
 
 
 class Component:
@@ -95,7 +96,7 @@ class Component:
         })
         self.__processors.append(hook)
 
-    def add_command(self, name, func, _from_main=False):
+    def add_command(self, name, func, hidden=False, _from_main=False):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
@@ -110,8 +111,10 @@ class Component:
 
         hook = hooks.CommandHook(func, self, {
             "name": name,
+            "hidden": hidden,
         })
-        self.__commands[name] = hook
+        command = commands.Command(hook)
+        self.__commands[name] = command
 
     def add_timer(self, interval, func):
         """Register a new timer"""
@@ -157,7 +160,8 @@ class Component:
         """Get the full hooks chain for this component"""
         messages = [
             self.__before_processors[:],
-            [self.__commands[name] for name in sorted(self.__commands.keys())],
+            [self.__commands[name]._hook
+                for name in sorted(self.__commands.keys())],
             self.__no_commands[:],
             self.__processors[:],
         ]

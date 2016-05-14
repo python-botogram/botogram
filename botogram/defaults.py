@@ -6,7 +6,6 @@
     Released under the MIT license
 """
 
-from . import utils
 from . import components
 from . import decorators
 
@@ -17,7 +16,7 @@ class DefaultComponent(components.Component):
     component_name = "botogram"
 
     def __init__(self):
-        self.add_command("start", self.start_command)
+        self.add_command("start", self.start_command, hidden=True)
         self.add_command("help", self.help_command)
 
         self._add_no_commands_hook(self.no_commands_hook)
@@ -43,7 +42,7 @@ class DefaultComponent(components.Component):
     # /help command
 
     def help_command(self, bot, chat, args):
-        commands = bot._get_commands()
+        commands = {cmd.name: cmd for cmd in bot.available_commands()}
         if len(args) > 1:
             message = [bot._("<b>Error!</b> The <code>/help</code> command "
                              "allows up to one argument.")]
@@ -77,14 +76,10 @@ class DefaultComponent(components.Component):
         if len(commands) > 0:
             message.append(bot._("<b>This bot supports those commands:</b>"))
             for name in sorted(commands.keys()):
-                # Allow to hide commands in the help message
-                if name in bot.hide_commands:
-                    continue
-
-                func = commands[name]
-                docstring = utils.docstring_of(func, bot, format=True) \
-                                 .split("\n", 1)[0]
-                message.append("/%s <code>-</code> %s" % (name, docstring))
+                summary = commands[name].summary
+                if summary is None:
+                    summary = "<i>%s</i>" % bot._("No description available.")
+                message.append("/%s <code>-</code> %s" % (name, summary))
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
@@ -109,8 +104,9 @@ class DefaultComponent(components.Component):
         """Generate a command's help message"""
         message = []
 
-        func = commands[command]
-        docstring = utils.docstring_of(func, bot, format=True)
+        docstring = commands[command].docstring
+        if docstring is None:
+            docstring = "<i>%s</i>" % bot._("No description available.")
         message.append("/%s <code>-</code> %s" % (command, docstring))
 
         # Show the owner informations

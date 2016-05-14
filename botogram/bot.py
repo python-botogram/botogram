@@ -33,7 +33,6 @@ class Bot(frozenbot.FrozenBot):
 
         self.about = ""
         self.owner = ""
-        self.hide_commands = ["start"]
 
         self.before_help = []
         self.after_help = []
@@ -42,6 +41,9 @@ class Bot(frozenbot.FrozenBot):
 
         self._lang = ""
         self._lang_inst = None
+
+        # Support for the old, deprecated bot.hide_commands
+        self._hide_commands = []
 
         # Set the default language to english
         self.lang = "en"
@@ -128,10 +130,11 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
-    def command(self, name):
+    def command(self, name, hidden=False):
         """Register a new command"""
         def __(func):
-            self._main_component.add_command(name, func, _from_main=True)
+            self._main_component.add_command(name, func, hidden,
+                                             _from_main=True)
             return func
         return __
 
@@ -193,17 +196,11 @@ class Bot(frozenbot.FrozenBot):
         chains = components.merge_chains(self._main_component,
                                          *self._components)
 
-        # Get the list of commands for the bot
-        commands = self._components[-1]._get_commands()
-        for component in reversed(self._components[:-1]):
-            commands.update(component._get_commands())
-        commands.update(self._main_component._get_commands())
-
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
-                                   self.hide_commands, self.before_help,
+                                   self._hide_commands, self.before_help,
                                    self.after_help, self.process_backlog,
                                    self.lang, self.itself, self._commands_re,
-                                   commands, chains, self._scheduler,
+                                   self._commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory)
 
@@ -220,14 +217,34 @@ class Bot(frozenbot.FrozenBot):
         self._lang_inst = utils.get_language(lang)
         self._lang = lang
 
-    def _get_commands(self):
+    @property
+    def _commands(self):
         """Get all the commands this bot implements"""
-        result = {}
-        for component in self._components:
-            result.update(component._get_commands())
-        result.update(self._main_component._get_commands())
+        # This is marked as a property so the available_commands method becomes
+        # dynamic (it's static on FrozenBot instead)
+        commands = self._components[-1]._get_commands()
+        for component in reversed(self._components[:-1]):
+            commands.update(component._get_commands())
+        commands.update(self._main_component._get_commands())
 
+        result = {}
+        for name, command in commands.items():
+            result[name] = command.for_bot(self)
         return result
+
+    # These functions allows to use the old, deprecated bot.hide_commands
+
+    @property
+    @utils.deprecated("bot.hide_commands", "1.0", "Use @bot.command(\"name\", "
+                      "hidden=True) instead")
+    def hide_commands(self):
+        return self._hide_commands
+
+    @hide_commands.setter
+    @utils.deprecated("bot.hide_commands", "1.0", "Use @bot.command(\"name\", "
+                      "hidden=True) instead", back=1)
+    def hide_commands(self, value):
+        self._hide_commands = value
 
 
 def create(api_key, *args, **kwargs):

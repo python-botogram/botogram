@@ -50,6 +50,35 @@ def test_calling_functions(frozenbot):
     assert all_called
 
 
+def test_available_commands(bot):
+    # Create a bunch of dummy commands
+    @bot.command("test1")
+    def test1():
+        pass
+
+    @bot.command("test2")
+    def test2():
+        pass
+
+    @bot.command("test3", hidden=True)
+    def test3():
+        pass
+
+    assert {cmd.name for cmd in bot.available_commands()} == {
+        "help",
+        "test1",
+        "test2",
+    }
+
+    assert {cmd.name for cmd in bot.available_commands(all=True)} == {
+        "help",
+        "start",
+        "test1",
+        "test2",
+        "test3",
+    }
+
+
 def test_pickle_frozenbot(frozenbot):
     # This will pickle and unpickle the frozen bot
     pickled = pickle.loads(pickle.dumps(frozenbot))

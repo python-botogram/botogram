@@ -40,6 +40,11 @@ New features
    * New class :py:class:`botogram.ParsedText`
    * New class :py:class:`botogram.ParsedTextEntity`
 
+* Added a new way to hide commands from the ``/help`` command:
+
+   * New argument ``hidden`` on :py:meth:`botogram.Bot.command`
+   * New argument ``hidden`` on :py:meth:`botogram.Component.add_command`
+
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`
@@ -64,6 +69,7 @@ Deprecated features will be removed in botogram 1.0!
 
 * ``Message.new_chat_participant`` is now deprecated
 * ``Message.left_chat_participant`` is now deprecated
+* ``Bot.hide_commands`` is now deprecated
 
 .. _changelog-0.2.1:
 
