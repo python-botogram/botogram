@@ -1,6 +1,6 @@
 """
     botogram.shared.proxies
-    Object proxies for the botogram's shared memory
+    Object proxies for the botogram's shared state
 
     Copyright (c) 2016 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
@@ -16,8 +16,9 @@ _None = object()
 class LockProxy:
     """Lock backed by the botogram's shared memory"""
 
-    def __init__(self, object_id, driver):
+    def __init__(self, object_id, bucket, driver):
         self._object_id = object_id
+        self._bucket = bucket
         self._driver = driver
 
     def __repr__(self):
@@ -44,8 +45,9 @@ class LockProxy:
 class DictProxy:
     """A proxy for dictionaries"""
 
-    def __init__(self, object_id, driver):
+    def __init__(self, object_id, bucket, driver):
         self._object_id = object_id
+        self._bucket = bucket
         self._driver = driver
 
     def __str__(self):

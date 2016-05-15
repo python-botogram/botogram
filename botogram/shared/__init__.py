@@ -1,78 +1,123 @@
 """
     botogram.shared
-    Generic implementation of the shared memory
+    Generic implementation of the shared state
 
     Copyright (C) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
-import functools
+import uuid
 
 from . import drivers
 from . import proxies
 
 
-class SharedMemory:
-    """Implementation of the shared memory for one bot"""
+class SharedBucket:
+    """Implementation of a single, shared bucket"""
+
+    def __init__(self, id, manager, driver):
+        self._id = id
+        self._manager = manager
+        self._driver = driver
+
+        # A cache for the objects this bucket contains
+        self._objects = {}
+
+        # Main instance of the shared memory of this bucket
+        self.memory = self.object("dict", "__memory__")
+
+    def object(self, type, id=None):
+        """Get or create an object"""
+        # If no ID was provided just create another object
+        if id is None:
+            return self.create_object(type)
+
+        if self.object_exists(id):
+            return self.get_object(id)
+        return self.create_object(type, id)
+
+    def create_object(self, type, id=None):
+        """Create a new object in this bucket"""
+        # If no ID is provided generate a new unique one
+        if id is None:
+            id = str(uuid.uuid4())
+
+        id = "%s:%s" % (self._id, id)
+        self._driver.object_create(type, id)
+
+        proxy = self._manager._proxy_for(type)
+        return proxy(id, self, self._driver)
+
+    def get_object(self, id):
+        """Get an existing object by its ID"""
+        if not self.object_exists(id):
+            raise NameError("Object with ID %s doesn't exist" % id)
+
+        id = "%s:%s" % (self._id, id)
+        proxy = self._manager._proxy_for(self._driver.object_type(id))
+        return proxy(id, self, self._driver)
+
+    def object_exists(self, id):
+        """Check if an object exists"""
+        id = "%s:%s" % (self._id, id)
+        return self._driver.object_exists(id)
+
+
+class SharedStateManager:
+    """Manager of the shared state"""
 
     def __init__(self, driver=None):
         # The default driver is LocalDriver
         if driver is None:
             driver = drivers.LocalDriver()
-        self.driver = driver
+        self._driver = driver
 
-        self._preparers = {}
+        # Prepare the default proxies
+        self._object_types = {}
+        self.register_object_type("dict", proxies.DictProxy)
+        self.register_object_type("lock", proxies.LockProxy)
 
-    def __reduce__(self):
-        return rebuild, (self.driver,)
+        self._buckets = {}
+        self._main_bucket = SharedBucket("__main__", self, driver)
+        self._bucket_names = self._main_bucket.object("dict", "__buckets__")
 
-    def _key_of(self, *parts):
-        """Get the key for a shared item"""
-        return ":".join(parts)
+    def bucket(self, name):
+        """Create a new bucket"""
+        if name not in self._bucket_names:
+            self._bucket_names[name] = str(uuid.uuid4())
 
-    def register_preparers_list(self, component, inits):
-        """Register a new list to pick preparers from"""
-        # Ignore the request if a list was already registered
-        if component in self._preparers:
-            return
+        id = self._bucket_names[name]
+        if id not in self._buckets:
+            self._buckets[id] = SharedBucket(id, self, self._driver)
 
-        self._preparers[component] = inits
+        return self._buckets[id]
 
-    def of(self, bot, component, *other):
-        """Get the shared memory of a specific component"""
-        memory, is_new = self.driver.get(self._key_of(bot, component, *other))
+    def delete_bucket(self, name):
+        """Delete an existing bucket"""
+        if name not in self._bucket_names:
+            raise NameError("Bucket %s doesn't exist")
 
-        # Treat as a standard shared memory only if no other names are provided
-        if not other:
-            # Be sure to initialize the shared memory if it's needed
-            if is_new:
-                self.apply_preparers(component, memory)
+        bucket_id = self._bucket_names.pop(name)
 
-            # Add the lock method to the object
-            memory.lock = functools.partial(self.lock, bot, component)
+        # Delete all the objects part of that bucket
+        bucket_id_prefix = "%s:" % bucket_id
+        for obj_id in self._driver.objects_list():
+            if obj_id.startswith(bucket_id_prefix):
+                self._driver.objects_delete(obj_id)
 
-        return memory
+        if bucket_id in self._buckets:
+            del self._buckets[bucket_id]
 
-    def apply_preparers(self, component, memory):
-        """Apply all the preparers of a component to a memory"""
-        if component not in self._preparers:
-            return
+    def register_object_type(self, name, proxy):
+        """Register a new object type"""
+        if name in self._object_types:
+            raise NameError("A type with name %s already exists" % name)
 
-        for preparer in self._preparers[component]:
-            preparer.call(memory)
+        self._object_types[name] = proxy
 
-    def switch_driver(self, driver=None):
-        """Use another driver for this shared memory"""
-        if driver is None:
-            driver = drivers.LocalDriver()
+    def _proxy_for(self, type):
+        """Get the proxy for that specific type"""
+        if type not in self._object_types:
+            raise TypeError("Type %s doesn't exist" % type)
 
-        driver.import_data(self.driver.export_data())
-        self.driver = driver
-
-    def lock(self, bot, component, name):
-        """Get a shared lock"""
-        return Lock(self, self._key_of(bot, component, name))
-
-
-def rebuild(driver):
-    return SharedMemory(driver)
+        return self._object_types[type]
