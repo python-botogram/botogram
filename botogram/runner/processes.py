@@ -46,8 +46,6 @@ class BaseProcess(multiprocessing.Process):
         for one in signal.SIGINT, signal.SIGTERM:
             signal.signal(one, _ignore_signal)
 
-        self.before_start()
-
         self.logger.debug("%s process is ready! (pid: %s)" % (self.name,
                           os.getpid()))
         while not self.stop:
@@ -75,10 +73,6 @@ class BaseProcess(multiprocessing.Process):
         """One single loop"""
         pass
 
-    def before_start(self):
-        """Before the process starts"""
-        pass
-
     def after_stop(self):
         """After the process stops"""
         pass
@@ -103,23 +97,17 @@ class IPCProcess(BaseProcess):
         ipc.register_command("jobs.shutdown", self.jobs_commands.shutdown)
 
         # Setup the shared commands
-        self.shared_commands = shared.SharedMemoryCommands()
-        ipc.register_command("shared.get", self.shared_commands.get)
-        ipc.register_command("shared.list", self.shared_commands.list)
-        ipc.register_command("shared.lock_acquire",
-                             self.shared_commands.lock_acquire)
-        ipc.register_command("shared.lock_release",
-                             self.shared_commands.lock_release)
-        ipc.register_command("shared.lock_status",
-                             self.shared_commands.lock_status)
-        ipc.register_command("shared.lock_import",
-                             self.shared_commands.lock_import)
-        ipc.register_command("shared.lock_export",
-                             self.shared_commands.lock_export)
-
-    def before_start(self):
-        # Start the shared memory manager
-        self.shared_commands.start()
+        self.shared_backend = shared.SharedStateBackend()
+        shared_commands = [
+            "object_list", "object_exists", "object_type", "object_create",
+            "dict_length", "dict_item_get", "dict_item_set",
+            "dict_item_delete", "dict_contains", "dict_keys", "dict_values",
+            "dict_items", "dict_clear", "dict_pop", "lock_acquire",
+            "lock_release", "lock_status", "data_import", "data_export",
+        ]
+        for cmd in shared_commands:
+            command = getattr(self.shared_backend, cmd)
+            ipc.register_command("shared.%s" % cmd, command)
 
     def loop(self):
         self.ipc_server.run()

@@ -1,143 +1,113 @@
 """
     botogram.runner.shared
-    Shared memory implementation for the botogram runner
+    Shared state driver for the botogram runner
 
     Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
     Released under the MIT license
 """
 
-import collections
-import multiprocessing
-import multiprocessing.managers
+from . import ipc
+from ..shared import drivers
 
 
-class OverrideableDict(dict):
-    pass
-
-
-class SharedMemoryCommands:
-    """Definition of IPC commands for the shared memory"""
+class SharedStateBackend:
 
     def __init__(self):
-        self._memories = {}
-        self._manager = multiprocessing.managers.SyncManager()
+        # The backend for the botogram runner driver simply forwards the
+        # requests to an instance of a LocalDriver; this removes most of the
+        # code duplication between the two drivers
+        self._driver = drivers.LocalDriver()
 
-        self._locks = set()
-        self._locks_queues = {}
+    def __getattr__(self, name):
+        # Don't forward private methods
+        if name.startswith("_") or name in self.__dict__:
+            return object.__getattribute__(self, name)
 
-    def start(self):
-        """Start the shared memory manager"""
-        self._manager.start()
+        return lambda args, reply: reply(getattr(self._driver, name)(*args))
 
-    def get(self, memory_id, reply):
-        """Get the shared memory which has the provided ID"""
-        new = False
-        if memory_id not in self._memories:
-            self._memories[memory_id] = self._manager.dict()
-            new = True
-
-        # Send the shared memory to the process which requested it
-        reply((self._memories[memory_id], new))
-
-    def list(self, memory_id, reply):
-        """Get all the shared memories available"""
-        reply(list(self._memories.keys()))
-
-    def lock_acquire(self, lock_id, reply):
-        """Acquire a lock"""
-        # If the lock isn't acquired acquire it
-        if lock_id not in self._locks:
-            self._locks.add(lock_id)
-            return reply(None)
-
-        # Else ignore the request, and add the reply function to the queue
-        if lock_id not in self._locks_queues:
-            self._locks_queues[lock_id] = collections.deque()
-        self._locks_queues[lock_id].appendleft(reply)
-
-    def lock_release(self, lock_id, reply):
-        """Release a lock"""
-        # If the lock wasn't acquired, just return
-        if lock_id not in self._locks:
-            return reply(None)
-
-        self._locks.remove(lock_id)
-
-        # If there are processes waiting for this lock, wake up one of them
-        if lock_id in self._locks_queues:
-            self._locks_queues[lock_id].pop()(None)
-            # And clear up the queue if it's empty
-            if not len(self._locks_queues[lock_id]):
-                del self._locks_queues[lock_id]
-
-        reply(None)
-
-    def lock_status(self, lock_id, reply):
-        """Check if a lock was acquired"""
-        reply(lock_id in self._locks)
-
-    def lock_import(self, locks, reply):
-        """Bulk import all the locks"""
-        self._locks = set(locks)
-        self._locks_queues = {}
-        reply(None)
-
-    def lock_export(self, __, reply):
-        """Export all the locks"""
-        reply(self._locks)
+    # TODO: implement custom supports for locks since they currently don't work
 
 
-class MultiprocessingDriver:
-    """This is a multiprocessing-ready driver for the shared memory"""
+class BotogramRunnerDriver:
 
-    def __init__(self):
-        self._memories = {}
+    def __init__(self, ipc_port, ipc_auth_key):
+        self._ipc_port = ipc_port
+        self._ipc_auth_key = ipc_auth_key
+
+        # This is lazily loaded so the driver can be used even when the IPC
+        # server isn't up yet
+        self._ipc_cache = None
 
     def __reduce__(self):
-        return rebuild_driver, tuple()
+        return rebuild_driver, (self._ipc_port, self._ipc_auth_key)
 
-    def _command(self, command, arg):
-        """Send a command"""
-        ipc = multiprocessing.current_process().ipc
-        return ipc.command(command, arg)
+    @property
+    def _ipc(self):
+        if self._ipc_cache is None:
+            self._ipc_cache = ipc.IPCClient(self._ipc_port, self._ipc_auth_key)
+        return self._ipc_cache
 
-    def get(self, memory_id):
-        # Create the shared memory if it doens't exist
-        is_new = False
-        if memory_id not in self._memories:
-            memory, is_new = self._command("shared.get", memory_id)
-            self._memories[memory_id] = memory
+    # Objects
 
-        return self._memories[memory_id], is_new
+    def object_list(self):
+        return self._ipc.command("shared.object_list", tuple())
 
-    def lock_acquire(self, lock_id):
-        # This automagically blocks if the lock is already acquired
-        self._command("shared.lock_acquire", lock_id)
+    def object_exists(self, id):
+        return self._ipc.command("shared.object_exists", (id,))
 
-    def lock_release(self, lock_id):
-        self._command("shared.lock_release", lock_id)
+    def object_type(self, id):
+        return self._ipc.command("shared.object_type", (id,))
 
-    def lock_status(self, lock_id):
-        return self._command("shared.lock_status", lock_id)
+    def object_create(self, type, id):
+        return self._ipc.command("shared.object_create", (type, id))
 
-    def import_data(self, data):
-        # This will merge the provided component with the shared memory
-        for memory_id, memory in data["storage"].items():
-            memory = self.get(memory_id)
-            memory.update(data)
+    # Dicts
 
-        if len(data["locks"]):
-            self._command("shared.lock_import", data["locks"])
+    def dict_length(self, id):
+        return self._ipc.command("shared.dict_length", (id,))
 
-    def export_data(self):
-        result = {"storage": {}}
-        for memory_id, data in self._memories.items():
-            result["storage"][memory_id] = dict(data)
+    def dict_item_get(self, id, key):
+        return self._ipc.command("shared.dict_item_get", (id, key))
 
-        result["locks"] = self._command("shared.lock_export", None)
+    def dict_item_set(self, id, key, value):
+        return self._ipc.command("shared.dict_item_set", (id, key, value))
 
-        return result
+    def dict_item_delete(self, id, key):
+        return self._ipc.command("shared.dict_item_delete", (id, key))
 
+    def dict_contains(self, id, key):
+        return self._ipc.command("shared.dict_contains", (id, key))
 
-def rebuild_driver():
-    return MultiprocessingDriver()
+    def dict_keys(self, id):
+        return self._ipc.command("shared.dict_keys", (id,))
+
+    def dict_values(self, id):
+        return self._ipc.command("shared.dict_values", (id,))
+
+    def dict_items(self, id):
+        return self._ipc.command("shared.dict_items", (id,))
+
+    def dict_clear(self, id):
+        return self._ipc.command("shared.dict_clenr", (id,))
+
+    def dict_pop(self, id, key=drivers._None):
+        return self._ipc.command("shared.dict_pop", (id, key))
+
+    # Locks
+
+    def lock_acquire(self, id):
+        return self._ipc.command("shared.lock_acquire", (id,))
+
+    def lock_release(self, id):
+        return self._ipc.command("shared.lock_release", (id,))
+
+    def lock_status(self, id):
+        return self._ipc.command("shared.lock_status", (id,))
+
+    # Importing and exporting
+
+    def data_import(self, data):
+        return self._ipc.command("shared.data_import", (data,))
+
+    def data_export(self):
+        return self._ipc.command("shared.data_export", tuple())

@@ -24,7 +24,7 @@ class FrozenBot:
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
                  commands, chains, scheduler, main_component_id, bot_id,
-                 shared_memory):
+                 shared):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -41,7 +41,7 @@ class FrozenBot:
         self._commands_re = commands_re
         self._main_component_id = main_component_id
         self._bot_id = bot_id
-        self._shared_memory = shared_memory
+        self.shared = shared
         self._scheduler = scheduler
         self._chains = chains
         self._commands = commands
@@ -65,7 +65,7 @@ class FrozenBot:
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._commands,
             self._chains, self._scheduler, self._main_component_id,
-            self._bot_id, self._shared_memory,
+            self._bot_id, self.shared,
         )
         return restore, args
 
@@ -202,7 +202,7 @@ class FrozenBot:
         if component is not None:
             # It's lazily loaded so it won't make an IPC call on the runner
             def lazy_shared():
-                return self._shared_memory.of(self._bot_id, component)
+                return self.shared.bucket("%s:%s" % (self._bot_id, component))
 
             available.setdefault("shared", utils.CallLazyArgument(lazy_shared))
 

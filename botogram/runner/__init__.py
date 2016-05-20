@@ -42,10 +42,6 @@ class BotogramRunner:
         self.ipc_auth_key = self._ipc_server.auth_key
         self._ipc_stop_key = self._ipc_server.stop_key
 
-        # Use the MultiprocessingDriver for all the shared memories
-        for bot in self._bots.values():
-            bot._shared_memory.switch_driver(shared.MultiprocessingDriver())
-
         self._workers_count = workers
 
         self.logger = logbook.Logger("botogram runner")
@@ -111,6 +107,12 @@ class BotogramRunner:
         ipc_process = processes.IPCProcess(None, self._ipc_server)
         ipc_process.start()
         self._ipc_process = ipc_process
+
+        # Use the MultiprocessingDriver for all the shared memories
+        for bot in self._bots.values():
+            bot.shared.switch_driver(
+                shared.BotogramRunnerDriver(self.ipc_port, self.ipc_auth_key)
+            )
 
         # And boot the client
         # This will wait until the IPC server is started

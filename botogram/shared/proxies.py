@@ -13,8 +13,26 @@ import copy
 _None = object()
 
 
+class DriverProxy:
+    """Internal proxy for a shared state driver"""
+
+    def __init__(self, driver):
+        self._driver = driver
+
+    def _switch_driver(self, driver):
+        """Switch the driver attached to this proxy"""
+        self._driver = driver
+
+    def __getattr__(self, name):
+        # Use standard lookup for private names
+        if name.startswith("_"):
+            return object.__getattr__(self, name)
+
+        return getattr(self._driver, name)
+
+
 class LockProxy:
-    """Lock backed by the botogram's shared memory"""
+    """A proxy for locks"""
 
     def __init__(self, object_id, bucket, driver):
         self._object_id = object_id
@@ -22,7 +40,11 @@ class LockProxy:
         self._driver = driver
 
     def __repr__(self):
-        return '<LockProxy for lock "%s">' % self._object_id
+        extra = ""
+        if self.acquired:
+            extra = " (acquired)"
+
+        return '<LockProxy%s>' % extra
 
     @property
     def acquired(self):

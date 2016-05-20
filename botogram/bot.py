@@ -50,13 +50,14 @@ class Bot(frozenbot.FrozenBot):
         self._main_component = components.Component("")
         self._main_component_id = self._main_component._component_id
 
-        # Setup shared memory
-        self._shared_memory = shared.SharedMemory()
+        # Setup shared state
+        self.shared = shared.SharedStateManager()
 
         # Register bot's shared memory initializers
         inits = self._main_component._get_chains()["memory_preparers"][0]
         maincompid = self._main_component._component_id
-        self._shared_memory.register_preparers_list(maincompid, inits)
+        # TODO: FIXME
+        #self._shared_memory.register_preparers_list(maincompid, inits)
 
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
@@ -170,7 +171,8 @@ class Bot(frozenbot.FrozenBot):
             chains = component._get_chains()
             compid = component._component_id
             preparers = chains["memory_preparers"][0]
-            self._shared_memory.register_preparers_list(compid, preparers)
+            # TODO: FIXME
+            #self._shared_memory.register_preparers_list(compid, preparers)
 
             # Register tasks
             self._scheduler.register_tasks_list(chains["tasks"][0])
@@ -205,7 +207,7 @@ class Bot(frozenbot.FrozenBot):
                                    self.lang, self.itself, self._commands_re,
                                    commands, chains, self._scheduler,
                                    self._main_component._component_id,
-                                   self._bot_id, self._shared_memory)
+                                   self._bot_id, self.shared)
 
     @property
     def lang(self):

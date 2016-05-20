@@ -25,13 +25,25 @@ class SharedObject:
         self._prepare()
 
     def _prepare(self):
-        pass
+        raise NotImplementedError
+
+    def export(self):
+        raise NotImplementedError
+
+    def restore(self):
+        raise NotImplementedError
 
 
 class SharedDict(SharedObject):
 
     def _prepare(self):
         self.value = {}
+
+    def restore(self, value):
+        self.value = value
+
+    def export(self):
+        return self.value.copy()
 
 
 class SharedLock(SharedObject):
@@ -40,6 +52,13 @@ class SharedLock(SharedObject):
         self.lock = threading.Lock()
         self.acquired = False
 
+    def restore(self, value):
+        # Restore lock to a clean state
+        self._prepare()
+
+    def export(self):
+        return self.acquired
+
 
 class LocalDriver:
     """Local driver for the shared memory"""
@@ -47,8 +66,13 @@ class LocalDriver:
     def __init__(self):
         self._objects = {}
 
+        self._types_mapping = {
+            "dict": SharedDict,
+            "lock": SharedLock,
+        }
+
     def __reduce__(self):
-        return rebuild_local_driver, (self.export_data(),)
+        return rebuild_local_driver, (self.data_export(),)
 
     def _ensure_object(type):
         """Ensure the object exists and it's of that type"""
@@ -68,38 +92,30 @@ class LocalDriver:
         return decorator
 
     ##############################
-    #   objects implemnetation   #
+    #   objects implementation   #
     ##############################
 
     def object_list(self):
-        """List all the objects this driver contains"""
         return list(self._objects.keys())
 
     def object_exists(self, id):
-        """Check if a specific object exists"""
         return id in self._objects
 
     def object_type(self, id):
-        """Get the type of an object"""
         return self._objects[id].type
 
     def object_create(self, type, id):
-        """Create a new object"""
         if id in self._objects:
             raise NameError("An object with id %s already exists!" % id)
 
-        if type == "dict":
-            cls = SharedDict
-        elif type == "lock":
-            cls = SharedLock
-        else:
+        try:
+            cls = self._types_mapping[type]
+        except KeyError:
             raise TypeError("Unsupported type: %s" % type)
 
         self._objects[id] = cls(id, type)
-        return self._objects[id]
 
     def object_delete(self, id):
-        """Delete an object"""
         if id in self._objects:
             del self._objects[id]
 
@@ -173,35 +189,23 @@ class LocalDriver:
     #   Importing and exporting   #
     ###############################
 
-    def import_data(self, data):
-        # Rebuild the objects
-        self._objects = {}
-        for id, value in data["objects"]:
-            if type(value) == dict:
-                self._objects[id] = SharedObject("dict")
-                self._objects[id].value = value
-            else:
-                raise ValueError("Unsupported type: %s" % type(value))
+    def data_import(self, data):
+        """Import data from another driver"""
+        for id, content in data.items():
+            self.object_create(content["type"], id)
+            self._objects[id].restore(content["value"])
 
-        # Rebuild the locks
-        self._locks = {}
-        for lock_id in data["locks"]:
-            self.lock_acquire(lock_id)
+    def data_export(self):
+        """Export the data contained in this driver"""
+        result = {}
+        for obj in self._objects.values():
+            result[obj.id] = {"type": obj.type, "value": obj.export()}
 
-    def export_data(self):
-        # Get an exportable format for both objects and locks
-        objects = {id: {
-            "value": obj.value,
-            "children": obj.children,
-        } for id, obj in self._objects.items()}
-
-        locks = [lock_id for lock_id, d in self._locks if not d["acquired"]]
-
-        return {"storage": objects, "locks": locks}
+        return result
 
 
-def rebuild_local_driver(memories):
+def rebuild_local_driver(data):
     obj = LocalDriver()
-    obj.import_data(memories)
+    obj.data_import(data)
 
     return obj
