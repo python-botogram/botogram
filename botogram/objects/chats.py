@@ -6,6 +6,7 @@
     Released under the MIT license
 """
 
+from .. import api
 from .base import BaseObject, multiple
 from . import mixins
 
@@ -103,6 +104,20 @@ class Chat(BaseObject, mixins.ChatMixin):
                 result += " " + self.last_name
 
         return result
+
+    def leave(self):
+        """Leave this chat"""
+        if self.type not in ("group", "supergroup"):
+            raise TypeError("This method can only be called in groups and "
+                            "supergroups")
+
+        try:
+            self._api.call("leaveChat", {"chat_id": self.id})
+        except api.APIError as e:
+            if e.error_code == 403 and "not a member" in e.description:
+                exc = RuntimeError("The bot isn't a member of this group")
+                raise exc from None
+            raise
 
 
 class UserProfilePhotos(BaseObject):

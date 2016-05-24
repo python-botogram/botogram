@@ -370,6 +370,25 @@ about its business.
 
       .. versionadded:: 0.2
 
+   .. py:method:: leave()
+
+      Kick the bot from this chat. This method is available only on groups and
+      supergroups, and the bot must be a member of the chat.
+
+      This method might be handy if the other members of the group are abusing
+      your bot, or spamming it with too much messages. Keep in mind though, an
+      admin of the chat can re-add your bot at any time, so if you want to
+      forget about it you need to store the chat ID somewhere and leave the
+      group as soon as your bot joins it.
+
+      .. code-block:: python
+
+         @bot.command("bye")
+         def bye_command(chat):
+             chat.leave()
+
+      .. versionadded:: 0.3
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
