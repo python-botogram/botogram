@@ -725,10 +725,17 @@ about its business.
 
    .. py:attribute:: forward_from
 
-      The sending :py:class:`~botogram.User` of the original message when this
-      message is a forward.
+      The sender of the original message, if this message was forwarded. This
+      attribute can contain one of the following objects:
+
+      * :py:class:`~botogram.User` when the original sender is an user
+      * :py:class:`~botogram.Chat` when the message originated in a channel
 
       *This attribute can be None if it's not provided by Telegram.*
+
+      .. versionchanged:: 0.3
+
+         The value can also be an instance of :py:class:`~botogram.Chat`.
 
    .. py:attribute:: forward_date
 

@@ -280,6 +280,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "from": User,
         "entities": ParsedText,
         "forward_from": User,
+        "forward_from_chat": Chat,
         "forward_date": int,
         "reply_to_message": _itself,
         "text": str,
@@ -307,6 +308,10 @@ class Message(BaseObject, mixins.MessageMixin):
     replace_keys = {
         "from": "sender",
         "entities": "parsed_text",
+
+        # Those are provided dynamically by self.forward_from
+        "forward_from": "_forward_from",
+        "forward_from_chat": "_forward_from_chat",
     }
 
     def __init__(self, data, api=None):
@@ -321,6 +326,16 @@ class Message(BaseObject, mixins.MessageMixin):
         # The instance is needed to calculate the content of each entity
         if self.parsed_text is not None:
             self.parsed_text.set_message(self)
+
+    @property
+    def forward_from(self):
+        """Get from where the message was forwarded"""
+        # Provide either _forward_from or _forward_from_chat
+        if self._forward_from is not None:
+            return self._forward_from
+
+        if self._forward_from_chat is not None:
+            return self._forward_from_chat
 
     @property
     @utils.deprecated("Message.new_chat_participant", "1.0",

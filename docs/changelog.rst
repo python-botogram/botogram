@@ -58,6 +58,8 @@ Changes
   :py:meth:`botogram.Message.new_chat_member`
 * Renamed ``Message.left_chat_participant`` to
   :py:meth:`botogram.Message.left_chat_member`
+* :py:attr:`botogram.Message.forward_from` can now be either an instance of
+  :py:class:`~botogram.User` or :py:class:`~botogram.Chat`
 
 Performance improvements
 ------------------------
