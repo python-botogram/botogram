@@ -358,7 +358,7 @@ components.
       a notification on the client side (yes by default).
 
       :param int chat: The ID of the chat which should receive the message.
-      :param str message The message you want to send.
+      :param str message: The message you want to send.
       :param bool preview: If you want to show the link preview.
       :param int reply_to: The ID of the message this one is replying to.
       :param string syntax: The name of the syntax you used for the message.
