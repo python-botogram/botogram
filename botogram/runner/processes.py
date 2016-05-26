@@ -186,7 +186,7 @@ class UpdaterProcess(BaseProcess):
             return
 
         try:
-            updates, backlog = self.fetcher.fetch()
+            updates = self.fetcher.fetch()
         except updates_module.AnotherInstanceRunningError:
             self.handle_another_instance()
             return
@@ -196,26 +196,17 @@ class UpdaterProcess(BaseProcess):
             self.logger.debug("Exception content: %s" % str(e))
             return
 
-        if backlog:
-            if len(backlog) == 1:
-                self.logger.debug("Skipped update #%s because it's coming "
-                                  "from the backlog" % backlog[0].update_id)
-            else:
-                self.logger.debug("Skipped updates #%s to #%s because they're "
-                                  "coming from the backlog" % (
-                                      backlog[0].update_id,
-                                      backlog[-1].update_id
-                                  ))
+        if not updates:
+            return
 
-        if updates:
-            result = []
-            for update in updates:
-                update.set_api(None)
-                result.append(jobs.Job(self.bot_id, jobs.process_update, {
-                    "update": update,
-                }))
+        result = []
+        for update in updates:
+            update.set_api(None)
+            result.append(jobs.Job(self.bot_id, jobs.process_update, {
+                "update": update,
+            }))
 
-            self.ipc.command("jobs.bulk_put", result)
+        self.ipc.command("jobs.bulk_put", result)
 
     def handle_another_instance(self):
         """Code run when another instance of the bot is running"""

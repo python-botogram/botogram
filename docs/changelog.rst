@@ -65,7 +65,8 @@ Changes
 Performance improvements
 ------------------------
 
-* Updates initial filtering and queueing performance improved
+* Updates queueing performance improved
+* Backlog processing is now instantaneous
 
 Deprecated features
 -------------------
