@@ -179,6 +179,29 @@ class Chat(BaseObject, mixins.ChatMixin):
                                                        expect=int)
         return self._cache_members_count
 
+    def status_of(self, user):
+        """Check the status of a member of the group"""
+        if self.type in ("private", "channel"):
+            raise TypeError("Not available in private chats or channels")
+
+        # Convert Users to IDs
+        if isinstance(user, User):
+            user = user.id
+
+        # Initialize the cache
+        if not hasattr(self, "_cache_status_of"):
+            self._cache_status_of = {}
+
+        # Populate the cache for new users
+        if user not in self._cache_status_of:
+            member = self._api.call("getChatMember", {
+                "chat_id": self.id,
+                "user_id": user,
+            }, expect=ChatMember)
+            self._cache_status_of[user] = member.status
+
+        return self._cache_status_of[user]
+
     def leave(self):
         """Leave this chat"""
         if self.type not in ("group", "supergroup"):

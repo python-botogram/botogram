@@ -452,6 +452,42 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:method:: status_of(user)
+
+      Return the status of the provided user (either an instance of
+      :py:class:`~botogram.User` or an ID) in the group chat. A ``TypeError``
+      is raised if the current chat is a private conversation or a channel.
+
+      Currently available statuses:
+
+      * **creator**: this user created the group in the first place
+      * **administrator**: the user is an admin appointed by the group creator
+      * **member**: the user is a normal member of the group
+      * **left**: the user left the group in the past or never joined it
+      * **kicked**: the user was kicked by an administrator out of the group
+
+      Please remember the content of this attribute is fetched from Telegram
+      the first time you access it (so it might be slow), but it's cached right
+      after, so the following accesses will involve no network communication.
+
+      .. code-block:: python
+         :emphasize-lines: 6,7
+
+         @bot.command("status_of")
+         def status_of_command(chat, message, args):
+             if len(args) != 1:
+                 message.reply("You must provide just the ID of the user!")
+
+             status = chat.status_of(int(args[0]))
+             chat.send("*%s*" % status)
+
+      :param user: the user you want to check the status of (either
+                   :py:class:`~botogram.User` or the user ID as an ``int``)
+      :returns: the status of the user
+      :rtype: str
+
+      .. versionaddedd:: 0.3
+
    .. py:method:: leave()
 
       Kick the bot from this chat. This method is available only on groups and
