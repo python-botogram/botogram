@@ -370,6 +370,43 @@ about its business.
 
       .. versionadded:: 0.2
 
+   .. py:attribute:: admins
+
+      The list of the administrators of the group (or supergroup), represented
+      as a list of :py:class:`~botogram.User`. If the chat is a private chat, a
+      list containing only the chat partner is returned. Instead, a
+      ``TypeError`` is raised if the chat is a channel.
+
+      Please remember the content of this attribute is fetched from Telegram
+      the first time you access it (so it might be slow), but it's cached right
+      after, so the following accesses will involve no network communication.
+
+      .. code-block:: python
+         :emphasize-lines: 14,15,16
+
+         # This hook bans a member of the group if an admin replies to one of
+         # its messages with "#ban"
+
+         @bot.process_message
+         def ban_users(chat, message):
+            # Allow only groups
+            if message.type not in ("group", "supergroup"):
+                return
+
+            # Allow only replies with text in the reply
+            if message.text is None or message.reply_to_message is None:
+                return
+
+            # Allow only admins to ban people
+            if message.sender not in chat.admins:
+                return
+
+            # Match the text and ban the original message sender
+            if message.text == "#ban":
+                chat.ban(message.reply_to_message.sender)
+
+      .. versionadded:: 0.3
+
    .. py:method:: leave()
 
       Kick the bot from this chat. This method is available only on groups and

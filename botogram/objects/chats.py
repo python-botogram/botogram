@@ -93,6 +93,22 @@ class Chat(BaseObject, mixins.ChatMixin):
     }
     _check_equality_ = "id"
 
+    def _to_user(self):
+        """Convert this Chat object to an User object"""
+        if self.type != "private":
+            raise TypeError("This method works only on private chats!")
+
+        # Be sure to cache the instance
+        if not hasattr(self, "_cache_user"):
+            self._cache_user = User({
+                "id": self.id,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "username": self.username,
+            }, self._api)
+
+        return self._cache_user
+
     @property
     def name(self):
         """Get the full name of the chat"""
@@ -107,6 +123,27 @@ class Chat(BaseObject, mixins.ChatMixin):
 
         return result
 
+    @property
+    def admins(self):
+        """Get a list of the admins of the chat"""
+        # If this is a private chat, return the current user since Telegram
+        # doesn't support `getChatAdministrators` for private chats
+        if self.type == "private":
+            return [self._to_user()]
+        elif self.type == "channel":
+            raise TypeError("Not available on channels")
+
+        # Be sure to cache the list of the admins
+        if not hasattr(self, "_cache_admins"):
+            members = self._api.call("getChatAdministrators",
+                                     {"chat_id": self.id},
+                                     expect=multiple(ChatMember))
+            self._cache_admins = tuple(member.user for member in members)
+
+        # The list of admins is saved as a tuple, so it's not mutable, but it's
+        # returned as a list (the tuple thing is an implementation detail)
+        return list(self._cache_admins)
+
     def leave(self):
         """Leave this chat"""
         if self.type not in ("group", "supergroup"):
@@ -120,6 +157,19 @@ class Chat(BaseObject, mixins.ChatMixin):
                 exc = RuntimeError("The bot isn't a member of this group")
                 raise exc from None
             raise
+
+
+class ChatMember(BaseObject):
+    """Telegram API representation of a chat member
+
+    https://core.telegram.org/bots/api#chatmember
+    """
+
+    required = {
+        "user": User,
+        "status": str,
+    }
+    _check_equality_ = "user"
 
 
 class UserProfilePhotos(BaseObject):
