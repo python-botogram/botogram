@@ -27,6 +27,7 @@ class User(BaseObject, mixins.ChatMixin):
         "last_name": str,
         "username": str,
     }
+    _check_equality_ = "id"
 
     @property
     def name(self):
@@ -90,6 +91,7 @@ class Chat(BaseObject, mixins.ChatMixin):
         "first_name": str,
         "last_name": str,
     }
+    _check_equality_ = "id"
 
     @property
     def name(self):

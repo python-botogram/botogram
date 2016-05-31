@@ -23,6 +23,7 @@ class Update(BaseObject):
     optional = {
         "message": Message
     }
+    _check_equality_ = "update_id"
 
 
 # Shortcut for the Updates type

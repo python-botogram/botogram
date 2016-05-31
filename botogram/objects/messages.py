@@ -66,6 +66,17 @@ class ParsedTextEntity(BaseObject):
 
         self._message = message
 
+    def __eq__(self, other):
+        if not isinstance(other, ParsedTextEntity):
+            return False
+
+        # Don't do custom equality if no message object is attached
+        if self._message is None or other._message is None:
+            return id(self) == id(other)
+
+        return self._message.message_id == other._message.message_id and \
+            self._offset == other._offset and self._length == other._length
+
     def __str__(self):
         return self.text
 
@@ -173,6 +184,10 @@ class ParsedText:
         self._entities = None
 
         self.set_message(message)
+
+    def __eq__(self, other):
+        return isinstance(other, ParsedText) and \
+            self._entities == other._entities
 
     def __repr__(self):
         return '<ParsedText %s>' % repr(self._calculate_entities())
@@ -313,6 +328,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "forward_from": "_forward_from",
         "forward_from_chat": "_forward_from_chat",
     }
+    _check_equality_ = "message_id"
 
     def __init__(self, data, api=None):
         super().__init__(data, api)

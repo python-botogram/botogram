@@ -24,6 +24,7 @@ class PhotoSize(BaseObject, mixins.FileMixin):
     optional = {
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Photo(mixins.FileMixin):
@@ -61,6 +62,9 @@ class Photo(mixins.FileMixin):
         for attr in attrs:
             setattr(self, attr, getattr(self.biggest, attr))
 
+    def __eq__(self, other):
+        return isinstance(other, Photo) and self.sizes == other.sizes
+
     def set_api(self, api):
         """Change the API instance"""
         self._api = api
@@ -94,6 +98,7 @@ class Audio(BaseObject, mixins.FileMixin):
         "mime_type": str,
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Voice(BaseObject, mixins.FileMixin):
@@ -110,6 +115,7 @@ class Voice(BaseObject, mixins.FileMixin):
         "mime_type": str,
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Document(BaseObject, mixins.FileMixin):
@@ -127,6 +133,7 @@ class Document(BaseObject, mixins.FileMixin):
         "mime_type": str,
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Sticker(BaseObject, mixins.FileMixin):
@@ -145,6 +152,7 @@ class Sticker(BaseObject, mixins.FileMixin):
         "emoji": str,
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Video(BaseObject, mixins.FileMixin):
@@ -164,6 +172,7 @@ class Video(BaseObject, mixins.FileMixin):
         "mime_type": str,
         "file_size": int,
     }
+    _check_equality_ = "file_id"
 
 
 class Contact(BaseObject):
@@ -180,6 +189,7 @@ class Contact(BaseObject):
         "last_name": str,
         "user_id": int,
     }
+    _check_equality_ = "phone_number"
 
 
 class Location(BaseObject):
@@ -192,3 +202,8 @@ class Location(BaseObject):
         "longitude": float,
         "latitude": float,
     }
+
+    def __eq__(self, other):
+        return isinstance(other, Location) and \
+            self.longitude == other.longitude and \
+            self.latitude == other.latitude

@@ -51,6 +51,7 @@ New features
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`
 * Multiple instances of the same bot are now properly handled (as errors)
+* It's now possible to correctly compare API objects
 
 Changes
 -------

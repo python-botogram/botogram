@@ -18,6 +18,7 @@ class BaseObject:
     required = {}
     optional = {}
     replace_keys = {}
+    _check_equality_ = None
 
     def __init__(self, data, api=None):
         # Prevent receiving strange types
@@ -52,6 +53,17 @@ class BaseObject:
 
         if api is not None:
             self.set_api(api)
+
+    def __eq__(self, other):
+        to_check = self._check_equality_
+
+        if to_check is None:
+            return id(self) == id(other)
+
+        if not isinstance(other, self.__class__):
+            return False
+
+        return getattr(self, to_check) == getattr(other, to_check)
 
     def set_api(self, api):
         """Change the API instance"""
