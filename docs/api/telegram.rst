@@ -407,6 +407,33 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:attribute:: creator
+
+      Return the creator of the group (or supergroup), represented as an
+      :py:class:`~botogram.User`. If the chat is a private chat, the chat
+      partner is returned. Instead, a ``TypeError`` is raised if the chat is a
+      channel.
+
+      Please remember the content of this attribute is fetched from Telegram
+      the first time you access it (so it might be slow), but it's cached right
+      after, so the following accesses will involve no network communication.
+
+      .. code-block:: python
+         :emphasize-lines: 4,5,6
+
+         @bot.command("antiflood_limit")
+         def antiflood_limit_command(shared, chat, message, args):
+             """Set the antiflood limit"""
+             # Only the chat creator should be able to do this
+             if message.sender != chat.creator:
+                 message.reply("You're not the creator of the chat")
+
+             if len(args) != 1:
+                 message.reply("You need to provide just the new limit!")
+             shared["antiflood_limit"] = int(args[0])
+
+      .. versionadded:: 0.3
+
    .. py:method:: leave()
 
       Kick the bot from this chat. This method is available only on groups and

@@ -144,6 +144,27 @@ class Chat(BaseObject, mixins.ChatMixin):
         # returned as a list (the tuple thing is an implementation detail)
         return list(self._cache_admins)
 
+    @property
+    def creator(self):
+        """Get the creator of this chat"""
+        # If this is a private chat, return the current user since Telegram
+        # doesn't support `getChatAdministrators` for private chats
+        if self.type == "private":
+            return self._to_user()
+        elif self.type == "channel":
+            raise TypeError("Not available on channels")
+
+        # Be sure to cache the chat creator
+        if not hasattr(self, "_cache_creator"):
+            # Get a list of the admins and fetch only the creator
+            members = self._api.call("getChatAdministrators",
+                                     {"chat_id": self.id},
+                                     expect=multiple(ChatMember))
+            self._cache_creator = [member.user for member in members
+                                   if member.status == "creator"][0]
+
+        return self._cache_creator
+
     def leave(self):
         """Leave this chat"""
         if self.type not in ("group", "supergroup"):
