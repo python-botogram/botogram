@@ -49,6 +49,7 @@ New features
 * Added new attribute :py:attr:`botogram.Sticker.emoji`
 * Added new attribute :py:attr:`botogram.Chat.admins`
 * Added new attribute :py:attr:`botogram.Chat.creator`
+* Added new attribute :py:attr:`botogram.Chat.members_count`
 * Added new method :py:meth:`botogram.Chat.leave`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`

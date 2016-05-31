@@ -434,6 +434,24 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:attribute:: members_count
+
+      Return the number of members of this chat. This works across all the
+      kinds of chat.
+
+      Please remember the content of this attribute is fetched from Telegram
+      the first time you access it (so it might be slow), but it's cached right
+      after, so the following accesses will involve no network communication.
+
+      .. code-block:: python
+
+         @bot.command("members")
+         def members_command(chat, message, args):
+             """Get the number of members in this group"""
+             chat.send(str(chat.members_count))
+
+      .. versionadded:: 0.3
+
    .. py:method:: leave()
 
       Kick the bot from this chat. This method is available only on groups and

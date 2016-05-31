@@ -165,6 +165,20 @@ class Chat(BaseObject, mixins.ChatMixin):
 
         return self._cache_creator
 
+    @property
+    def members_count(self):
+        """Get the number of members of this chat"""
+        # This isn't *really* needed, but avoids an HTTP request
+        if self.type == "private":
+            return 1
+
+        # Be sure to cache the number of members
+        if not hasattr(self, "_cache_members_count"):
+            self._cache_members_count = self._api.call("getChatMembersCount",
+                                                       {"chat_id": self.id},
+                                                       expect=int)
+        return self._cache_members_count
+
     def leave(self):
         """Leave this chat"""
         if self.type not in ("group", "supergroup"):
