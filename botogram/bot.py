@@ -21,6 +21,7 @@ from . import utils
 from . import frozenbot
 from . import shared
 from . import tasks
+from . import messages
 
 
 class Bot(frozenbot.FrozenBot):
@@ -62,6 +63,10 @@ class Bot(frozenbot.FrozenBot):
 
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
+
+        # Initialize the list of update processors
+        self._update_processors = {}
+        self.register_update_processor("message", messages.process_message)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -191,6 +196,14 @@ class Bot(frozenbot.FrozenBot):
         inst = runner.BotogramRunner(self, workers=workers)
         inst.run()
 
+    def register_update_processor(self, kind, processor):
+        """Register a new update processor"""
+        if kind in self._update_processors:
+            raise NameError("An update processor for \"%s\" updates is "
+                            "already registered" % kind)
+
+        self._update_processors[kind] = processor
+
     def freeze(self):
         """Return a frozen instance of the bot"""
         chains = components.merge_chains(self._main_component,
@@ -202,7 +215,8 @@ class Bot(frozenbot.FrozenBot):
                                    self.lang, self.itself, self._commands_re,
                                    self._commands, chains, self._scheduler,
                                    self._main_component._component_id,
-                                   self._bot_id, self._shared_memory)
+                                   self._bot_id, self._shared_memory,
+                                   self._update_processors)
 
     @property
     def lang(self):
