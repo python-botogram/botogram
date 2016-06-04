@@ -163,6 +163,31 @@ components.
       :param bool multiple: If the function should be called multiple times on
          multiple matches.
 
+   .. py:decoratormethod:: message_edited
+
+      All the functions decorated with this method will be called when an user
+      edits a message the bot knows about. This allows you, for example, to
+      update the preview of a message if the user edits the request, or to
+      enforce a no-edits policy on groups by banning whoever edits a message.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **chat**: the chat in which the message was originally sent (instance
+        of :py:class:`~botogram.Chat`)
+
+      * **message**: the edited message (instance of
+        :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         @bot.message_edited
+         def no_edits(chat, message):
+             message.reply("You can't edit messages! Bye.")
+             chat.ban(message.sender)
+
+      .. versionadded:: 0.3
+
    .. py:decoratormethod:: command(name, [hidden=False])
 
       This decorator register a new command, and calls the decorated function

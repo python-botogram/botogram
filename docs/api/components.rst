@@ -127,6 +127,37 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param bool multiple: If the function should be called multiple times on
          multiple matches.
 
+   .. py:method:: add_message_edited_hook(func)
+
+      All the functions provided to this method will be called when an user
+      edits a message the bot knows about. This allows you, for example, to
+      update the preview of a message if the user edits the request, or to
+      enforce a no-edits policy on groups by banning whoever edits a message.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the provided functions:
+
+      * **chat**: the chat in which the message was orignally sent (instance of
+        :py:class:`~botogram.Chat`)
+      * **message**: the edited message (instance of
+        :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         class NoEditsComponent(botogram.Component):
+             component_name = "noedits"
+
+             def __init__(self):
+                 self.add_message_edited_hook(self.no_edits)
+
+             def no_edits(self, chat, message):
+                 message.reply("You can't edit messages! Bye.")
+                 chat.ban(message.sender)
+
+      :param callable func: The function you want to use.
+
+      .. versionadded:: 0.3
+
    .. py:method:: add_command(name, func, [hidden=False])
 
       This function registers a new command, and calls the provided function

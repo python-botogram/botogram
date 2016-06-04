@@ -23,7 +23,7 @@ class FrozenBot:
     def __init__(self, api, about, owner, hide_commands, before_help,
                  after_help, process_backlog, lang, itself, commands_re,
                  commands, chains, scheduler, main_component_id, bot_id,
-                 shared_memory):
+                 shared_memory, update_processors):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -43,6 +43,7 @@ class FrozenBot:
         self._shared_memory = shared_memory
         self._scheduler = scheduler
         self._chains = chains
+        self._update_processors = update_processors
         self._commands = {name: command.for_bot(self)
                           for name, command in commands.items()}
 
@@ -65,7 +66,7 @@ class FrozenBot:
             self.before_help, self.after_help, self.process_backlog,
             self.lang, self.itself, self._commands_re, self._commands,
             self._chains, self._scheduler, self._main_component_id,
-            self._bot_id, self._shared_memory,
+            self._bot_id, self._shared_memory, self._update_processors,
         )
         return restore, args
 
@@ -171,21 +172,13 @@ class FrozenBot:
         update.set_api(self.api)  # Be sure to use the correct API object
 
         try:
-            for hook in self._chains["messages"]:
-                # Get the correct name of the hook
-                name = hook.name
-                self.logger.debug("Processing update #%s with the %s hook..." %
-                                  (update.update_id, name))
+            for kind, processor in self._update_processors.items():
+                # Call the processor of the right kind
+                if getattr(update, kind) is None:
+                    continue
 
-                result = hook.call(self, update)
-                if result is True:
-                    self.logger.debug("Update #%s was just processed by the "
-                                      "%s hook." % (update.update_id, name))
-                    return True
-
-            self.logger.debug("No hook actually processed the #%s update." %
-                              update.update_id)
-
+                processor(self, self._chains, update)
+                break
         except api_module.ChatUnavailableError as e:
             # Do some sane logging
             self.logger.warning("Chat %s is not available to your bot:" %
@@ -198,8 +191,6 @@ class FrozenBot:
                 self.logger.debug("Executing %s for chat %s..." % (hook.name,
                                   e.chat_id))
                 hook.call(self, e.chat_id, e.reason)
-
-        return False
 
     def scheduled_tasks(self, current_time=None, wrap=True):
         """Return a list of tasks scheduled for now"""
@@ -214,6 +205,10 @@ class FrozenBot:
         if wrap:
             return [wrapper(job) for job in tasks]
         return list(tasks)
+
+    def register_update_processor(self, kind, processor):
+        """Register a new update processor"""
+        raise FrozenBotError("Can't register new update processors at runtime")
 
     # This helper manages the translation
 

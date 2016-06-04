@@ -200,6 +200,15 @@ class ChatUnavailableHook(Hook):
                          reason=reason)
 
 
+class MessageEditedHook(Hook):
+    """Underlying hook for @bot.message_edited"""
+
+    def _call(self, bot, update):
+        message = update.edited_message
+        return bot._call(self.func, self.component_id, chat=message.chat,
+                         message=message)
+
+
 class TimerHook(Hook):
     """Underlying hook for a timer"""
 
