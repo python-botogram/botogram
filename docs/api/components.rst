@@ -104,7 +104,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param bool multiple: If the function should be called multiple times on
          multiple matches.
 
-   .. py:method:: add_message_matches_hook(func)
+   .. py:method:: add_message_matches_hook(regex, func, [flags=0, multiple=False])
 
       The function provided to this method will be called only if the
       processed message matches the ``regex`` you provided. You may also
@@ -121,7 +121,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       If the function returns ``True``, then the message processing is stopped,
       and no more functions will be called for that update.
 
-      :param str string: The string you want contained in the message
+      :param str regex: The regular expression the message should match
       :param callable func: The function you want to use.
       :param int flags: ``re`` module's flags
       :param bool multiple: If the function should be called multiple times on
