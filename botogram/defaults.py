@@ -6,6 +6,9 @@
     Released under the MIT license
 """
 
+import html
+
+from . import syntaxes
 from . import components
 from . import decorators
 
@@ -76,7 +79,7 @@ class DefaultComponent(components.Component):
         if len(commands) > 0:
             message.append(bot._("<b>This bot supports those commands:</b>"))
             for name in sorted(commands.keys()):
-                summary = commands[name].summary
+                summary = escape_html(commands[name].summary)
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
                 message.append("/%s <code>-</code> %s" % (name, summary))
@@ -104,7 +107,7 @@ class DefaultComponent(components.Component):
         """Generate a command's help message"""
         message = []
 
-        docstring = commands[command].docstring
+        docstring = escape_html(commands[command].docstring)
         if docstring is None:
             docstring = "<i>%s</i>" % bot._("No description available.")
         message.append("/%s <code>-</code> %s" % (command, docstring))
@@ -151,3 +154,12 @@ class DefaultComponent(components.Component):
                 bot._("Use /help to get a list of the commands."),
             ]), syntax="html")
             return True
+
+
+def escape_html(text):
+    """Escape a docstring"""
+    # The docstring is escaped only if it doesn't contain HTML markup
+    if not syntaxes.is_html(text):
+        return html.escape(text)
+
+    return text

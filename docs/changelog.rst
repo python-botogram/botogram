@@ -78,6 +78,15 @@ Performance improvements
 * Updates queueing performance improved
 * Backlog processing is now instantaneous
 
+Bug fixes
+---------
+
+* Fix docstrings not escaped in the ``/help`` command if no syntax was used
+  (`issue 67`_)
+
+   * Now docstrings are escaped if you don't use any HTML syntax in them, but
+     if you use HTML you need to manually escape that specific docstring.
+
 Deprecated features
 -------------------
 
@@ -86,6 +95,8 @@ Deprecated features will be removed in botogram 1.0!
 * ``Message.new_chat_participant`` is now deprecated
 * ``Message.left_chat_participant`` is now deprecated
 * ``Bot.hide_commands`` is now deprecated
+
+.. _issue 67: https://github.com/pietroalbini/botogram/issues/67
 
 .. _changelog-0.2.1:
 
