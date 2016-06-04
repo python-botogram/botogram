@@ -45,6 +45,11 @@ New features
    * New argument ``hidden`` on :py:meth:`botogram.Bot.command`
    * New argument ``hidden`` on :py:meth:`botogram.Component.add_command`
 
+* Add support for processing edited messages:
+
+   * New decorator :py:meth:`botogram.Bot.message_edited`
+   * New method :py:meth:`botogram.Component.add_message_edited_hook`
+
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Added new attribute :py:attr:`botogram.Sticker.emoji`
 * Added new attribute :py:attr:`botogram.Chat.admins`

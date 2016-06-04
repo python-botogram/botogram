@@ -31,6 +31,7 @@ class Component:
         self.__memory_preparers = []
         self.__timers = []
         self.__chat_unavailable_hooks = []
+        self.__messages_edited_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -148,6 +149,14 @@ class Component:
         hook = hooks.ChatUnavailableHook(func, self)
         self.__chat_unavailable_hooks.append(hook)
 
+    def add_message_edited_hook(self, func):
+        """Add a new edited message hook"""
+        if not callable(func):
+            raise ValueError("A message edited hook must be callable")
+
+        hook = hooks.MessageEditedHook(func, self)
+        self.__messages_edited_hooks.append(hook)
+
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
@@ -170,6 +179,7 @@ class Component:
             "memory_preparers": [self.__memory_preparers],
             "tasks": [self.__timers],
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
+            "messages_edited": [self.__messages_edited_hooks],
         }
 
     def _get_commands(self):

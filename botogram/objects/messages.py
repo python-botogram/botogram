@@ -319,6 +319,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "migrate_to_chat_id": int,
         "migrate_from_chat_id": int,
         "pinned_message": _itself,
+        "edit_date": int,
     }
     replace_keys = {
         "from": "sender",

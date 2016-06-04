@@ -67,6 +67,8 @@ class Bot(frozenbot.FrozenBot):
         # Initialize the list of update processors
         self._update_processors = {}
         self.register_update_processor("message", messages.process_message)
+        self.register_update_processor("edited_message",
+                                       messages.process_edited_message)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -134,6 +136,11 @@ class Bot(frozenbot.FrozenBot):
                                                           multiple)
             return func
         return __
+
+    def message_edited(self, func):
+        """Add a message edited hook"""
+        self._main_component.add_message_edited_hook(func)
+        return func
 
     def command(self, name, hidden=False):
         """Register a new command"""

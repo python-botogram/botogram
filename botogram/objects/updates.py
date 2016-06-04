@@ -21,7 +21,8 @@ class Update(BaseObject):
         "update_id": int,
     }
     optional = {
-        "message": Message
+        "message": Message,
+        "edited_message": Message,
     }
     _check_equality_ = "update_id"
 
