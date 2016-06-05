@@ -7,20 +7,7 @@
 """
 
 from . import objects
-from . import api
-
-
-class FetchError(api.APIError):
-    """Something went wrong while fetching updates"""
-    pass
-
-
-class AnotherInstanceRunningError(FetchError):
-    """Another instance of your bot is running somewhere else"""
-
-    def __init__(self):
-        Exception.__init__(self, "Request terminated because of another long "
-                           "pooling or webhook active")
+from . import exceptions as exc
 
 
 class UpdatesFetcher:
@@ -42,13 +29,13 @@ class UpdatesFetcher:
                 "offset": self._last_id + 1,
                 "timeout": timeout,
             }, expect=objects.Updates)
-        except api.APIError as e:
+        except exc.APIError as e:
             # Raise a specific exception if another instance is running
             if e.error_code == 409 and "conflict" in e.description.lower():
-                raise AnotherInstanceRunningError()
+                raise exc.AnotherInstanceRunningError()
             raise
         except ValueError:
-            raise FetchError("Got an invalid response from Telegram!")
+            raise exc.FetchError("Got an invalid response from Telegram!")
 
     def fetch(self, timeout=1):
         """Fetch the latest updates"""
@@ -82,7 +69,7 @@ class UpdatesFetcher:
 
             try:
                 updates = self._fetch_updates(check_timeout)
-            except AnotherInstanceRunningError:
+            except exc.AnotherInstanceRunningError:
                 # Reset the count
                 checks_count = 0
                 continue

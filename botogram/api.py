@@ -8,6 +8,8 @@
 
 import requests
 
+from . import exceptions as exc
+
 
 # These API methods sends something to a chat
 # This list is used to filter which method to check for unavailable chats
@@ -23,46 +25,6 @@ SEND_TO_CHAT_METHODS = (
     "sendLocation",
     "sendChatAction",
 )
-
-
-class APIError(Exception):
-    """Something went wrong with the API"""
-
-    def __init__(self, response):
-        self.error_code = response["error_code"]
-        self.description = response["description"]
-
-        msg = "Request failed with code %s. Response from Telegram: \"%s\"" % (
-            self.error_code, self.description
-        )
-
-        super(APIError, self).__init__(msg)
-
-
-class ChatUnavailableError(APIError):
-    """A chat is unavailable, which means you can't send messages to it"""
-
-    def __init__(self, reason, chat_id):
-        self.reason = reason
-        self.chat_id = chat_id
-
-        if reason == "blocked":
-            msg = "The user with ID %s blocked your bot" % chat_id
-        elif reason == "account_deleted":
-            msg = "The user with ID %s deleted his account" % chat_id
-        elif reason == "not_contacted":
-            msg = "The user with ID %s didn't contact you before" % chat_id
-        elif reason == "not_found":
-            msg = "The chat with ID %s doesn't exist" % chat_id
-        elif reason == "kicked":
-            msg = "The bot was kicked from the group with ID %s" % chat_id
-        elif reason == "chat_moved":
-            msg = "The chat with ID %s moved, and the old ID is no longer " \
-                  "valid" % chat_id
-        else:
-            raise ValueError("Unknown reason: %s" % reason)
-
-        Exception.__init__(self, msg)
 
 
 class TelegramAPI:
@@ -104,9 +66,9 @@ class TelegramAPI:
                     reason = "chat_moved"
 
                 if reason is not None:
-                    raise ChatUnavailableError(reason, params["chat_id"])
+                    raise exc.ChatUnavailableError(reason, params["chat_id"])
 
-            raise APIError(content)
+            raise exc.APIError(content)
 
         # If no special object is expected, return the decoded json.
         # Else, return the "pythonized" result

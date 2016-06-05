@@ -22,6 +22,7 @@ from . import frozenbot
 from . import shared
 from . import tasks
 from . import messages
+from . import exceptions as exc
 
 
 class Bot(frozenbot.FrozenBot):
@@ -78,7 +79,7 @@ class Bot(frozenbot.FrozenBot):
         # Fetch the bot itself's object
         try:
             self.itself = self.api.call("getMe", expect=objects.User)
-        except api.APIError as e:
+        except exc.APIError as e:
             self.logger.error("Can't connect to Telegram!")
             if e.error_code == 401:
                 self.logger.error("The API token seems to be invalid.")

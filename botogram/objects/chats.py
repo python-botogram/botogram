@@ -6,7 +6,7 @@
     Released under the MIT license
 """
 
-from .. import api
+from .. import exceptions as exc
 from .base import BaseObject, multiple
 from . import mixins
 
@@ -210,10 +210,10 @@ class Chat(BaseObject, mixins.ChatMixin):
 
         try:
             self._api.call("leaveChat", {"chat_id": self.id})
-        except api.APIError as e:
+        except exc.APIError as e:
             if e.error_code == 403 and "not a member" in e.description:
-                exc = RuntimeError("The bot isn't a member of this group")
-                raise exc from None
+                new_exc = RuntimeError("The bot isn't a member of this group")
+                raise new_exc from None
             raise
 
 

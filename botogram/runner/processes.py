@@ -17,8 +17,8 @@ import logbook
 from . import jobs
 from . import shared
 from . import ipc
-from .. import api
 from .. import updates as updates_module
+from .. import exceptions as exc
 
 
 class BaseProcess(multiprocessing.Process):
@@ -187,10 +187,10 @@ class UpdaterProcess(BaseProcess):
 
         try:
             updates = self.fetcher.fetch()
-        except updates_module.AnotherInstanceRunningError:
+        except exc.AnotherInstanceRunningError:
             self.handle_another_instance()
             return
-        except api.APIError as e:
+        except exc.APIError as e:
             self.logger.error("An error occured while fetching updates!")
             self.logger.debug("Exception type: %s" % e.__class__.__name__)
             self.logger.debug("Exception content: %s" % str(e))

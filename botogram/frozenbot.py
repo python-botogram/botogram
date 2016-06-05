@@ -10,7 +10,7 @@ import logbook
 
 from . import utils
 from . import objects
-from . import api as api_module
+from . import exceptions as exc
 
 
 class FrozenBotError(Exception):
@@ -179,7 +179,7 @@ class FrozenBot:
 
                 processor(self, self._chains, update)
                 break
-        except api_module.ChatUnavailableError as e:
+        except exc.ChatUnavailableError as e:
             # Do some sane logging
             self.logger.warning("Chat %s is not available to your bot:" %
                                 e.chat_id)
