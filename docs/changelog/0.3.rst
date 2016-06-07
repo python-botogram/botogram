@@ -22,15 +22,15 @@ New features
 * Added the ability to react :ref:`when a chat is not available
   <unavailable-chats>`.
 
-  * New decorator :py:meth:`botogram.Bot.chat_unavailable`
-  * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
+   * New decorator :py:meth:`botogram.Bot.chat_unavailable`
+   * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
 
 * Added support for editing messages sent by the bot
 
-  * New method :py:meth:`botogram.Message.edit`
-  * New method :py:meth:`botogram.Message.edit_caption`
-  * New method :py:meth:`botogram.Bot.edit_message`
-  * New method :py:meth:`botogram.Bot.edit_caption`
+   * New method :py:meth:`botogram.Message.edit`
+   * New method :py:meth:`botogram.Message.edit_caption`
+   * New method :py:meth:`botogram.Bot.edit_message`
+   * New method :py:meth:`botogram.Bot.edit_caption`
 
 * Added support for working with parsed text in a message:
 

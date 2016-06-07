@@ -50,7 +50,7 @@ development. Feel free to use them when you need them.
    the references to it in your source code. Your bot will still work
    flawlessly.
 
-   .. deprecated:: ae3314ed it will be removed in botogram 1.0
+   .. deprecated:: pre-0.1 it will be removed in botogram 1.0
 
 .. py:decorator:: botogram.pass_bot
 
@@ -58,7 +58,7 @@ development. Feel free to use them when you need them.
    the references to it in your source code. Your bot will still work
    flawlessly.
 
-   .. deprecated:: ae3314ed it will be removed in botogram 1.0
+   .. deprecated:: pre-0.1 it will be removed in botogram 1.0
 
 .. py:decorator:: botogram.help_message_for(func)
 

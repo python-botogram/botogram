@@ -510,7 +510,7 @@ about its business.
       :returns: the status of the user
       :rtype: str
 
-      .. versionaddedd:: 0.3
+      .. versionadded:: 0.3
 
    .. py:method:: leave()
 
