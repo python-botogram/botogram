@@ -316,6 +316,30 @@ about its business.
 
          Now the method returns the sent message
 
+   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, extra=None, notify=True])
+
+      Send a contact to the user. A Telegram contact is made of its phone
+      number (with the international prefix), its first name and optionally its
+      last name. You can use this, for example, to send the user the phone
+      number of a buisness so he can call them:
+
+      .. code-block:: python
+
+         @bot.command("support")
+         def support_command(chat, message, args):
+             message.sender.send("Hi there, here is our support number:")
+             message.sender.send_contact("+390124567890", "Support")
+
+      :param str phone: The phone number of the contact
+      :param str first_name: The first name of the contact
+      :param str last_name: The last name of the contact
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
 
 .. py:class:: botogram.Chat
 
@@ -731,6 +755,31 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, extra=None, notify=True])
+
+      Send a contact to the chat. A Telegram contact is made of its phone
+      number (with the international prefix), its first name and optionally its
+      last name. You can use this, for example, to send the user the phone
+      number of a buisness so he can call them:
+
+      .. code-block:: python
+
+         @bot.command("support")
+         def support_command(chat, message, args):
+             chat.send("Hi there, here is our support number:")
+             chat.send_contact("+390124567890", "Support")
+
+      :param str phone: The phone number of the contact
+      :param str first_name: The first name of the contact
+      :param str last_name: The last name of the contact
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
 
 .. py:class:: botogram.ParsedText
 
@@ -1326,6 +1375,30 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, extra=None, notify=True])
+
+      Reply to this message with a contact. A Telegram contact is made of its
+      phone number (with the international prefix), its first name and
+      optionally its last name. You can use this, for example, to send the user
+      the phone number of a buisness so he can call them:
+
+      .. code-block:: python
+
+         @bot.command("support")
+         def support_command(chat, message, args):
+             message.reply("Hi there, here is our support number:")
+             message.reply_with_contact("+390124567890", "Support")
+
+      :param str phone: The phone number of the contact
+      :param str first_name: The first name of the contact
+      :param str last_name: The last name of the contact
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
 
 
 .. py:class:: botogram.Photo

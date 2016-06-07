@@ -48,6 +48,12 @@ New features
    * New decorator :py:meth:`botogram.Bot.message_edited`
    * New method :py:meth:`botogram.Component.add_message_edited_hook`
 
+* Added support for sending contacts:
+
+   * New method :py:meth:`botogram.User.send_contact`
+   * New method :py:meth:`botogram.Chat.send_contact`
+   * New method :py:meth:`botogram.Message.reply_with_contact`
+
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Added new attribute :py:attr:`botogram.Sticker.emoji`
 * Added new attribute :py:attr:`botogram.Chat.admins`

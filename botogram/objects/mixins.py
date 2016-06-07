@@ -164,6 +164,18 @@ class ChatMixin:
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
 
+    def send_contact(self, phone, first_name, last_name=None, *, reply_to=None,
+                     extra=None, notify=True):
+        """Send a contact"""
+        args = self._get_call_args(reply_to, extra, notify)
+        args["phone_number"] = phone
+        args["first_name"] = first_name
+
+        if last_name is not None:
+            args["last_name"] = last_name
+
+        return self._api.call("sendContact", args, expect=_objects().Message)
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -253,6 +265,11 @@ class MessageMixin:
     def reply_with_sticker(self, *args, **kwargs):
         """Reply with a sticker to the current message"""
         return self.chat.send_sticker(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def reply_with_contact(self, *args, **kwargs):
+        """Reply with a contact to the current message"""
+        return self.chat.send_contact(*args, reply_to=self, **kwargs)
 
 
 class FileMixin:
