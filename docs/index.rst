@@ -79,7 +79,7 @@ Side notes
 .. toctree::
    :maxdepth: 2
 
-   changelog
+   changelog/index
    license
 
 .. _Telegram bots: https://core.telegram.org/bots
