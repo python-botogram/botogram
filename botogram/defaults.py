@@ -158,6 +158,10 @@ class DefaultComponent(components.Component):
 
 def escape_html(text):
     """Escape a docstring"""
+    # You can't escape None, right?
+    if text is None:
+        return
+
     # The docstring is escaped only if it doesn't contain HTML markup
     if not syntaxes.is_html(text):
         return html.escape(text)
