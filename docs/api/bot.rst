@@ -359,6 +359,24 @@ components.
 
       .. versionadded:: 0.3
 
+   .. py:method:: chat(id)
+
+      Get the :py:class:`~botogram.Chat` object of the chat with the ID you
+      provided to this method. You can use this to get information about a chat
+      you know about, or to send messages to other chats:
+
+      .. code-block:: python
+
+         BROADCAST_TO = [123, 321, 132]  # List of chat IDs
+
+         @bot.command("broadcast")
+         def broadcast_command(bot, chat, message, args):
+             """Broadcast a message to multiple chats"""
+             to_send = " ".join(args)
+
+             for chat_id in BROADCAST_TO:
+                 bot.chat(chat_id).send(to_send)
+
    .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       This method sends a message to a specific chat. The chat must be
@@ -396,6 +414,8 @@ components.
 
          Now the method returns the sent message
 
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
+
    .. py:method:: send_photo(chat, path[, caption="", reply_to=None, extra=None, notify=True])
 
       This method sends a photo to a specific chat. The chat must be identified
@@ -426,6 +446,8 @@ components.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
 
    .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
@@ -463,6 +485,8 @@ components.
 
          Now the method returns the sent message
 
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
+
    .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
 
       This method sends a voice message to a specific chat. The chat must be
@@ -496,6 +520,8 @@ components.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
 
    .. py:method:: send_video(chat, path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
 
@@ -532,6 +558,8 @@ components.
 
          Now the method returns the sent message
 
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
+
    .. py:method:: send_file(chat, path, [reply_to=None, extra=None, notify=True])
 
       This method sends a generic file to a specific chat. The chat must be
@@ -563,6 +591,8 @@ components.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
 
    .. py:method:: send_location(chat, latitude, longitude, [reply_to=None, extra=None, notify=True])
 
@@ -597,6 +627,8 @@ components.
 
          Now the method returns the sent message
 
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
+
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       This method sends a sticker to a specific chat chat (in webp format). The
@@ -628,6 +660,8 @@ components.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. deprecated:: 0.3 it will be removed in botogram 1.0
 
    .. py:attribute:: hide_commands
 

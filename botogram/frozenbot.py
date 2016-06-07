@@ -128,6 +128,12 @@ class FrozenBot:
     # This class also contains methods to send messages to users
     # They're defined dynamically out of the class body, see below
 
+    # Get a chat from its ID
+
+    def chat(self, id):
+        """Get an instance of botogram.Chat based on its ID"""
+        return self.api.call("getChat", {"chat_id": id}, expect=objects.Chat)
+
     # Edit messages already sent
 
     def _edit_create_fake_message_object(self, chat, message):
@@ -267,6 +273,8 @@ _proxied_sends = [
 
 for _proxy in _proxied_sends:
     @utils.wraps(_proxy)
+    @utils.deprecated("0.1", "1.0", "Use Bot.chat(id).%s() instead."
+                      % _proxy.__name__)
     def _wrapper(self, chat, *args, __proxy=_proxy, **kwargs):
         # String chats are channels
         if type(chat) == str:

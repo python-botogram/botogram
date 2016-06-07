@@ -57,6 +57,7 @@ New features
 * Added new attribute :py:attr:`botogram.Chat.members_count`
 * Added new method :py:meth:`botogram.Chat.status_of`
 * Added new method :py:meth:`botogram.Chat.leave`
+* Added new method :py:meth:`botogram.Bot.chat`
 * Every method which sends something to a chat now returns the sent
   :py:class:`~botogram.Message`
 * Multiple instances of the same bot are now properly handled (as errors)
@@ -95,6 +96,14 @@ Deprecated features will be removed in botogram 1.0!
 * ``Message.new_chat_participant`` is now deprecated
 * ``Message.left_chat_participant`` is now deprecated
 * ``Bot.hide_commands`` is now deprecated
+* ``Bot.send`` is now deprecated
+* ``Bot.send_photo`` is now deprecated
+* ``Bot.send_audio`` is now deprecated
+* ``Bot.send_voice`` is now deprecated
+* ``Bot.send_video`` is now deprecated
+* ``Bot.send_file`` is now deprecated
+* ``Bot.send_location`` is now deprecated
+* ``Bot.send_sticker`` is now deprecated
 
 .. _issue 67: https://github.com/pietroalbini/botogram/issues/67
 
