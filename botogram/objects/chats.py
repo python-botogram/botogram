@@ -216,6 +216,38 @@ class Chat(BaseObject, mixins.ChatMixin):
                 raise exc from None
             raise
 
+    @mixins._require_api
+    def ban(self, user):
+        """Ban an user from the group"""
+        # Check if the chat is a group
+        if self.type not in ("group", "supergroup"):
+            raise RuntimeError("This chat is not a group or a supergroup!")
+
+        # Accept also an instance of `User`
+        if isinstance(user, User):
+            user = user.id
+
+        self._api.call("kickChatMember", {
+            "chat_id": self.id,
+            "user_id": user,
+        })
+
+    @mixins._require_api
+    def unban(self, user):
+        """Unban an user from the supergroup"""
+        # Check if the chat is a supergroup
+        if self.type != "supergroup":
+            raise RuntimeError("This chat is nota group or a supergroup!")
+
+        # Accept also an instance of `User`
+        if isinstance(user, User):
+            user = user.id
+
+        self._api.call("unbanChatMember", {
+            "chat_id": self.id,
+            "user_id": user,
+        })
+
 
 class ChatMember(BaseObject):
     """Telegram API representation of a chat member

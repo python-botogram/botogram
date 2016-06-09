@@ -48,6 +48,11 @@ New features
    * New decorator :py:meth:`botogram.Bot.message_edited`
    * New method :py:meth:`botogram.Component.add_message_edited_hook`
 
+* Added support for moderating groups:
+
+   * New method :py:meth:`botogram.Chat.ban`
+   * New method :py:meth:`botogram.Chat.unban`
+
 * Added support for sending contacts:
 
    * New method :py:meth:`botogram.User.send_contact`

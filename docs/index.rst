@@ -55,6 +55,7 @@ Narrative documentation
    bot-creation
    bot-structure
    unavailable-chats
+   groups-management
    shared-memory
    tasks
    custom-components

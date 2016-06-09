@@ -531,6 +531,67 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:method:: ban(user)
+
+      Ban the provided user from this group chat. You can either provide the
+      user ID or an instance of :py:class:`~botogram.User`. This method is the
+      cornerstone of :ref:`moderating group chats <manage-chats>`, since it
+      allows your bot to punish misbehaving users.
+
+      While on normal group chats a banned user can rejoin the chat if it's
+      added by one of its members or he uses a join link, on supergroups you
+      need to explicitly :py:meth:`~botogram.Chat.unban` he to let him rejoin.
+
+      Remember your bot must be an administrator of the chat in order to this
+      method to work properly.
+
+      .. code-block:: python
+
+         # This command bans the user who sent the message you replied to
+
+         @bot.command("ban")
+         def ban_user(chat, message, args):
+             """Ban that user"""
+             # Some needed filtering and error handling
+             if message.reply_to_message is None:
+                 message.reply("You must reply to a message the user wrote!")
+             if message.sender not in chat.admins:
+                 message.reply("You must be an admin of the group!")
+             if message.reply_to_message.sender in chat.admins:
+                 message.reply("You can't ban another admin!")
+
+             chat.ban(message.reply_to_message.sender)
+
+      :param int user: The user you want to ban (user ID or
+                       :py:class:`~botogram.User`)
+
+      .. versionadded:: 0.3
+
+   .. py:method:: unban(user)
+
+      Unban the user from this group chat. This does nothing on normal group
+      chats, but it removes the user from the group's blacklist if the chat is
+      a supergroup. This method can be handy if you want to remove the ban you
+      given to an user.
+
+      Remember your bot must be an administrator of the chat in order to this
+      method to work properly.
+
+      .. code-block:: python
+
+         @bot.timer(60)
+         def unban_all(shared, bot):
+             # This unbans all the users in the shared memory
+             for chat_id, user_id in shared["banned_users"].items():
+                 bot.chat(chat_id).unban(user_id)
+
+             shared["banned_users"] = {}
+
+      :param int user: The user you want to unban (user ID or
+                       :py:class:`~botogram.User`)
+
+      .. versionadded:: 0.3
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
