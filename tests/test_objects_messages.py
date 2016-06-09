@@ -160,6 +160,13 @@ def test_parsed_text_entity_url():
     entity._url = "https://www.example.com"
     entity.set_message(msg)
     assert entity.url == "https://www.example.com"
+    entity._url = None
+
+    # Url entity without a scheme
+    msg = get_dummy_message("www.example.com/abcdefg")
+    entity.type = "url"
+    entity.set_message(msg)
+    assert entity.url == "http://www.example.com/abcdefg"
 
 
 def test_parsed_text():

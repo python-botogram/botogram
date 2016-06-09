@@ -6,6 +6,7 @@
     Released under the MIT license
 """
 
+import re
 
 from .base import BaseObject, _itself
 from . import mixins
@@ -14,6 +15,9 @@ from .. import utils
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
     Location
+
+
+_url_protocol_re = re.compile(r"^https?:\/\/|s?ftp:\/\/|mailto:", re.I)
 
 
 def _require_message(func):
@@ -142,13 +146,12 @@ class ParsedTextEntity(BaseObject):
     @_require_message
     def url(self):
         """Get the URL attached to the message"""
-        # Use the provided if available
         if self._url is not None:
-            return self._url
-
-        if self.type == "link":
+            # Use the provided if available
+            url = self._url
+        elif self.type == "link":
             # Standard URLs
-            return self.text
+            url = self.text
         elif self.type == "mention":
             # telegram.me URLs
             return "https://telegram.me/%s" % self.text[1:]
@@ -158,6 +161,13 @@ class ParsedTextEntity(BaseObject):
         else:
             # Sorry!
             return None
+
+        # Be sure to have a protocol in the URL (default to HTTP)
+        # Apparently Telegram doesn't provide always a valid URL, but whatever
+        # the user sends in the message
+        if not _url_protocol_re.match(url):
+            url = "http://%s" % url
+        return url
 
 
 class ParsedText:
