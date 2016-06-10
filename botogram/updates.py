@@ -54,10 +54,16 @@ class UpdatesFetcher:
         """Fetch the latest updates"""
         if not self._backlog_processed:
             # Just erase all the previous messages
-            self._bot.api.call("getUpdates", {
+            last = self._bot.api.call("getUpdates", {
                 "offset": -1,
                 "timeout": 0,
             }, expect=objects.Updates)
+
+            # Be sure to skip also the last update
+            if last:
+                self._last_id = last[-1].update_id
+            else:
+                self._last_id = 0
 
             self._backlog_processed = True
 
