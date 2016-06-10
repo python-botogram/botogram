@@ -30,6 +30,12 @@ import re
 import invoke
 
 
+# This is because invoke can't keep backward compatibility...
+_invoke_v = invoke.__version__.split(".")
+if int(_invoke_v[0]) == 0 and int(_invoke_v[1]) <= 12:
+    invoke.task = invoke.ctask
+
+
 BASE = os.path.dirname(__file__)
 PYTHON = "python3"
 PROJECT = "botogram"
@@ -74,7 +80,7 @@ def remove_dir_content(path):
 
 
 @invoke.task
-def clean():
+def clean(ctx):
     """Clean all the build things"""
     for dir in "build", "%s.egg-info" % PROJECT:
         path = os.path.join(BASE, dir)
@@ -125,7 +131,7 @@ def i18n_available():
 
 
 @invoke.task(name="i18n-compile")
-def i18n_compile():
+def i18n_compile(ctx):
     """Compile the translation files"""
     env = create_env("build", requirements=True)
 
@@ -139,7 +145,7 @@ def i18n_compile():
 
 
 @invoke.task(name="i18n-extract")
-def i18n_extract():
+def i18n_extract(ctx):
     """Extract all the messages from the source code"""
     env = create_env("build", requirements=True)
 
@@ -158,7 +164,7 @@ def i18n_extract():
 
 
 @invoke.task(name="i18n-new")
-def i18n_new(lang):
+def i18n_new(ctx, lang):
     """Create a new language file"""
     env = create_env("build", requirements=True)
 
@@ -179,13 +185,13 @@ def i18n_new(lang):
 
 
 @invoke.task
-def devel():
+def devel(ctx):
     """Setup the development environment"""
     create_env("devel", self=True, force=True)
 
 
 @invoke.task(pre=[i18n_compile])
-def build():
+def build(ctx):
     """Create a new build"""
     env = create_env("build", requirements=True)
 
@@ -198,7 +204,7 @@ def build():
 
 
 @invoke.task(pre=[build])
-def install():
+def install(ctx):
     """Install the program on this environment"""
     invoke.run("python3 -m pip install --upgrade build/packages/*whl")
 
@@ -210,7 +216,7 @@ def install():
 
 
 @invoke.task
-def test():
+def test(ctx):
     """Run the test suite"""
     env = create_env("test", requirements=True, self=True)
 
@@ -223,7 +229,7 @@ def test():
 
 
 @invoke.task
-def lint():
+def lint(ctx):
     """Lint the source code"""
     FLAKE8_OPTIONS = "--select=E,W,F,C9,N8"
     env = create_env("lint", requirements=True)
@@ -237,7 +243,7 @@ def lint():
 
 
 @invoke.task
-def docs():
+def docs(ctx):
     """Build the documentation"""
     env = create_env("docs", requirements=True)
 
@@ -255,7 +261,7 @@ def docs():
 
 
 @invoke.task(name="deps-sync")
-def deps_sync():
+def deps_sync(ctx):
     """Sync dependencies versions"""
     env = create_env("tools", requirements=True)
 
@@ -270,7 +276,7 @@ def deps_sync():
 
 
 @invoke.task(name="deps-compile")
-def deps_compile():
+def deps_compile(ctx):
     """Compile new requirements-*.txt"""
     env = create_env("tools", requirements=True)
 
