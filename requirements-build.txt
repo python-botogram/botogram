@@ -4,6 +4,6 @@
 #
 #    pip-compile requirements-build.in
 #
-Babel==2.2.0
-pytz==2016.3              # via babel
+babel==2.3.4
+pytz==2016.4              # via babel
 wheel==0.29.0
