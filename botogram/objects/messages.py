@@ -44,6 +44,7 @@ class ParsedTextEntity(BaseObject):
     }
     optional = {
         "url": str,
+        "user": User,
     }
     replace_keys = {
         "url": "_url",  # Dynamically implemented
@@ -59,10 +60,12 @@ class ParsedTextEntity(BaseObject):
         "bot_command": "command",
         "text_link": "link",
         "url": "link",
+        "text_mention": "mention",
     }
     replace_types_inverse = {
         "command": "bot_command",
         "link": "text_link",
+        "mention": "text_mention",
     }
 
     def __init__(self, data, api=None, message=None):
@@ -120,9 +123,14 @@ class ParsedTextEntity(BaseObject):
                 self._type = "url"
             else:
                 self._type = "text_link"
-            return
 
-        if value in self.replace_types_inverse:
+        elif value == "mention":
+            if self.user is not None:
+                self._type = "text_mention"
+            else:
+                self._type = "mention"
+
+        elif value in self.replace_types_inverse:
             self._type = self.replace_types_inverse[value]
         else:
             self._type = value
@@ -153,8 +161,16 @@ class ParsedTextEntity(BaseObject):
             # Standard URLs
             url = self.text
         elif self.type == "mention":
+            # Detect the correct username
+            if self.user is not None and self.user.username is not None:
+                username = self.user.username
+            elif self.text.startswith("@"):
+                username = self.text[1:]
+            else:
+                return None
+
             # telegram.me URLs
-            return "https://telegram.me/%s" % self.text[1:]
+            return "https://telegram.me/%s" % username
         elif self.type == "email":
             # mailto: URL
             return "mailto:%s" % self.text

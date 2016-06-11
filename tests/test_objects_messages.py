@@ -8,6 +8,7 @@
 import pytest
 
 import botogram.objects.messages
+import botogram.objects.chats
 
 
 def get_dummy_message(text):
@@ -127,6 +128,39 @@ def test_parsed_text_entity_type():
     entity.type = "link"
     assert entity._type == "text_link"
 
+    ############################################
+    #  A mention (which mutates as "mention")  #
+    ############################################
+
+    msg = get_dummy_message("@test_image")
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "mention"
+    assert entity.type == "mention"
+
+    # Setter
+    entity.type = "mention"
+    assert entity._type == "mention"
+
+    #################################################
+    #  A mention (which mutates as "text_mention")  #
+    #################################################
+
+    msg = get_dummy_message("@test_image")
+    entity.user = botogram.objects.chats.User({"id": 1, "first_name": "Test"})
+    entity.set_message(msg)
+
+    # Getter
+    entity._type = "text_mention"
+    assert entity.type == "mention"
+
+    # Setter
+    entity.type = "mention"
+    assert entity._type == "text_mention"
+
+    entity.user = None
+
 
 def test_parsed_text_entity_url():
     # Basic entity
@@ -142,11 +176,24 @@ def test_parsed_text_entity_url():
     entity.set_message(msg)
     assert entity.url == "https://www.example.com"
 
-    # Mention entity
+    # Mention entity with @usernames
     msg = get_dummy_message("@a_botogram_users_group")
     entity.type = "mention"
     entity.set_message(msg)
     assert entity.url == "https://telegram.me/a_botogram_users_group"
+
+    # Text mention entities without usernames
+    msg = get_dummy_message("A botogram users group!")
+    entity.user = botogram.objects.chats.User({"id": 1, "first_name": "Test"})
+    entity.type = "mention"
+    entity.set_message(msg)
+    assert entity.url is None
+
+    # Text mention entities with usernames
+    entity.user.username = "test_username"
+    assert entity.url == "https://telegram.me/test_username"
+
+    entity.user = None
 
     # Email entity
     msg = get_dummy_message("john.42.doe@example.com")

@@ -906,13 +906,14 @@ about its business.
 
       * **plain**: a plain string (with no formatting or special meaning)
 
-      * **mention**: a mention to another user (for example ``@pietroalbini``)
+      * **mention**: a mention to another user (can contain the username or the
+        full name, for example ``@pietroalbini`` or ``Pietro``)
 
       * **hashtag**: an hashtag (for example ``#pythonftw``)
 
       * **command**: a command sent to a bot (for example ``/help``)
 
-      * **url**: a link (the text can contain its label)
+      * **link** a link (the text can contain its label)
 
       * **email**: an email address (for example ``pietro@pietroalbini.io``)
 
@@ -932,8 +933,14 @@ about its business.
    .. py:attribute:: url
 
       The attached URL for the entity. This includes the raw URL for the
-      **url** and **text_link** types, the ``telegram.me`` link for the
-      **mention** type, and the ``mailto:`` link for **email** type.
+      **url** type, the ``telegram.me`` link for the **mention** type (if the
+      user has an username), and the ``mailto:`` link for **email** type.
+
+   .. py:attribute:: user
+
+      The :py:class:`~botogram.User` mentioned in this entity. This isn't
+      always provided by Telegram, currently only if the mentioned user doesn't
+      have an username.
 
 .. py:class:: botogram.Message
 
