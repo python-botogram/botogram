@@ -1083,6 +1083,13 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: venue
+
+      If the user sent a :py:class:`~botogram.Venue` with this message, the
+      attribute contains its representation.
+
+      *This attribute can be None if the message isn't a venue.*
+
    .. py:attribute:: new_chat_member
 
       A :py:class:`~botogram.User` object representing a new member of a group
@@ -1818,6 +1825,36 @@ about its business.
    .. py:attribute:: latitude
 
       The float latitude as defined by the sender.
+
+
+.. py:class:: botogram.Venue
+
+   This object represents a venue (a location with attached a title and an
+   address). A venue may also have a Foursquare ID attached.
+
+   .. py:attribute:: location
+
+      The :py:class:`~botogram.Location` of the venue. You can use this to get
+      the exact geographic coordinates of the venue.
+
+   .. py:attribute:: title
+
+      The name of the venue. The value might not match the venue sometimes,
+      because it's supplied by the user/bot who sent the venue.
+
+   .. py:attribute:: address
+
+      The address of the venue. The value might not match the venue sometimes,
+      because it's supplied by the user/bot who sent the venue.
+
+   .. py:attribute:: foursquare
+
+      The ID of the venue on Foursquare. You can use this to get more
+      information about the venue from the Foursquare API. The ID might not
+      match the venue sometimes because it's supplied by the user/bot who sent
+      the venue.
+
+      *This value can be None if the venue doesn't have a Foursquare ID.*
 
 
 .. py:class:: botogram.Update

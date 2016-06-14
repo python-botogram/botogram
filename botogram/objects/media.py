@@ -207,3 +207,23 @@ class Location(BaseObject):
         return isinstance(other, Location) and \
             self.longitude == other.longitude and \
             self.latitude == other.latitude
+
+
+class Venue(BaseObject):
+    """Telegram API representation of a venue
+
+    https://core.telegram.orgf/bots/api#venue
+    """
+
+    required = {
+        "location": Location,
+        "title": str,
+        "address": str,
+    }
+    optional = {
+        "foursquare_id": str,
+    }
+    replace_keys = {
+        "foursquare_id": "foursquare",
+    }
+    _check_equality_ = "location"
