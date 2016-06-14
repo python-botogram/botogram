@@ -156,6 +156,20 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
+    def send_venue(self, latitude, longitude, title, address, foursquare=None,
+                   reply_to=None, extra=None, notify=True):
+        """Send a venue"""
+        args = self._get_call_args(reply_to, extra, notify)
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+        args["title"] = title
+        args["address"] = address
+        if foursquare is not None:
+            args["foursquare_id"] = foursquare
+
+        self._api.call("sendVenue", args, expect=_objects().Message)
+
+    @_require_api
     def send_sticker(self, sticker, reply_to=None, extra=None, notify=True):
         """Send a sticker"""
         args = self._get_call_args(reply_to, extra, notify)
@@ -260,6 +274,11 @@ class MessageMixin:
     def reply_with_location(self, *args, **kwargs):
         """Reply with a geographic location to the current chat"""
         return self.chat.send_location(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def reply_with_venue(self, *args, **kwargs):
+        """Reply with a venue to the current message"""
+        return self.chat.send_venue(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_sticker(self, *args, **kwargs):

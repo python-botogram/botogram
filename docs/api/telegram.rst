@@ -290,6 +290,36 @@ about its business.
 
          Now the method returns the sent message
 
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, extra=None, notify=True])
+
+      Send a venue to the user. A venue is made of its geographic coordinates
+      (latitude and longitude), its title and address, and optionally the
+      venue's Foursquare ID, if you want to integrate with that. Users will
+      then see the venue in the map, along with the information you provided.
+
+      You can use this, for example, if you want to recommend to your bot's
+      users a place to go to dinner tonight:
+
+      .. code-block:: python
+
+         @bot.command("whereshouldigo")
+         def whereshouldigo_command(chat, message, args):
+             message.sender.send("Here there is an unique place to go to dinner tonight!")
+             message.sender.send_venue(35, -45, "The Abyss", "Atlantic Ocean")
+
+      :param float latitude: The latitude of the venue
+      :param float longitude: The longitude of the venue
+      :param str title: The name of the venue
+      :param str address: The address of the venue
+      :param str foursquare: The Foursquare ID of the venue
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
+
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
       Send the sticker to the user (in webp format). If the sticker you're
@@ -790,6 +820,36 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, extra=None, notify=True])
+
+      Send a venue to the chat. A venue is made of its geographic coordinates
+      (latitude and longitude), its title and address, and optionally the
+      venue's Foursquare ID, if you want to integrate with that. Users will
+      then see the venue in the map, along with the information you provided.
+
+      You can use this, for example, if you want to recommend to your bot's
+      users a place to go to dinner tonight:
+
+      .. code-block:: python
+
+         @bot.command("whereshouldigo")
+         def whereshouldigo_command(chat, message, args):
+             chat.send("Here there is an unique place to go to dinner tonight!")
+             chat.send_venue(35, -45, "The Abyss", "Atlantic Ocean")
+
+      :param float latitude: The latitude of the venue
+      :param float longitude: The longitude of the venue
+      :param str title: The name of the venue
+      :param str address: The address of the venue
+      :param str foursquare: The Foursquare ID of the venue
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
 
    .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
@@ -1427,6 +1487,36 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+   .. py:method:: reply_with_venue(latitude, longitude, title, address, [foursquare=None, extra=None, notify=True])
+
+      Reply to this message with a venue. A venue is made of its geographic
+      coordinates (latitude and longitude), its title and address, and
+      optionally the venue's Foursquare ID, if you want to integrate with that.
+      Users will then see the venue in the map, along with the information you
+      provided.
+
+      You can use this, for example, if you want to recommend to your bot's
+      users a place to go to dinner tonight:
+
+      .. code-block:: python
+
+         @bot.command("whereshouldigo")
+         def whereshouldigo_command(chat, message, args):
+             message.reply("Here there is an unique place to go to dinner tonight!")
+             message.reply_with_venue(35, -45, "The Abyss", "Atlantic Ocean")
+
+      :param float latitude: The latitude of the venue
+      :param float longitude: The longitude of the venue
+      :param str title: The name of the venue
+      :param str address: The address of the venue
+      :param str foursquare: The Foursquare ID of the venue
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.3
 
    .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None, notify=True])
 
