@@ -7,7 +7,7 @@ sudo: false
 cache: pip
 
 install:
-- pip install invoke
+- pip install "invoke<0.13"
 
 script:
 - invoke build
