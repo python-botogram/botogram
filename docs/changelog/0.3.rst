@@ -14,7 +14,15 @@ botogram 0.3
 
 *Alpha release, not yet released*
 
-Release description not yet written.
+botogram 0.3 is the third alpha release of botogram. It reaches almost feature
+parity with the upstream Telegram API (except for keyboards and inlines),
+including the new features in the Bot API 2.0 and 2.1 updates, such as
+moderating group chats or editing messages.
+
+Performance are improved, with a faster updates fetching process, and a bug was
+fixed in this release. There are also a few deprecations to keep the API clean.
+All the deprecated features in this release will be removed in botogram 1.0, so
+you have plenty of time to switch to the new ones.
 
 New features
 ------------
