@@ -28,6 +28,7 @@ about its business.
 * :py:class:`~botogram.Voice`
 * :py:class:`~botogram.Contact`
 * :py:class:`~botogram.Location`
+* :py:class:`~botogram.Venue`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
 * :py:class:`~botogram.ReplyKeyboardMarkup`
@@ -1413,7 +1414,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_video(path, [duration=None, caption=None, extra=None, notify=True])
+   .. py:method:: reply_with_video(path, [duration=None, caption=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video. *extra* is an
