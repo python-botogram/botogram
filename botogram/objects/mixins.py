@@ -164,6 +164,7 @@ class ChatMixin:
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
 
+    @_require_api
     def send_contact(self, phone, first_name, last_name=None, *, reply_to=None,
                      extra=None, notify=True):
         """Send a contact"""
