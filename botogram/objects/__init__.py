@@ -10,7 +10,7 @@
 
 from .chats     import User, Chat, UserProfilePhotos
 from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
-                       Video, Contact, Location
+                       Video, Contact, Location, Venue
 from .messages  import Message
 from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
 from .updates   import Update, Updates
@@ -32,6 +32,7 @@ __all__ = [
     "Video",
     "Contact",
     "Location",
+    "Venue",
 
     # Messages-related objects
     "Message",

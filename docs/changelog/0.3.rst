@@ -59,6 +59,14 @@ New features
    * New method :py:meth:`botogram.Chat.send_contact`
    * New method :py:meth:`botogram.Message.reply_with_contact`
 
+* Added support for venues:
+
+   * New class :py:class:`botogram.Venue`
+   * New attrinute :py:attr:`botogram.Message.venue`
+   * New method :py:meth:`botogram.User.send_venue`
+   * New method :py:meth:`botogram.Chat.send_venue`
+   * New method :py:meth:`botogram.Message.reply_with_venue`
+
 * Added new attribute :py:attr:`botogram.Message.pinned_message`
 * Added new attribute :py:attr:`botogram.Sticker.emoji`
 * Added new attribute :py:attr:`botogram.Chat.admins`
