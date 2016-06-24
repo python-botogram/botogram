@@ -80,6 +80,6 @@ cites botogram in a chat, you can do this:
        if message.sender.username is not None:
            user = message.sender.username
 
-       bot.send("@my_channel", "%s mentioned botogram!" % user)
+       bot.chat("@my_channel").send("%s mentioned botogram!" % user)
 
 .. _@botfather: https://telegram.me/botfather
