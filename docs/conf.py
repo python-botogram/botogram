@@ -23,7 +23,7 @@ copyright = "2015-2016 Pietro Albini"
 author = "Pietro Albini"
 
 version = "0.3"
-release = "0.3.dev0"
+release = "0.3.2"
 
 language = None
 
