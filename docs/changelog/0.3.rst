@@ -7,6 +7,17 @@ Changelog of botogram 0.3.x
 
 Here you can find all the changes in the botogram 0.3.x releases.
 
+.. _changelog-0.3.2:
+
+botogram 0.3.2
+==============
+
+*Bugfix release, not yet released.*
+
+* Fix inability to send messages to channels (`issue 69`_)
+
+.. _issue 69: https://github.com/pietroalbini/botogram/issues/69
+
 .. _changelog-0.3.1:
 
 botogram 0.3.1

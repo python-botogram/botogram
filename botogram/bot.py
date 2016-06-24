@@ -278,5 +278,5 @@ def channel(name, api_key):
     """Get a representation of a channel"""
     conn = api.TelegramAPI(api_key)
 
-    obj = objects.Chat({"id": 0, "type": "channel", "username": name}, conn)
+    obj = conn.call("getChat", {"chat_id": name}, expect=objects.Chat)
     return obj

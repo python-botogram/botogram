@@ -45,14 +45,7 @@ class ChatMixin:
         if hasattr(reply_to, "message_id"):
             reply_to = reply_to.message_id
 
-        # Get the correct chat_id
-        # There is an hasattr because User objects doesn't have any type
-        if hasattr(self, "type"):
-            chat_id = self.username if self.type == "channel" else self.id
-        else:
-            chat_id = self.id
-
-        args = {"chat_id": chat_id}
+        args = {"chat_id": self.id}
         if reply_to is not None:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
