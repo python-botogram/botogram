@@ -12,7 +12,7 @@ Here you can find all the changes in the botogram 0.3.x releases.
 botogram 0.3.2
 ==============
 
-*Bugfix release, not yet released.*
+*Bugfix release, released on June 24th, 2016.*
 
 * Fix inability to send messages to channels (`issue 69`_)
 
