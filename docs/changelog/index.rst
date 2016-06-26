@@ -12,6 +12,7 @@ Here you can see what changed in every botogram release.
 .. toctree::
    :maxdepth: 2
 
+   0.4
    0.3
    0.2
    0.1

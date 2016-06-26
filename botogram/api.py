@@ -6,6 +6,8 @@
     Released under the MIT license
 """
 
+import os
+
 import requests
 
 
@@ -76,10 +78,23 @@ class TelegramAPI:
         self._api_key = api_key
         self._endpoint = endpoint
 
+        self._session_cache = None
+        self._session_pid = -1
+
+    def _session(self):
+        """Get the current requests session"""
+        # Ensure a new session is created if the PID changes. This is because
+        # sessions behaves badly if you use them after fork()
+        if self._session_pid != os.getpid() or self._session_cache is None:
+            self._session_cache = requests.Session()
+            self._session_pid = os.getpid()
+
+        return self._session_cache
+
     def call(self, method, params=None, files=None, expect=None):
         """Call a method of the API"""
         url = self._endpoint + "bot%s/%s" % (self._api_key, method)
-        response = requests.get(url, params=params, files=files)
+        response = self._session().get(url, params=params, files=files)
         content = response.json()
 
         if not content["ok"]:
