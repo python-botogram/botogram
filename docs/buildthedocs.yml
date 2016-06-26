@@ -13,7 +13,7 @@ versions:
     source:
       provider: git
       url: .
-      checkout: v0.3.2
+      checkout: release/0.3
     directory: docs
     title: botogram 0.3
     notice: alpha
@@ -23,7 +23,7 @@ versions:
     source:
       provider: git
       url: .
-      checkout: v0.2.1
+      checkout: release/0.2
     directory: docs
     title: botogram 0.2
     notice: alpha
