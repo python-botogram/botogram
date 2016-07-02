@@ -7,6 +7,17 @@ Changelog of botogram 0.2.x
 
 Here you can find all the changes in the botogram 0.2.x releases.
 
+.. _changelog-0.2.2:
+
+botogram 0.2.2
+==============
+
+*Bugfix release, released on July 2nd, 2016*
+
+* Fix botogram crashing if someone edits a message (`issue 70`_)
+
+.. _issue 70: https://github.com/pietroalbini/botogram/issues/70
+
 .. _changelog-0.2.1:
 
 botogram 0.2.1
