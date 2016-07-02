@@ -14,7 +14,7 @@ Here you can see what changed in every botogram release.
 botogram 0.2.2
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on Julym 2nd, 2016*
 
 * Fix botogram crashing if someone edits a message (`issue 70`_)
 
