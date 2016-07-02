@@ -201,6 +201,11 @@ class UpdaterProcess(BaseProcess):
             return
 
         for update in updates:
+            # botogram 0.2.x doesn't support anything but messages, ignore the
+            # other things -- Fix issue GH-70
+            if update.message is None:
+                continue
+
             self.last_id = update.update_id
 
             if not self.backlog_processed:

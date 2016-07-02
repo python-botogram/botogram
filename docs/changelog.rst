@@ -9,6 +9,17 @@ botogram changelog
 
 Here you can see what changed in every botogram release.
 
+.. _changelog-0.2.2:
+
+botogram 0.2.2
+==============
+
+*Bugfix release, not yet released*
+
+* Fix botogram crashing if someone edits a message (`issue 70`_)
+
+.. _issue 70: https://github.com/pietroalbini/botogram/issues/70
+
 .. _changelog-0.2.1:
 
 botogram 0.2.1
