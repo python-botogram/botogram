@@ -377,6 +377,17 @@ components.
              for chat_id in BROADCAST_TO:
                  bot.chat(chat_id).send(to_send)
 
+      If your bot can't access the chat, an exception will be raised. Check out
+      the documentation about :ref:`unavailable chats <unavailable-chats>` to
+      learn more about that.
+
+      .. versionadded:: 0.3
+
+      .. versionchanged:: 0.3.3
+
+         If your bot can't access the chat, a ``ChatUnavailableError`` will be
+         raised.
+
    .. py:method:: send(chat, message[, preview=True, reply_to=None, syntax=None, extra=None, notify=True])
 
       This method sends a message to a specific chat. The chat must be
