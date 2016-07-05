@@ -104,18 +104,47 @@ class TelegramAPI:
             # Special handling for unavailable chats
             if method in SEND_TO_CHAT_METHODS:
                 reason = None
+
+                # This happens when the bot tries to send messages to an user
+                # who blocked the bot
                 if status == 403 and "blocked" in message:
+                    # Error code # 403
+                    # Bot was blocked by the user
                     reason = "blocked"
-                elif status == 403 and "deleted user" in message:
+
+                # This happens when the user deleted its account
+                elif status == 403 and "deleted" in message:
+                    # Error code # 403
+                    # Forbidden: user is deleted
                     reason = "account_deleted"
+
+                # This happens, as @BotSupport says, when the Telegram API
+                # isn't able to determine why your bot can't contact an user
                 elif status == 400 and "PEER_ID_INVALID" in message:
-                    # What, this error is an identifier and not a sentence :/
+                    # Error code # 400
+                    # PEER_ID_INVALID
                     reason = "not_contacted"
+
+                # This happens when the bot can't contact the user or the user
+                # doesn't exist
                 elif status == 400 and "not found" in message:
+                    # Error code # 400
+                    # Bad Request: chat not found
                     reason = "not_found"
+
+                # This happens when the bot is kicked from the group chat it's
+                # trying to send messages to
                 elif status == 403 and "kicked" in message:
+                    # Error code # 403
+                    # Forbidden: bot was kicked from the group chat
+                    # Forbidden: bot was kicked from the supergroup chat
                     reason = "kicked"
-                elif status == 400 and "deactivated" in message:
+
+                # This happens when the ID points to a group chat, which was
+                # migrated to a supergroup chat, thus changing its ID
+                elif status == 400 and "migrated" in message:
+                    # Error code # 400
+                    # Bad Request: group chat is migrated to a supergroup chat
                     reason = "chat_moved"
 
                 if reason is not None:
