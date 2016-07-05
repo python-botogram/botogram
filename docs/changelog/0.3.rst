@@ -7,6 +7,18 @@ Changelog of botogram 0.3.x
 
 Here you can find all the changes in the botogram 0.3.x releases.
 
+.. _changelog-0.3.3:
+
+botogram 0.3.3
+==============
+
+*Bugfix release, not yet released*
+
+* Fix broken detection of unavailable chats, due to changes in the Bot API
+  (`issue 72`_)
+
+.. _issue 72: https://github.com/pietroalbini/botogram/issues/72
+
 .. _changelog-0.3.2:
 
 botogram 0.3.2
