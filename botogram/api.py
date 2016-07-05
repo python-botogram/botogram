@@ -24,6 +24,7 @@ SEND_TO_CHAT_METHODS = (
     "sendVoice",
     "sendLocation",
     "sendChatAction",
+    "getChat",
 )
 
 

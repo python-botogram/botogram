@@ -14,9 +14,12 @@ botogram 0.3.3
 
 *Bugfix release, not yet released*
 
+* Fix unavailable chats not detected when calling :py:meth:`botogram.Bot.chat`
+  (`issue 71`_)
 * Fix broken detection of unavailable chats, due to changes in the Bot API
   (`issue 72`_)
 
+.. _issue 71: https://github.com/pietroalbini/botogram/issues/71
 .. _issue 72: https://github.com/pietroalbini/botogram/issues/72
 
 .. _changelog-0.3.2:
