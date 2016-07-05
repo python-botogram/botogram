@@ -38,31 +38,45 @@ def test_unavailable_chats(api, mock_req):
     mock_req({
         "sendMessage": {"ok": True, "result": {}},
         "forwardMessage": {
-            "ok": False, "error_code": 123, "description": "test",
+            "ok": False, "error_code": 123,
+            "description": "This is a message!",
         },
         "sendPhoto": {
-            "ok": False, "error_code": 403, "description": "test",
+            "ok": False, "error_code": 403,
+            "description": "This is not the message you want!",
         },
         "sendAudio": {
-            "ok": False, "error_code": 123, "description": "blocked test",
+            "ok": False, "error_code": 123,
+            "description": "Bot was blocked by the user",
         },
         "sendDocument": {
-            "ok": False, "error_code": 403, "description": "blocked test",
+            "ok": False, "error_code": 403,
+            "description": "Bot was blocked by the user",
         },
         "sendSticker": {
-            "ok": False, "error_code": 400, "description": "chat not found",
+            "ok": False, "error_code": 400,
+            "description": "Bad request: chat not found",
         },
         "sendVideo": {
-            "ok": False, "error_code": 403, "description": "I was kicked!",
+            "ok": False, "error_code": 403,
+            "description": "Forbidden: bot was kicked from the group chat",
         },
         "sendLocation": {
-            "ok": False, "error_code": 400, "description": "PEER_ID_INVALID",
+            "ok": False, "error_code": 400,
+            "description": "PEER_ID_INVALID",
         },
         "sendVoice": {
-            "ok": False, "error_code": 403, "description": "a deleted user",
+            "ok": False, "error_code": 403,
+            "description": "Forbidden: user is deleted",
+        },
+        "sendChatAction": {
+            "ok": False, "error_code": 400,
+            "description":
+                "Bad Request: group chat is migrated to a supergroup chat",
         },
         "getMe": {
-            "ok": False, "error_code": 403, "description": "blocked test",
+            "ok": False, "error_code": 403,
+            "description": "Bot was blocked by the user",
         },
     })
 
@@ -132,7 +146,9 @@ def test_unavailable_chats_take2(api, mock_req):
     mock_req({
         "sendMessage": {"ok": True, "result": {}},
         "forwardMessage": {
-            "ok": False, "error_code": 400, "description": "chat deactivated",
+            "ok": False, "error_code": 400,
+            "description":
+                "Bad Request: group chat is migrated to a supergroup chat",
         },
     })
 

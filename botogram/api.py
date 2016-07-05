@@ -91,7 +91,7 @@ class TelegramAPI:
                 reason = None
                 if status == 403 and "blocked" in message:
                     reason = "blocked"
-                elif status == 403 and "deleted user" in message:
+                elif status == 403 and "deleted" in message:
                     reason = "account_deleted"
                 elif status == 400 and "PEER_ID_INVALID" in message:
                     # What, this error is an identifier and not a sentence :/
@@ -100,7 +100,7 @@ class TelegramAPI:
                     reason = "not_found"
                 elif status == 403 and "kicked" in message:
                     reason = "kicked"
-                elif status == 400 and "deactivated" in message:
+                elif status == 400 and "migrated" in message:
                     reason = "chat_moved"
 
                 if reason is not None:
