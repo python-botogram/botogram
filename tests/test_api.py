@@ -63,7 +63,7 @@ def test_unavailable_chats(api, mock_req):
         },
         "sendLocation": {
             "ok": False, "error_code": 400,
-            "description": "PEER_ID_INVALID",
+            "description": "Bad request: PEER_ID_INVALID",
         },
         "sendVoice": {
             "ok": False, "error_code": 403,

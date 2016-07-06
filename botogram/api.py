@@ -108,7 +108,7 @@ class TelegramAPI:
                 # isn't able to determine why your bot can't contact an user
                 elif status == 400 and "PEER_ID_INVALID" in message:
                     # Error code # 400
-                    # PEER_ID_INVALID
+                    # Bad request: PEER_ID_INVALID
                     reason = "not_found"
 
                 # This happens when the bot can't contact the user or the user
