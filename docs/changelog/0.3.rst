@@ -12,7 +12,7 @@ Here you can find all the changes in the botogram 0.3.x releases.
 botogram 0.3.3
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on July 6th, 2016*
 
 * Fix unavailable chats not detected when calling :py:meth:`botogram.Bot.chat`
   (`issue 71`_)
