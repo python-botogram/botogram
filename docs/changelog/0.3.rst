@@ -18,9 +18,12 @@ botogram 0.3.3
   (`issue 71`_)
 * Fix broken detection of unavailable chats, due to changes in the Bot API
   (`issue 72`_)
+* Discontinue the unavailable chat reason **not_contacted** since it's not
+  possible to detect it anymore (`issue 73`_)
 
 .. _issue 71: https://github.com/pietroalbini/botogram/issues/71
 .. _issue 72: https://github.com/pietroalbini/botogram/issues/72
+.. _issue 73: https://github.com/pietroalbini/botogram/issues/73
 
 .. _changelog-0.3.2:
 

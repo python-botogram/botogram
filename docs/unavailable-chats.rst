@@ -30,9 +30,6 @@ Here there is a list of the current reasons why a chat isn't available:
 * **account_deleted**: the user deleted his account, so you won't be able to
   send messages to him anymore.
 
-* **not_contacted**: the user hasn't contacted your bot directly yet. If the
-  user is in a group chat try to tell him to start your bot!
-
 * **chat_moved**: the chat was moved to a new ID. This currently happens if the
   group was converted into a supergroup.
 

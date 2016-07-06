@@ -119,12 +119,13 @@ def test_unavailable_chats(api, mock_req):
     assert e.value.chat_id == 123
     assert e.value.reason == "kicked"
 
-    # Test a failed request with matching error code and description to an user
-    # which hasn't contacted your bot yet
+    # Test a failed request with matching error code and description, and in
+    # which Telegram failed to determine the reason why the user can't be
+    # contacted
     with pytest.raises(botogram.api.ChatUnavailableError) as e:
         api.call("sendLocation", {"chat_id": 123})
     assert e.value.chat_id == 123
-    assert e.value.reason == "not_contacted"
+    assert e.value.reason == "not_found"
 
     # Test a failed request with matching error code and description to an user
     # which deleted its account
