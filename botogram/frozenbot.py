@@ -204,7 +204,7 @@ class FrozenBot:
             def lazy_shared():
                 return self.shared.bucket("%s:%s" % (self._bot_id, component))
 
-            available.setdefault("shared", utils.CallLazyArgument(lazy_shared))
+            available.setdefault("bucket", utils.CallLazyArgument(lazy_shared))
 
         return utils.call(func, **available)
 

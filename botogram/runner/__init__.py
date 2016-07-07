@@ -108,12 +108,6 @@ class BotogramRunner:
         ipc_process.start()
         self._ipc_process = ipc_process
 
-        # Use the MultiprocessingDriver for all the shared memories
-        for bot in self._bots.values():
-            bot.shared.switch_driver(
-                shared.BotogramRunnerDriver(self.ipc_port, self.ipc_auth_key)
-            )
-
         # And boot the client
         # This will wait until the IPC server is started
         ipc_info = (self.ipc_port, self.ipc_auth_key)
@@ -123,6 +117,12 @@ class BotogramRunner:
                 break
             except ConnectionRefusedError:
                 time.sleep(0.1)
+
+        # Use the MultiprocessingDriver for all the shared memories
+        for bot in self._bots.values():
+            bot.shared.switch_driver(
+                shared.BotogramRunnerDriver(self.ipc_port, self.ipc_auth_key)
+            )
 
         # Boot up all the worker processes
         for i in range(self._workers_count):

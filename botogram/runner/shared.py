@@ -6,17 +6,37 @@
     Released under the MIT license
 """
 
+import collections
+import functools
+
 from . import ipc
 from ..shared import drivers
+
+
+class BotogramRunnerSharedLock(drivers.SharedObject):
+
+    def _prepare(self):
+        self.acquired = False
+        self.queue = collections.deque()
+
+    def restore(self, value):
+        # Restore lock to a clean state
+        self._prepare()
+
+    def export(self):
+        return self.acquired
 
 
 class SharedStateBackend:
 
     def __init__(self):
-        # The backend for the botogram runner driver simply forwards the
-        # requests to an instance of a LocalDriver; this removes most of the
-        # code duplication between the two drivers
+        # The backend for the botogram runner driver simply forwards most of
+        # the requests to an instance of a LocalDriver; this removes most of
+        # the code duplication between the two drivers
         self._driver = drivers.LocalDriver()
+
+        # Use a custom representation for shared locks
+        self._driver._types_mapping["lock"] = BotogramRunnerSharedLock
 
     def __getattr__(self, name):
         # Don't forward private methods
@@ -25,7 +45,63 @@ class SharedStateBackend:
 
         return lambda args, reply: reply(getattr(self._driver, name)(*args))
 
-    # TODO: implement custom supports for locks since they currently don't work
+    def _ensure_object(type):
+        """Ensure the object exists and it's of that type"""
+        def decorator(f):
+            @functools.wraps(f)
+            def wrapper(self, args, reply):
+                object_id = args[0]
+
+                if object_id not in self._driver._objects:
+                    raise ValueError("Object doesn't exist: %s" % object_id)
+
+                obj = self._driver._objects[object_id]
+                if obj.type != type:
+                    raise TypeError("Operation not supported on the %s type" %
+                                    obj.type)
+
+                return f(self, reply, obj)
+            return wrapper
+        return decorator
+
+    ############################
+    #   Locks implementation   #
+    ############################
+
+    # Locks are implemented from scratch because we can't actually lock the IPC
+    # process...
+
+    @_ensure_object("lock")
+    def lock_acquire(self, reply, obj):
+        # If the object wasn't acquired just acquire it
+        if not obj.acquired:
+            print("Lock not acquired, releasing...")
+            obj.acquired = True
+            reply(True)
+        else:
+            print("Lock acquired, queueing...")
+            # Schedule the reply for later
+            # This blocks the caller, creating a lock-like situation
+            obj.queue.appendleft(reply)
+
+    @_ensure_object("lock")
+    def lock_release(self, reply, obj):
+        # If the object wasn
+        if obj.acquired:
+            # If there were some other processes in the queue for this lock
+            # unlock the first of them, else just release the lock
+            if obj.queue:
+                new_owner_reply = obj.queue.pop()
+                new_owner_reply(True)
+            else:
+                obj.acquired = False
+
+        reply(True)
+        return
+
+    @_ensure_object("lock")
+    def lock_status(self, reply, obj):
+        reply(obj.acquired)
 
 
 class BotogramRunnerDriver:

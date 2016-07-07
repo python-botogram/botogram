@@ -101,7 +101,7 @@ class SharedStateManager:
         self.register_object_type("lock", proxies.LockProxy)
 
         self._buckets = {}
-        self._main_bucket = SharedBucket("__main__", self, driver)
+        self._main_bucket = SharedBucket("__main__", self, self._driver)
         self._bucket_names = self._main_bucket.object("dict", "__buckets__")
 
     def bucket(self, name):
