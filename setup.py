@@ -52,6 +52,7 @@ setuptools.setup(
         "botogram",
         "botogram.objects",
         "botogram.runner",
+        "botogram.utils",
     ],
 
     install_requires = [
