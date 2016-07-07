@@ -236,7 +236,14 @@ def _read_from_socket(conn, length):
         if chunk > READ_MAX_CHUNK:
             chunk = READ_MAX_CHUNK
 
-        resp = conn.recv(chunk)
+        # In Python 3.4, when the process received a signal every system call
+        # is interrupted, so it's better to retry sending the data instead of
+        # crashing when someone signals the process
+        try:
+            resp = conn.recv(chunk)
+        except InterruptedError:
+            continue
+
         if len(resp) == 0:
             raise EOFError("Broken socket!")
 
@@ -250,7 +257,14 @@ def _write_on_socket(conn, data):
     """Write a chunk of data on a connection"""
     remaining = len(data)
     while remaining > 0:
-        sent = conn.send(data[len(data) - remaining:])
+        # In Python 3.4, when the process received a signal every system call
+        # is interrupted, so it's better to retry sending the data instead of
+        # crashing when someone signals the process
+        try:
+            sent = conn.send(data[len(data) - remaining:])
+        except InterruptedError:
+            continue
+
         if sent == 0:
             raise EOFError("Broken socket!")
 
