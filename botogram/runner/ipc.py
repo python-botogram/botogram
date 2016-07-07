@@ -236,7 +236,7 @@ def _read_from_socket(conn, length):
         if chunk > READ_MAX_CHUNK:
             chunk = READ_MAX_CHUNK
 
-        resp = conn.recv(4)
+        resp = conn.recv(chunk)
         if len(resp) == 0:
             raise EOFError("Broken socket!")
 
