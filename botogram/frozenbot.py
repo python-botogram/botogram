@@ -276,12 +276,7 @@ for _proxy in _proxied_sends:
     @utils.deprecated("Bot.%s()" % _proxy.__name__, "1.0",
                       "Use Bot.chat(id).%s() instead." % _proxy.__name__)
     def _wrapper(self, chat, *args, __proxy=_proxy, **kwargs):
-        # String chats are channels
-        if type(chat) == str:
-            obj = objects.Chat({"id": 0, "type": "channel", "username": chat},
-                               self.api)
-        else:
-            obj = objects.Chat({"id": chat, "type": ""}, self.api)
+        obj = self.chat(chat)
 
         return __proxy(obj, *args, **kwargs)
 
