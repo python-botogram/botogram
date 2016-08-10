@@ -12,7 +12,7 @@ Here you can find all the changes in the botogram 0.3.x releases.
 botogram 0.3.4
 ==============
 
-*Bugfix release, not yet released*
+*Bugfix release, released on August 10th, 2016*
 
 * Fix inability to send messages to supergroups by username, using the
   deprecated :py:meth:`botogram.Bot.send` method (`issue 74`_)
