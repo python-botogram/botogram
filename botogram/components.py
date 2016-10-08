@@ -97,7 +97,7 @@ class Component:
         })
         self.__processors.append(hook)
 
-    def add_command(self, name, func, hidden=False, _from_main=False):
+    def add_command(self, name, func, hidden=False, order=0, _from_main=False):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
@@ -113,6 +113,7 @@ class Component:
         hook = hooks.CommandHook(func, self, {
             "name": name,
             "hidden": hidden,
+            "order": order,
         })
         command = commands.Command(hook)
         self.__commands[name] = command

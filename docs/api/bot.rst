@@ -188,7 +188,7 @@ components.
 
       .. versionadded:: 0.3
 
-   .. py:decoratormethod:: command(name, [hidden=False])
+   .. py:decoratormethod:: command(name, [hidden=False, order=0])
 
       This decorator register a new command, and calls the decorated function
       when someone issues the command in a chat. The command will also be added
@@ -208,6 +208,11 @@ components.
 
       :param str name: The name of the command.
       :param bool hidden: If the command should be hidden from ``/help``
+      :param int order: The order in which the commands are shown in ``/help``
+
+      .. versionchanged:: 0.4
+
+         Added the ``order`` argument.
 
       .. versionchanged:: 0.3
 

@@ -174,6 +174,9 @@ class CommandHook(Hook):
         self._hidden = False
         if "hidden" in args:
             self._hidden = args["hidden"]
+        self._order = 0
+        if "order" in args:
+            self._order = args["order"]
 
     def _call(self, bot, update):
         message = update.message
