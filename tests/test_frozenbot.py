@@ -52,7 +52,7 @@ def test_calling_functions(frozenbot):
 
 def test_available_commands(bot):
     # Create a bunch of dummy commands
-    @bot.command("test1")
+    @bot.command("test1", order=10)
     def test1():
         pass
 
@@ -64,31 +64,18 @@ def test_available_commands(bot):
     def test3():
         pass
 
-    @bot.command("test4", order=-10)
-    def test4():
-        pass
-
     assert {cmd.name for cmd in bot.available_commands()} == {
         "help",
-        "test1",
         "test2",
-        "test4",
+        "test1",
     }
 
     assert {cmd.name for cmd in bot.available_commands(all=True)} == {
         "help",
         "start",
-        "test1",
         "test2",
+        "test1",
         "test3",
-        "test4",
-    }
-
-    assert {cmd.name for cmd in bot.sorted_available_commands()} == {
-        "test4",
-        "help",
-        "test1",
-        "test2",
     }
 
 
