@@ -58,7 +58,9 @@ class DefaultComponent(components.Component):
                                  name=args[0]),
                            bot._("Use /help to get a list of the commands.")]
         else:
-            message = self._help_generic_message(bot, commands)
+            sorted_commands = {cmd.name: cmd for cmd in
+                               bot.sorted_available_commands()}
+            message = self._help_generic_message(bot, sorted_commands)
 
         chat.send("\n".join(message), syntax="html")
 
@@ -78,8 +80,7 @@ class DefaultComponent(components.Component):
         # Show help on commands
         if len(commands) > 0:
             message.append(bot._("<b>This bot supports those commands:</b>"))
-            s = sorted(commands.values(), key=lambda command: command.name)
-            for command in sorted(s, key=lambda command: command.order):
+            for command in commands.values():
                 summary = escape_html(commands[command.name].summary)
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")

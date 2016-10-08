@@ -232,6 +232,11 @@ class FrozenBot:
             if all or not is_hidden:
                 yield command
 
+    def sorted_available_commands(self, all=False):
+        commands = self.available_commands(all)
+        s = sorted(commands, key=lambda command: command.name)
+        return sorted(s, key=lambda command: command.order)
+
     def _call(self, func, component=None, **available):
         """Wrapper for calling user-provided functions"""
         # Set some default available arguments

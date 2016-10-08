@@ -64,10 +64,15 @@ def test_available_commands(bot):
     def test3():
         pass
 
+    @bot.command("test4", order=-10)
+    def test3():
+        pass
+
     assert {cmd.name for cmd in bot.available_commands()} == {
         "help",
         "test1",
         "test2",
+        "test4",
     }
 
     assert {cmd.name for cmd in bot.available_commands(all=True)} == {
@@ -76,6 +81,14 @@ def test_available_commands(bot):
         "test1",
         "test2",
         "test3",
+        "test4",
+    }
+
+    assert {cmd.name for cmd in bot.sorted_available_commands()} == {
+        "test4",
+        "help",
+        "test1",
+        "test2",
     }
 
 
