@@ -65,7 +65,7 @@ def test_available_commands(bot):
         pass
 
     @bot.command("test4", order=-10)
-    def test3():
+    def test4():
         pass
 
     assert {cmd.name for cmd in bot.available_commands()} == {
