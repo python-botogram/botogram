@@ -145,7 +145,8 @@ class Bot(frozenbot.FrozenBot):
     def command(self, name, hidden=False, order=0):
         """Register a new command"""
         def __(func):
-            self._main_component.add_command(name, func, hidden, order=order, _from_main=True)
+            self._main_component.add_command(name, func, hidden,
+                                             order=order, _from_main=True)
             return func
         return __
 

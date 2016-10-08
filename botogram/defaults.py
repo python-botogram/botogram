@@ -78,11 +78,13 @@ class DefaultComponent(components.Component):
         # Show help on commands
         if len(commands) > 0:
             message.append(bot._("<b>This bot supports those commands:</b>"))
-            for command in sorted(commands.values(), key=lambda command: command.order):
+            for command in sorted(commands.values(),
+                                  key=lambda command: command.order):
                 summary = escape_html(commands[command.name].summary)
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
-                message.append("/%s <code>-</code> %s" % (command.name, summary))
+                message.append("/%s <code>-</code> %s" %
+                               (command.name, summary))
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
