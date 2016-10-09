@@ -16,6 +16,14 @@ botogram 0.4
 
 Release description not yet written.
 
+New features
+------------
+
+* Added ability to reorder commands in ``/help``.
+
+  * New argument ``order`` in :py:meth:`botogram.Bot.command`
+  * New argument ``order`` in :py:meth:`botogram.Component.add_command`
+
 Performance improvements
 ------------------------
 
