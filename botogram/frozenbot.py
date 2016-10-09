@@ -226,8 +226,7 @@ class FrozenBot:
 
     def available_commands(self, all=False):
         """Get a list of the commands this bot implements"""
-        s = sorted({cmd for cmd in self._commands.values()},
-                   key=lambda command: command.name)
+        s = sorted(self._commands.values(), key=lambda command: command.name)
         c = sorted(s, key=lambda command: command.order)
 
         for command in c:

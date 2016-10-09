@@ -64,19 +64,19 @@ def test_available_commands(bot):
     def test3():
         pass
 
-    assert {cmd.name for cmd in bot.available_commands()} == {
+    assert [cmd.name for cmd in bot.available_commands()] == [
         "help",
         "test2",
         "test1",
-    }
+    ]
 
-    assert {cmd.name for cmd in bot.available_commands(all=True)} == {
+    assert [cmd.name for cmd in bot.available_commands(all=True)] == [
         "help",
         "start",
         "test2",
-        "test1",
         "test3",
-    }
+        "test1",
+    ]
 
 
 def test_pickle_frozenbot(frozenbot):
