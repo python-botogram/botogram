@@ -14,6 +14,7 @@ class Command:
         # Get some parameters from the hook
         self.name = hook._name
         self.hidden = hook._hidden
+        self.order = hook._order
 
         self._hook = hook
         self._component_id = hook.component_id

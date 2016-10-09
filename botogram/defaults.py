@@ -45,12 +45,12 @@ class DefaultComponent(components.Component):
     # /help command
 
     def help_command(self, bot, chat, args):
-        commands = {cmd.name: cmd for cmd in bot.available_commands()}
+        commands = list(bot.available_commands())
         if len(args) > 1:
             message = [bot._("<b>Error!</b> The <code>/help</code> command "
                              "allows up to one argument.")]
         elif len(args) == 1:
-            if args[0] in commands:
+            if any(cmd.name == args[0] for cmd in commands):
                 message = self._help_command_message(bot, commands, args[0])
             else:
                 message = [bot._("<b>Unknown command:</b> "
@@ -78,11 +78,12 @@ class DefaultComponent(components.Component):
         # Show help on commands
         if len(commands) > 0:
             message.append(bot._("<b>This bot supports those commands:</b>"))
-            for name in sorted(commands.keys()):
-                summary = escape_html(commands[name].summary)
+            for command in commands:
+                summary = escape_html(command.summary)
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
-                message.append("/%s <code>-</code> %s" % (name, summary))
+                message.append("/%s <code>-</code> %s" %
+                               (command.name, summary))
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
@@ -107,7 +108,8 @@ class DefaultComponent(components.Component):
         """Generate a command's help message"""
         message = []
 
-        docstring = escape_html(commands[command].docstring)
+        docstring = escape_html(next((cmd for cmd in commands if
+                                      cmd.name == command), None).docstring)
         if docstring is None:
             docstring = "<i>%s</i>" % bot._("No description available.")
         message.append("/%s <code>-</code> %s" % (command, docstring))

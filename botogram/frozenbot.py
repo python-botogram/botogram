@@ -226,7 +226,10 @@ class FrozenBot:
 
     def available_commands(self, all=False):
         """Get a list of the commands this bot implements"""
-        for command in self._commands.values():
+        s = sorted(self._commands.values(), key=lambda command: command.name)
+        c = sorted(s, key=lambda command: command.order)
+
+        for command in c:
             # Remove `or command.name in self.hide_commands` in botogram 1.0
             is_hidden = command.hidden or command.name in self._hide_commands
             if all or not is_hidden:

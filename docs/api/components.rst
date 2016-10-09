@@ -158,7 +158,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       .. versionadded:: 0.3
 
-   .. py:method:: add_command(name, func, [hidden=False])
+   .. py:method:: add_command(name, func, [hidden=False, order=0])
 
       This function registers a new command, and calls the provided function
       when someone issues the command in a chat. The command will also be added
@@ -185,6 +185,11 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param str name: The name of the command.
       :param callable func: The function you want to use.
       :param bool hidden: If the command should be hidden from ``/help``
+      :param int order: The order in which the commands are shown in ``/help``
+
+      .. versionchanged:: 0.4
+
+         Added the ``order`` argument.
 
       .. versionchanged:: 0.3
 
