@@ -38,6 +38,8 @@ class Bot(frozenbot.FrozenBot):
         self.before_help = []
         self.after_help = []
 
+        self.link_preview_in_help = True
+
         self.process_backlog = False
 
         self._lang = ""
@@ -218,8 +220,9 @@ class Bot(frozenbot.FrozenBot):
 
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self._hide_commands, self.before_help,
-                                   self.after_help, self.process_backlog,
-                                   self.lang, self.itself, self._commands_re,
+                                   self.after_help, self.link_preview_in_help,
+                                   self.process_backlog, self.lang,
+                                   self.itself, self._commands_re,
                                    self._commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory,

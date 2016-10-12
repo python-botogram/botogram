@@ -60,7 +60,8 @@ class DefaultComponent(components.Component):
         else:
             message = self._help_generic_message(bot, commands)
 
-        chat.send("\n".join(message), syntax="html")
+        chat.send("\n".join(message), syntax="html",
+                  preview=bot.link_preview_in_help)
 
     def _help_generic_message(self, bot, commands):
         """Generate an help message"""

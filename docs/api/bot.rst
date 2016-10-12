@@ -54,6 +54,10 @@ components.
       A list of strings to be inserted in the ``/help`` messages. These ones
       will be inserted after the commands list.
 
+   .. py:attribute:: link_preview_in_help
+
+      Disable link preview in the ``/help`` messages.
+
    .. py:attribute:: process_backlog
 
       A boolean representing if the backlog should be processed. Backlog is
