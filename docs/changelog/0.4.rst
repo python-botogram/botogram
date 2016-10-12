@@ -19,6 +19,10 @@ Release description not yet written.
 New features
 ------------
 
+* Added ability to disable the link preview in ``/help``.
+
+  * New parameter ``link_preview_in_help`` in :py:class:`botogram.Bot`
+
 * Added ability to reorder commands in ``/help``.
 
   * New argument ``order`` in :py:meth:`botogram.Bot.command`
