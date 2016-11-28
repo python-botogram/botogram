@@ -71,6 +71,10 @@ class Bot(frozenbot.FrozenBot):
         self.register_update_processor("message", messages.process_message)
         self.register_update_processor("edited_message",
                                        messages.process_edited_message)
+        self.register_update_processor("channel_post",
+                                       messages.process_channel_post)
+        self.register_update_processor("channel_post",
+                                       messages.process_edited_channel_post)
 
         self._bot_id = str(uuid.uuid4())
 
