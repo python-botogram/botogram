@@ -73,7 +73,7 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_edited_message)
         self.register_update_processor("channel_post",
                                        messages.process_channel_post)
-        self.register_update_processor("channel_post",
+        self.register_update_processor("edited_channel_post",
                                        messages.process_edited_channel_post)
 
         self._bot_id = str(uuid.uuid4())
@@ -146,6 +146,16 @@ class Bot(frozenbot.FrozenBot):
     def message_edited(self, func):
         """Add a message edited hook"""
         self._main_component.add_message_edited_hook(func)
+        return func
+
+    def channel_post(self, func):
+        """Add a channel post hook"""
+        self._main_component.add_channel_post_hook(func)
+        return func
+
+    def edited_channel_post(self, func):
+        """Add a edited channel post hook"""
+        self._main_component.add_edited_channel_post_hook(func)
         return func
 
     def command(self, name, hidden=False, order=0):

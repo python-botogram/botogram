@@ -32,6 +32,8 @@ class Component:
         self.__timers = []
         self.__chat_unavailable_hooks = []
         self.__messages_edited_hooks = []
+        self.__channel_post_hooks = []
+        self.__edited_channel_post_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -158,6 +160,22 @@ class Component:
         hook = hooks.MessageEditedHook(func, self)
         self.__messages_edited_hooks.append(hook)
 
+    def add_channel_post_hook(self, func):
+        """Add a channel post hook"""
+        if not callable(func):
+            raise ValueError("A channel post hook must be callable")
+
+        hook = hooks.ChannelPostHook(func, self)
+        self.__channel_post_hooks.append(hook)
+
+    def add_edited_channel_post_hook(self, func):
+        """Add a channel post hook"""
+        if not callable(func):
+            raise ValueError("A edited channel post hook must be callable")
+
+        hook = hooks.EditedChannelPostHook(func, self)
+        self.__edited_channel_post_hooks.append(hook)
+
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
@@ -181,6 +199,8 @@ class Component:
             "tasks": [self.__timers],
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
             "messages_edited": [self.__messages_edited_hooks],
+            "channel_post": [self.__channel_post_hooks],
+            "edited_channel_post": [self.__edited_channel_post_hooks]
         }
 
     def _get_commands(self):
