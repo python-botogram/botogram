@@ -38,6 +38,7 @@ def process_edited_message(bot, chains, update):
     bot.logger.debug("No hook actually processed the #%s update." %
                      update.update_id)
 
+
 def process_channel_post(bot, chains, update):
     """Process a channel post"""
     for hook in chains["channel_post"]:
@@ -52,12 +53,13 @@ def process_channel_post(bot, chains, update):
 
     bot.logger.debug("No hook actually processed the #%s update." %
                      update.update_id)
-    
+
+
 def process_edited_channel_post(bot, chains, update):
     """Process an edited channel post"""
     for hook in chains["edited_channel_post"]:
-        bot.logger.debug("Processing edited_channel_post in update #%s with the "
-                         "hook %s..." % (update.update_id, hook.name))
+        bot.logger.debug("Processing edited_channel_post in update #%s with"
+                         "the hook %s..." % (update.update_id, hook.name))
 
         result = hook.call(bot, update)
         if result is True:
