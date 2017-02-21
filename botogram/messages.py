@@ -55,9 +55,9 @@ def process_channel_post(bot, chains, update):
                      update.update_id)
 
 
-def process_edited_channel_post(bot, chains, update):
+def process_channel_post_edited(bot, chains, update):
     """Process an edited channel post"""
-    for hook in chains["edited_channel_post"]:
+    for hook in chains["channel_post_edited"]:
         bot.logger.debug("Processing edited channel post in update #%s with"
                          "the hook %s..." % (update.update_id, hook.name))
 
