@@ -212,6 +212,24 @@ class MessageEditedHook(Hook):
                          message=message)
 
 
+class ChannelPostHook(Hook):
+    """Underlying hook for @bot.channel_post"""
+
+    def _call(self, bot, update):
+        message = update.channel_post
+        return bot._call(self.func, self.component_id, chat=message.chat,
+                         message=message)
+
+
+class EditedChannelPostHook(Hook):
+    """Underlying hook for @bot.channel_post_edited"""
+
+    def _call(self, bot, update):
+        message = update.edited_channel_post
+        return bot._call(self.func, self.component_id, chat=message.chat,
+                         message=message)
+
+
 class TimerHook(Hook):
     """Underlying hook for a timer"""
 
