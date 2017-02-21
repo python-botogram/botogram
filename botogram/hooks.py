@@ -222,7 +222,7 @@ class ChannelPostHook(Hook):
 
 
 class EditedChannelPostHook(Hook):
-    """Underlying hook for @bot.edited_channel_post"""
+    """Underlying hook for @bot.channel_post_edited"""
 
     def _call(self, bot, update):
         message = update.edited_channel_post

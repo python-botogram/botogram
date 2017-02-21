@@ -169,7 +169,7 @@ class Component:
         self.__channel_post_hooks.append(hook)
 
     def add_edited_channel_post_hook(self, func):
-        """Add a channel post hook"""
+        """Add an edited channel post hook"""
         if not callable(func):
             raise ValueError("A edited channel post hook must be callable")
 
