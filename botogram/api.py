@@ -95,7 +95,8 @@ class TelegramAPI:
     def call(self, method, params=None, files=None, expect=None):
         """Call a method of the API"""
         url = self._endpoint + "bot%s/%s" % (self._api_key, method)
-        response = self._session().get(url, params=params, files=files, timeout=10)
+        response = self._session().get(url, params=params, files=files,
+                                       timeout=10)
         content = response.json()
 
         if not content["ok"]:
