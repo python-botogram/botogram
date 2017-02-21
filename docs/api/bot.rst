@@ -194,6 +194,51 @@ components.
 
       .. versionadded:: 0.3
 
+   .. py:decoratormethod:: channel_post
+
+      Functions decorated with this decorator will receive all the messages
+      posted to channels the bot is a member of. This allows you to act when
+      certain messages are received, as an example.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **chat**: the chat in which the channel post was originally sent
+        (instance of :py:class:`~botogram.Chat`)
+
+      * **message**: the message (instance of :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         @bot.channel_post
+         def channel_post(chat, message):
+             message.reply("I read this post!")
+
+      .. versionadded:: 0.4
+
+   .. py:decoratormethod:: channel_post_edited
+
+      Functions decorated with this decorator will receive all the messages
+      edited in channels the bot is a member of. This allows you to act when
+      certain messages are changed, as an example.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **chat**: the chat in which the channel post was originally sent
+        (instance of :py:class:`~botogram.Chat`)
+
+      * **message**: the (new) edited message (instance of
+        :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         @bot.channel_post_edited
+         def channel_post_edited(chat, message):
+             message.reply("This post is changed!")
+
+      .. versionadded:: 0.4
+
    .. py:decoratormethod:: command(name, [hidden=False, order=0])
 
       This decorator register a new command, and calls the decorated function

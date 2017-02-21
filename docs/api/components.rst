@@ -158,6 +158,64 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       .. versionadded:: 0.3
 
+   .. py:method:: add_channel_post_hook(func)
+
+      All the functions provided to this method will receive all the messages
+      posted to channels the bot is a member of. This allows you to act when
+      certain messages are received, as an example.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the provided functions:
+
+      * **chat**: the chat in which the channel post was originally sent
+        (instance of :py:class:`~botogram.Chat`)
+
+      * **message**: the message (instance of :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         class ChannelAckComponent(botogram.Component):
+             component_name = "channel-ack"
+
+             def __init__(self):
+                 self.add_channel_post_hook(self.reply)
+
+            def reply(self, chat, message):
+                message.reply("I read this post!")
+
+      :param callable func: The function you want to use.
+
+      .. versionadded:: 0.4
+
+   .. py:method:: add_channel_post_edited_hook(func)
+
+      All the functions provided to this method will receive all the messages
+      edited in channels the bot is a member of. This allows you to act when
+      certain messages are changed, as an example.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the provided functions:
+
+      * **chat**: the chat in which the channel post was originally sent
+        (instance of :py:class:`~botogram.Chat`)
+
+      * **message**: the (new) edited message (instance of :py:class:`~botogram.Message`)
+
+      .. code-block:: python
+
+         class ChannelAlertComponent(botogram.Component):
+             component_name = "channel-alert"
+
+             def __init__(self):
+                 self.add_channel_post_edited_hook(self.reply)
+
+            def reply(self, chat, message):
+                message.reply("This post is changed!")
+
+      :param callable func: The function you want to use.
+
+      .. versionadded:: 0.4
+
    .. py:method:: add_command(name, func, [hidden=False, order=0])
 
       This function registers a new command, and calls the provided function
