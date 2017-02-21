@@ -214,11 +214,11 @@ components.
         def channel_post(chat, message):
             message.reply("This post is cool")
 
-      .. versionadded:: 0.3
+      .. versionadded:: 0.4
 
-    .. py:decoratormethod:: channel_post
+    .. py:decoratormethod:: edited_channel_post
 
-      This decorator receive messages from channels, with new Telegram Bot API update
+      This decorator receive edited messages from channels, with new Telegram Bot API update
       2.3
 
       You can :ref:`request the following arguments <bot-structure-hooks-args>`
@@ -236,7 +236,7 @@ components.
         def edit_channel_post(chat, message):
             message.reply("Why you edited this post? It was so cool :(")
 
-      .. versionadded:: 0.3
+      .. versionadded:: 0.4
 
    .. py:decoratormethod:: command(name, [hidden=False, order=0])
 
