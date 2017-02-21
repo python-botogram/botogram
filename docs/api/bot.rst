@@ -216,7 +216,7 @@ components.
 
       .. versionadded:: 0.4
 
-    .. py:decoratormethod:: edited_channel_post
+    .. py:decoratormethod:: channel_post_edited
 
       This decorator receive edited messages from channels, with new Telegram Bot API update
       2.3
@@ -232,8 +232,8 @@ components.
 
       .. code-block:: python
 
-        @bot.edited_channel_post
-        def edit_channel_post(chat, message):
+        @bot.channel_post_edited
+        def channel_post_edited(chat, message):
             message.reply("Why you edited this post? It was so cool :(")
 
       .. versionadded:: 0.4
