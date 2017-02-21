@@ -39,3 +39,9 @@ Performance improvements
 ------------------------
 
 * botogram now tries to reuse existing connections to Telegram when possible
+
+Bug fixes
+---------
+
+* Fix inability to fetch updates and stop the runner after an internet
+  connection outage.
