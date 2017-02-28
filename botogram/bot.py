@@ -27,7 +27,7 @@ from . import messages
 class Bot(frozenbot.FrozenBot):
     """A botogram-made bot"""
 
-    def __init__(self, api_connection):
+    def __init__(self, api_connection, itself=None):
         self.logger = logbook.Logger('botogram bot')
 
         self.api = api_connection
@@ -81,20 +81,24 @@ class Bot(frozenbot.FrozenBot):
         self.use(defaults.DefaultComponent())
         self.use(self._main_component, only_init=True)
 
-        # Fetch the bot itself's object
-        try:
-            self.itself = self.api.call("getMe", expect=objects.User)
-        except api.APIError as e:
-            self.logger.error("Can't connect to Telegram!")
-            if e.error_code == 401:
-                self.logger.error("The API token seems to be invalid.")
-            else:
-                self.logger.error("Response from Telegram: %s" % e.description)
-            exit(1)
-        except requests.exceptions.ConnectionError:
-            self.logger.error("Can't reach Telegram servers! Are you sure "
-                              "you're connected to the internet?")
-            exit(1)
+        if itself is not None:
+            self.itself = itself
+        else:
+            # Fetch the bot itself's object
+            try:
+                self.itself = self.api.call("getMe", expect=objects.User)
+            except api.APIError as e:
+                self.logger.error("Can't connect to Telegram!")
+                if e.error_code == 401:
+                    self.logger.error("The API token seems to be invalid.")
+                else:
+                    self.logger.error("Response from Telegram: %s" %
+                                      e.description)
+                exit(1)
+            except requests.exceptions.ConnectionError:
+                self.logger.error("Can't reach Telegram servers! Are you sure "
+                                  "you're connected to the internet?")
+                exit(1)
 
         # This regex will match all commands pointed to this bot
         self._commands_re = re.compile(r'^\/([a-zA-Z0-9_]+)(@' +
@@ -285,10 +289,10 @@ class Bot(frozenbot.FrozenBot):
         self._hide_commands = value
 
 
-def create(api_key, *args, **kwargs):
+def create(api_key, itself=None, *args, **kwargs):
     """Create a new bot"""
     conn = api.TelegramAPI(api_key)
-    return Bot(conn, *args, **kwargs)
+    return Bot(conn, itself, *args, **kwargs)
 
 
 def channel(name, api_key):
