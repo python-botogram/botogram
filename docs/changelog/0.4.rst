@@ -19,6 +19,11 @@ Release description not yet written.
 New features
 ------------
 
+* Added option to manually provide the representation of the bot’s user account
+
+  * New argument ``itself`` in :py:class:`botogram.Bot`
+  * New argument ``itself`` in :py:meth:`botogram.create`
+
 * Added support for receiving messages sent to channels
 
   * New decorator :py:meth:`botogram.Bot.channel_post`

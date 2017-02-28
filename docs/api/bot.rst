@@ -11,17 +11,18 @@ botogram is a microframework aimed to help you creating bots. It's obvious it
 has something to create them! Here is the reference of all the needed
 components.
 
-.. py:function:: botogram.create(api_key)
+.. py:function:: botogram.create(api_key, [itself=None])
 
    Create a new bot. This is a shortcut of directly creating the
    :py:class:`botogram.Bot` instance, because it automatically creates the API
    connection instance. Be sure to provide a valid API key.
 
    :param str api_key: The API key you received from Telegram
+   :param botogram.User itself: The representation of the bot's user account.
    :return: The bot instance
    :rtype: botogram.Bot
 
-.. py:class:: botogram.Bot(api_connection)
+.. py:class:: botogram.Bot(api_connection, [itself=None])
 
    This class represents a single bot, and contains all of its logic. You can
    customize this class either extending it or with the decorators it provides.
@@ -31,6 +32,7 @@ components.
    :py:func:`botogram.create` utility function.
 
    :param botogram.TelegramAPI api_connection: The connection to the API
+   :param botogram.User itself: The representation of the bot's user account.
 
    .. py:attribute:: about
 
