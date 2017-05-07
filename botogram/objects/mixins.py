@@ -184,6 +184,17 @@ class ChatMixin:
 
         return self._api.call("sendContact", args, expect=_objects().Message)
 
+    @_require_api
+    def delete_message(self, message):
+        """Delete a message from chat"""
+        if hasattr(message, "message_id"):
+            message = message.message_id
+
+        return self._api.call("deleteMessage", {
+            "chat_id": self.id,
+            "message_id": message,
+        })
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -283,6 +294,14 @@ class MessageMixin:
     def reply_with_contact(self, *args, **kwargs):
         """Reply with a contact to the current message"""
         return self.chat.send_contact(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def delete(self):
+        """Delete the message"""
+        return self._api.call("deleteMessage", {
+            "chat_id": self.chat.id,
+            "message_id": self.message_id,
+        })
 
 
 class FileMixin:

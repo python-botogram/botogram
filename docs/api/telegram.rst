@@ -372,6 +372,16 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:method:: delete_message(message)
+
+      Delete the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      :param message: The message to delete (can be an ID too)
+
+      .. versionadded:: 0.4
+
 .. py:class:: botogram.Chat
 
    This class represents a Telegram chat.
@@ -1273,6 +1283,14 @@ about its business.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+
+   .. py:method:: delete()
+
+      Delete this message.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      .. versionadded:: 0.4
 
    .. py:method:: edit_caption(caption, [extra=None])
 
