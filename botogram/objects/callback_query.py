@@ -9,9 +9,10 @@
 from .base import BaseObject
 
 from .messages import User, Message
+from . import mixins
 
 
-class CallbackQuery(BaseObject):
+class CallbackQuery(BaseObject, mixins.CallbackMixin):
     """Telegram API representation of a callback query
 
     https://core.telegram.org/bots/api#callbackquery
@@ -31,3 +32,6 @@ class CallbackQuery(BaseObject):
     replace_keys = {
         "from": "sender",
     }
+
+    def __init__(self, data, api=None):
+        super().__init__(data, api)

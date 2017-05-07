@@ -297,3 +297,15 @@ class FileMixin:
         downloaded = self._api.file_content(response["result"]["file_path"])
         with open(path, 'wb') as f:
             f.write(downloaded)
+
+
+class CallbackMixin:
+    """Add some methods for callbacks"""
+
+    @_require_api
+    def notify(self, text, alert=False, cache_time=0):
+        self._api.call("answerCallbackQuery",
+                       {"callback_query_id": self.id,
+                        "text": text,
+                        "show_alert": alert,
+                        "cache_time": cache_time})
