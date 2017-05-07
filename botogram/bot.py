@@ -22,6 +22,7 @@ from . import frozenbot
 from . import shared
 from . import tasks
 from . import messages
+from . import callbacks
 
 
 class Bot(frozenbot.FrozenBot):
@@ -75,6 +76,8 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("callback_query",
+                                       callbacks.process_callback)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -165,6 +168,11 @@ class Bot(frozenbot.FrozenBot):
                                              order=order, _from_main=True)
             return func
         return __
+
+    def callback(self, func):
+        """Add a callback query hook"""
+        self._main_component.add_callback_query_hook(func)
+        return func
 
     def timer(self, interval):
         """Register a new timer"""

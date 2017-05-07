@@ -26,7 +26,7 @@ class Update(BaseObject):
         "edited_message": Message,
         "channel_post": Message,
         "edited_channel_post": Message,
-        "callback_query": CallbackQuery
+        "callback_query": CallbackQuery,
     }
     _check_equality_ = "update_id"
 

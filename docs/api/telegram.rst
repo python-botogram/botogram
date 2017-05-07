@@ -2080,34 +2080,43 @@ about its business.
 
 .. py:class:: botogram.CallbackQuery
 
-      This class represents a callback query object.
+   This class represents a callback query received by the bot.
+
    .. py:attribute:: id
 
-      Unique identifier for the query
+      The id of the callback.
 
    .. py:attribute:: sender
 
-      The :py:class:`~botogram.User` that sends the callback query
+      The :py:class:`~botogram.User` that sent the callback query.
 
    .. py:attribute:: message
 
-      :py:class:`~botogram.Message` with the callback button that originated the query.
+      The :py:class:`~botogram.Message` that was attached to the button that originated the query.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: inline_message_id
 
-      Identifier of the message sent via the bot in inline mode, that originated the query.
+      The id of the message sent via the bot in inline mode that was attached to the button that originated the query.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: chat_instance
 
-      Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent
+      The chat to which the message with the callback button was sent.
 
    .. py:attribute:: data
 
       Data associated with the callback button.
 
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: game_short_name
 
-      Short name of a Game to be returned, serves as the unique identifier for the game
+      Short name of a Game to be returned, serves as the unique identifier for the game.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
 
 .. _Telegram's Bot API: https://core.telegram.org/bots/api

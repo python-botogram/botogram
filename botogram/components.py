@@ -34,6 +34,7 @@ class Component:
         self.__messages_edited_hooks = []
         self.__channel_post_hooks = []
         self.__channel_post_edited_hooks = []
+        self.__callback_query_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -171,10 +172,18 @@ class Component:
     def add_channel_post_edited_hook(self, func):
         """Add an edited channel post hook"""
         if not callable(func):
-            raise ValueError("A edited channel post hook must be callable")
+            raise ValueError("An edited channel post hook must be callable")
 
         hook = hooks.EditedChannelPostHook(func, self)
         self.__channel_post_edited_hooks.append(hook)
+
+    def add_callback_query_hook(self, func):
+        """Add a callback query hook"""
+        if not callable(func):
+            return ValueError("A callback query hook must be callable")
+
+        hook = hooks.CallbackQueryHook(func, self)
+        self.__callback_query_hooks.append(hook)
 
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
@@ -200,7 +209,8 @@ class Component:
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
             "messages_edited": [self.__messages_edited_hooks],
             "channel_post": [self.__channel_post_hooks],
-            "channel_post_edited": [self.__channel_post_edited_hooks]
+            "channel_post_edited": [self.__channel_post_edited_hooks],
+            "callback_query": [self.__callback_query_hooks],
         }
 
     def _get_commands(self):
