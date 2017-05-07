@@ -34,6 +34,7 @@ about its business.
 * :py:class:`~botogram.ReplyKeyboardMarkup`
 * :py:class:`~botogram.ReplyKeyboardHide`
 * :py:class:`~botogram.ForceReply`
+* :py:class:`~botogram.CallbackQuery`
 
 
 .. py:class:: botogram.User
@@ -2075,6 +2076,38 @@ about its business.
            is attached to is made in reply.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+
+.. py:class:: botogram.CallbackQuery
+
+      This class represents a callback query object.
+   .. py:attribute:: id
+
+      Unique identifier for the query
+
+   .. py:attribute:: sender
+
+      The :py:class:`~botogram.User` that sends the callback query
+
+   .. py:attribute:: message
+
+      :py:class:`~botogram.Message` with the callback button that originated the query.
+
+   .. py:attribute:: inline_message_id
+
+      Identifier of the message sent via the bot in inline mode, that originated the query.
+
+   .. py:attribute:: chat_instance
+
+      Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent
+
+   .. py:attribute:: data
+
+      Data associated with the callback button.
+
+   .. py:attribute:: game_short_name
+
+      Short name of a Game to be returned, serves as the unique identifier for the game
 
 
 .. _Telegram's Bot API: https://core.telegram.org/bots/api

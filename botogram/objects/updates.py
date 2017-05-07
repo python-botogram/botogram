@@ -9,6 +9,7 @@
 from .base import BaseObject, multiple
 
 from .messages import Message
+from .callback_query import CallbackQuery
 
 
 class Update(BaseObject):
@@ -24,7 +25,8 @@ class Update(BaseObject):
         "message": Message,
         "edited_message": Message,
         "channel_post": Message,
-        "edited_channel_post": Message
+        "edited_channel_post": Message,
+        "callback_query": CallbackQuery
     }
     _check_equality_ = "update_id"
 
