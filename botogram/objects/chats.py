@@ -26,6 +26,10 @@ class User(BaseObject, mixins.ChatMixin):
     optional = {
         "last_name": str,
         "username": str,
+        "language_code": str,
+    }
+    replace_keys = {
+        "language_code": "lang",
     }
     _check_equality_ = "id"
 
