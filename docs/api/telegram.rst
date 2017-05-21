@@ -34,6 +34,8 @@ about its business.
 * :py:class:`~botogram.ReplyKeyboardMarkup`
 * :py:class:`~botogram.ReplyKeyboardHide`
 * :py:class:`~botogram.ForceReply`
+* :py:class:`~botogram.ShippingQuery`
+* :py:class:`~botogram.PreCheckoutQuery`
 
 
 .. py:class:: botogram.User
@@ -371,6 +373,28 @@ about its business.
       :rtype: ~botogram.Message
 
       .. versionadded:: 0.3
+
+   .. py:method:: send_invoice(title, description, payload, start_parameter, provider_token, currency, prices, [photo_url=None, photo_size=None, photo_width=None, photo_height=None, need_name=False, need_phone_number=False, need_email=False, need_shipping_address=False, is_flexible=False, notify=True])
+
+      Send an invoice to the user.
+
+      :param str title: Product name
+      :param str description: Product description
+      :param str payload: Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes
+      :param str provider_token: Payments provider token, obtained via Botfather
+      :param str start_parameter: Unique deep-linking parameter that can be used to generate this invoice when used as a start parameter
+      :param str currency: Three-letter ISO 4217 currency code
+      :param array of objects prices: Price breakdown, a list of components
+      :param str photo_url: URL of the product photo for the invoice
+      :param int photo_size: Photo size
+      :param int photo_width: Photo width
+      :param int photo_height: Photo height
+      :param bool need_name: Pass True, if you require the user's full name to complete the order
+      :param bool need_phone_number: Pass True, if you require the user's phone number to complete the order
+      :param bool need_email: Pass True, if you require the user's email to complete the order
+      :param bool need_shipping_address: Pass True, if you require the user's shipping address to complete the order
+      :param bool is_flexible: Pass True, if the final price depends on the shipping method
+      :param bool notify: If you want to trigger a notification on the client
 
 .. py:class:: botogram.Chat
 
@@ -1966,6 +1990,22 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: shipping_query
+
+      The :py:class:`~botogram.ShippingQuery` object
+
+      *This attribute can be None if it's not provided by Telegram*
+
+      .. versionadded:: 0.4
+
+   .. py:attribute:: pre_checkout_query
+
+      The :py:class:`~botogram.PreChekoutQuery` object
+
+      *This attribute can be None if it's not provided by Telegram*
+
+      .. versionadded:: 0.4
+
 
 .. py:class:: botogram.UserProfilePhotos
 
@@ -2076,6 +2116,93 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+
+.. py:class:: botogram.ShippingQuery
+
+   This class contains information about an incoming shipping query.
+
+   .. py:attribute:: id
+
+      Unique query identifier.
+
+   .. py:attribute:: sender
+
+      The :py:class:`~botogram.User` who sent the query.
+
+   .. py:attribute:: invoice_payload
+
+      Bot specified invoice payload.
+
+   .. py:attribute:: shipping_address
+
+      User specified shipping address.
+
+   .. py:method:: reply(shipping_options)
+
+      Accept the shipping address and reply with shipping options.
+
+      .. code-block:: python
+
+         @bot.shipping_query
+         def reply_to_shipping_query(shipping_query):
+             shipping_options = botogram.ShippingOptions()
+             shipping_options.add("Amazon Prime", {"Spedition": 2000, "Commission": 100})
+             shipping_options.add("Amazon 2 days", {"Spedition": 1000})
+             shipping_options.add("Amazon 5 days", {"Spedition": 500})
+             shipping_query.reply(shipping_options)
+
+
+   .. py:method:: decline(error_message)
+
+      Decline the shipping address with an error message.
+
+   .. versionadded:: 0.4
+
+
+.. py:class:: botogram.PreCheckoutQuery
+
+   .. py:attribute:: id
+
+      Unique query identifier.
+
+   .. py:attribute:: sender
+
+      The :py:class:`~botogram.User` who sent the query.
+
+   .. py:attribute:: currency
+
+      Three-letter ISO 4217 currency code.
+
+   .. py:attribute:: total_amount
+
+      Total price in the *smallest* units of the currency (integer, not float/double).
+
+   .. py:attribute:: invoice_payload
+
+      Bot specified invoice payload.
+
+   .. py:attribute:: shipping_option_id
+
+      Identifier of the shipping option chosen by the user.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: order_info
+
+      Order info provided by the user.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+
+   .. py:method:: accept()
+
+      Accept the pre checkout and continue the payment.
+
+   .. py:method:: decline(error_message)
+
+      Decline the pre checkout and abort the payment with an error message.
+
+   .. versionadded:: 0.4
 
 .. _Telegram's Bot API: https://core.telegram.org/bots/api
 .. _API methods: https://core.telegram.org/bots/api#available-methods

@@ -230,6 +230,21 @@ class EditedChannelPostHook(Hook):
                          message=message)
 
 
+class ShippingQueryHook(Hook):
+    """Underlying hook for @bot.shipping_query"""
+
+    def _call(self, bot, update):
+        shipping_query = update.shipping_query
+        return bot._call(self.func, self.component_id, shipping_query=shipping_query)
+
+
+class PreCheckoutQueryHook(Hook):
+    """Underlying hook for @bot.pre_checkout_query"""
+
+    def _call(self, bot, update):
+        pre_checkout_query = update.pre_checkout_query
+        return bot._call(self.func, self.component_id, pre_checkout_query=pre_checkout_query)
+
 class TimerHook(Hook):
     """Underlying hook for a timer"""
 

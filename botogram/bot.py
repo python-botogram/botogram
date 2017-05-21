@@ -22,6 +22,7 @@ from . import frozenbot
 from . import shared
 from . import tasks
 from . import messages
+from . import payments
 
 
 class Bot(frozenbot.FrozenBot):
@@ -75,6 +76,10 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("shipping_query",
+                                       payments.process_shipping_query)
+        self.register_update_processor("pre_checkout_query",
+                                       payments.process_pre_checkout_query)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -156,6 +161,16 @@ class Bot(frozenbot.FrozenBot):
     def channel_post_edited(self, func):
         """Add a edited channel post hook"""
         self._main_component.add_channel_post_edited_hook(func)
+        return func
+
+    def shipping_query(self, func):
+        """Add a shipping query hook"""
+        self._main_component.add_shipping_query_hook(func)
+        return func
+
+    def pre_checkout_query(self, func):
+        """Add a pre checkout query hook"""
+        self._main_component.add_pre_checkout_query_hook(func)
         return func
 
     def command(self, name, hidden=False, order=0):
