@@ -184,6 +184,47 @@ class ChatMixin:
 
         return self._api.call("sendContact", args, expect=_objects().Message)
 
+    @_require_api
+    def send_invoice(self,
+                     title,
+                     description,
+                     payload,
+                     start_parameter,
+                     provider_token,
+                     currency,
+                     prices,
+                     photo_url=None,
+                     photo_size=None,
+                     photo_width=None,
+                     photo_height=None,
+                     need_name=False,
+                     need_phone_number=False,
+                     need_email=False,
+                     need_shipping_address=False,
+                     is_flexible=False,
+                     notify=True):
+
+        self._api.call("sendInvoice", {
+            "chat_id": self.id,
+            "provider_token": provider_token,
+            "title": title,
+            "description": description,
+            "payload": payload,
+            "currency": currency,
+            "start_parameter": start_parameter,
+            "prices": prices._to_json(),
+            "photo_url": photo_url,
+            "photo_size": photo_size,
+            "photo_width": photo_width,
+            "photo_height": photo_height,
+            "need_name": need_name,
+            "need_phone_number": need_phone_number,
+            "need_email": need_email,
+            "need_shipping_address": need_shipping_address,
+            "is_flexible": is_flexible,
+            "disable_notification": not notify,
+        })
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -297,3 +338,45 @@ class FileMixin:
         downloaded = self._api.file_content(response["result"]["file_path"])
         with open(path, 'wb') as f:
             f.write(downloaded)
+
+
+class ShippingQueryMixin:
+    """Add some methods to shipping query"""
+
+    @_require_api
+    def reply(self, shipping_options):
+        """Reply to shipping query"""
+        self._api.call("answerShippingQuery", {
+            "shipping_query_id": self.id,
+            "ok": True,
+            "shipping_options": shipping_options._to_json()
+        })
+
+    @_require_api
+    def decline(self, error_message):
+        self._api.call("answerShippingQuery", {
+            "shipping_query_id": self.id,
+            "ok": False,
+            "error_message": error_message,
+        })
+
+
+class PreCheckoutQueryMixin:
+    """Add some methods to pre checkout query"""
+
+    @_require_api
+    def accept(self):
+        """Accept a pre checkout query"""
+        self._api.call("answerPreCheckoutQuery", {
+            "pre_checkout_query_id": self.id,
+            "ok": True
+        })
+
+    @_require_api
+    def decline(self, error_message):
+        """Decline a pre checkout query"""
+        self._api.call("answerPreCheckoutQuery", {
+            "pre_checkout_query_id": self.id,
+            "ok": False,
+            "error_message": error_message
+        })
