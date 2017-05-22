@@ -34,6 +34,8 @@ class Component:
         self.__messages_edited_hooks = []
         self.__channel_post_hooks = []
         self.__channel_post_edited_hooks = []
+        self.__shipping_query_hooks = []
+        self.__pre_checkout_query_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -176,6 +178,22 @@ class Component:
         hook = hooks.EditedChannelPostHook(func, self)
         self.__channel_post_edited_hooks.append(hook)
 
+    def add_shipping_query_hook(self, func):
+        """Add a shipping query hook"""
+        if not callable(func):
+            raise ValueError("A shipping query hook must be callable")
+
+        hook = hooks.ShippingQueryHook(func, self)
+        self.__shipping_query_hooks.append(hook)
+
+    def add_pre_checkout_query_hook(self, func):
+        """Add a pre checkout query hook"""
+        if not callable(func):
+            raise ValueError("A pre checkout query hook must be callable")
+
+        hook = hooks.PreCheckoutQueryHook(func, self)
+        self.__pre_checkout_query_hooks.append(hook)
+
     def _add_no_commands_hook(self, func):
         """Register an hook which will be executed when no commands matches"""
         if not callable(func):
@@ -200,7 +218,9 @@ class Component:
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
             "messages_edited": [self.__messages_edited_hooks],
             "channel_post": [self.__channel_post_hooks],
-            "channel_post_edited": [self.__channel_post_edited_hooks]
+            "channel_post_edited": [self.__channel_post_edited_hooks],
+            "shipping_query": [self.__shipping_query_hooks],
+            "pre_checkout_query": [self.__pre_checkout_query_hooks],
         }
 
     def _get_commands(self):
