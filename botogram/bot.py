@@ -168,7 +168,7 @@ class Bot(frozenbot.FrozenBot):
         self._main_component.add_shipping_query_hook(func)
         return func
 
-    def pre_checkout_query(self, func):
+    def pre_checkout(self, func):
         """Add a pre checkout query hook"""
         self._main_component.add_pre_checkout_query_hook(func)
         return func

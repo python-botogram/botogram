@@ -396,6 +396,8 @@ about its business.
       :param bool is_flexible: Pass True, if the final price depends on the shipping method
       :param bool notify: If you want to trigger a notification on the client
 
+      .. versionadded:: 0.4
+
 .. py:class:: botogram.Chat
 
    This class represents a Telegram chat.
@@ -926,6 +928,30 @@ about its business.
       :rtype: ~botogram.Message
 
       .. versionadded:: 0.3
+
+   .. py:method:: send_invoice(title, description, payload, start_parameter, provider_token, currency, prices, [photo_url=None, photo_size=None, photo_width=None, photo_height=None, need_name=False, need_phone_number=False, need_email=False, need_shipping_address=False, is_flexible=False, notify=True])
+
+      Send an invoice to the user.
+
+      :param str title: Product name
+      :param str description: Product description
+      :param str payload: Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes
+      :param str provider_token: Payments provider token, obtained via Botfather
+      :param str start_parameter: Unique deep-linking parameter that can be used to generate this invoice when used as a start parameter
+      :param str currency: Three-letter ISO 4217 currency code
+      :param array of objects prices: Price breakdown, a list of components
+      :param str photo_url: URL of the product photo for the invoice
+      :param int photo_size: Photo size
+      :param int photo_width: Photo width
+      :param int photo_height: Photo height
+      :param bool need_name: Pass True, if you require the user's full name to complete the order
+      :param bool need_phone_number: Pass True, if you require the user's phone number to complete the order
+      :param bool need_email: Pass True, if you require the user's email to complete the order
+      :param bool need_shipping_address: Pass True, if you require the user's shipping address to complete the order
+      :param bool is_flexible: Pass True, if the final price depends on the shipping method
+      :param bool notify: If you want to trigger a notification on the client
+
+      .. versionadded:: 0.4
 
 .. py:class:: botogram.ParsedText
 
@@ -1998,7 +2024,7 @@ about its business.
 
       .. versionadded:: 0.4
 
-   .. py:attribute:: pre_checkout_query
+   .. py:attribute:: pre_checkout
 
       The :py:class:`~botogram.PreChekoutQuery` object
 
