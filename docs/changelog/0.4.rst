@@ -35,6 +35,12 @@ New features
   * New argument ``order`` in :py:meth:`botogram.Bot.command`
   * New argument ``order`` in :py:meth:`botogram.Component.add_command`
 
+* Added ability to delete messages
+
+  * New method :py:meth:`botogram.User.delete_message`
+  * New method :py:meth:`botogram.Chat.delete_message`
+  * New method :py:meth:`botogram.Message.delete`
+
 Performance improvements
 ------------------------
 
