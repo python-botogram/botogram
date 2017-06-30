@@ -43,7 +43,7 @@ setuptools.setup(
     license = "MIT",
 
     author = "Pietro Albini",
-    author_email = "pietro@pietroalbini.io",
+    author_email = "pietro@pietroalbini.org",
 
     description = "A Python framework for Telegram bots",
     long_description = __doc__,
