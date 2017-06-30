@@ -34,6 +34,7 @@ about its business.
 * :py:class:`~botogram.ReplyKeyboardMarkup`
 * :py:class:`~botogram.ReplyKeyboardHide`
 * :py:class:`~botogram.ForceReply`
+* :py:class:`~botogram.CallbackQuery`
 
 
 .. py:class:: botogram.User
@@ -2101,6 +2102,47 @@ about its business.
          * Those mentioned by @username in the text of the message object.
          * The sender of the original message, when the message this object
            is attached to is made in reply.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+
+.. py:class:: botogram.CallbackQuery
+
+   This class represents a callback query received by the bot.
+
+   .. py:attribute:: id
+
+      The id of the callback.
+
+   .. py:attribute:: sender
+
+      The :py:class:`~botogram.User` that sent the callback query.
+
+   .. py:attribute:: message
+
+      The :py:class:`~botogram.Message` that was attached to the button that originated the query.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: inline_message_id
+
+      The id of the message sent via the bot in inline mode that was attached to the button that originated the query.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: chat_instance
+
+      The chat to which the message with the callback button was sent.
+
+   .. py:attribute:: data
+
+      Data associated with the callback button.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: game_short_name
+
+      Short name of a Game to be returned, serves as the unique identifier for the game.
 
       *This attribute can be None if it's not provided by Telegram.*
 

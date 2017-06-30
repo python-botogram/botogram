@@ -241,6 +241,15 @@ class EditedChannelPostHook(Hook):
                          message=message)
 
 
+class CallbackQueryHook(Hook):
+    """Underlying hook for @bot.callback"""
+
+    def _call(self, bot, update):
+        query = update.callback_query
+        return bot._call(self.func, self.component_id, message=query.message,
+                         user=query.sender, callback=query)
+
+
 class TimerHook(Hook):
     """Underlying hook for a timer"""
 
