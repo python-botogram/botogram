@@ -124,6 +124,10 @@ class FrozenBot:
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
 
+    def callback(self, name, hidden=False):
+        """Register a new callback"""
+        raise FrozenBotError("Can't add callbacks to a bot at runtime")
+
     def timer(self, interval):
         """Register a new timer"""
         raise FrozenBotError("Can't add timers to a bot at runtime")

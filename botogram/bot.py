@@ -25,6 +25,7 @@ import uuid
 import requests.exceptions
 
 from . import api
+from . import callbacks
 from . import objects
 from . import runner
 from . import defaults
@@ -87,6 +88,7 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("callback_query", callbacks.process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -175,6 +177,13 @@ class Bot(frozenbot.FrozenBot):
         def __(func):
             self._main_component.add_command(name, func, hidden,
                                              order=order, _from_main=True)
+            return func
+        return __
+
+    def callback(self, name):
+        """Register a new callback"""
+        def __(func):
+            self._main_component.add_callback(name, func)
             return func
         return __
 

@@ -19,6 +19,8 @@
 
 import re
 
+from .callbacks import parse_callback_data
+
 
 class Hook:
     """Base class for all the hooks"""
@@ -203,6 +205,31 @@ class CommandHook(Hook):
         args = _command_args_split_re.split(text)[1:]
         bot._call(self.func, self.component_id, chat=message.chat,
                   message=message, args=args)
+        return True
+
+
+class CallbackHook(Hook):
+    """Underlying hook for @bot.callback"""
+
+    def _after_init(self, args):
+        self._name = "%s:%s" % (self.component.component_name, args["name"])
+
+    def _call(self, bot, update):
+        if not update.callback_query:
+            return
+        q = update.callback_query
+
+        name, data = parse_callback_data(q._data)
+        print(name, self._name)
+        if name != self._name:
+            return
+
+        bot._call(
+            self.func, self.component_id, query=q, chat=q.message.chat,
+            message=q.message, data=data,
+        )
+
+        update.callback_query._maybe_send_noop()
         return True
 
 

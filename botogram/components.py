@@ -37,6 +37,7 @@ class Component:
         self = super(Component, cls).__new__(cls)
 
         self.__commands = {}
+        self.__callbacks = {}
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
@@ -132,6 +133,19 @@ class Component:
         command = commands.Command(hook)
         self.__commands[name] = command
 
+    def add_callback(self, name, func):
+        """Add a new callback"""
+        if name in self.__callbacks:
+            raise NameError("The callback %s already exists" % name)
+
+        if not callable(func):
+            raise ValueError("A callback must be callable")
+
+        hook = hooks.CallbackHook(func, self, {
+            "name": name,
+        })
+        self.__callbacks[name] = hook
+
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
@@ -212,7 +226,11 @@ class Component:
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
             "messages_edited": [self.__messages_edited_hooks],
             "channel_post": [self.__channel_post_hooks],
-            "channel_post_edited": [self.__channel_post_edited_hooks]
+            "channel_post_edited": [self.__channel_post_edited_hooks],
+            "callbacks": [[
+                self.__callbacks[name]
+                for name in sorted(self.__callbacks.keys())
+            ]],
         }
 
     def _get_commands(self):

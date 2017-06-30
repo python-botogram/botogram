@@ -18,30 +18,10 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-from .base import BaseObject, multiple
-
-from .callbacks import CallbackQuery
-from .messages import Message
+from botogram.callbacks import parse_callback_data
 
 
-class Update(BaseObject):
-    """Telegram API representation of an update
-
-    https://core.telegram.org/bots/api#update
-    """
-
-    required = {
-        "update_id": int,
-    }
-    optional = {
-        "message": Message,
-        "edited_message": Message,
-        "channel_post": Message,
-        "edited_channel_post": Message,
-        "callback_query": CallbackQuery,
-    }
-    _check_equality_ = "update_id"
-
-
-# Shortcut for the Updates type
-Updates = multiple(Update)
+def test_parse_callback_data():
+    assert parse_callback_data("test") == ("test", None)
+    assert parse_callback_data("test:something") == ("test:something", None)
+    assert parse_callback_data("test\0wow") == ("test", "wow")
