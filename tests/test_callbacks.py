@@ -18,7 +18,34 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-from botogram.callbacks import parse_callback_data
+import json
+
+from botogram.callbacks import Buttons, parse_callback_data
+
+
+def test_buttons():
+    buttons = Buttons()
+    buttons[0].url("test 1", "http://example.com")
+    buttons[0].callback("test 2", "test_callback")
+    buttons[3].callback("test 3", "another_callback", "data")
+    buttons[2].switch_inline_query("test 4")
+    buttons[2].switch_inline_query("test 5", "wow", current_chat=True)
+
+    assert buttons._serialize_attachment() == {
+        "inline_keyboard": [
+            [
+                {"text": "test 1", "url": "http://example.com"},
+                {"text": "test 2", "callback_data": "test_callback"},
+            ],
+            [
+                {"text": "test 4", "switch_inline_query": ""},
+                {"text": "test 5", "switch_inline_query_current_chat": "wow"},
+            ],
+            [
+                {"text": "test 3", "callback_data": "another_callback\0data"},
+            ],
+        ],
+    }
 
 
 def test_parse_callback_data():

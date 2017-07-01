@@ -220,7 +220,6 @@ class CallbackHook(Hook):
         q = update.callback_query
 
         name, data = parse_callback_data(q._data)
-        print(name, self._name)
         if name != self._name:
             return
 
