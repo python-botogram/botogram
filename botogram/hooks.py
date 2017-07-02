@@ -20,6 +20,7 @@
 import re
 
 from .callbacks import hashed_callback_name
+from .context import Context
 
 
 class Hook:
@@ -53,9 +54,10 @@ class Hook:
 
     def call(self, bot, update):
         """Call the hook"""
-        if self._only_texts and update.message.text is None:
-            return
-        return self._call(bot, update)
+        with Context(bot, self, update):
+            if self._only_texts and update.message.text is None:
+                return
+            return self._call(bot, update)
 
     def _call(self, bot, update):
         """*Actually* call the hook"""
@@ -217,28 +219,30 @@ class CallbackHook(Hook):
         )
 
     def call(self, bot, update, name, data):
-        if not update.callback_query:
-            return
-        q = update.callback_query
+        with Context(bot, self, update):
+            if not update.callback_query:
+                return
+            q = update.callback_query
 
-        if name != self._name:
-            return
+            if name != self._name:
+                return
 
-        bot._call(
-            self.func, self.component_id, query=q, chat=q.message.chat,
-            message=q.message, data=data,
-        )
+            bot._call(
+                self.func, self.component_id, query=q, chat=q.message.chat,
+                message=q.message, data=data,
+            )
 
-        update.callback_query._maybe_send_noop()
-        return True
+            update.callback_query._maybe_send_noop()
+            return True
 
 
 class ChatUnavailableHook(Hook):
     """Underlying hook for @bot.chat_unavailable"""
 
     def call(self, bot, chat_id, reason):
-        return bot._call(self.func, self.component_id, chat_id=chat_id,
-                         reason=reason)
+        with Context(bot, self, None):
+            return bot._call(self.func, self.component_id, chat_id=chat_id,
+                             reason=reason)
 
 
 class MessageEditedHook(Hook):
@@ -272,4 +276,5 @@ class TimerHook(Hook):
     """Underlying hook for a timer"""
 
     def call(self, bot):
-        return bot._call(self.func, self.component_id)
+        with Context(bot, self, None):
+            return bot._call(self.func, self.component_id)
