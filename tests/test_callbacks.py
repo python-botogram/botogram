@@ -22,50 +22,65 @@ import json
 
 from botogram.callbacks import Buttons, parse_callback_data, get_callback_data
 from botogram.callbacks import hashed_callback_name
+from botogram.components import Component
+from botogram.context import Context
+from botogram.hooks import Hook
 
 
-def test_buttons(bot):
-    buttons = Buttons(bot)
+def test_buttons(bot, sample_update):
+    component = Component("test")
+    hook = Hook(lambda: None, component)
+
+    buttons = Buttons()
     buttons[0].url("test 1", "http://example.com")
     buttons[0].callback("test 2", "test_callback")
     buttons[3].callback("test 3", "another_callback", "data")
     buttons[2].switch_inline_query("test 4")
     buttons[2].switch_inline_query("test 5", "wow", current_chat=True)
 
-    assert buttons._serialize_attachment() == {
-        "inline_keyboard": [
-            [
-                {"text": "test 1", "url": "http://example.com"},
-                {
-                    "text": "test 2",
-                    "callback_data": get_callback_data(bot, "test_callback"),
-                },
+    with Context(bot, hook, sample_update):
+        assert buttons._serialize_attachment() == {
+            "inline_keyboard": [
+                [
+                    {"text": "test 1", "url": "http://example.com"},
+                    {
+                        "text": "test 2",
+                        "callback_data": get_callback_data(
+                            bot, sample_update.chat(), "test:test_callback",
+                        ),
+                    },
+                ],
+                [
+                    {"text": "test 4", "switch_inline_query": ""},
+                    {
+                        "text": "test 5",
+                        "switch_inline_query_current_chat": "wow"
+                    },
+                ],
+                [
+                    {
+                        "text": "test 3",
+                        "callback_data": get_callback_data(
+                            bot, sample_update.chat(), "test:another_callback",
+                            "data",
+                        ),
+                    },
+                ],
             ],
-            [
-                {"text": "test 4", "switch_inline_query": ""},
-                {"text": "test 5", "switch_inline_query_current_chat": "wow"},
-            ],
-            [
-                {
-                    "text": "test 3",
-                    "callback_data": get_callback_data(
-                        bot, "another_callback", "data"
-                    ),
-                },
-            ],
-        ],
-    }
+        }
 
 
-def test_parse_callback_data(bot):
-    raw = get_callback_data(bot, "test_callback", "this is some data!")
-    assert parse_callback_data(bot, raw) == (
+def test_parse_callback_data(bot, sample_update):
+    c = sample_update.chat()
+
+    raw = get_callback_data(bot, c, "test_callback", "this is some data!")
+    assert parse_callback_data(bot, c, raw) == (
         hashed_callback_name("test_callback"),
         "this is some data!",
     )
 
-    raw = get_callback_data(bot, "test_callback")
-    assert parse_callback_data(bot, raw) == (
+    raw = get_callback_data(bot, c, "test_callback")
+    assert parse_callback_data(bot, c, raw) == (
         hashed_callback_name("test_callback"),
         None,
     )
