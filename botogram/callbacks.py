@@ -101,7 +101,10 @@ def parse_callback_data(bot, raw):
     if not crypto.compare(crypto.get_hmac(bot, name + data), signature):
         raise crypto.TamperedMessageError
 
-    return name, data.decode("utf-8")
+    if data:
+        return name, data.decode("utf-8")
+    else:
+        return name, None
 
 
 def get_callback_data(bot, name, data=None):

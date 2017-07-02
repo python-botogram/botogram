@@ -63,3 +63,9 @@ def test_parse_callback_data(bot):
         hashed_callback_name("test_callback"),
         "this is some data!",
     )
+
+    raw = get_callback_data(bot, "test_callback")
+    assert parse_callback_data(bot, raw) == (
+        hashed_callback_name("test_callback"),
+        None,
+    )
