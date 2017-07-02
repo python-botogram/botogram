@@ -18,30 +18,28 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# Prepare the logger
-from .utils import configure_logger
-configure_logger()
-del configure_logger
+import pytest
+
+from botogram.crypto import generate_secret_key, get_hmac, sign_data
+from botogram.crypto import TamperedMessageError, verify_signature
 
 
-# flake8: noqa
-
-from .api import APIError, ChatUnavailableError
-from .bot import Bot, create, channel
-from .frozenbot import FrozenBotError
-from .components import Component
-from .decorators import pass_bot, pass_shared, help_message_for
-from .runner import run
-from .objects import *
-from .utils import usernames_in
+def test_generate_secret_key(bot):
+    # Check if the generated key for the test bot is correct
+    key = generate_secret_key(bot)
+    assert key == b'\\\x93aA\xe8\x8d\x9aL\x8c\xfd\x81,D\xeaj\xd0'
 
 
-# This code will simulate the Windows' multiprocessing behavior if the
-# BOTOGRAM_SIMULATE_WINDOWS environment variable is set
-import os
-import multiprocessing
+def test_hmac(bot):
+    expect = b'q\x06\x9c\xc1\xfa\xd1n\xe8\xef\x17\xf6\xd7Z\xb0G\x7f'
+    assert get_hmac(bot, b'test data') == expect
 
-if "BOTOGRAM_SIMULATE_WINDOWS" in os.environ:
-    multiprocessing.set_start_method("spawn", force=True)
+    signed = sign_data(bot, b'test string')
+    assert verify_signature(bot, signed) == b'test string'
 
-del os, multiprocessing
+    signed += b'a'
+    with pytest.raises(TamperedMessageError):
+        verify_signature(bot, signed)
+
+    with pytest.raises(TamperedMessageError):
+        verify_signature(bot, b'a')

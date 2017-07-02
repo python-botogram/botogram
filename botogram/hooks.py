@@ -19,7 +19,7 @@
 
 import re
 
-from .callbacks import parse_callback_data
+from .callbacks import hashed_callback_name
 
 
 class Hook:
@@ -212,14 +212,15 @@ class CallbackHook(Hook):
     """Underlying hook for @bot.callback"""
 
     def _after_init(self, args):
-        self._name = "%s:%s" % (self.component.component_name, args["name"])
+        self._name = hashed_callback_name(
+            "%s:%s" % (self.component.component_name, args["name"])
+        )
 
-    def _call(self, bot, update):
+    def call(self, bot, update, name, data):
         if not update.callback_query:
             return
         q = update.callback_query
 
-        name, data = parse_callback_data(q._data)
         if name != self._name:
             return
 

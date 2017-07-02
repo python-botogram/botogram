@@ -20,11 +20,12 @@
 
 import json
 
-from botogram.callbacks import Buttons, parse_callback_data
+from botogram.callbacks import Buttons, parse_callback_data, get_callback_data
+from botogram.callbacks import hashed_callback_name
 
 
-def test_buttons():
-    buttons = Buttons()
+def test_buttons(bot):
+    buttons = Buttons(bot)
     buttons[0].url("test 1", "http://example.com")
     buttons[0].callback("test 2", "test_callback")
     buttons[3].callback("test 3", "another_callback", "data")
@@ -35,20 +36,30 @@ def test_buttons():
         "inline_keyboard": [
             [
                 {"text": "test 1", "url": "http://example.com"},
-                {"text": "test 2", "callback_data": "test_callback"},
+                {
+                    "text": "test 2",
+                    "callback_data": get_callback_data(bot, "test_callback"),
+                },
             ],
             [
                 {"text": "test 4", "switch_inline_query": ""},
                 {"text": "test 5", "switch_inline_query_current_chat": "wow"},
             ],
             [
-                {"text": "test 3", "callback_data": "another_callback\0data"},
+                {
+                    "text": "test 3",
+                    "callback_data": get_callback_data(
+                        bot, "another_callback", "data"
+                    ),
+                },
             ],
         ],
     }
 
 
-def test_parse_callback_data():
-    assert parse_callback_data("test") == ("test", None)
-    assert parse_callback_data("test:something") == ("test:something", None)
-    assert parse_callback_data("test\0wow") == ("test", "wow")
+def test_parse_callback_data(bot):
+    raw = get_callback_data(bot, "test_callback", "this is some data!")
+    assert parse_callback_data(bot, raw) == (
+        hashed_callback_name("test_callback"),
+        "this is some data!",
+    )
