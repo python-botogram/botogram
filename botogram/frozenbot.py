@@ -23,7 +23,6 @@ import logbook
 from . import utils
 from . import objects
 from . import api as api_module
-from .callbacks import Buttons
 
 
 class FrozenBotError(Exception):
@@ -234,10 +233,6 @@ class FrozenBot:
     def register_update_processor(self, kind, processor):
         """Register a new update processor"""
         raise FrozenBotError("Can't register new update processors at runtime")
-
-    def buttons(self):
-        """Create a new inline keyboard"""
-        return Buttons(self)
 
     # This helper manages the translation
 

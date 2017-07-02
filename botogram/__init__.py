@@ -34,6 +34,7 @@ from .decorators import pass_bot, pass_shared, help_message_for
 from .runner import run
 from .objects import *
 from .utils import usernames_in
+from .callbacks import buttons
 
 
 # This code will simulate the Windows' multiprocessing behavior if the

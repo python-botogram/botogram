@@ -22,6 +22,7 @@ import binascii
 import hashlib
 
 from . import crypto
+from .context import ctx
 
 
 DIGEST = hashlib.md5
@@ -31,9 +32,8 @@ DIGEST_LEN = 16
 class ButtonsRow:
     """A row of an inline keyboard"""
 
-    def __init__(self, bot):
+    def __init__(self):
         self._content = []
-        self._bot = bot
 
     def url(self, label, url):
         """Open an URL when the button is pressed"""
@@ -41,9 +41,15 @@ class ButtonsRow:
 
     def callback(self, label, callback, data=None):
         """Trigger a callback when the button is pressed"""
+        def generate_callback_data():
+            c = ctx()
+
+            name = "%s:%s" % (c.component_name(), callback)
+            return get_callback_data(c.bot, name, data)
+
         self._content.append({
             "text": label,
-            "callback_data": get_callback_data(self._bot, callback, data),
+            "callback_data": generate_callback_data,
         })
 
     def switch_inline_query(self, label, query="", current_chat=False):
@@ -59,27 +65,44 @@ class ButtonsRow:
                 "switch_inline_query": query,
             })
 
+    def _get_content(self):
+        """Get the content of this row"""
+        for item in self._content:
+            new = item.copy()
+
+            # Replace any callable with its value
+            # This allows to dynamically generate field values
+            for key, value in new.items():
+                if callable(value):
+                    new[key] = value()
+
+            yield new
+
 
 class Buttons:
     """Factory for inline keyboards"""
 
-    def __init__(self, bot):
+    def __init__(self):
         self._rows = {}
-        self._bot = bot
 
     def __getitem__(self, index):
         if index not in self._rows:
-            self._rows[index] = ButtonsRow(self._bot)
+            self._rows[index] = ButtonsRow()
         return self._rows[index]
 
     def _serialize_attachment(self):
         rows = [
-            row._content for i, row in sorted(
+            list(row._get_content()) for i, row in sorted(
                 tuple(self._rows.items()), key=lambda i: i[0]
             )
         ]
 
         return {"inline_keyboard": rows}
+
+
+def buttons():
+    """Create a new inline keyboard"""
+    return Buttons()
 
 
 def parse_callback_data(bot, raw):
