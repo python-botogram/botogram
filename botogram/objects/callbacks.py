@@ -19,6 +19,7 @@
 #   DEALINGS IN THE SOFTWARE.
 
 from .base import BaseObject
+from ..context import ctx
 from .messages import User, Message
 from .mixins import _require_api
 
@@ -66,6 +67,25 @@ class CallbackQuery(BaseObject):
     def open_url(self, url, cache=0):
         """Tell the user's client to open an URL"""
         self._answered = True
+
+        self._api.call("answerCallbackQuery", {
+            "callback_query_id": self.id,
+            "url": url,
+            "cache_time": cache,
+        })
+
+    @_require_api
+    def open_private_chat(self, start_arg, cache=0):
+        """Open the bot private chat with the user"""
+        self._answered = True
+
+        # Telegram doesn't support opening private chats with empty parameters,
+        # so here we present the developer a friendlier message
+        if not start_arg:
+            raise ValueError("You must provide a non-empty start argument")
+
+        # Construct the correct link
+        url = "https://t.me/" + ctx().bot_username() + "?start=" + start_arg
 
         self._api.call("answerCallbackQuery", {
             "callback_query_id": self.id,

@@ -39,6 +39,10 @@ class Context:
     def __exit__(self, *_):
         _local._botogram_context.pop()
 
+    def bot_username(self):
+        """Get the username of the bot"""
+        return self.bot.itself.username
+
     def component_name(self):
         """Get the name of the current component"""
         return self.hook.component.component_name
