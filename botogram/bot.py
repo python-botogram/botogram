@@ -252,8 +252,10 @@ class Bot(frozenbot.FrozenBot):
     def register_update_processor(self, kind, processor):
         """Register a new update processor"""
         if kind in self._update_processors:
-            raise NameError("An update processor for \"%s\" updates is "
-                            "already registered" % kind)
+            self.logger.warn("Your code replaced the default update processor "
+                             "for '%s'!" % kind)
+            self.logger.warn("If you want botogram to handle those updates "
+                             "natively remove your processor.")
 
         self._update_processors[kind] = processor
 
