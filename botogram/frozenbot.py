@@ -33,9 +33,10 @@ class FrozenBot:
     """A frozen version of botogram.Bot"""
 
     def __init__(self, api, about, owner, hide_commands, before_help,
-                 after_help, link_preview_in_help, process_backlog, lang,
-                 itself, commands_re, commands, chains, scheduler,
-                 main_component_id, bot_id, shared_memory, update_processors):
+                 after_help, link_preview_in_help,
+                 validate_callback_signatures, process_backlog, lang, itself,
+                 commands_re, commands, chains, scheduler, main_component_id,
+                 bot_id, shared_memory, update_processors):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -48,6 +49,7 @@ class FrozenBot:
         self.before_help = before_help
         self.after_help = after_help
         self.link_preview_in_help = link_preview_in_help
+        self.validate_callback_signatures = validate_callback_signatures
         self.process_backlog = process_backlog
         self.lang = lang
         self._commands_re = commands_re
@@ -77,10 +79,10 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self._hide_commands,
             self.before_help, self.after_help, self.link_preview_in_help,
-            self.process_backlog, self.lang, self.itself, self._commands_re,
-            self._commands, self._chains, self._scheduler,
-            self._main_component_id, self._bot_id, self._shared_memory,
-            self._update_processors,
+            self.validate_callback_signatures, self.process_backlog, self.lang,
+            self.itself, self._commands_re, self._commands, self._chains,
+            self._scheduler, self._main_component_id, self._bot_id,
+            self._shared_memory, self._update_processors,
         )
         return restore, args
 
@@ -123,6 +125,10 @@ class FrozenBot:
     def command(self, name, hidden=False):
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
+
+    def callback(self, name, hidden=False):
+        """Register a new callback"""
+        raise FrozenBotError("Can't add callbacks to a bot at runtime")
 
     def timer(self, interval):
         """Register a new timer"""

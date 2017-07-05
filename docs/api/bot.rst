@@ -60,6 +60,17 @@ components.
 
       .. versionadded:: 0.4
 
+   .. py:attribute:: validate_callback_signatures
+
+      Enable or disable signature verification for callbacks. Disabling them
+      can cause security issues for your bot, and it's advised to do so only if
+      you changed the bot token recently. See the :ref:`security section for
+      callbacks <buttons-security>` for more details.
+
+      The default value is **True**.
+
+      .. versionadded:: 0.4
+
    .. py:attribute:: process_backlog
 
       A boolean representing if the backlog should be processed. Backlog is
@@ -268,6 +279,43 @@ components.
       .. versionchanged:: 0.3
 
          Added the ``hidden`` argument.
+
+   .. py:decoratormethod:: callback(name)
+
+      This decorator adds an handler for the callback with the provided name.
+      See the chapter about :ref:`buttons and callbacks <buttons>` for more
+      information about them.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated function:
+
+      * **query**: the received :py:class:`~botogram.CallbackQuery`
+
+      * **chat**: the :py:class:`~botogram.Chat` from which the callback query
+        was sent
+
+      * **message**: the :py:class:`~botogram.Message` related to the callback
+        query
+
+      * **data**: the custom information provided by you along with the call
+
+      .. code-block:: python
+
+         @bot.command("greeter")
+         def greeter_command(chat, message):
+             """Say hi to the user"""
+             btns = botogram.Buttons()
+             btns[0].callback("Click me", "say-hi", message.sender.name)
+
+             chat.send("Click the button below", attach=btns)
+
+         @bot.callback("say-hi")
+         def say_hi_callback(query, data):
+             query.notify("Hi " + data)
+
+      :param str name: the name of the callback
+
+      .. versionadded:: 0.4
 
    .. py:decoratormethod:: chat_unavailable
 

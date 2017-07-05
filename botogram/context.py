@@ -18,31 +18,42 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# Prepare the logger
-from .utils import configure_logger
-configure_logger()
-del configure_logger
+import threading
 
 
-# flake8: noqa
-
-from .api import APIError, ChatUnavailableError
-from .bot import Bot, create, channel
-from .frozenbot import FrozenBotError
-from .components import Component
-from .decorators import pass_bot, pass_shared, help_message_for
-from .runner import run
-from .objects import *
-from .utils import usernames_in
-from .callbacks import Buttons, ButtonsRow
+_local = threading.local()
+_local._botogram_context = []
 
 
-# This code will simulate the Windows' multiprocessing behavior if the
-# BOTOGRAM_SIMULATE_WINDOWS environment variable is set
-import os
-import multiprocessing
+class Context:
+    """Context of an hook call"""
 
-if "BOTOGRAM_SIMULATE_WINDOWS" in os.environ:
-    multiprocessing.set_start_method("spawn", force=True)
+    def __init__(self, bot, hook, update):
+        self.bot = bot
+        self.hook = hook
+        self.update = update
 
-del os, multiprocessing
+    def __enter__(self):
+        _local._botogram_context.append(self)
+
+    def __exit__(self, *_):
+        _local._botogram_context.pop()
+
+    def bot_username(self):
+        """Get the username of the bot"""
+        return self.bot.itself.username
+
+    def component_name(self):
+        """Get the name of the current component"""
+        return self.hook.component.component_name
+
+    def chat(self):
+        """Get the current chat"""
+        if self.update:
+            return self.update.chat()
+
+
+def ctx():
+    """Get the current context"""
+    if _local._botogram_context:
+        return _local._botogram_context[-1]

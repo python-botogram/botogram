@@ -25,6 +25,7 @@ import uuid
 import requests.exceptions
 
 from . import api
+from . import callbacks
 from . import objects
 from . import runner
 from . import defaults
@@ -53,6 +54,8 @@ class Bot(frozenbot.FrozenBot):
         self.link_preview_in_help = True
 
         self.process_backlog = False
+
+        self.validate_callback_signatures = True
 
         self._lang = ""
         self._lang_inst = None
@@ -87,6 +90,7 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("callback_query", callbacks.process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -117,6 +121,13 @@ class Bot(frozenbot.FrozenBot):
         return object.__reduce__(self)
 
     def __setattr__(self, name, value):
+        # Warn about disabled callback validation
+        if name == "validate_callback_signatures" and not value:
+            self.logger.warn("Your code disabled signature validation for "
+                             "callbacks!")
+            self.logger.warn("This can cause security issues. Please enable "
+                             "it again.")
+
         # Use the standard __setattr__
         return object.__setattr__(self, name, value)
 
@@ -178,6 +189,13 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
+    def callback(self, name):
+        """Register a new callback"""
+        def __(func):
+            self._main_component.add_callback(name, func)
+            return func
+        return __
+
     def timer(self, interval):
         """Register a new timer"""
         def __(func):
@@ -234,8 +252,10 @@ class Bot(frozenbot.FrozenBot):
     def register_update_processor(self, kind, processor):
         """Register a new update processor"""
         if kind in self._update_processors:
-            raise NameError("An update processor for \"%s\" updates is "
-                            "already registered" % kind)
+            self.logger.warn("Your code replaced the default update processor "
+                             "for '%s'!" % kind)
+            self.logger.warn("If you want botogram to handle those updates "
+                             "natively remove your processor.")
 
         self._update_processors[kind] = processor
 
@@ -247,6 +267,7 @@ class Bot(frozenbot.FrozenBot):
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self._hide_commands, self.before_help,
                                    self.after_help, self.link_preview_in_help,
+                                   self.validate_callback_signatures,
                                    self.process_backlog, self.lang,
                                    self.itself, self._commands_re,
                                    self._commands, chains, self._scheduler,

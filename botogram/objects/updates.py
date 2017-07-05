@@ -20,6 +20,7 @@
 
 from .base import BaseObject, multiple
 
+from .callbacks import CallbackQuery
 from .messages import Message
 
 
@@ -29,6 +30,8 @@ class Update(BaseObject):
     https://core.telegram.org/bots/api#update
     """
 
+    # Please update the chat method below when adding new types, thanks!
+
     required = {
         "update_id": int,
     }
@@ -36,9 +39,29 @@ class Update(BaseObject):
         "message": Message,
         "edited_message": Message,
         "channel_post": Message,
-        "edited_channel_post": Message
+        "edited_channel_post": Message,
+        "callback_query": CallbackQuery,
     }
     _check_equality_ = "update_id"
+
+    def chat(self):
+        """Get the chat related to this update"""
+        if self.message is not None:
+            return self.message.chat
+
+        if self.edited_message is not None:
+            return self.edited_message.chat
+
+        if self.channel_post is not None:
+            return self.channel_post.chat
+
+        if self.edited_channel_post is not None:
+            return self.edited_channel_post.chat
+
+        if self.callback_query is not None:
+            return self.callback_query.message.chat
+
+        raise NotImplementedError
 
 
 # Shortcut for the Updates type

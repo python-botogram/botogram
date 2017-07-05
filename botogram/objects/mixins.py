@@ -23,6 +23,7 @@ import json
 
 from .. import utils
 from .. import syntaxes
+from ..utils.deprecations import _deprecated_message
 
 
 _objects_module = None
@@ -51,7 +52,7 @@ def _require_api(func):
 class ChatMixin:
     """Add some methods for chats"""
 
-    def _get_call_args(self, reply_to, extra, notify=True):
+    def _get_call_args(self, reply_to, extra, attach, notify):
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
         if hasattr(reply_to, "message_id"):
@@ -61,7 +62,14 @@ class ChatMixin:
         if reply_to is not None:
             args["reply_to_message_id"] = reply_to
         if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -4
+            )
             args["reply_markup"] = json.dumps(extra.serialize())
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment())
         if not notify:
             args["disable_notification"] = True
 
@@ -69,9 +77,9 @@ class ChatMixin:
 
     @_require_api
     def send(self, message, preview=True, reply_to=None, syntax=None,
-             extra=None, notify=True):
+             extra=None, attach=None, notify=True):
         """Send a message"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         args["text"] = message
         args["disable_web_page_preview"] = not preview
 
@@ -83,9 +91,9 @@ class ChatMixin:
 
     @_require_api
     def send_photo(self, path, caption=None, reply_to=None, extra=None,
-                   notify=True):
+                   attach=None, notify=True):
         """Send a photo"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
 
@@ -96,9 +104,9 @@ class ChatMixin:
 
     @_require_api
     def send_audio(self, path, duration=None, performer=None, title=None,
-                   reply_to=None, extra=None, notify=True):
+                   reply_to=None, extra=None, attach=None, notify=True):
         """Send an audio track"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
         if performer is not None:
@@ -113,9 +121,9 @@ class ChatMixin:
 
     @_require_api
     def send_voice(self, path, duration=None, title=None, reply_to=None,
-                   extra=None, notify=True):
+                   extra=None, attach=None, notify=True):
         """Send a voice message"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
 
@@ -126,9 +134,9 @@ class ChatMixin:
 
     @_require_api
     def send_video(self, path, duration=None, caption=None, reply_to=None,
-                   extra=None, notify=True):
+                   extra=None, attach=None, notify=True):
         """Send a video"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
         if caption is not None:
@@ -140,9 +148,10 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path, reply_to=None, extra=None, notify=True):
+    def send_file(self, path, reply_to=None, extra=None, attach=None,
+                  notify=True):
         """Send a generic file"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
 
         files = {"document": open(path, "rb")}
 
@@ -151,9 +160,9 @@ class ChatMixin:
 
     @_require_api
     def send_location(self, latitude, longitude, reply_to=None, extra=None,
-                      notify=True):
+                      attach=None, notify=True):
         """Send a geographic location"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         args["latitude"] = latitude
         args["longitude"] = longitude
 
@@ -162,9 +171,9 @@ class ChatMixin:
 
     @_require_api
     def send_venue(self, latitude, longitude, title, address, foursquare=None,
-                   reply_to=None, extra=None, notify=True):
+                   reply_to=None, extra=None, attach=None, notify=True):
         """Send a venue"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         args["latitude"] = latitude
         args["longitude"] = longitude
         args["title"] = title
@@ -175,9 +184,10 @@ class ChatMixin:
         self._api.call("sendVenue", args, expect=_objects().Message)
 
     @_require_api
-    def send_sticker(self, sticker, reply_to=None, extra=None, notify=True):
+    def send_sticker(self, sticker, reply_to=None, extra=None, attach=None,
+                     notify=True):
         """Send a sticker"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
 
         files = {"sticker": open(sticker, "rb")}
         return self._api.call("sendSticker", args, files,
@@ -185,9 +195,9 @@ class ChatMixin:
 
     @_require_api
     def send_contact(self, phone, first_name, last_name=None, *, reply_to=None,
-                     extra=None, notify=True):
+                     extra=None, attach=None, notify=True):
         """Send a contact"""
-        args = self._get_call_args(reply_to, extra, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify)
         args["phone_number"] = phone
         args["first_name"] = first_name
 
@@ -228,7 +238,7 @@ class MessageMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def edit(self, text, syntax=None, preview=True, extra=None):
+    def edit(self, text, syntax=None, preview=True, extra=None, attach=None):
         """Edit this message"""
         args = {"message_id": self.message_id, "chat_id": self.chat.id}
         args["text"] = text
@@ -239,23 +249,46 @@ class MessageMixin:
 
         if not preview:
             args["disable_web_page_preview"] = True
+
         if extra is not None:
-            args["reply_markup"] = extra.serialize()
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment())
 
         self._api.call("editMessageText", args)
         self.text = text
 
     @_require_api
-    def edit_caption(self, caption, extra=None):
+    def edit_caption(self, caption, extra=None, attach=None):
         """Edit this message's caption"""
         args = {"message_id": self.message_id, "chat_id": self.chat.id}
         args["caption"] = caption
 
         if extra is not None:
-            args["reply_markup"] = extra.serialize()
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment())
 
         self._api.call("editMessageCaption", args)
         self.caption = caption
+
+    @_require_api
+    def edit_attach(self, attach):
+        """Edit this message's attachment"""
+        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args["reply_markup"] = attach
+
+        self._api.call("editMessageReplyMarkup", args)
 
     @_require_api
     def reply(self, *args, **kwargs):

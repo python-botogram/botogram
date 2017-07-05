@@ -182,3 +182,7 @@ class TelegramAPI:
         response = requests.get(url)
 
         return response.content
+
+    @property
+    def token(self):
+        return self._api_key
