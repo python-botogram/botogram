@@ -235,3 +235,16 @@ This protection is completly transparent: you don't have to do anything to
 enable or manage it. The signature is based on the token of the bot though:
 this means if you revoke or change the token, all previous callbacks will
 become invalid, which may annoy your users because old buttons stop working.
+
+If you want to avoid disruption after changing your bot's token, it's advised
+to disable signature verification for a few days: it lowers the security of
+your bot, but allows the user to keep using buttons under old messages. In
+order to disable the verification you need to add this snippet of code before
+the bot is started:
+
+.. code-block:: python
+
+   bot.validate_callback_signatures = False
+
+You should remove the snippet after a few days. The bot will print a
+warning at startup to remember you to do so.

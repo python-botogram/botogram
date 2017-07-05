@@ -116,9 +116,11 @@ def parse_callback_data(bot, chat, raw):
     name = prelude[16:]
     data = raw[32:]
 
-    correct = get_signature(bot, chat, name, data)
-    if not crypto.compare(correct, signature):
-        raise crypto.TamperedMessageError
+    # Don't check the signature if the user explicitly disabled the check
+    if bot.validate_callback_signatures:
+        correct = get_signature(bot, chat, name, data)
+        if not crypto.compare(correct, signature):
+            raise crypto.TamperedMessageError
 
     if data:
         return name, data.decode("utf-8")

@@ -60,6 +60,17 @@ components.
 
       .. versionadded:: 0.4
 
+   .. py:attribute:: validate_callback_signatures
+
+      Enable or disable signature verification for callbacks. Disabling them
+      can cause security issues for your bot, and it's advised to do so only if
+      you changed the bot token recently. See the :ref:`security section for
+      callbacks <buttons-security>` for more details.
+
+      The default value is **True**.
+
+      .. versionadded:: 0.4
+
    .. py:attribute:: process_backlog
 
       A boolean representing if the backlog should be processed. Backlog is

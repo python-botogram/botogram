@@ -55,6 +55,8 @@ class Bot(frozenbot.FrozenBot):
 
         self.process_backlog = False
 
+        self.validate_callback_signatures = True
+
         self._lang = ""
         self._lang_inst = None
 
@@ -119,6 +121,13 @@ class Bot(frozenbot.FrozenBot):
         return object.__reduce__(self)
 
     def __setattr__(self, name, value):
+        # Warn about disabled callback validation
+        if name == "validate_callback_signatures" and not value:
+            self.logger.warn("Your code disabled signature validation for "
+                             "callbacks!")
+            self.logger.warn("This can cause security issues. Please enable "
+                             "it again.")
+
         # Use the standard __setattr__
         return object.__setattr__(self, name, value)
 
@@ -256,6 +265,7 @@ class Bot(frozenbot.FrozenBot):
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self._hide_commands, self.before_help,
                                    self.after_help, self.link_preview_in_help,
+                                   self.validate_callback_signatures,
                                    self.process_backlog, self.lang,
                                    self.itself, self._commands_re,
                                    self._commands, chains, self._scheduler,

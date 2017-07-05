@@ -20,10 +20,13 @@
 
 import json
 
+import pytest
+
 from botogram.callbacks import Buttons, parse_callback_data, get_callback_data
 from botogram.callbacks import hashed_callback_name
 from botogram.components import Component
 from botogram.context import Context
+from botogram.crypto import TamperedMessageError
 from botogram.hooks import Hook
 
 
@@ -83,4 +86,17 @@ def test_parse_callback_data(bot, sample_update):
     assert parse_callback_data(bot, c, raw) == (
         hashed_callback_name("test_callback"),
         None,
+    )
+
+    with pytest.raises(TamperedMessageError):
+        raw = get_callback_data(bot, c, "test_callback", "data") + "!"
+        parse_callback_data(bot, c, raw)
+
+    # Now test with disabled signature verification
+    bot.validate_callback_signatures = False
+
+    raw = get_callback_data(bot, c, "test_callback", "data") + "!"
+    assert parse_callback_data(bot, c, raw) == (
+        hashed_callback_name("test_callback"),
+        "data!"
     )

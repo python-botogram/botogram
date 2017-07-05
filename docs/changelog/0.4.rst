@@ -21,6 +21,7 @@ New features
 
 * Added support for :ref:`buttons and callbacks <buttons>`
 
+  * New attribute :py:attr:`botogram.Bot.validate_callback_signatures`
   * New class :py:class:`botogram.Buttons`
   * New class :py:class:`botogram.ButtonsRow`
   * New class :py:class:`botogram.CallbackQuery`
