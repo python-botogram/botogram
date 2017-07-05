@@ -283,8 +283,8 @@ class MessageMixin:
         self.caption = caption
 
     @_require_api
-    def edit_attachs(self, attach):
-        """Edit this message's attachments"""
+    def edit_attach(self, attach):
+        """Edit this message's attachment"""
         args = {"message_id": self.message_id, "chat_id": self.chat.id}
         args["reply_markup"] = attach
 

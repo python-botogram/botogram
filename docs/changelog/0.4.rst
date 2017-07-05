@@ -57,7 +57,7 @@ New features
 
 * Added ability to edit message attachments
 
-  * New method :py:meth:`botogram.Message.edit_attachs`
+  * New method :py:meth:`botogram.Message.edit_attach`
 
 Performance improvements
 ------------------------

@@ -1384,7 +1384,7 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: edit_attachs(attach)
+   .. py:method:: edit_attach(attach)
 
       This method allows you to change the attachment of a message you already
       sent. For example, you can use it to update the :ref:`buttons <buttons>`
@@ -1397,7 +1397,7 @@ about its business.
          message = chat.send("Some example websites.", attach=btns)
 
          btns[1].url("example.org", "http://example.org")
-         message.edit_attachs(btns)
+         message.edit_attach(btns)
 
       :param object attach: The new attachment
 
