@@ -19,6 +19,14 @@ Release description not yet written.
 New features
 ------------
 
+* Added support for :ref:`buttons and callbacks <buttons>`
+
+  * New class :py:class:`botogram.Buttons`
+  * New class :py:class:`botogram.ButtonsRow`
+  * New class :py:class:`botogram.CallbackQuery`
+  * New decorator :py:meth:`botogram.Bot.callback`
+  * New method :py:meth:`botogram.Component.add_callback`
+
 * Added support for receiving messages sent to channels
 
   * New decorator :py:meth:`botogram.Bot.channel_post`
@@ -41,6 +49,16 @@ New features
   * New method :py:meth:`botogram.Chat.delete_message`
   * New method :py:meth:`botogram.Message.delete`
 
+* Added the ``attach`` argument to all the send methods.
+
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.User`
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.Chat`
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.Message`
+
+* Added ability to edit message attachments
+
+  * New method :py:meth:`botogram.Message.edit_attachs`
+
 Performance improvements
 ------------------------
 
@@ -51,3 +69,10 @@ Bug fixes
 
 * Fix inability to fetch updates and stop the runner after an internet
   connection outage.
+
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* The ``extra`` attribute on all the send methods is now deprecated

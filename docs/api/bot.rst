@@ -269,6 +269,43 @@ components.
 
          Added the ``hidden`` argument.
 
+   .. py:decoratormethod:: callback(name)
+
+      This decorator adds an handler for the callback with the provided name.
+      See the chapter about :ref:`buttons and callbacks <buttons>` for more
+      information about them.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated function:
+
+      * **query**: the received :py:class:`~botogram.CallbackQuery`
+
+      * **chat**: the :py:class:`~botogram.Chat` from which the callback query
+        was sent
+
+      * **message**: the :py:class:`~botogram.Message` related to the callback
+        query
+
+      * **data**: the custom information provided by you along with the call
+
+      .. code-block:: python
+
+         @bot.command("greeter")
+         def greeter_command(chat, message):
+             """Say hi to the user"""
+             btns = botogram.Buttons()
+             btns[0].callback("Click me", "say-hi", message.sender.name)
+
+             chat.send("Click the button below", attach=btns)
+
+         @bot.callback("say-hi")
+         def say_hi_callback(query, data):
+             query.notify("Hi " + data)
+
+      :param str name: the name of the callback
+
+      .. versionadded:: 0.4
+
    .. py:decoratormethod:: chat_unavailable
 
       The decorated function is called when you try to send a message to a chat
