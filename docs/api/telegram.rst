@@ -1130,6 +1130,13 @@ about its business.
 
          The value can also be an instance of :py:class:`~botogram.Chat`.
 
+   .. py:attribute:: forward_from_message_id
+
+      The ID of the original message that was forwarded. This is currently only
+      available for channel posts.
+
+      .. versionadded:: 0.4
+
    .. py:attribute:: forward_date
 
       The integer date (in Unix time) of when the original message was sent,
@@ -1228,6 +1235,14 @@ about its business.
       attribute contains its representation.
 
       *This attribute can be None if the message isn't a venue.*
+
+   .. py:attribute:: channel_post_author
+
+      The author of the message. This only works if the message is a channel
+      post and it's signed by the author, even if the message is forwarded.
+      Otherwise it's *None*.
+
+      .. versionadded:: 0.4
 
    .. py:attribute:: new_chat_member
 

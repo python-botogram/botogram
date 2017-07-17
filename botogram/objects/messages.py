@@ -334,6 +334,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "entities": ParsedText,
         "forward_from": User,
         "forward_from_chat": Chat,
+        "forward_from_message_id": int,
         "forward_date": int,
         "reply_to_message": _itself,
         "text": str,
@@ -393,6 +394,16 @@ class Message(BaseObject, mixins.MessageMixin):
 
         if self._forward_from is not None:
             return self._forward_from
+
+    @property
+    def channel_post_author(self):
+        """Get the author of the channel post"""
+        if self.chat.type == "channel":
+            return self.sender
+
+        if self._forward_from_chat is not None:
+            if self.forward_from.type == "channel":
+                return self._forward_from
 
     @property
     @utils.deprecated("Message.new_chat_participant", "1.0",

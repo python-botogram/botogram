@@ -60,6 +60,11 @@ New features
 
   * New method :py:meth:`botogram.Message.edit_attach`
 
+* Added new attributes on the :py:class:`~botogram.Message` object:
+
+  * New attribute :py:attr:`botogram.Message.channel_post_author`
+  * New attribute :py:attr:`botogram.Message.forward_from_message_id`
+
 Performance improvements
 ------------------------
 
