@@ -70,6 +70,11 @@ Bug fixes
 
 * Fix inability to fetch updates and stop the runner after an internet
   connection outage.
+* Fix :py:attr:`botogram.Message.forward_from` giving wrong information with
+  signed channel posts (`issue 80`_)
+
+.. _issue 80: https://github.com/pietroalbini/botogram/issues/80
+
 
 Deprecated features
 -------------------

@@ -387,11 +387,12 @@ class Message(BaseObject, mixins.MessageMixin):
     def forward_from(self):
         """Get from where the message was forwarded"""
         # Provide either _forward_from or _forward_from_chat
-        if self._forward_from is not None:
-            return self._forward_from
-
+        # _forward_from_chat is checked earlier because it's more correct
         if self._forward_from_chat is not None:
             return self._forward_from_chat
+
+        if self._forward_from is not None:
+            return self._forward_from
 
     @property
     @utils.deprecated("Message.new_chat_participant", "1.0",
