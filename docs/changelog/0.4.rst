@@ -14,7 +14,9 @@ botogram 0.4
 
 *Alpha release, not yet released.*
 
-Release description not yet written.
+botogram 0.4 is the fourth alpha release of botogram. It adds support for
+buttons and a few new APIs added in the meantime by Telegram. It also includes
+big performance improvements and a few deprecations to keep the API clean.
 
 New features
 ------------
