@@ -37,7 +37,7 @@ import setuptools
 
 setuptools.setup(
     name = "botogram",
-    version = "0.4.dev0",
+    version = "0.4",
     url = "https://botogram.pietroalbini.org",
 
     license = "MIT",

@@ -9,6 +9,17 @@ versions:
     notice: unstable
     warning: This documentation is for the unstable and in-development version of botogram!
 
+
+  - name: "0.4"
+    source:
+      provider: git
+      url: .
+      checkout: v0.4
+    directory: docs
+    title: botogram 0.4
+    notice: alpha
+    warning: null
+
   - name: "0.3"
     source:
       provider: git
@@ -16,15 +27,5 @@ versions:
       checkout: v0.3.4
     directory: docs
     title: botogram 0.3
-    notice: alpha
-    warning: null
-
-  - name: "0.2"
-    source:
-      provider: git
-      url: .
-      checkout: v0.2.2
-    directory: docs
-    title: botogram 0.2
     notice: alpha
     warning: null
