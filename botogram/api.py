@@ -127,9 +127,9 @@ class TelegramAPI:
                     reason = "blocked"
 
                 # This happens when the user deleted its account
-                elif status == 403 and "deleted" in message:
+                elif status == 403 and "deactivated" in message:
                     # Error code # 403
-                    # Forbidden: user is deleted
+                    # Forbidden: user is deactivated
                     reason = "account_deleted"
 
                 # This happens, as @BotSupport says, when the Telegram API

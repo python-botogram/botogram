@@ -80,7 +80,7 @@ def test_unavailable_chats(api, mock_req):
         },
         "sendVoice": {
             "ok": False, "error_code": 403,
-            "description": "Forbidden: user is deleted",
+            "description": "Forbidden: user is deactivated",
         },
         "sendChatAction": {
             "ok": False, "error_code": 400,
