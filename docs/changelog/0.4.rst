@@ -7,6 +7,20 @@ Changelog of botogram 0.4.x
 
 Here you can find all the changes in the botogram 0.4.x releases.
 
+.. _changelog-0.4.1:
+
+botogram 0.4.1
+==============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+Bug fixes
+---------
+
+* Accounts deleted by inactivity incorrectly raised an APIError instead of a ChatUnavailableError
+
 .. _changelog-0.4:
 
 botogram 0.4
