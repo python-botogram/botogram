@@ -59,6 +59,7 @@ class Bot(frozenbot.FrozenBot):
 
         self._lang = ""
         self._lang_inst = None
+        self.override_i18n = {}
 
         # Support for the old, deprecated bot.hide_commands
         self._hide_commands = []
@@ -273,7 +274,7 @@ class Bot(frozenbot.FrozenBot):
                                    self._commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory,
-                                   self._update_processors)
+                                   self._update_processors, self.override_i18n)
 
     @property
     def lang(self):
