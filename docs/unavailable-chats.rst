@@ -105,7 +105,7 @@ can take action without aborting the update processing:
 
        for user in users:
            try:
-               bot.send(user, message)
+               bot.chat(user).send(message)
            except botogram.ChatUnavailableError as e:
                print("Can't send messages to %s (reason: %s)" %
                      (e.chat_id, e.reason))
