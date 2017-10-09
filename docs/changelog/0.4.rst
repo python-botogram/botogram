@@ -16,6 +16,13 @@ botogram 0.4.1
 
 Release description not yet written.
 
+New features
+------------
+
+* Added ability to override default i18n messages
+
+   * New attribute :py:attr:`botogram.Bot.override_i18n`
+
 Bug fixes
 ---------
 

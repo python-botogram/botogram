@@ -83,6 +83,13 @@ components.
       The :py:class:`botogram.User` representation of the bot's user account.
       From this you can access its id, username and more.
 
+   .. py:attribute:: override_i18n
+
+      A dictionary that allows to override default i18n messages by associating
+      the default ``msgid`` string of a message with its alternative.
+
+      .. versionadded:: 0.4.1
+
    .. py:decoratormethod:: before_processing
 
       Functions decorated with this decorator will be called before an update

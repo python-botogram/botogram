@@ -36,7 +36,7 @@ class FrozenBot:
                  after_help, link_preview_in_help,
                  validate_callback_signatures, process_backlog, lang, itself,
                  commands_re, commands, chains, scheduler, main_component_id,
-                 bot_id, shared_memory, update_processors):
+                 bot_id, shared_memory, update_processors, override_i18n):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -61,6 +61,7 @@ class FrozenBot:
         self._update_processors = update_processors
         self._commands = {name: command.for_bot(self)
                           for name, command in commands.items()}
+        self.override_i18n = override_i18n
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -82,7 +83,7 @@ class FrozenBot:
             self.validate_callback_signatures, self.process_backlog, self.lang,
             self.itself, self._commands_re, self._commands, self._chains,
             self._scheduler, self._main_component_id, self._bot_id,
-            self._shared_memory, self._update_processors,
+            self._shared_memory, self._update_processors, self.override_i18n,
         )
         return restore, args
 
@@ -240,7 +241,12 @@ class FrozenBot:
 
     def _(self, message, **args):
         """Translate a string"""
-        return self._lang_inst.gettext(message) % args
+        # Check if the message has been overridden
+        if message in self.override_i18n:
+            return self.override_i18n[message] % args
+        # Otherwise try to return the original message
+        else:
+            return self._lang_inst.gettext(message) % args
 
     # And some internal methods used by botogram
 
