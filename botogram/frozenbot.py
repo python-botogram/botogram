@@ -83,7 +83,7 @@ class FrozenBot:
             self.validate_callback_signatures, self.process_backlog, self.lang,
             self.itself, self._commands_re, self._commands, self._chains,
             self._scheduler, self._main_component_id, self._bot_id,
-            self._shared_memory, self._update_processors, self.override_i18n
+            self._shared_memory, self._update_processors, self.override_i18n,
         )
         return restore, args
 

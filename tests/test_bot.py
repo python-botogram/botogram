@@ -31,7 +31,7 @@ def test_bot_creation(api, mock_req):
     # Mock the getMe request
     mock_req({
         "getMe": {"ok": True, "result": {"id": 1, "first_name": "test",
-                  "username": "test_bot"}},
+                                         "username": "test_bot"}},
     })
 
     bot1 = botogram.bot.create(conftest.API_KEY)
@@ -78,16 +78,20 @@ def test_bot_freeze(bot):
 
     assert bot == frozen
 
+
 def test_i18n_override(bot):
-    default_message = botogram.utils.get_language("en").gettext("Use /help to get a list of all the commands.")
+    default_message = botogram.utils.get_language("en") \
+        .gettext("Use /help to get a list of all the commands.")
     override_message = "git gud"
 
     bot.override_i18n = {
         default_message: override_message
     }
 
-    assert bot._("Use /help to get a list of all the commands.") == "git gud"
+    assert bot._("Use /help to get a list of all the commands.") \
+        == override_message
 
     bot.override_i18n = {}
 
-    assert bot._("Use /help to get a list of all the commands.") == default_message
+    assert bot._("Use /help to get a list of all the commands.") \
+        == default_message
