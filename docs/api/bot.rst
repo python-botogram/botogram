@@ -88,7 +88,7 @@ components.
       A dictionary that allows to override default i18n messages by associating
       the default ``msgid`` string of a message with its alternative.
 
-      .. versionadded:: 0.4.1
+      .. versionadded:: 0.5
 
    .. py:decoratormethod:: before_processing
 

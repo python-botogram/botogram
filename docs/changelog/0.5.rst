@@ -1,0 +1,24 @@
+.. Copyright (c) 2015-2017 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.5.x
+===========================
+
+Here you can find all the changes in the botogram 0.5.x releases.
+
+.. _changelog-0.5:
+
+botogram 0.5
+============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+New features
+------------
+
+* Added ability to override default i18n messages
+
+  * New attribute :py:attr:`botogram.Bot.override_i18n`
