@@ -83,6 +83,10 @@ components.
       The :py:class:`botogram.User` representation of the bot's user account.
       From this you can access its id, username and more.
 
+   .. py:attribute:: lang
+
+      The `ISO 639-1 code`_ assigned the language used by the bot.
+
    .. py:attribute:: override_i18n
 
       A dictionary that allows to override default i18n messages by associating
@@ -797,3 +801,5 @@ components.
       available for use or detailed help.
 
       .. deprecated:: 0.3 it will be removed in botogram 1.0
+
+.. _`ISO 639-1 code`: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
