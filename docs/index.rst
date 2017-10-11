@@ -62,6 +62,7 @@ Narrative documentation
    custom-components
    deploy/index
    channels
+   i18n
 
 .. _index-reference:
 
