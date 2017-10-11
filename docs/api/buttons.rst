@@ -34,7 +34,7 @@ information about them.
           btns = botogram.Buttons()
           btns[0].url("Visit example.com", "http://www.example.com")
           btns[1].url("example.net", "http://www.example.net")
-          btns[2].url("example.org", "http://www.example.org")
+          btns[1].url("example.org", "http://www.example.org")
 
           chat.send("Check out some example sites!", attach=btns)
 
@@ -71,7 +71,7 @@ information about them.
 
          btns = botogram.Buttons()
          btns[0].callback("Commit changes", "commit")
-         btns[1].callback("Checkout master", "checkout", "master")
+         btns[0].callback("Checkout master", "checkout", "master")
 
       :param str label: The label of the button shown to the user
       :param str callback: The internal name of the callback
