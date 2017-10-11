@@ -19,8 +19,8 @@ Available translations
 
 The following languages are currently included in the botogram package:
 
-   * ``en`` (English)
-   * ``it`` (Italian)
+* ``en`` (English)
+* ``it`` (Italian)
 
 .. _i18n-setting-language:
 
@@ -44,6 +44,33 @@ using.
 After doing this, the bot will start using the translated messages included in
 the package. If a message hasn't been translated to the selected language, the
 bot will fall back on the English default.
+
+.. _i18n-overriding:
+
+Overriding default messages
+===========================
+
+.. versionadded:: 0.5
+
+As described in :ref:`i18n-new-language`, new and updated translations'
+availability is limited to new botogram releases, meaning that it could take
+some time for them to reach end users.
+
+Packaged translations may also not always fit a specific use case, making it
+necessary for you to edit some of the messages. While you could use a custom
+build of the package with a modified translation, it is also possible to
+programmatically override the translation of single messages through
+:py:attr:`botogram.Bot.override_i18n`, a dictionary that works basically the
+same way as a ``.po`` file, associating ``msgid``'s to ``msgstr``'s:
+
+.. code-block:: python
+
+   bot.override_i18n = {
+        "Use /help to get a list of all the commands.": \
+        "Utilizza /help per ottenere la lista di tutti i comandi."
+    }
+
+We'll go more in depth on the translation format in the next section.
 
 .. _i18n-new-language:
 
@@ -133,7 +160,7 @@ As botogram evolves, more message will probably be added to the codebase, and it
 is also possible for currently included translations to contain mistakes.
 
 The workflow for updating a translation is basically the same as the one
-described in `i18n-new-language`_, but you may also need to use ::
+described in :ref:`i18n-new-language`, but you may also need to use ::
 
    $ invoke i18n-extract
 
@@ -147,30 +174,6 @@ actual translation and the source code references in comments.
 
 While trivial, it would be nice if you also changed the ``PO-Revision-Date``
 header to reflect your changes.
-
-.. _i18n-overriding:
-
-Overriding default messages
-===========================
-
-.. versionadded:: 0.5
-
-Translating botogram to a new language is a non-trivial process and its effects
-are only available once a new version has been released. To avoid needing to
-use a custom build of the package in order to use your new translation, you can
-programmatically override botogram's messages while you wait for the next
-release.
-
-This is possible through :py:attr:`botogram.Bot.override_i18n`, a dictionary
-that works basically the same way as a ``.po`` file, associating ``msgid``'s to
-``msgstr``'s:
-
-.. code-block:: python
-
-   bot.override_i18n = {
-        "Use /help to get a list of all the commands.": \
-        "Utilizza /help per ottenere la lista di tutti i comandi."
-    }
 
 
 .. _`GNU gettext`: https://www.gnu.org/software/gettext/
