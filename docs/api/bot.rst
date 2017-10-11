@@ -351,7 +351,7 @@ components.
 
          @bot.timer(1)
          def spammer(bot):
-             bot.send(USER_ID, "Hey!")
+             bot.chat(USER_ID).send("Hey!")
 
       :param int interval: The execution interval, in seconds.
 
