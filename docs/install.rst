@@ -7,10 +7,47 @@
 Installation of botogram
 ========================
 
-botogram is available `on the Python Packages Index`_, so you can install it
-really easily with the `pip`_ command-line utility. Before installing it, be
-sure to have Python_ 3.4 (or a newer version), pip_, virtualenv_ and
-setuptools_ installed on your system. Then, issue the following command::
+This tutorial will guide you through botogram's installation process.
+
+.. _install-dependencies:
+
+Getting started
+===============
+
+In order to install botogram you will need to manually install some tools that
+are used during the build process. Before proceeding please make sure to have
+Python_ 3.4 or newer installed, along with the pip_ command line utility.
+
+Installing virtualenv
+---------------------
+
+Virtual environments are necessary to create isolated Python installations that
+allow you to manage dependencies for different projects. Using pip, installing
+the virtualenv_ tool is trivial::
+
+   $ [sudo] python3 -m pip install virtualenv
+
+Please refer to the `virtualenv documentation <install virtualenv>`_ if you wish
+to install virtualenv from source.
+
+Installing invoke
+-----------------
+
+botogram uses invoke_ for managing tasks. You can think of it like a sort of
+Makefile for the project. As for virtualenv, the recommended installation
+process uses pip::
+
+   $ python3 -m pip install invoke
+
+More information on the installation process can be found on the
+`PyInvoke documentation <install pyinvoke>`_.
+
+Installing from the Python Packages Index
+=========================================
+
+botogram releases are available `from the Python Packages Index`_ and can be
+installed using pip. This is the recommended way of installing the package and
+should work for the majority of usecases::
 
    $ python3 -m pip install botogram
 
@@ -23,8 +60,8 @@ Living on the edge
 ==================
 
 If you don't mind having some instability or bugs, and you want the latest
-features not yet released, you can clone the `botogram git repository`_,
-install `virtualenv`_, `invoke`_ and execute the installation from source::
+features not yet released, you can clone the `botogram git repository`_, and
+execute the installation from source::
 
    $ git clone https://github.com/pietroalbini/botogram.git
    $ cd botogram
@@ -43,9 +80,8 @@ Python community solves this problem with a tool called virtualenv_, which
 creates a small, isolated Python installation for each project. This allows
 you to experiment in a project without affecting other ones.
 
-In order to create a virtual environment, first of all you need to `install
-virtualenv`_. Next, you can issue the following command to create a virtual
-environment in ``env/``::
+We'll assume you've already installed virtualenv as explained above. Next, you
+can issue the following command to create a virtual environment in ``env/``::
 
    $ virtualenv -p python3 env
 
@@ -84,11 +120,13 @@ one::
 
    $ sudo invoke install
 
-.. _on the Python Packages Index: https://pypi.python.org/pypi/botogram
+.. _from the Python Packages Index: https://pypi.python.org/pypi/botogram
 .. _pip: https://pip.pypa.io
 .. _Python: https://www.python.org
 .. _setuptools: https://setuptools.pypa.io
 .. _botogram git repository: https://github.com/pietroalbini/botogram
 .. _virtualenv: https://virtualenv.pypa.io
-.. _invoke: https://www.pyinvoke.org
+.. Apparently pyinvoke's documentation is no longer being served over HTTPS
+.. _invoke: http://www.pyinvoke.org
 .. _install virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+.. _install pyinvoke: http://www.pyinvoke.org/installing.html
