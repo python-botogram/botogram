@@ -125,11 +125,14 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True])
 
-      Send a photo found at *path* to the user. You may optionally specify a
-      *caption* for the photo being sent. If the photo you are sending is in
-      reply to another message, set *reply_to* to the ID of the other
+      Send a photo to the user. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify a *caption* for the photo being sent.
+      If the photo you are sending is in reply to another message,
+      set *reply_to* to the ID of the other
       :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -139,6 +142,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object attach: An extra thing to attach to the message.
@@ -154,12 +159,18 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+      .. versionchanged:: 0.5
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+         Added support for *file_id* and *url*.
 
-      Send the audio track found in the *path* to the user. You may optionally
-      specify the *duration*, the *performer* and the *title* of the audio
-      track. If the audio track you're sending is in reply to another message,
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+
+      Send an audio track to the user. You can specify the track by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration*, the *performer* and the *title* 
+      of the audio track. If the audio track you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -169,6 +180,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param str file_id: The Telegram *file_id* of the audio track
+      :param str url: The URL to the audio track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -190,12 +203,14 @@ about its business.
          
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*.
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None])
 
-      Send the voice message found in the *path* to the user. You may
-      optionally specify the *duration* of the voice message. If the voice
+      Send a voice message to the user. You can specify the audio by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* of the voice message. If the voice
       message you're sending is in reply to another message, set *reply_to* to
       the ID of the other :py:class:`~botogram.Message`.
 
@@ -206,6 +221,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param str file_id: The Telegram *file_id* of the voice message
+      :param str url: The URL to the audio
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
@@ -225,14 +242,16 @@ about its business.
          
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*.
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True])
 
-      Send the video found in the *path* to the user. You may optionally
-      specify the *duration* and the *caption* of the video. If the audio track
-      you're sending is in reply to another message, set *reply_to* to the ID
-      of the other :py:class:`~botogram.Message`.
+      Send a video to the user. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* and the *caption* of the video.
+      If the audio track you're sending is in reply to another message, 
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
       :ref:`buttons <buttons>` to the message.
@@ -241,6 +260,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
@@ -257,11 +278,17 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+       .. versionchanged:: 0.5
 
-   .. py:method:: send_file(path, [reply_to=None, attach=None, extra=None, notify=True, caption=None])
+         Added support for *file_id* and *url*.
 
-      Send the generic file found in the *path* to the user. If the file you're
-      sending is in reply to another message, set *reply_to* to the ID of the
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+
+      Send a generic file to the user. You can specify the file by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      If the file you're sending is in reply to another message, set *reply_to* to the ID of the
       other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -271,6 +298,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -289,7 +318,7 @@ about its business.
          
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*.
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
@@ -713,9 +742,12 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, attach=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, attach=None, extra=None, attach=None, notify=True])
 
-      Send a photo found at *path* to the chat. You may optionally specify a
+      Send a photo to the chat. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify a
       *caption* for the photo being sent. If the photo you are sending is in
       reply to another message, set *reply_to* to the ID of the other
       :py:class:`~botogram.Message`.
@@ -727,6 +759,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object attach: An extra thing to attach to the message.
@@ -743,9 +777,16 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+      .. versionchanged:: 0.5
 
-      Send the audio track found in the *path* to the chat. You may optionally
+         Added support for *file_id* and *url*
+
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, extra=None, attach=None, notify=True, caption=None])
+
+      Send an audio track to the chat. You can specify the track by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally
       specify the *duration*, the *performer* and the *title* of the audio
       track. If the audio track you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
@@ -757,6 +798,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param str file_id: The Telegram *file_id* of the track
+      :param str url: The URL to the track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -778,12 +821,14 @@ about its business.
 
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, extra=None, attach=None, notify=True, caption=None])
 
-      Send the voice message found in the *path* to the chat. You may
-      optionally specify the *duration* of the voice message. If the voice
+      Send a voice message to the chat. You can specify the audio by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* of the voice message. If the voice
       message you're sending is in reply to another message, set *reply_to* to
       the ID of the other :py:class:`~botogram.Message`.
 
@@ -794,6 +839,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param str file_id: The Telegram *file_id* of the audio
+      :param str url: The URL to the audio
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
@@ -813,11 +860,14 @@ about its business.
 
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, extra=None, attach=None, notify=True])
 
-      Send the video found in the *path* to the chat. You may optionally
+      Send a video to the chat. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
       you're sending is in reply to another message, set *reply_to* to the ID
       of the other :py:class:`~botogram.Message`.
@@ -829,6 +879,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
@@ -846,10 +898,16 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_file(path, [reply_to=None, attach=None, extra=None, notify=True, caption=None])
+      .. versionchanged:: 0.5
 
-      Send the generic file found in the *path* to the chat. If the file you're
-      sending is in reply to another message, set *reply_to* to the ID of the
+         Added support for *file_id* and *url*
+
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+
+      Send a generic file to the chat. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      If the file you're sending is in reply to another message, set *reply_to* to the ID of the
       other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -859,6 +917,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str file_id: The Telegram *file_id* of the file
+      :param str url: The URL to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -877,7 +937,7 @@ about its business.
 
       .. versionchanged:: 0.5
 
-         Added support for caption
+         Added support for *caption*, *file_id* and *url*
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
