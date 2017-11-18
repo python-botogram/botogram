@@ -90,14 +90,17 @@ class ChatMixin:
         return self._api.call("sendMessage", args, expect=_objects().Message)
 
     @_require_api
-    def send_photo(self, path, caption=None, reply_to=None, extra=None,
+    def send_photo(self, path=None, idtg=None, caption=None, reply_to=None, extra=None,
                    attach=None, notify=True):
         """Send a photo"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
-
-        files = {"photo": open(path, "rb")}
+        if path is not None:
+            files = {"photo": open(path, "rb")}
+        elif idtg is not None:
+            args["photo"] = idtg
+            files = None
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -106,6 +109,9 @@ class ChatMixin:
     def send_audio(self, path, duration=None, performer=None,
                    title=None, reply_to=None, extra=None, attach=None,
                    notify=True, caption=None):
+    def send_audio(self, path=None, file_id=None, duration=None,
+                   performer=None, title=None, reply_to=None,
+                   extra=None, attach=None, notify=True, caption=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -117,13 +123,17 @@ class ChatMixin:
         if title is not None:
             args["title"] = title
 
-        files = {"audio": open(path, "rb")}
+        if path is not None:
+            files = {"audio": open(path, "rb")}
+        elif idtg is not None:
+            files = None
+            args["audio"] = idtg
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_voice(self, path, duration=None, title=None, reply_to=None,
+    def send_voice(self, path=None, idtg=None, duration=None, title=None, reply_to=None,
                    extra=None, attach=None, notify=True, caption=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -132,13 +142,17 @@ class ChatMixin:
         if duration is not None:
             args["duration"] = duration
 
-        files = {"voice": open(path, "rb")}
+        if path is not None:
+            files = {"voice": open(path, "rb")}
+        elif idtg is not None:
+            files = None
+            args["voice"] = idtg
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_video(self, path, duration=None, caption=None, reply_to=None,
+    def send_video(self, path=None, idtg=None, duration=None, caption=None, reply_to=None,
                    extra=None, attach=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -147,20 +161,28 @@ class ChatMixin:
         if caption is not None:
             args["caption"] = caption
 
-        files = {"video": open(path, "rb")}
+        if path is not None:
+            files = {"video": open(path, "rb")}
+        elif idtg is not None:
+            files = None
+            args["video"] = idtg
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path, reply_to=None, extra=None,
-                  attach=None, notify=True, caption=None):
+    def send_file(self, path=None, idtg=None, reply_to=None, extra=None, attach=None,
+                  notify=True, caption=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
 
-        files = {"document": open(path, "rb")}
+        if path is not None:
+            files = {"document": open(path, "rb")}
+        elif idtg is not None:
+            files = None
+            args["document"] = idtg
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
