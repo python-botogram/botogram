@@ -90,24 +90,30 @@ class ChatMixin:
         return self._api.call("sendMessage", args, expect=_objects().Message)
 
     @_require_api
-    def send_photo(self, path=None, idtg=None, caption=None, reply_to=None, extra=None,
-                   attach=None, notify=True):
+    def send_photo(self, path=None, file_id=None, url=None, caption=None,
+                   reply_to=None, extra=None, attach=None, notify=True):
         """Send a photo"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
         if path is not None:
             files = {"photo": open(path, "rb")}
-        elif idtg is not None:
-            args["photo"] = idtg
+        elif file_id is not None:
+            args["photo"] = file_id
             files = None
+        elif url is not None:
+            args["photo"] = url
+            files = None
+        elif path is None and file_id is None and url is not None:
+            raise TypeError("path or file_id or URL is  missing")
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_audio(self, path=None, idtg=None, duration=None, performer=None, title=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+    def send_audio(self, path=None, file_id=None, url=None, duration=None,
+                   title=None, performer=None, abstitle=None, reply_to=None,
+                   extra=None, attach=None, notify=True):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
@@ -119,16 +125,22 @@ class ChatMixin:
 
         if path is not None:
             files = {"audio": open(path, "rb")}
-        elif idtg is not None:
+        elif file_id is not None:
             files = None
-            args["audio"] = idtg
+            args["audio"] = file_id
+        elif url is not None:
+            args["audio"] = url
+            files = None
+        elif path is None and file_id is None and url is not None:
+            raise TypeError("path or file_id or URL is  missing")
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_voice(self, path=None, idtg=None, duration=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True):
+    def send_voice(self, path=None, url=None, file_id=None, duration=None,
+                   title=None, reply_to=None, extra=None, attach=None,
+                   notify=True):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
@@ -136,16 +148,22 @@ class ChatMixin:
 
         if path is not None:
             files = {"voice": open(path, "rb")}
-        elif idtg is not None:
+        elif file_id is not None:
             files = None
-            args["voice"] = idtg
+            args["voice"] = file_id
+        elif url is not None:
+            args["voice"] = url
+            files = None
+        elif path is None and file_id is None and url is not None:
+            raise TypeError("path or file_id or URL is  missing")
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_video(self, path=None, idtg=None, duration=None, caption=None, reply_to=None,
-                   extra=None, attach=None, notify=True):
+    def send_video(self, path=None, file_id=None, url=None,
+                   duration=None, caption=None, reply_to=None, extra=None,
+                   attach=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
@@ -155,24 +173,34 @@ class ChatMixin:
 
         if path is not None:
             files = {"video": open(path, "rb")}
-        elif idtg is not None:
+        elif file_id is not None:
             files = None
-            args["video"] = idtg
+            args["video"] = file_id
+        elif url is not None:
+            args["video"] = url
+            files = None
+        elif path is None and file_id is None and url is not None:
+            raise TypeError("path or file_id or URL is  missing")
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path=None, idtg=None, reply_to=None, extra=None, attach=None,
-                  notify=True):
+    def send_file(self, path=None, file_id=None, url=None, reply_to=None,
+                  extra=None, attach=None, notify=True):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
 
         if path is not None:
             files = {"document": open(path, "rb")}
-        elif idtg is not None:
+        elif file_id is not None:
             files = None
-            args["document"] = idtg
+            args["document"] = file_id
+        elif url is not None:
+            args["document"] = url
+            files = None
+        elif path is None and file_id is None and url is not None:
+            raise TypeError("path or file_id or URL is  missing")
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
