@@ -19,54 +19,55 @@ msgstr ""
 "Generated-By: Babel 2.3.4\n"
 
 #: botogram/defaults.py:46
-msgid "Use /help para obter uma lista de todos os comandos."
-msgstr ""
+msgid "Use /help to get a list of all the commands."
+msgstr "Use /help para obter uma lista de todos os comandos."
 
 #: botogram/defaults.py:53
-msgid "Comoece utilizando o bot."
-msgstr ""
+msgid "Start using the bot."
+msgstr "Comoece utilizando o bot."
 
 #: botogram/defaults.py:54
-msgid "Isto exibe uma mensagem de saudação."
-msgstr ""
+msgid "This shows a greeting message."
+msgstr "Isto exibe uma mensagem de saudação."
 
 #: botogram/defaults.py:62
-msgid "<b>Erro!</b> O comando <code>/help</code> aceita até um argumento."
-msgstr ""
+msgid "<b>Error!</b> The <code>/help</code> command allows up to one argument."
+msgstr "<b>Erro!</b> O comando <code>/help</code> aceita até um argumento."
 
 #: botogram/defaults.py:68 botogram/defaults.py:167
 #, python-format
-msgid "<b>Comando desconhecido:</b> <code>/%(name)s</code>"
-msgstr ""
+msgstr "<b>Comando desconhecido:</b> <code>/%(name)s</code>"
 
 #: botogram/defaults.py:71 botogram/defaults.py:169
 msgid "Use /help para obter uuma lista de todos os comandos."
 msgstr ""
 
 #: botogram/defaults.py:93
-msgid "<b>Este bot possui os seguintes comandos:</b>"
-msgstr ""
+msgid "<b>This bot supports those commands:</b>"
+msgstr "<b>Este bot possui os seguintes comandos:</b>"
 
 #: botogram/defaults.py:97 botogram/defaults.py:127
-msgid "Descrição não disponível."
-msgstr ""
+msgid "No description available."
+msgstr "Descrição não disponível."
 
 #: botogram/defaults.py:101 botogram/defaults.py:144
 msgid ""
+"You can also use <code>/help &lt;command&gt;</code> to get help about a "
+"specific command."
+msgstr ""
 "Você também pode utilizar o comando <code>/help &lt;command&gt;</code> para obter "
 "ajuda de um comando específico."
-msgstr ""
 
 #: botogram/defaults.py:105
-msgid "<i>Este bot não possui comandos.</i>"
-msgstr ""
+msgid "<i>This bot has no commands.</i>"
+msgstr "<i>Este bot não possui comandos.</i>"
 
 #: botogram/defaults.py:114 botogram/defaults.py:133
 #, python-format
-msgid "Por favor entre em contato com %(owner)s se você tiver problemas com esse bot."
-msgstr ""
+msgid "Please contact %(owner)s if you have problems with this bot."
+msgstr "Por favor entre em contato com %(owner)s se você tiver problemas com esse bot."
 
 #: botogram/defaults.py:143
-msgid "Exibe essa mensagem de ajuda."
-msgstr ""
+msgid "Show this help message."
+msgstr "Exibe essa mensagem de ajuda."
 
