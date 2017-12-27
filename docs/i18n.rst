@@ -19,6 +19,7 @@ Available translations
 
 The following languages are currently included in the botogram package:
 
+* ``br`` (Brazilian Portuguese)
 * ``en`` (English)
 * ``it`` (Italian)
 

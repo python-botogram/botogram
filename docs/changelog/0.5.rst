@@ -19,6 +19,7 @@ Release description not yet written.
 New features
 ------------
 
+* Added Brazilian Portuguese translation
 * Added ability to override default i18n messages
 
   * New attribute :py:attr:`botogram.Bot.override_i18n`
