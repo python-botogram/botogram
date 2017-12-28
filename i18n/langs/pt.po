@@ -1,0 +1,72 @@
+# English translations for botogram.
+# Copyright (C) 2016 Pietro Albini <pietro@pietroalbini.io>
+# This file is distributed under the same license as the botogram project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: botogram 1.0.dev0\n"
+"Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
+"POT-Creation-Date: 2017-12-26 21:27+0200\n"
+"PO-Revision-Date: 2017-12-28 11:44+0200\n"
+"Last-Translator: Fernando Possebon <possebon@gmail.com>\n"
+"Language: pt\n"
+"Language-Team: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: botogram/defaults.py:46
+msgid "Use /help to get a list of all the commands."
+msgstr "Use /help para obter uma lista de todos os comandos."
+
+#: botogram/defaults.py:53
+msgid "Start using the bot."
+msgstr "Comece a utilizar o bot."
+
+#: botogram/defaults.py:54
+msgid "This shows a greeting message."
+msgstr "Isto exibe uma mensagem de saudação."
+
+#: botogram/defaults.py:62
+msgid "<b>Error!</b> The <code>/help</code> command allows up to one argument."
+msgstr "<b>Erro!</b> O comando <code>/help</code> aceita até um argumento."
+
+#: botogram/defaults.py:68 botogram/defaults.py:167
+#, python-format
+msgstr "<b>Comando desconhecido:</b> <code>/%(name)s</code>"
+
+#: botogram/defaults.py:71 botogram/defaults.py:169
+msgid "Use /help para obter uma lista de todos os comandos."
+msgstr ""
+
+#: botogram/defaults.py:93
+msgid "<b>This bot supports those commands:</b>"
+msgstr "<b>Este bot possui os seguintes comandos:</b>"
+
+#: botogram/defaults.py:97 botogram/defaults.py:127
+msgid "No description available."
+msgstr "Descrição não disponível."
+
+#: botogram/defaults.py:101 botogram/defaults.py:144
+msgid ""
+"You can also use <code>/help &lt;command&gt;</code> to get help about a "
+"specific command."
+msgstr ""
+"Você também pode utilizar o comando <code>/help &lt;command&gt;</code> para obter "
+"ajuda de um comando específico."
+
+#: botogram/defaults.py:105
+msgid "<i>This bot has no commands.</i>"
+msgstr "<i>Este bot não possui comandos.</i>"
+
+#: botogram/defaults.py:114 botogram/defaults.py:133
+#, python-format
+msgid "Please contact %(owner)s if you have problems with this bot."
+msgstr "Por favor entre em contacto com %(owner)s se você tiver problemas com esse bot."
+
+#: botogram/defaults.py:143
+msgid "Show this help message."
+msgstr "Exibe essa mensagem de ajuda."
