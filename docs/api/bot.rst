@@ -575,7 +575,7 @@ components.
 
       .. deprecated:: 0.3 it will be removed in botogram 1.0
 
-   .. py:method:: send_audio(chat, path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_audio(chat, path, [caption=None, duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
 
       This method sends an audio track to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -598,6 +598,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the audio track
+      :param str caption: The caption of the audio
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -613,7 +614,7 @@ components.
 
       .. deprecated:: 0.3 it will be removed in botogram 1.0
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_voice(chat, path, [caption=None, duration=None, reply_to=None, extra=None, notify=True])
 
       This method sends a voice message to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -636,6 +637,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the voice message
+      :param str caption: The caption of the voice message
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
@@ -686,7 +688,7 @@ components.
 
       .. deprecated:: 0.3 it will be removed in botogram 1.0
 
-   .. py:method:: send_file(chat, path, [reply_to=None, extra=None, notify=True])
+   .. py:method:: send_file(chat, path, [caption=None, reply_to=None, extra=None, notify=True])
 
       This method sends a generic file to a specific chat. The chat must be
       identified by its ID, and Telegram applies some restrictions on the chats
@@ -708,6 +710,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the file
       :param str path: The path to the file
+      :param str caption: The caption of the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
