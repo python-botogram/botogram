@@ -598,7 +598,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the audio track
-      :param str caption The caption of the video
+      :param str caption: The caption of the audio
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -637,7 +637,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the photo.
       :param str path: The path to the voice message
-      :param str caption The caption of the video
+      :param str caption: The caption of the voice message
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
@@ -710,7 +710,7 @@ components.
 
       :param int chat: The ID of the chat which should receive the file
       :param str path: The path to the file
-      :param str caption The caption of the video
+      :param str caption: The caption of the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
