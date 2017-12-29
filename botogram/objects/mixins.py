@@ -103,8 +103,9 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_audio(self, path, caption=None, duration=None, performer=None, title=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+    def send_audio(self, path, caption=None, duration=None, performer=None,
+                   title=None, reply_to=None, extra=None, attach=None, 
+                   notify=True):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
