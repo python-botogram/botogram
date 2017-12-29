@@ -155,7 +155,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_audio(path, [caption=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send the audio track found in the *path* to the user. You may optionally
       specify the *duration*, the *performer* and the *title* of the audio
@@ -169,6 +169,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param str caption: A caption for the audio track.
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -187,7 +188,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_voice(chat, path, [caption=None, duration=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the user. You may
       optionally specify the *duration* of the voice message. If the voice
@@ -201,6 +202,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param str caption: A caption for the voice message.
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
@@ -248,7 +250,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_file(path, [reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_file(path, [caption=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send the generic file found in the *path* to the user. If the file you're
       sending is in reply to another message, set *reply_to* to the ID of the
@@ -261,6 +263,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str caption: A caption for the file.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
