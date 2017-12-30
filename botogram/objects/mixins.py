@@ -103,9 +103,9 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_audio(self, path, caption=None, duration=None, performer=None,
+    def send_audio(self, path, duration=None, performer=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True):
+                   notify=True, caption=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -123,8 +123,8 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_voice(self, path, caption=None, duration=None, title=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+    def send_voice(self, path, duration=None, title=None, reply_to=None,
+                   extra=None, attach=None, notify=True, caption=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -153,8 +153,8 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path, caption=None, reply_to=None, extra=None,
-                  attach=None, notify=True):
+    def send_file(self, path, reply_to=None, extra=None,
+                  attach=None, notify=True, caption=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
