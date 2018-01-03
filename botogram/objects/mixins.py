@@ -96,7 +96,7 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
-            
+        
         if path is not None and file_id is None and url is None:
             files = {"photo": open(path, "rb")}
         elif file_id is not None and path is None and url is None:
@@ -148,6 +148,7 @@ class ChatMixin:
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
                    notify=True, caption=None):
+
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
