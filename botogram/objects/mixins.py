@@ -105,14 +105,14 @@ class ChatMixin:
             args["photo"] = url
             files = None
         elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is  missing")
+            raise TypeError("path or file_id or URL is missing")
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
-                   title=None, performer=None, abstitle=None, reply_to=None,
+                   performer=None, title=None, reply_to=None,
                    extra=None, attach=None, notify=True, caption=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -134,13 +134,13 @@ class ChatMixin:
             args["audio"] = url
             files = None
         elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is  missing")
+            raise TypeError("path or file_id or URL is missing")
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_voice(self, path=None, url=None, file_id=None, duration=None,
+    def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
                    notify=True, caption=None):
         """Send a voice message"""
@@ -159,7 +159,7 @@ class ChatMixin:
             args["voice"] = url
             files = None
         elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is  missing")
+            raise TypeError("path or file_id or URL is missing")
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
@@ -184,7 +184,7 @@ class ChatMixin:
             args["video"] = url
             files = None
         elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is  missing")
+            raise TypeError("path or file_id or URL is missing")
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
@@ -206,7 +206,7 @@ class ChatMixin:
             args["document"] = url
             files = None
         elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is  missing")
+            raise TypeError("path or file_id or URL is missing")
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
