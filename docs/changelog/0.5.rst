@@ -19,6 +19,16 @@ Release description not yet written.
 New features
 ------------
 
+* Added Brazilian Portuguese translation
 * Added ability to override default i18n messages
 
   * New attribute :py:attr:`botogram.Bot.override_i18n`
+
+* Added support for captions in audios, files and voices
+
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_audio`
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_file`
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_voice`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_audio`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_file`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_voice`
