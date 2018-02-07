@@ -32,3 +32,18 @@ New features
   * New argument ``caption`` in :py:meth:`botogram.User.send_audio`
   * New argument ``caption`` in :py:meth:`botogram.User.send_file`
   * New argument ``caption`` in :py:meth:`botogram.User.send_voice`
+
+* Added support for sending media by ID or URL
+
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_audio`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_audio`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_voice`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_voice`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_video`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_video`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_file`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_file`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_photo`
