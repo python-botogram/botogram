@@ -42,7 +42,7 @@ def test_buttons(bot, sample_update):
     buttons[2].switch_inline_query("test 5", "wow", current_chat=True)
 
     with Context(bot, hook, sample_update):
-        assert buttons._serialize_attachment() == {
+        assert buttons._serialize_attachment(sample_update.chat()) == {
             "inline_keyboard": [
                 [
                     {"text": "test 1", "url": "http://example.com"},

@@ -69,7 +69,9 @@ class ChatMixin:
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = json.dumps(attach._serialize_attachment())
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self
+            ))
         if not notify:
             args["disable_notification"] = True
 
@@ -327,7 +329,9 @@ class MessageMixin:
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = json.dumps(attach._serialize_attachment())
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
 
         self._api.call("editMessageText", args)
         self.text = text
@@ -346,7 +350,9 @@ class MessageMixin:
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = json.dumps(attach._serialize_attachment())
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
 
         self._api.call("editMessageCaption", args)
         self.caption = caption

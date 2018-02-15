@@ -41,11 +41,11 @@ class ButtonsRow:
 
     def callback(self, label, callback, data=None):
         """Trigger a callback when the button is pressed"""
-        def generate_callback_data():
+        def generate_callback_data(chat):
             c = ctx()
 
             name = "%s:%s" % (c.component_name(), callback)
-            return get_callback_data(c.bot, c.chat(), name, data)
+            return get_callback_data(c.bot, chat, name, data)
 
         self._content.append({
             "text": label,
@@ -65,7 +65,7 @@ class ButtonsRow:
                 "switch_inline_query": query,
             })
 
-    def _get_content(self):
+    def _get_content(self, chat):
         """Get the content of this row"""
         for item in self._content:
             new = item.copy()
@@ -74,7 +74,7 @@ class ButtonsRow:
             # This allows to dynamically generate field values
             for key, value in new.items():
                 if callable(value):
-                    new[key] = value()
+                    new[key] = value(chat)
 
             yield new
 
@@ -90,9 +90,9 @@ class Buttons:
             self._rows[index] = ButtonsRow()
         return self._rows[index]
 
-    def _serialize_attachment(self):
+    def _serialize_attachment(self, chat):
         rows = [
-            list(row._get_content()) for i, row in sorted(
+            list(row._get_content(chat)) for i, row in sorted(
                 tuple(self._rows.items()), key=lambda i: i[0]
             )
         ]

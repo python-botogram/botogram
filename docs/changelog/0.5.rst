@@ -47,3 +47,8 @@ New features
   * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_file`
   * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_photo`
   * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_photo`
+
+Bug fixes
+---------
+
+* Fixed invalid callbacks sent to chats different than the current one
