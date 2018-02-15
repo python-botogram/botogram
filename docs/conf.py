@@ -36,8 +36,8 @@ project = "botogram"
 copyright = "2015-2016 Pietro Albini"
 author = "Pietro Albini"
 
-version = "0.4"
-release = "0.4"
+version = "0.5"
+release = "0.5"
 
 language = None
 
