@@ -1,0 +1,34 @@
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.6.x
+===========================
+
+Here you can find all the changes in the botogram 0.6.x releases.
+
+.. _changelog-0.6:
+
+botogram 0.6
+============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+New features
+------------
+
+* Added support for text formatting in media captions
+
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_photo`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_audio`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_file`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_video`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_voice`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_photo`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_audio`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_file`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_video`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_voice`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.edit_caption`
