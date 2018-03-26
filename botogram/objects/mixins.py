@@ -93,11 +93,15 @@ class ChatMixin:
 
     @_require_api
     def send_photo(self, path=None, file_id=None, url=None, caption=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+                   reply_to=None, extra=None, attach=None, notify=True, *,
+                   syntax=None):
         """Send a photo"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"photo": open(path, "rb")}
@@ -119,11 +123,15 @@ class ChatMixin:
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
                    performer=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True, caption=None):
+                   extra=None, attach=None, notify=True, caption=None, *,
+                   syntax=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
         if performer is not None:
@@ -151,13 +159,16 @@ class ChatMixin:
     @_require_api
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True, caption=None):
+                   notify=True, caption=None, *, syntax=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
         if duration is not None:
             args["duration"] = duration
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"voice": open(path, "rb")}
@@ -179,13 +190,16 @@ class ChatMixin:
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
                    duration=None, caption=None, reply_to=None, extra=None,
-                   attach=None, notify=True):
+                   attach=None, notify=True, *, syntax=None):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
         if caption is not None:
             args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"video": open(path, "rb")}
@@ -206,11 +220,15 @@ class ChatMixin:
 
     @_require_api
     def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None):
+                  extra=None, attach=None, notify=True, caption=None, *,
+                  syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"document": open(path, "rb")}
@@ -337,10 +355,13 @@ class MessageMixin:
         self.text = text
 
     @_require_api
-    def edit_caption(self, caption, extra=None, attach=None):
+    def edit_caption(self, caption, extra=None, attach=None, *, syntax=None):
         """Edit this message's caption"""
         args = {"message_id": self.message_id, "chat_id": self.chat.id}
         args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if extra is not None:
             _deprecated_message(

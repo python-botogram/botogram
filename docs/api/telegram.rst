@@ -125,7 +125,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a photo to the user. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -149,6 +149,7 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -163,8 +164,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the user. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -190,6 +195,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the audio track.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -204,8 +210,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None])
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the user. You can specify the audio by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -229,6 +239,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the voice message.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -243,8 +254,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
 
       Send a video to the user. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -268,6 +283,7 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -282,8 +298,12 @@ about its business.
        .. versionchanged:: 0.5
 
          Added support for *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the user. You can specify the file by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -305,6 +325,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the file.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -319,6 +340,10 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
@@ -742,7 +767,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, attach=None, extra=None, attach=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, attach=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a photo to the chat. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -766,6 +791,7 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -780,8 +806,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, extra=None, attach=None, notify=True, caption=None])
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the chat. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -808,6 +838,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the audio track.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -822,8 +853,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, extra=None, attach=None, notify=True, caption=None])
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the chat. You can specify the audio by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -847,6 +882,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the voice message.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -861,8 +897,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, extra=None, attach=None, notify=True])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a video to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -887,6 +927,7 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -901,8 +942,12 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -924,6 +969,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the file.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -938,6 +984,10 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
@@ -1470,7 +1520,7 @@ about its business.
 
       .. versionadded:: 0.4
 
-   .. py:method:: edit_caption(caption, [attach=None, extra=None])
+   .. py:method:: edit_caption(caption, [attach=None, extra=None, syntax=None])
 
       With this method you can edit the caption of the media attached to a
       message the user already received. This allows you to do a lot of
@@ -1482,12 +1532,17 @@ about its business.
       :param str caption: The new caption of the media file.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
+      :param str syntax: The name of the syntax used for the message.
 
       .. deprecated:: 0.4
 
          The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
+      
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
    .. py:method:: edit_attach(attach)
 
