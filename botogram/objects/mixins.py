@@ -273,12 +273,34 @@ class ChatMixin:
         self._api.call("sendVenue", args, expect=_objects().Message)
 
     @_require_api
-    def send_sticker(self, sticker, reply_to=None, extra=None, attach=None,
-                     notify=True):
+    def send_sticker(self, sticker=None, reply_to=None, extra=None,
+                     attach=None, notify=True, *,
+                     path=None, file_id=None, url=None):
         """Send a sticker"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        if sticker is not None:
+            if path is not None:
+                raise TypeError("The sticker argument is overridden by " +
+                                "the path one")
+            path = sticker
+            _deprecated_message(
+                "The sticker parameter", "1.0", "use the path parameter", -3
+            )
 
-        files = {"sticker": open(sticker, "rb")}
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if path is not None and file_id is None and url is None:
+            files = {"sticker": open(path, "rb")}
+        elif file_id is not None and path is None and url is None:
+            files = None
+            args["sticker"] = file_id
+        elif url is not None and file_id is None and path is None:
+            args["sticker"] = url
+            files = None
+        elif path is None and file_id is None and url is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path, file_id and URL must be " +
+                            "passed")
+
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
 
