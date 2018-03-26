@@ -412,11 +412,12 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, path=None, file_id=None, url=None])
 
-      Send the sticker to the user (in webp format). If the sticker you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`.
+      Send the sticker to the user (in webp format). You can specify the sticker by
+      passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
+      arguments must be passed. If the sticker you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
       :ref:`buttons <buttons>` to the message.
@@ -429,12 +430,19 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str path: The path to the webp-formatted sticker
+      :param str file_id: The Telegram *file_id* of the sticker
+      :param str url: The URL to the webp-formatted sticker
       :returns: The message you sent
       :rtype: ~botogram.Message
 
       .. deprecated:: 0.4
 
          The *extra* parameter is now deprecated
+         
+     .. deprecated:: 0.6
+
+         The *sticker* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
@@ -1053,11 +1061,12 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, file_id=None, url=None])
 
-      Send the sticker to the chat (in webp format). If the sticker you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`.
+      Send the sticker to the chat (in webp format). You can specify the sticker by
+      passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
+      arguments must be passed. If the sticker you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
       :ref:`buttons <buttons>` to the message.
@@ -1070,12 +1079,19 @@ about its business.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str path: The path to the webp-formatted sticker
+      :param str file_id: The Telegram *file_id* of the sticker
+      :param str url: The URL to the webp-formatted sticker
       :returns: The message you sent
       :rtype: ~botogram.Message
 
       .. deprecated:: 0.4
 
          The *extra* parameter is now deprecated
+         
+     .. deprecated:: 0.6
+
+         The *sticker* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
