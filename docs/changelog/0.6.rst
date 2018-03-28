@@ -32,3 +32,15 @@ New features
   * New argument ``syntax`` in :py:meth:`botogram.User.send_video`
   * New argument ``syntax`` in :py:meth:`botogram.User.send_voice`
   * New argument ``syntax`` in :py:meth:`botogram.Message.edit_caption`
+  
+* Added support for sending stickers by ID or URL
+  
+  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_sticker`
+  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.User.send_sticker`
+  
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* The ``sticker`` parameter in :py:meth:`botogram.Chat.send_sticker` and :py:meth:`botogram.User.send_sticker` is now deprecated
