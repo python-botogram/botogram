@@ -21,6 +21,9 @@
 from .. import api
 from .base import BaseObject, multiple
 from . import mixins
+from datetime import datetime as dt
+from time import mktime
+
 
 from .media import Photo
 
@@ -38,6 +41,8 @@ class User(BaseObject, mixins.ChatMixin):
     optional = {
         "last_name": str,
         "username": str,
+        "language_code": str,
+        "is_bot": bool
     }
     _check_equality_ = "id"
 
@@ -102,6 +107,13 @@ class Chat(BaseObject, mixins.ChatMixin):
         "username": str,
         "first_name": str,
         "last_name": str,
+        "all_members_are_administrators": bool,
+        "description": str,
+        "invite_link": str,
+        # This is added at the bottom of messages.py due to circular imports
+        # "pinned_message" = Message
+        "sticker_set_name": str,
+        "can_set_sticker_set": bool
     }
     _check_equality_ = "id"
 
@@ -260,6 +272,112 @@ class Chat(BaseObject, mixins.ChatMixin):
             "user_id": user,
         })
 
+    def kick(self, user, time=None):
+        if self.type == "private":
+            raise RuntimeError("This chat is a private!")
+        if isinstance(user, User):
+            user = user.id
+
+        if time is None:
+            self._api.call("unbanChatMember", {
+                "chat_id": self.id,
+                "user_id": user
+            })
+        else:
+            if isinstance(time, dt):
+                time = mktime(time.timetuple())
+            self._api.call("kickChatMember", {
+                "chat_id": self.id,
+                "user_id": user,
+                "until_date": time
+            })
+
+    def permissions(self, user):
+        return Permissions(user, self)
+
+
+class Permissions:
+    def __init__(self, user, chat):
+        if chat.type not in ("group", "supergroup"):
+            raise RuntimeError("This chat is not a group or a supergroup!")
+        # Accept also an instance of `User`
+        self._chatid = chat.id
+        self._api = chat._api
+        if isinstance(user, User):
+            self._user = user.id
+        else:
+            self._user = user
+        infouser = self._api.call("getChatMember", {
+                                                    "chat_id": self._chatid,
+                                                    "user_id": self._user},
+                                  expect=ChatMember)
+
+        try:
+            self._until_date = infouser.until_date
+        except AttributeError:
+            self._until_date = 0
+        self.until_date = self._until_date
+
+        try:
+            self._send_messages = infouser.can_send_messages
+        except AttributeError:
+            self._send_messages = True
+        self.send_messages = self._send_messages
+
+        try:
+            self._send_media_messages = infouser.can_media_messages
+        except AttributeError:
+            self._send_media_messages = True
+        self.send_media_messages = self._send_media_messages
+
+        try:
+            self._send_other_messages = infouser.can_send_other_messages
+        except AttributeError:
+            self._send_other_messages = True
+        self.send_other_messages = self._send_other_messages
+
+        try:
+            self._add_web_page_previews = infouser.can_add_web_page_previews
+        except AttributeError:
+            self._add_web_page_previews = True
+        self.add_web_page_previews = self._add_web_page_previews
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.save()
+
+    def save(self):
+        arguments = {
+                    "chat_id": self.chatid,
+                    "user_id": self.user
+                    }
+        modify = False
+
+        if isinstance(self.until_date, dt):
+            self.until_date = mktime(self.until_date.timetuple())
+            modify = True
+        if self._until_date != self.until_date:
+            arguments.update({"until_date": self.until_date})
+            modify = True
+        if self._send_messages != self.send_messages:
+            arguments.update({"can_send_messages": self.send_messages})
+            modify = True
+        if self._send_media_messages != self.send_media_messages:
+            arguments.update({"can_send_media_messages": self.send_media_messages})
+            modify = True
+        if self._send_other_messages != self.send_other_messages:
+            arguments.update({"can_send_other_messages": self.send_other_messages})
+            modify = True
+        if self._add_web_page_previews != self.add_web_page_previews:
+            arguments.update({"can_add_web_page_previews": self.add_web_page_previews})
+            modify = True
+
+        if modify:
+            self._api.call("restrictChatMember", arguments)
+
 
 class ChatMember(BaseObject):
     """Telegram API representation of a chat member
@@ -270,6 +388,22 @@ class ChatMember(BaseObject):
     required = {
         "user": User,
         "status": str,
+    }
+    optional = {
+        "until_date": int,
+        "can_be_edited": bool,
+        "can_change_info": bool,
+        "can_post_messages": bool,
+        "can_edit_messages": bool,
+        "can_delete_messages": bool,
+        "can_invite_users": bool,
+        "can_restrict_members": bool,
+        "can_pin_messages": bool,
+        "can_promote_members": bool,
+        "can_send_messages": bool,
+        "can_send_media_messages": bool,
+        "can_send_other_messages": bool,
+        "can_add_web_page_previews": bool
     }
     _check_equality_ = "user"
 
@@ -284,3 +418,9 @@ class UserProfilePhotos(BaseObject):
         "total_count": int,
         "photos": multiple(Photo),
     }
+
+
+# add this code on the button to avoid import loop
+# flake8: noqa
+from .messages import Message
+Chat.optional["pinned_message"] = Message
