@@ -161,7 +161,7 @@ class FrozenBot:
         """Helper method for edit_message and edit_caption"""
         # Also accept objects
         if hasattr(message, "message_id"):
-            message = message.message_id
+            message = message.id
         if hasattr(chat, "id"):
             chat = chat.id
 
@@ -179,15 +179,15 @@ class FrozenBot:
         }, self.api)
 
     def edit_message(self, chat, message, text, syntax=None, preview=True,
-                     extra=None):
+                     extra=None, attach=None):
         """Edit a message already sent to the user"""
         msg = self._edit_create_fake_message_object(chat, message)
-        msg.edit(text, syntax, preview, extra)
+        msg.edit(text, syntax, preview, extra, attach)
 
-    def edit_caption(self, chat, message, caption, extra=None):
+    def edit_caption(self, chat, message, caption, extra=None, attach=None):
         """Edit the caption of a media already sent to the user"""
         msg = self._edit_create_fake_message_object(chat, message)
-        msg.edit_caption(caption, extra)
+        msg.edit_caption(caption, extra, attach)
 
     # Let's process the messages
 

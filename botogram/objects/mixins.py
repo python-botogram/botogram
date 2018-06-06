@@ -56,7 +56,7 @@ class ChatMixin:
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
         if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
+            reply_to = reply_to.id
 
         args = {"chat_id": self.id}
         if reply_to is not None:
@@ -311,7 +311,7 @@ class MessageMixin:
     @_require_api
     def edit(self, text, syntax=None, preview=True, extra=None, attach=None):
         """Edit this message"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["text"] = text
 
         syntax = syntaxes.guess_syntax(text, syntax)
@@ -420,7 +420,7 @@ class MessageMixin:
         """Delete the message"""
         return self._api.call("deleteMessage", {
             "chat_id": self.chat.id,
-            "message_id": self.message_id,
+            "message_id": self.id,
         })
 
 

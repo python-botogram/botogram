@@ -28,6 +28,7 @@ about its business.
 * :py:class:`~botogram.Voice`
 * :py:class:`~botogram.Contact`
 * :py:class:`~botogram.Location`
+* :py:class:`~botogram.Permissions`
 * :py:class:`~botogram.Venue`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
@@ -69,6 +70,13 @@ about its business.
       You can't write to this attribute, but it automatically updates when you
       change :py:attr:`~botogram.User.first_name` or
       :py:attr:`~botogram.User.last_name`.
+
+   .. py:attribute:: is_bot
+
+      is_bot indicates if the user is a bot. due to the telegram privacy rules,
+      this can be true only when your bot can actually see other bots' messages.
+
+
 
       .. versionadded:: 0.2
 
@@ -497,6 +505,42 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: all_members_are_administrators
+
+      This attribute is True if all the members of the group are administrator.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: description
+
+      The group/channel description
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: invite_link
+
+      This group chat/channel invite link.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: pinned_message
+
+      This group/chat pinned :py:class:`~botogram.Message`
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: sticker_set_name
+
+      The name of the supergroup's sticker set.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: can_set_sticker_set
+
+      This attribute is True if the bot can set this supergroup's sticker set.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: name
 
       The computed name of the chat. If this chat has a title this attribute
@@ -708,6 +752,47 @@ about its business.
                        :py:class:`~botogram.User`)
 
       .. versionadded:: 0.3
+
+   .. py:method:: kick(user[, time=None])
+
+      Kick the user form this group chat.
+
+      Remember your bot must be an administrator of the chat in order for this method to work properly.
+
+     :param int user: The user you want to kick (user ID or
+                       :py:class:`~botogram.User`)
+
+     :param int time:  until the user can't enter in the chat (unix time or
+                       datetime format)
+
+   .. py:method:: permissions(user)
+
+     Retrieve or edit the permissions of the provided user in the current group. This method returns an instance of
+     :py:class:`~botogram.Permissions`
+
+      .. code-block:: python
+
+         from datetime import datetime as dt, timedelta
+         @bot.command("limit")
+         def limit_user(chat, message):
+          # Allow only groups
+          if chat.type not in ("group", "supergroup"):
+             return
+
+         # Allow only replies with text in the reply
+         if message.text is None or message.reply_to_message is None:
+             return
+
+         # Allow only admins to limit people
+         if message.sender not in chat.admins:
+             return
+         with chat.permissions(message.reply_to_message.sender) as perms:
+             perms.send_messages = False
+             perms.until_date = dt.now() + timedelta(minutes=10)
+
+      :param int user: The user you want to change permissions (user ID or :py:class:`~botogram.User`)
+      :returns: The class to edit permissions
+      :rtype: :py:class:`~botogram.Permissions`
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
@@ -1176,7 +1261,7 @@ about its business.
    This class represents messages received by and sent from your bot. Messages
    serve as a container for many of the core API objects described here.
 
-   .. py:attribute:: message_id
+   .. py:attribute:: id
 
       The integer ID of the message.
 
@@ -2162,6 +2247,39 @@ about its business.
    .. py:attribute:: latitude
 
       The float latitude as defined by the sender.
+
+
+.. py:class:: botogram.Permissions
+
+   This class represents the permissions of the user.
+   If you use this as a context manager, the save method will automatically be called if no exceptions were raised."
+   [example with only the context manager, not the full handler]
+
+   .. py:attribute:: until_date
+
+      The unix timestamp or datime format of when the changes you're doing will be reverted.
+
+   .. py:attribute:: send_messages
+
+      The boolean value if the user can send messages.
+
+   .. py:attribute:: send_media_messages
+
+      The boolean value if the user can send media messages.
+
+   .. py:attribute:: send_other_messages
+
+      The boolean value if the user can send other messages.
+
+   .. py:attribute:: add_web_page_previews
+
+      The boolean value if the user can send web page previews.
+
+   .. py:method:: save()
+
+      Send the changes to Telegram.
+
+      This method automatically detects the changes you made and doesn't do anything if no attribute was changed.
 
 
 .. py:class:: botogram.Venue
