@@ -2257,7 +2257,8 @@ about its business.
 
    This class represents the permissions of the user.
    If you use this as a context manager, the save method will automatically be called if no exceptions were raised."
-   [example with only the context manager, not the full handler]
+
+   .. versionadded:: 0.6
 
    .. py:attribute:: until_date
 
@@ -2285,7 +2286,6 @@ about its business.
 
       This method automatically detects the changes you made and doesn't do anything if no attribute was changed.
 
-      .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Venue
