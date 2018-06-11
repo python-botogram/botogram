@@ -20,7 +20,7 @@
 
 # flake8: noqa
 
-from .chats     import User, Chat, UserProfilePhotos
+from .chats     import User, Chat, UserProfilePhotos, Permissions
 from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
                        Video, Contact, Location, Venue
 from .messages  import Message
