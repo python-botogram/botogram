@@ -460,8 +460,11 @@ components.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+      .. versionchanged:: 0.6
 
-   .. py:method:: edit_caption(caption, [extra=None])
+         Added support for attach
+
+   .. py:method:: edit_caption(caption, [attach=None, extra=None])
 
       With this method you can edit the caption of the media attached to a
       message the user already received. This allows you to do a lot of
@@ -471,9 +474,14 @@ components.
       Please remember you can only edit messages your bot sent to the user.
 
       :param str caption: The new caption of the media file.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+
+      .. versionchanged:: 0.6
+
+         Added support for attach
 
    .. py:method:: chat(id)
 

@@ -75,9 +75,6 @@ about its business.
 
       is_bot indicates if the user is a bot. due to the telegram privacy rules,
       this can be true only when your bot can actually see other bots' messages.
-
-
-
       .. versionadded:: 0.2
 
    .. py:attribute:: avatar
@@ -510,36 +507,42 @@ about its business.
       This attribute is True if all the members of the group are administrator.
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: description
 
       The group/channel description
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: invite_link
 
       This group chat/channel invite link.
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: pinned_message
 
       This group/chat pinned :py:class:`~botogram.Message`
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: sticker_set_name
 
       The name of the supergroup's sticker set.
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: can_set_sticker_set
 
       This attribute is True if the bot can set this supergroup's sticker set.
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: name
 
@@ -793,6 +796,7 @@ about its business.
       :param int user: The user you want to change permissions (user ID or :py:class:`~botogram.User`)
       :returns: The class to edit permissions
       :rtype: :py:class:`~botogram.Permissions`
+      .. versionadded:: 0.6
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
@@ -2280,6 +2284,8 @@ about its business.
       Send the changes to Telegram.
 
       This method automatically detects the changes you made and doesn't do anything if no attribute was changed.
+
+      .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Venue

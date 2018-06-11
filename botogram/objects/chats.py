@@ -307,8 +307,8 @@ class Permissions:
         else:
             self._user = user
         infouser = self._api.call("getChatMember", {
-                                                    "chat_id": self._chatid,
-                                                    "user_id": self._user},
+            "chat_id": self._chatid,
+            "user_id": self._user},
                                   expect=ChatMember)
 
         try:
@@ -350,9 +350,9 @@ class Permissions:
 
     def save(self):
         arguments = {
-                    "chat_id": self.chatid,
-                    "user_id": self.user
-                    }
+            "chat_id": self.chatid,
+            "user_id": self.user
+        }
         modify = False
 
         if isinstance(self.until_date, dt):
@@ -365,13 +365,16 @@ class Permissions:
             arguments.update({"can_send_messages": self.send_messages})
             modify = True
         if self._send_media_messages != self.send_media_messages:
-            arguments.update({"can_send_media_messages": self.send_media_messages})
+            arguments.update({"can_send_media_messages":
+                             self.send_media_messages})
             modify = True
         if self._send_other_messages != self.send_other_messages:
-            arguments.update({"can_send_other_messages": self.send_other_messages})
+            arguments.update({"can_send_other_messages":
+                             self.send_other_messages})
             modify = True
         if self._add_web_page_previews != self.add_web_page_previews:
-            arguments.update({"can_add_web_page_previews": self.add_web_page_previews})
+            arguments.update({"can_add_web_page_previews":
+                             self.add_web_page_previews})
             modify = True
 
         if modify:
