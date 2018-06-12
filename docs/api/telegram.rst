@@ -130,7 +130,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, syntax=None, reply_to=None, extra=None, attach=None, notify=True])
 
       Send a photo to the user. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -150,6 +150,7 @@ about its business.
       :param str file_id: The Telegram *file_id* of the photo.
       :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
+      :param str syntax: The name of the syntax used for the caption.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -169,7 +170,11 @@ about its business.
 
          Added support for *file_id* and *url*.
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the user. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -195,6 +200,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the audio track.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -210,7 +216,11 @@ about its business.
 
          Added support for *caption*, *file_id* and *url*.
 
-   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None])
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the user. You can specify the audio by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -234,6 +244,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the voice message.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -249,7 +260,11 @@ about its business.
 
          Added support for *caption*, *file_id* and *url*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, syntax=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a video to the user. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -269,6 +284,7 @@ about its business.
       :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param str syntax: The name of the syntax used for the caption.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -288,7 +304,11 @@ about its business.
 
          Added support for *file_id* and *url*.
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None])
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the user. You can specify the file by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -310,6 +330,7 @@ about its business.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :param str caption: A caption for the file.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
@@ -324,6 +345,10 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*.
+
+      .. versionchanged:: 0.6
+
+         Added support for syntax
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
@@ -1159,6 +1184,25 @@ about its business.
       :param message: The message to delete (can be an ID too)
 
       .. versionadded:: 0.4
+
+   .. py:method:: pin_message(message[, notify=True])
+
+      Pin the message with the provided ID or :py:class:`~botogram.Message` object .
+      A message can be pinned only if it's sent in a supergroup or channel where the bot is an admin.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param message: The message to delete (can be an ID too)
+      :param bool notify: If you want to trigger a notification on the client
+
+      .. versionadded:: 0.6
+
+   .. py:method:: unpin_message()
+
+      Unpin the pessage pinned
+
+      .. versionadded:: 0.6
 
 .. py:class:: botogram.ParsedText
 

@@ -93,7 +93,8 @@ class ChatMixin:
 
     @_require_api
     def send_photo(self, path=None, file_id=None, url=None, caption=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+                   syntax=None, reply_to=None, extra=None, attach=None,
+                   notify=True):
         """Send a photo"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -112,6 +113,9 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -119,7 +123,8 @@ class ChatMixin:
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
                    performer=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True, caption=None):
+                   extra=None, attach=None, notify=True, caption=None,
+                   syntax=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -144,6 +149,9 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -151,7 +159,7 @@ class ChatMixin:
     @_require_api
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True, caption=None):
+                   notify=True, caption=None, syntax=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -173,12 +181,16 @@ class ChatMixin:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
 
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
+
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, reply_to=None, extra=None,
+                   duration=None, caption=None, syntax=None, reply_to=None, extra=None,
                    attach=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -201,12 +213,17 @@ class ChatMixin:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
 
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
+
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None):
+                  extra=None, attach=None, notify=True, caption=None,
+                  syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -225,6 +242,10 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
+
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
@@ -337,7 +358,7 @@ class MessageMixin:
         self.text = text
 
     @_require_api
-    def edit_caption(self, caption, extra=None, attach=None):
+    def edit_caption(self, caption, extra=None, attach=None, syntax=None):
         """Edit this message's caption"""
         args = {"message_id": self.message_id, "chat_id": self.chat.id}
         args["caption"] = caption
@@ -353,6 +374,9 @@ class MessageMixin:
             args["reply_markup"] = json.dumps(attach._serialize_attachment(
                 self.chat
             ))
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         self._api.call("editMessageCaption", args)
         self.caption = caption
