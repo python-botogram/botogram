@@ -99,6 +99,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"photo": open(path, "rb")}
@@ -113,9 +116,6 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -129,6 +129,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
         if performer is not None:
@@ -149,9 +152,6 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -164,6 +164,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
 
@@ -181,23 +184,22 @@ class ChatMixin:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
 
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
-
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, syntax=None, reply_to=None, extra=None,
-                   attach=None, notify=True):
+                   duration=None, caption=None, syntax=None, reply_to=None,
+                   extra=None, attach=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"video": open(path, "rb")}
@@ -213,10 +215,6 @@ class ChatMixin:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
 
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
-
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
@@ -228,6 +226,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"document": open(path, "rb")}
@@ -242,10 +243,6 @@ class ChatMixin:
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
-
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
@@ -360,7 +357,7 @@ class MessageMixin:
     @_require_api
     def edit_caption(self, caption, extra=None, attach=None, syntax=None):
         """Edit this message's caption"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["caption"] = caption
 
         if extra is not None:
@@ -384,7 +381,7 @@ class MessageMixin:
     @_require_api
     def edit_attach(self, attach):
         """Edit this message's attachment"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["reply_markup"] = attach
 
         self._api.call("editMessageReplyMarkup", args)
