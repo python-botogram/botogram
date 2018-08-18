@@ -1219,6 +1219,8 @@ about its business.
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
+      .. versionadded:: 0.6
+
 .. py:class:: botogram.ParsedText
 
    This class contains the parsed representation of the text of a received
@@ -2408,6 +2410,8 @@ about its business.
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param str syntax: The name of the syntax used for the caption.
+
+   .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Update
