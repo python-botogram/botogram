@@ -23,6 +23,7 @@ import json
 
 from .. import utils
 from .. import syntaxes
+from .base import multiple
 from ..utils.deprecations import _deprecated_message
 
 
@@ -55,7 +56,7 @@ class ChatMixin:
     def _get_call_args(self, reply_to, extra, attach, notify):
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
+        if hasattr(reply_to, "id"):
             reply_to = reply_to.id
 
         args = {"chat_id": self.id}
@@ -306,6 +307,16 @@ class ChatMixin:
             "message_id": message,
         })
 
+    @_require_api
+    def send_album(self, album=None, reply_to=None, notify=True):
+        albums = send_album(self, reply_to, notify)
+        if album is not None:
+            albums._content = album._content
+            albums._file = album._file
+            albums._used = True
+            return albums.save()
+        return albums
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -457,3 +468,37 @@ class FileMixin:
         downloaded = self._api.file_content(response["result"]["file_path"])
         with open(path, 'wb') as f:
             f.write(downloaded)
+
+
+# add this code on the button to avoid import loop
+# flake8: noqa
+from .media import Album
+
+
+class send_album(Album):
+    def __init__(self, chat, reply_to=None, notify=True):
+        self._get_call_args = chat._get_call_args
+        self._api = chat._api
+        self.reply_to = reply_to
+        self.notify = notify
+        Album.__init__(self)
+        self._used = False
+
+    def __enter__(self):
+        self._used = True
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.save()
+
+    def save(self):
+        args = self._get_call_args(self.reply_to, None, None, self.notify)
+        args["media"] = json.dumps(self._content)
+        return self._api.call("sendMediaGroup", args, self._file,
+                              expect=multiple(_objects().Message))
+
+    def __del__(self):
+        if not self._used:
+            utils.warn(1, "error_with_album",
+                       "you should use `with` to use send_album -- check the documentation")

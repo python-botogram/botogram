@@ -270,7 +270,7 @@ about its business.
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
       
       You may optionally specify the *duration* and the *caption* of the video.
-      If the audio track you're sending is in reply to another message, 
+      If the video you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -1203,6 +1203,21 @@ about its business.
       Unpin the pessage pinned
 
       .. versionadded:: 0.6
+
+   .. py:method:: send_album([album=None, reply_to=None, notify=True])
+
+      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
+      message you are sending is in reply to another, set *reply_to* to the ID
+      of the other :py:class:`~botogram.Message`.
+      The *notify* parameter defines if your message should
+      trigger the notification on the client side (yes by default).
+
+      :param album: The :py:class:`~botogram.Album` send to the chat
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool notify: If you want to trigger a notification on the client
+
+      :returns: The messages you sent
+      :rtype: list of :py:class:`~botogram.Message`
 
 .. py:class:: botogram.ParsedText
 
@@ -2360,6 +2375,39 @@ about its business.
       the venue.
 
       *This value can be None if the venue doesn't have a Foursquare ID.*
+
+
+.. py:class:: botogram.Album
+
+
+   This object represents an album (a group of photos and videos)
+
+   .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
+
+      Add a photo to the album. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify a *caption* for the photo being sent.
+
+      :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
+      :param str caption: A caption for the photo.
+      :param str syntax: The name of the syntax used for the caption.
+
+   .. py:method:: add_video([path=None, file_id=None, url=None, duration=None, caption=None, syntax=None])
+
+      Add a video to the album. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration* and the *caption* of the video.
+
+      :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
+      :param int duration: The video duration, in seconds
+      :param str caption: The caption of the video
+      :param str syntax: The name of the syntax used for the caption.
 
 
 .. py:class:: botogram.Update
