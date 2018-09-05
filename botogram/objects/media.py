@@ -296,4 +296,3 @@ class Album:
                             "passed")
 
         self._content.append(args)
-

@@ -501,4 +501,5 @@ class send_album(Album):
     def __del__(self):
         if not self._used:
             utils.warn(1, "error_with_album",
-                       "you should use `with` to use send_album -- check the documentation")
+                       "you should use `with` to use send_album\
+                        -- check the documentation")

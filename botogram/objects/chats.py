@@ -296,7 +296,7 @@ class Chat(BaseObject, mixins.ChatMixin):
 
     def pin_message(self, message, notify=True):
         # Check if the chat is a supergroup
-        if self.type not in  ("supergroup","channel"):
+        if self.type not in ("supergroup", "channel"):
             raise RuntimeError("This chat is nota a supergroup or channel!")
 
         if isinstance(message, Message):
@@ -309,7 +309,7 @@ class Chat(BaseObject, mixins.ChatMixin):
         }, expect=bool)
 
     def unpin_message(self):
-        return  self._api.call("unpinChatMessage", {
+        return self._api.call("unpinChatMessage", {
             "chat_id": self.id,
         }, expect=bool)
 
