@@ -23,6 +23,7 @@ import json
 
 from .. import utils
 from .. import syntaxes
+from .base import multiple
 from ..utils.deprecations import _deprecated_message
 
 
@@ -55,8 +56,8 @@ class ChatMixin:
     def _get_call_args(self, reply_to, extra, attach, notify):
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
-            reply_to = reply_to.message_id
+        if hasattr(reply_to, "id"):
+            reply_to = reply_to.id
 
         args = {"chat_id": self.id}
         if reply_to is not None:
@@ -93,11 +94,15 @@ class ChatMixin:
 
     @_require_api
     def send_photo(self, path=None, file_id=None, url=None, caption=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+                   syntax=None, reply_to=None, extra=None, attach=None,
+                   notify=True):
         """Send a photo"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"photo": open(path, "rb")}
@@ -119,11 +124,15 @@ class ChatMixin:
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
                    performer=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True, caption=None):
+                   extra=None, attach=None, notify=True, caption=None,
+                   syntax=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
         if performer is not None:
@@ -151,11 +160,14 @@ class ChatMixin:
     @_require_api
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True, caption=None):
+                   notify=True, caption=None, syntax=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
 
@@ -178,14 +190,17 @@ class ChatMixin:
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, reply_to=None, extra=None,
-                   attach=None, notify=True):
+                   duration=None, caption=None, syntax=None, reply_to=None,
+                   extra=None, attach=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"video": open(path, "rb")}
@@ -206,11 +221,15 @@ class ChatMixin:
 
     @_require_api
     def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None):
+                  extra=None, attach=None, notify=True, caption=None,
+                  syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
             args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"document": open(path, "rb")}
@@ -288,6 +307,16 @@ class ChatMixin:
             "message_id": message,
         })
 
+    @_require_api
+    def send_album(self, album=None, reply_to=None, notify=True):
+        albums = send_album(self, reply_to, notify)
+        if album is not None:
+            albums._content = album._content
+            albums._file = album._file
+            albums._used = True
+            return albums.save()
+        return albums
+
 
 class MessageMixin:
     """Add some methods for messages"""
@@ -311,7 +340,7 @@ class MessageMixin:
     @_require_api
     def edit(self, text, syntax=None, preview=True, extra=None, attach=None):
         """Edit this message"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["text"] = text
 
         syntax = syntaxes.guess_syntax(text, syntax)
@@ -337,9 +366,9 @@ class MessageMixin:
         self.text = text
 
     @_require_api
-    def edit_caption(self, caption, extra=None, attach=None):
+    def edit_caption(self, caption, extra=None, attach=None, syntax=None):
         """Edit this message's caption"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["caption"] = caption
 
         if extra is not None:
@@ -353,6 +382,9 @@ class MessageMixin:
             args["reply_markup"] = json.dumps(attach._serialize_attachment(
                 self.chat
             ))
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         self._api.call("editMessageCaption", args)
         self.caption = caption
@@ -360,7 +392,7 @@ class MessageMixin:
     @_require_api
     def edit_attach(self, attach):
         """Edit this message's attachment"""
-        args = {"message_id": self.message_id, "chat_id": self.chat.id}
+        args = {"message_id": self.id, "chat_id": self.chat.id}
         args["reply_markup"] = attach
 
         self._api.call("editMessageReplyMarkup", args)
@@ -420,7 +452,7 @@ class MessageMixin:
         """Delete the message"""
         return self._api.call("deleteMessage", {
             "chat_id": self.chat.id,
-            "message_id": self.message_id,
+            "message_id": self.id,
         })
 
 
@@ -436,3 +468,38 @@ class FileMixin:
         downloaded = self._api.file_content(response["result"]["file_path"])
         with open(path, 'wb') as f:
             f.write(downloaded)
+
+
+# add this code on the button to avoid import loop
+# flake8: noqa
+from .media import Album
+
+
+class send_album(Album):
+    def __init__(self, chat, reply_to=None, notify=True):
+        self._get_call_args = chat._get_call_args
+        self._api = chat._api
+        self.reply_to = reply_to
+        self.notify = notify
+        Album.__init__(self)
+        self._used = False
+
+    def __enter__(self):
+        self._used = True
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.save()
+
+    def save(self):
+        args = self._get_call_args(self.reply_to, None, None, self.notify)
+        args["media"] = json.dumps(self._content)
+        return self._api.call("sendMediaGroup", args, self._file,
+                              expect=multiple(_objects().Message))
+
+    def __del__(self):
+        if not self._used:
+            utils.warn(1, "error_with_album",
+                       "you should use `with` to use send_album\
+                        -- check the documentation")

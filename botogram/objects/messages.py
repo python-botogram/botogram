@@ -23,7 +23,6 @@ import re
 from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
-
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
     Location, Venue
@@ -93,7 +92,7 @@ class ParsedTextEntity(BaseObject):
         if self._message is None or other._message is None:
             return id(self) == id(other)
 
-        return self._message.message_id == other._message.message_id and \
+        return self._message.id == other._message.id and \
             self._offset == other._offset and self._length == other._length
 
     def __str__(self):
@@ -364,6 +363,7 @@ class Message(BaseObject, mixins.MessageMixin):
     replace_keys = {
         "from": "sender",
         "entities": "parsed_text",
+        "message_id": "id",
 
         # Those are provided dynamically by self.forward_from
         "forward_from": "_forward_from",
@@ -413,6 +413,12 @@ class Message(BaseObject, mixins.MessageMixin):
 
     @property
     @utils.deprecated("Message.left_chat_participant", "1.0",
-                      "Rename property ot Message.left_chat_member")
+                      "Rename property to Message.left_chat_member")
     def left_chat_participant(self):
         return self.left_chat_member
+
+    @property
+    @utils.deprecated("Message.message_id", "0.5",
+                      "Rename property to Message.id")
+    def message_id(self):
+        return self.id

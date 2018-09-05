@@ -438,7 +438,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: edit_message(chat, message, text, [syntax=None, preview=True, extra=None])
+   .. py:method:: edit_message(chat, message, text, [syntax=None, preview=True, attach=None, extra=None])
 
       With this method you can edit the text of a message the user already
       received. This allows you to do a lot of interesting things, like
@@ -456,11 +456,15 @@ components.
       :param str text: The new text of the message
       :param bool preview: Whether to show link previews.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+      .. versionchanged:: 0.6
 
-   .. py:method:: edit_caption(caption, [extra=None])
+         Added support for attach
+
+   .. py:method:: edit_caption(caption, [attach=None, extra=None])
 
       With this method you can edit the caption of the media attached to a
       message the user already received. This allows you to do a lot of
@@ -470,9 +474,14 @@ components.
       Please remember you can only edit messages your bot sent to the user.
 
       :param str caption: The new caption of the media file.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+
+      .. versionchanged:: 0.6
+
+         Added support for attach
 
    .. py:method:: chat(id)
 
