@@ -256,7 +256,7 @@ class Album:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
         if path is not None and file_id is None and url is None:
-            name = "photo"+str(len(self._file))
+            name = "photo" + str(len(self._file))
             args["media"] = "attach://" + name
             self._file.append((name, (path, open(path, "rb"))))
         elif file_id is not None and path is None and url is None:
@@ -282,7 +282,7 @@ class Album:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
         if path is not None and file_id is None and url is None:
-            name = "photo"+str(len(self._file))
+            name = "photo" + str(len(self._file))
             args["media"] = "attach://" + name
             self._file.append((name, (path, open(path, "rb"))))
         elif file_id is not None and path is None and url is None:
