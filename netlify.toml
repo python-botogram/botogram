@@ -4,7 +4,7 @@ publish = ".netlify/build"
 command = "make"
 
 # Permanent redirect from the netlify domain to the canonical domain
-#[[redirects]]
+[[redirects]]
 from = "https://org-pietroalbini-botogram.netlify.com/*"
 to = "https://botogram.pietroalbini.org/:splat"
 status = 301
