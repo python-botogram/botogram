@@ -1,4 +1,4 @@
-## botogram [![Build Status](https://img.shields.io/travis/pietroalbini/botogram/master.svg)](https://travis-ci.org/pietroalbini/botogram) [![News channel](https://img.shields.io/badge/telegram_channel-@botogram__framework-0d86d7.svg?style=flat)][channel]
+## botogram [![Build Status](https://travis-ci.com/python-botogram/botogram.svg?branch=master)](https://travis-ci.com/python-botogram/botogram) [![News channel](https://img.shields.io/badge/telegram_channel-@botogram__framework-0d86d7.svg?style=flat)][channel]
 
 _Just focus on your bots._
 
