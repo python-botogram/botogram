@@ -1,12 +1,26 @@
-"""
-    botogram.hooks
-    Logic for all the hooks
-
-    Copyright (c) 2016 Pietro Albini <pietro@pietroalbini.io>
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 import re
+
+from .callbacks import hashed_callback_name
+from .context import Context
 
 
 class Hook:
@@ -40,9 +54,10 @@ class Hook:
 
     def call(self, bot, update):
         """Call the hook"""
-        if self._only_texts and update.message.text is None:
-            return
-        return self._call(bot, update)
+        with Context(bot, self, update):
+            if self._only_texts and update.message.text is None:
+                return
+            return self._call(bot, update)
 
     def _call(self, bot, update):
         """*Actually* call the hook"""
@@ -195,12 +210,39 @@ class CommandHook(Hook):
         return True
 
 
+class CallbackHook(Hook):
+    """Underlying hook for @bot.callback"""
+
+    def _after_init(self, args):
+        self._name = hashed_callback_name(
+            "%s:%s" % (self.component.component_name, args["name"])
+        )
+
+    def call(self, bot, update, name, data):
+        with Context(bot, self, update):
+            if not update.callback_query:
+                return
+            q = update.callback_query
+
+            if name != self._name:
+                return
+
+            bot._call(
+                self.func, self.component_id, query=q, chat=q.message.chat,
+                message=q.message, data=data,
+            )
+
+            update.callback_query._maybe_send_noop()
+            return True
+
+
 class ChatUnavailableHook(Hook):
     """Underlying hook for @bot.chat_unavailable"""
 
     def call(self, bot, chat_id, reason):
-        return bot._call(self.func, self.component_id, chat_id=chat_id,
-                         reason=reason)
+        with Context(bot, self, None):
+            return bot._call(self.func, self.component_id, chat_id=chat_id,
+                             reason=reason)
 
 
 class MessageEditedHook(Hook):
@@ -234,4 +276,5 @@ class TimerHook(Hook):
     """Underlying hook for a timer"""
 
     def call(self, bot):
-        return bot._call(self.func, self.component_id)
+        with Context(bot, self, None):
+            return bot._call(self.func, self.component_id)

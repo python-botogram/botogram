@@ -1,17 +1,28 @@
-"""
-    botogram.objects.messages
-    Representation of messages-related upstream API objects
-
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#   DEALINGS IN THE SOFTWARE.
 
 import re
 
 from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
-
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
     Location, Venue
@@ -81,7 +92,7 @@ class ParsedTextEntity(BaseObject):
         if self._message is None or other._message is None:
             return id(self) == id(other)
 
-        return self._message.message_id == other._message.message_id and \
+        return self._message.id == other._message.id and \
             self._offset == other._offset and self._length == other._length
 
     def __str__(self):
@@ -322,6 +333,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "entities": ParsedText,
         "forward_from": User,
         "forward_from_chat": Chat,
+        "forward_from_message_id": int,
         "forward_date": int,
         "reply_to_message": _itself,
         "text": str,
@@ -351,6 +363,7 @@ class Message(BaseObject, mixins.MessageMixin):
     replace_keys = {
         "from": "sender",
         "entities": "parsed_text",
+        "message_id": "id",
 
         # Those are provided dynamically by self.forward_from
         "forward_from": "_forward_from",
@@ -375,11 +388,22 @@ class Message(BaseObject, mixins.MessageMixin):
     def forward_from(self):
         """Get from where the message was forwarded"""
         # Provide either _forward_from or _forward_from_chat
+        # _forward_from_chat is checked earlier because it's more correct
+        if self._forward_from_chat is not None:
+            return self._forward_from_chat
+
         if self._forward_from is not None:
             return self._forward_from
 
+    @property
+    def channel_post_author(self):
+        """Get the author of the channel post"""
+        if self.chat.type == "channel":
+            return self.sender
+
         if self._forward_from_chat is not None:
-            return self._forward_from_chat
+            if self.forward_from.type == "channel":
+                return self._forward_from
 
     @property
     @utils.deprecated("Message.new_chat_participant", "1.0",
@@ -389,6 +413,12 @@ class Message(BaseObject, mixins.MessageMixin):
 
     @property
     @utils.deprecated("Message.left_chat_participant", "1.0",
-                      "Rename property ot Message.left_chat_member")
+                      "Rename property to Message.left_chat_member")
     def left_chat_participant(self):
         return self.left_chat_member
+
+    @property
+    @utils.deprecated("Message.message_id", "0.5",
+                      "Rename property to Message.id")
+    def message_id(self):
+        return self.id

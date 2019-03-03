@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. api-bot::
 
@@ -60,6 +60,17 @@ components.
 
       .. versionadded:: 0.4
 
+   .. py:attribute:: validate_callback_signatures
+
+      Enable or disable signature verification for callbacks. Disabling them
+      can cause security issues for your bot, and it's advised to do so only if
+      you changed the bot token recently. See the :ref:`security section for
+      callbacks <buttons-security>` for more details.
+
+      The default value is **True**.
+
+      .. versionadded:: 0.4
+
    .. py:attribute:: process_backlog
 
       A boolean representing if the backlog should be processed. Backlog is
@@ -71,6 +82,17 @@ components.
 
       The :py:class:`botogram.User` representation of the bot's user account.
       From this you can access its id, username and more.
+
+   .. py:attribute:: lang
+
+      The `ISO 639-1 code`_ assigned the language used by the bot.
+
+   .. py:attribute:: override_i18n
+
+      A dictionary that allows to override default i18n messages by associating
+      the default ``msgid`` string of a message with its alternative.
+
+      .. versionadded:: 0.5
 
    .. py:decoratormethod:: before_processing
 
@@ -269,6 +291,43 @@ components.
 
          Added the ``hidden`` argument.
 
+   .. py:decoratormethod:: callback(name)
+
+      This decorator adds an handler for the callback with the provided name.
+      See the chapter about :ref:`buttons and callbacks <buttons>` for more
+      information about them.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated function:
+
+      * **query**: the received :py:class:`~botogram.CallbackQuery`
+
+      * **chat**: the :py:class:`~botogram.Chat` from which the callback query
+        was sent
+
+      * **message**: the :py:class:`~botogram.Message` related to the callback
+        query
+
+      * **data**: the custom information provided by you along with the call
+
+      .. code-block:: python
+
+         @bot.command("greeter")
+         def greeter_command(chat, message):
+             """Say hi to the user"""
+             btns = botogram.Buttons()
+             btns[0].callback("Click me", "say-hi", message.sender.name)
+
+             chat.send("Click the button below", attach=btns)
+
+         @bot.callback("say-hi")
+         def say_hi_callback(query, data):
+             query.notify("Hi " + data)
+
+      :param str name: the name of the callback
+
+      .. versionadded:: 0.4
+
    .. py:decoratormethod:: chat_unavailable
 
       The decorated function is called when you try to send a message to a chat
@@ -296,7 +355,7 @@ components.
 
          @bot.timer(1)
          def spammer(bot):
-             bot.send(USER_ID, "Hey!")
+             bot.chat(USER_ID).send("Hey!")
 
       :param int interval: The execution interval, in seconds.
 
@@ -379,7 +438,7 @@ components.
 
       :return: A frozen instance of the current bot.
 
-   .. py:method:: edit_message(chat, message, text, [syntax=None, preview=True, extra=None])
+   .. py:method:: edit_message(chat, message, text, [syntax=None, preview=True, attach=None, extra=None])
 
       With this method you can edit the text of a message the user already
       received. This allows you to do a lot of interesting things, like
@@ -397,11 +456,15 @@ components.
       :param str text: The new text of the message
       :param bool preview: Whether to show link previews.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+      .. versionchanged:: 0.6
 
-   .. py:method:: edit_caption(caption, [extra=None])
+         Added support for attach
+
+   .. py:method:: edit_caption(caption, [attach=None, extra=None])
 
       With this method you can edit the caption of the media attached to a
       message the user already received. This allows you to do a lot of
@@ -411,9 +474,14 @@ components.
       Please remember you can only edit messages your bot sent to the user.
 
       :param str caption: The new caption of the media file.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
 
       .. versionadded:: 0.3
+
+      .. versionchanged:: 0.6
+
+         Added support for attach
 
    .. py:method:: chat(id)
 
@@ -742,3 +810,5 @@ components.
       available for use or detailed help.
 
       .. deprecated:: 0.3 it will be removed in botogram 1.0
+
+.. _`ISO 639-1 code`: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes

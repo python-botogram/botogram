@@ -1,10 +1,22 @@
-"""
-    botogram.components
-    Definition of the components system
-
-    Copyright (c) 2015-2016 Pietro Albini
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#   DEALINGS IN THE SOFTWARE.
 
 import uuid
 
@@ -25,6 +37,7 @@ class Component:
         self = super(Component, cls).__new__(cls)
 
         self.__commands = {}
+        self.__callbacks = {}
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
@@ -120,6 +133,19 @@ class Component:
         command = commands.Command(hook)
         self.__commands[name] = command
 
+    def add_callback(self, name, func):
+        """Add a new callback"""
+        if name in self.__callbacks:
+            raise NameError("The callback %s already exists" % name)
+
+        if not callable(func):
+            raise ValueError("A callback must be callable")
+
+        hook = hooks.CallbackHook(func, self, {
+            "name": name,
+        })
+        self.__callbacks[name] = hook
+
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
@@ -200,7 +226,11 @@ class Component:
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
             "messages_edited": [self.__messages_edited_hooks],
             "channel_post": [self.__channel_post_hooks],
-            "channel_post_edited": [self.__channel_post_edited_hooks]
+            "channel_post_edited": [self.__channel_post_edited_hooks],
+            "callbacks": [[
+                self.__callbacks[name]
+                for name in sorted(self.__callbacks.keys())
+            ]],
         }
 
     def _get_commands(self):

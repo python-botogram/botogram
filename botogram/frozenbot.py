@@ -1,10 +1,22 @@
-"""
-    botogram.frozenbot
-    A frozen version of the real bot
-
-    Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#   DEALINGS IN THE SOFTWARE.
 
 import logbook
 
@@ -21,9 +33,10 @@ class FrozenBot:
     """A frozen version of botogram.Bot"""
 
     def __init__(self, api, about, owner, hide_commands, before_help,
-                 after_help, link_preview_in_help, process_backlog, lang,
-                 itself, commands_re, commands, chains, scheduler,
-                 main_component_id, bot_id, shared_memory, update_processors):
+                 after_help, link_preview_in_help,
+                 validate_callback_signatures, process_backlog, lang, itself,
+                 commands_re, commands, chains, scheduler, main_component_id,
+                 bot_id, shared_memory, update_processors, override_i18n):
         # This attribute should be added with the default setattr, because is
         # needed by the custom setattr
         object.__setattr__(self, "_frozen", False)
@@ -36,6 +49,7 @@ class FrozenBot:
         self.before_help = before_help
         self.after_help = after_help
         self.link_preview_in_help = link_preview_in_help
+        self.validate_callback_signatures = validate_callback_signatures
         self.process_backlog = process_backlog
         self.lang = lang
         self._commands_re = commands_re
@@ -47,6 +61,7 @@ class FrozenBot:
         self._update_processors = update_processors
         self._commands = {name: command.for_bot(self)
                           for name, command in commands.items()}
+        self.override_i18n = override_i18n
 
         # Setup the logger
         self.logger = logbook.Logger('botogram bot')
@@ -65,10 +80,10 @@ class FrozenBot:
         args = (
             self.api, self.about, self.owner, self._hide_commands,
             self.before_help, self.after_help, self.link_preview_in_help,
-            self.process_backlog, self.lang, self.itself, self._commands_re,
-            self._commands, self._chains, self._scheduler,
-            self._main_component_id, self._bot_id, self._shared_memory,
-            self._update_processors,
+            self.validate_callback_signatures, self.process_backlog, self.lang,
+            self.itself, self._commands_re, self._commands, self._chains,
+            self._scheduler, self._main_component_id, self._bot_id,
+            self._shared_memory, self._update_processors, self.override_i18n,
         )
         return restore, args
 
@@ -112,6 +127,10 @@ class FrozenBot:
         """Register a new command"""
         raise FrozenBotError("Can't add commands to a bot at runtime")
 
+    def callback(self, name, hidden=False):
+        """Register a new callback"""
+        raise FrozenBotError("Can't add callbacks to a bot at runtime")
+
     def timer(self, interval):
         """Register a new timer"""
         raise FrozenBotError("Can't add timers to a bot at runtime")
@@ -142,7 +161,7 @@ class FrozenBot:
         """Helper method for edit_message and edit_caption"""
         # Also accept objects
         if hasattr(message, "message_id"):
-            message = message.message_id
+            message = message.id
         if hasattr(chat, "id"):
             chat = chat.id
 
@@ -160,15 +179,15 @@ class FrozenBot:
         }, self.api)
 
     def edit_message(self, chat, message, text, syntax=None, preview=True,
-                     extra=None):
+                     extra=None, attach=None):
         """Edit a message already sent to the user"""
         msg = self._edit_create_fake_message_object(chat, message)
-        msg.edit(text, syntax, preview, extra)
+        msg.edit(text, syntax, preview, extra, attach)
 
-    def edit_caption(self, chat, message, caption, extra=None):
+    def edit_caption(self, chat, message, caption, extra=None, attach=None):
         """Edit the caption of a media already sent to the user"""
         msg = self._edit_create_fake_message_object(chat, message)
-        msg.edit_caption(caption, extra)
+        msg.edit_caption(caption, extra, attach)
 
     # Let's process the messages
 
@@ -222,7 +241,12 @@ class FrozenBot:
 
     def _(self, message, **args):
         """Translate a string"""
-        return self._lang_inst.gettext(message) % args
+        # Check if the message has been overridden
+        if message in self.override_i18n:
+            return self.override_i18n[message] % args
+        # Otherwise try to return the original message
+        else:
+            return self._lang_inst.gettext(message) % args
 
     # And some internal methods used by botogram
 

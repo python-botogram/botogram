@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Brad Christensen <temporalsculpt@live.com>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _api-telegram:
 
@@ -28,6 +28,7 @@ about its business.
 * :py:class:`~botogram.Voice`
 * :py:class:`~botogram.Contact`
 * :py:class:`~botogram.Location`
+* :py:class:`~botogram.Permissions`
 * :py:class:`~botogram.Venue`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
@@ -70,6 +71,10 @@ about its business.
       change :py:attr:`~botogram.User.first_name` or
       :py:attr:`~botogram.User.last_name`.
 
+   .. py:attribute:: is_bot
+
+      is_bot indicates if the user is a bot. due to the telegram privacy rules,
+      this can be true only when your bot can actually see other bots' messages.
       .. versionadded:: 0.2
 
    .. py:attribute:: avatar
@@ -92,7 +97,7 @@ about its business.
 
       .. versionadded:: 0.2
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the user. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -100,12 +105,9 @@ about its business.
       of the other :py:class:`~botogram.Message`. The *syntax* parameter is for
       defining how the message text should be processed by Telegram
       (:ref:`learn more about rich formatting <tricks-messages-syntax>`).
-      *extra* is an optional object which specifies additional reply interface
-      options on the recipient's end, and can be one of the following types:
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -114,168 +116,248 @@ about its business.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
 
-      Send a photo found at *path* to the user. You may optionally specify a
-      *caption* for the photo being sent. If the photo you are sending is in
-      reply to another message, set *reply_to* to the ID of the other
-      :py:class:`~botogram.Message`. *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      Send a photo to the user. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify a *caption* for the photo being sent.
+      If the photo you are sending is in reply to another message,
+      set *reply_to* to the ID of the other
+      :py:class:`~botogram.Message`.
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+      .. versionchanged:: 0.5
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
+         Added support for *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-      Send the audio track found in the *path* to the user. You may optionally
-      specify the *duration*, the *performer* and the *title* of the audio
-      track. If the audio track you're sending is in reply to another message,
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+
+      Send an audio track to the user. You can specify the track by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration*, the *performer* and the *title* 
+      of the audio track. If the audio track you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
-      *extra* is an optional object which specifies additional reply interface
-      options on the recipient's end, and can be one of the following types:
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param str file_id: The Telegram *file_id* of the audio track
+      :param str url: The URL to the audio track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the audio track.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+      .. versionchanged:: 0.5
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
+         Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-      Send the voice message found in the *path* to the user. You may
-      optionally specify the *duration* of the voice message. If the voice
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
+
+      Send a voice message to the user. You can specify the audio by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* of the voice message. If the voice
       message you're sending is in reply to another message, set *reply_to* to
-      the ID of the other :py:class:`~botogram.Message`.  *extra* is an
-      optional object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      the ID of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param str file_id: The Telegram *file_id* of the voice message
+      :param str url: The URL to the audio
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the voice message.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+      .. versionchanged:: 0.5
 
-   .. py:method:: send_video(path, [duration=None, caption=None, streaming=True, reply_to=None, extra=None, notify=True])
+         Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-      Send the video found in the *path* to the user. You may optionally
-      specify the *duration* and the *caption* of the video. If the audio track
-      you're sending is in reply to another message, set *reply_to* to the ID
-      of the other :py:class:`~botogram.Message`.  *extra* is an optional
-      object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      Send a video to the user. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* and the *caption* of the video.
+      If the audio track you're sending is in reply to another message, 
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+       .. versionchanged:: 0.5
 
-   .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
+         Added support for *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-      Send the generic file found in the *path* to the user. If the file you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`.  *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      Send a generic file to the user. You can specify the file by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      If the file you're sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the file.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+         
+      .. versionchanged:: 0.5
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
+         Added support for *caption*, *file_id* and *url*.
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
-      :py:class:`~botogram.Message`.  *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -283,16 +365,21 @@ about its business.
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a venue to the user. A venue is made of its geographic coordinates
       (latitude and longitude), its title and address, and optionally the
@@ -309,46 +396,64 @@ about its business.
              message.sender.send("Here there is an unique place to go to dinner tonight!")
              message.sender.send_venue(35, -45, "The Abyss", "Atlantic Ocean")
 
+      The *attach* parameter also allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
       :param float latitude: The latitude of the venue
       :param float longitude: The longitude of the venue
       :param str title: The name of the venue
       :param str address: The address of the venue
       :param str foursquare: The Foursquare ID of the venue
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
+   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, path=None, file_id=None, url=None])
 
-      Send the sticker to the user (in webp format). If the sticker you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`. *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      Send the sticker to the user (in webp format). You can specify the sticker by
+      passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
+      arguments must be passed. If the sticker you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str sticker: The path to the webp-formatted sticker
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str path: The path to the webp-formatted sticker
+      :param str file_id: The Telegram *file_id* of the sticker
+      :param str url: The URL to the webp-formatted sticker
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+         
+     .. deprecated:: 0.6
+
+         The *sticker* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the user. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -362,16 +467,34 @@ about its business.
              message.sender.send("Hi there, here is our support number:")
              message.sender.send_contact("+390124567890", "Support")
 
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionadded:: 0.3
+
+   .. py:method:: delete_message(message)
+
+      Delete the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      :param message: The message to delete (can be an ID too)
+
+      .. versionadded:: 0.4
 
 .. py:class:: botogram.Chat
 
@@ -411,6 +534,48 @@ about its business.
       the channel.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: all_members_are_administrators
+
+      This attribute is True if all the members of the group are administrator.
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
+
+   .. py:attribute:: description
+
+      The group/channel description
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
+
+   .. py:attribute:: invite_link
+
+      This group chat/channel invite link.
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
+
+   .. py:attribute:: pinned_message
+
+      This group/chat pinned :py:class:`~botogram.Message`
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
+
+   .. py:attribute:: sticker_set_name
+
+      The name of the supergroup's sticker set.
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
+
+   .. py:attribute:: can_set_sticker_set
+
+      This attribute is True if the bot can set this supergroup's sticker set.
+
+      *This attribute can be None if it's not provided by Telegram.*
+      .. versionadded:: 0.6
 
    .. py:attribute:: name
 
@@ -624,7 +789,49 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, extra=None, notify=True])
+   .. py:method:: kick(user[, time=None])
+
+      Kick the user form this group chat.
+
+      Remember your bot must be an administrator of the chat in order for this method to work properly.
+
+     :param int user: The user you want to kick (user ID or
+                       :py:class:`~botogram.User`)
+
+     :param int time:  until the user can't enter in the chat (unix time or
+                       datetime format)
+
+   .. py:method:: permissions(user)
+
+     Retrieve or edit the permissions of the provided user in the current group. This method returns an instance of
+     :py:class:`~botogram.Permissions`
+
+      .. code-block:: python
+
+         from datetime import datetime as dt, timedelta
+         @bot.command("limit")
+         def limit_user(chat, message):
+          # Allow only groups
+          if chat.type not in ("group", "supergroup"):
+             return
+
+         # Allow only replies with text in the reply
+         if message.text is None or message.reply_to_message is None:
+             return
+
+         # Allow only admins to limit people
+         if message.sender not in chat.admins:
+             return
+         with chat.permissions(message.reply_to_message.sender) as perms:
+             perms.send_messages = False
+             perms.until_date = dt.now() + timedelta(minutes=10)
+
+      :param int user: The user you want to change permissions (user ID or :py:class:`~botogram.User`)
+      :returns: The class to edit permissions
+      :rtype: :py:class:`~botogram.Permissions`
+      .. versionadded:: 0.6
+
+   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -632,12 +839,9 @@ about its business.
       of the other :py:class:`~botogram.Message`. The *syntax* parameter is for
       defining how the message text should be processed by Telegram
       (:ref:`learn more about rich formatting <tricks-messages-syntax>`).
-      *extra* is an optional object which specifies additional reply interface
-      options on the recipient's end, and can be one of the following types:
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -646,168 +850,250 @@ about its business.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo(path, [caption=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, attach=None, extra=None, attach=None, notify=True, syntax=None])
 
-      Send a photo found at *path* to the chat. You may optionally specify a
+      Send a photo to the chat. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify a
       *caption* for the photo being sent. If the photo you are sending is in
       reply to another message, set *reply_to* to the ID of the other
-      :py:class:`~botogram.Message`. *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      :py:class:`~botogram.Message`.
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_audio(path, [duration=None, performer=None, title=None, reply_to=None, extra=None, notify=True])
+      .. versionchanged:: 0.5
 
-      Send the audio track found in the *path* to the chat. You may optionally
+         Added support for *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
+
+      Send an audio track to the chat. You can specify the track by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally
       specify the *duration*, the *performer* and the *title* of the audio
       track. If the audio track you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
-      *extra* is an optional object which specifies additional reply interface
-      options on the recipient's end, and can be one of the following types:
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param str file_id: The Telegram *file_id* of the track
+      :param str url: The URL to the track
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the audio track.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_voice(chat, path, [duration=None, reply_to=None, extra=None, notify=True])
+      .. versionchanged:: 0.5
 
-      Send the voice message found in the *path* to the chat. You may
-      optionally specify the *duration* of the voice message. If the voice
+         Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
+
+      Send a voice message to the chat. You can specify the audio by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally specify the *duration* of the voice message. If the voice
       message you're sending is in reply to another message, set *reply_to* to
-      the ID of the other :py:class:`~botogram.Message`.  *extra* is an
-      optional object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      the ID of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param str file_id: The Telegram *file_id* of the audio
+      :param str url: The URL to the audio
       :param int duration: The message duration, in seconds
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the voice message.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_video(path, [duration=None, caption=None, streaming=True, reply_to=None, extra=None, notify=True])
+      .. versionchanged:: 0.5
 
-      Send the video found in the *path* to the chat. You may optionally
+         Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
+
+      Send a video to the chat. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
       you're sending is in reply to another message, set *reply_to* to the ID
-      of the other :py:class:`~botogram.Message`.  *extra* is an optional
-      object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_file(path, [reply_to=None, extra=None, notify=True])
+      .. versionchanged:: 0.5
 
-      Send the generic file found in the *path* to the chat. If the file you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`.  *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+         Added support for *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+
+      Send a generic file to the chat. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+      
+      If the file you're sending is in reply to another message, set *reply_to* to the ID of the
+      other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str file_id: The Telegram *file_id* of the file
+      :param str url: The URL to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str caption: A caption for the file.
+      :param str syntax: The name of the syntax used for the caption.
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, extra=None, notify=True])
+      .. versionchanged:: 0.5
+
+         Added support for *caption*, *file_id* and *url*
+         
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the chat. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
-      :py:class:`~botogram.Message`.  *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -815,16 +1101,21 @@ about its business.
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a venue to the chat. A venue is made of its geographic coordinates
       (latitude and longitude), its title and address, and optionally the
@@ -847,40 +1138,55 @@ about its business.
       :param str address: The address of the venue
       :param str foursquare: The Foursquare ID of the venue
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker(sticker, [reply_to=None, extra=None, notify=True])
+   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, file_id=None, url=None])
 
-      Send the sticker to the chat (in webp format). If the sticker you're
-      sending is in reply to another message, set *reply_to* to the ID of the
-      other :py:class:`~botogram.Message`. *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      Send the sticker to the chat (in webp format). You can specify the sticker by
+      passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
+      arguments must be passed. If the sticker you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str sticker: The path to the webp-formatted sticker
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
+      :param str path: The path to the webp-formatted sticker
+      :param str file_id: The Telegram *file_id* of the sticker
+      :param str url: The URL to the webp-formatted sticker
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+         
+     .. deprecated:: 0.6
+
+         The *sticker* parameter is now deprecated
 
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the chat. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -898,12 +1204,27 @@ about its business.
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionadded:: 0.3
+
+   .. py:method:: delete_message(message)
+
+      Delete the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      :param message: The message to delete (can be an ID too)
+
+      .. versionadded:: 0.4
 
 .. py:class:: botogram.ParsedText
 
@@ -1010,7 +1331,7 @@ about its business.
    This class represents messages received by and sent from your bot. Messages
    serve as a container for many of the core API objects described here.
 
-   .. py:attribute:: message_id
+   .. py:attribute:: id
 
       The integer ID of the message.
 
@@ -1053,6 +1374,13 @@ about its business.
       .. versionchanged:: 0.3
 
          The value can also be an instance of :py:class:`~botogram.Chat`.
+
+   .. py:attribute:: forward_from_message_id
+
+      The ID of the original message that was forwarded. This is currently only
+      available for channel posts.
+
+      .. versionadded:: 0.4
 
    .. py:attribute:: forward_date
 
@@ -1152,6 +1480,14 @@ about its business.
       attribute contains its representation.
 
       *This attribute can be None if the message isn't a venue.*
+
+   .. py:attribute:: channel_post_author
+
+      The author of the message. This only works if the message is a channel
+      post and it's signed by the author, even if the message is forwarded.
+      Otherwise it's *None*.
+
+      .. versionadded:: 0.4
 
    .. py:attribute:: new_chat_member
 
@@ -1257,7 +1593,7 @@ about its business.
 
          It will be removed in botogram 1.0
 
-   .. py:method:: edit(text, [syntax=None, preview=True, extra=None])
+   .. py:method:: edit(text, [syntax=None, preview=True, attach=None, extra=None])
 
       With this method you can edit the text of a message the user already
       received. This allows you to do a lot of interesting things, like
@@ -1272,11 +1608,24 @@ about its business.
       :param str text: The new text of the message
       :param bool preview: Whether to show link previews.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
 
-   .. py:method:: edit_caption(caption, [extra=None])
+   .. py:method:: delete()
+
+      Delete this message.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      .. versionadded:: 0.4
+
+   .. py:method:: edit_caption(caption, [attach=None, extra=None, syntax=None])
 
       With this method you can edit the caption of the media attached to a
       message the user already received. This allows you to do a lot of
@@ -1286,9 +1635,38 @@ about its business.
       Please remember you can only edit messages your bot sent to the user.
 
       :param str caption: The new caption of the media file.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
+      :param str syntax: The name of the syntax used for the message.
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
+      
+      .. versionchanged:: 0.6
+      
+         Support text formatting in caption through *syntax*.
+
+   .. py:method:: edit_attach(attach)
+
+      This method allows you to change the attachment of a message you already
+      sent. For example, you can use it to update the :ref:`buttons <buttons>`
+      under a message, like so:
+
+      .. code-block:: python
+
+         btns = botogram.Buttons()
+         btns[0].url("example.com", "http://example.com")
+         message = chat.send("Some example websites.", attach=btns)
+
+         btns[1].url("example.org", "http://example.org")
+         message.edit_attach(btns)
+
+      :param object attach: The new attachment
+
+      .. versionadded:: 0.4
 
    .. py:method:: forward_to(to[, notify=True])
 
@@ -1309,19 +1687,16 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply(message, [preview=True, syntax=None, extra=None, notify=True])
+   .. py:method:: reply(message, [preview=True, syntax=None, attach=None, extra=None, notify=True])
 
       Reply with the textual *message* in regards to this message. You may
       optionally stop clients from generating a *preview* for any link included
       in the reply. The *syntax* parameter is for defining how the message text
       should be processed by Telegram (:ref:`learn more about rich formatting
-      <tricks-messages-syntax>`).  *extra* is an optional object which
-      specifies additional reply interface options on the recipient's end, and
-      can be one of the following types:
+      <tricks-messages-syntax>`).
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -1329,51 +1704,55 @@ about its business.
       :param str message: The textual message to reply with.
       :param bool preview: Whether to show link previews.
       :param str syntax: The name of the syntax used for the message.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_photo(path, [caption=None, extra=None, notify=True])
+   .. py:method:: reply_with_photo(path, [caption=None, attach=None, extra=None, notify=True])
 
       Reply with a photo found at *path* in regards to this message. You may
-      optionally specify a *caption* for the photo being sent in reply. *extra*
-      is an optional object which specifies additional reply interface options
-      on the recipient's end, and can be one of the following types:
+      optionally specify a *caption* for the photo being sent in reply.
 
-        * :py:class:`botogram.ReplyKeyboardMarkup`
-        * :py:class:`botogram.ReplyKeyboardHide`
-        * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
       :param str caption: A caption for the photo.
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, extra=None, notify=True])
+   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, attach=None, extra=None, notify=True])
 
       Reply with the audio track found in the *path* to the chat. You may
       optionally specify the *duration*, the *performer* and the *title* of the
-      audio track. *extra* is an optional object which specifies additional
-      reply interface options on the recipient's end, and can be one of the
-      following types:
+      audio track.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -1382,50 +1761,54 @@ about its business.
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_voice(chat, path, [duration=None, extra=None, notify=True])
+   .. py:method:: reply_with_voice(chat, path, [duration=None, attach=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
-      optionally specify the *duration* of the voice message. *extra* is an
-      optional object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      optionally specify the *duration* of the voice message.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
       :param int duration: The message duration, in seconds
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, extra=None, notify=True])
+   .. py:method:: reply_with_video(path, [duration=None, caption=None, attach=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
-      specify the *duration* and the *caption* of the video. *extra* is an
-      optional object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      specify the *duration* and the *caption* of the video.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
@@ -1433,66 +1816,74 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_file(path, [extra=None, notify=True])
+   .. py:method:: reply_with_file(path, [attach=None, extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
       you're sending is in reply to another message, set *reply_to* to the ID
-      of the other :py:class:`~botogram.Message`.  *extra* is an optional
-      object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      of the other :py:class:`~botogram.Message`.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_location(latitude, longitude, [extra=None, notify=True])
+   .. py:method:: reply_with_location(latitude, longitude, [attach=None, extra=None, notify=True])
 
-      Send the geographic location to the user. *extra* is an optional object
-      which specifies additional reply interface options on the recipient's
-      end, and can be one of the following types:
+      Send the geographic location to the user.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_venue(latitude, longitude, title, address, [foursquare=None, extra=None, notify=True])
+   .. py:method:: reply_with_venue(latitude, longitude, title, address, [foursquare=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a venue. A venue is made of its geographic
       coordinates (latitude and longitude), its title and address, and
@@ -1515,37 +1906,44 @@ about its business.
       :param str title: The name of the venue
       :param str address: The address of the venue
       :param str foursquare: The Foursquare ID of the venue
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionadded:: 0.3
 
-   .. py:method:: reply_with_sticker(sticker, [reply_to=None, extra=None, notify=True])
+   .. py:method:: reply_with_sticker(sticker, [reply_to=None, attach=None, extra=None, notify=True])
 
-      Reply with the sticker (in webp format) to the chat. *extra* is an
-      optional object which specifies additional reply interface options on the
-      recipient's end, and can be one of the following types:
+      Reply with the sticker (in webp format) to the chat.
 
-      * :py:class:`botogram.ReplyKeyboardMarkup`
-      * :py:class:`botogram.ReplyKeyboardHide`
-      * :py:class:`botogram.ForceReply`
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
 
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
       :param str sticker: The path to the webp-formatted sticker
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
       :rtype: ~botogram.Message
 
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, extra=None, notify=True])
+   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a contact. A Telegram contact is made of its
       phone number (with the international prefix), its first name and
@@ -1562,10 +1960,15 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
       :returns: The message you sent
       :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
 
@@ -1919,6 +2322,41 @@ about its business.
    .. py:attribute:: latitude
 
       The float latitude as defined by the sender.
+
+
+.. py:class:: botogram.Permissions
+
+   This class represents the permissions of the user.
+   If you use this as a context manager, the save method will automatically be called if no exceptions were raised."
+
+   .. versionadded:: 0.6
+
+   .. py:attribute:: until_date
+
+      The unix timestamp or datime format of when the changes you're doing will be reverted.
+
+   .. py:attribute:: send_messages
+
+      The boolean value if the user can send messages.
+
+   .. py:attribute:: send_media_messages
+
+      The boolean value if the user can send media messages.
+
+   .. py:attribute:: send_other_messages
+
+      The boolean value if the user can send other messages.
+
+   .. py:attribute:: add_web_page_previews
+
+      The boolean value if the user can send web page previews.
+
+   .. py:method:: save()
+
+      Send the changes to Telegram.
+
+      This method automatically detects the changes you made and doesn't do anything if no attribute was changed.
+
 
 
 .. py:class:: botogram.Venue

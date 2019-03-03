@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _index:
 
@@ -56,11 +56,13 @@ Narrative documentation
    bot-structure
    unavailable-chats
    groups-management
+   buttons
    shared-memory
    tasks
    custom-components
    deploy/index
    channels
+   i18n
 
 .. _index-reference:
 

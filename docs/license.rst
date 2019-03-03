@@ -1,5 +1,5 @@
-.. Copyright (c) 2015-2016 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _license:
 
@@ -13,7 +13,7 @@ notice:
 
 ::
 
-   Copyright (c) 2015-2016 Pietro Albini
+   Copyright (c) 2015-2018 Pietro Albini
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to

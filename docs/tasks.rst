@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _tasks:
 
@@ -39,7 +39,7 @@ implement this, with a resolution of one second. Just use the
    @bot.timer(3600)
    def BONG(bot, shared):
        for chat in shared["subs"]:
-           bot.send(chat, "BONG")
+           bot.chat(chat).send("BONG")
 
 If you're working with components, you can instead use the
 :py:meth:`~botogram.Component.add_timer` method of the component instance.

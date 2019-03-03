@@ -1,10 +1,22 @@
-"""
-    botogram.bot
-    The actual bot application base
-
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#   DEALINGS IN THE SOFTWARE.
 
 import re
 import logbook
@@ -13,6 +25,7 @@ import uuid
 import requests.exceptions
 
 from . import api
+from . import callbacks
 from . import objects
 from . import runner
 from . import defaults
@@ -42,8 +55,11 @@ class Bot(frozenbot.FrozenBot):
 
         self.process_backlog = False
 
+        self.validate_callback_signatures = True
+
         self._lang = ""
         self._lang_inst = None
+        self.override_i18n = {}
 
         # Support for the old, deprecated bot.hide_commands
         self._hide_commands = []
@@ -75,6 +91,7 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("callback_query", callbacks.process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -105,6 +122,13 @@ class Bot(frozenbot.FrozenBot):
         return object.__reduce__(self)
 
     def __setattr__(self, name, value):
+        # Warn about disabled callback validation
+        if name == "validate_callback_signatures" and not value:
+            self.logger.warn("Your code disabled signature validation for "
+                             "callbacks!")
+            self.logger.warn("This can cause security issues. Please enable "
+                             "it again.")
+
         # Use the standard __setattr__
         return object.__setattr__(self, name, value)
 
@@ -166,6 +190,13 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
+    def callback(self, name):
+        """Register a new callback"""
+        def __(func):
+            self._main_component.add_callback(name, func)
+            return func
+        return __
+
     def timer(self, interval):
         """Register a new timer"""
         def __(func):
@@ -222,8 +253,10 @@ class Bot(frozenbot.FrozenBot):
     def register_update_processor(self, kind, processor):
         """Register a new update processor"""
         if kind in self._update_processors:
-            raise NameError("An update processor for \"%s\" updates is "
-                            "already registered" % kind)
+            self.logger.warn("Your code replaced the default update processor "
+                             "for '%s'!" % kind)
+            self.logger.warn("If you want botogram to handle those updates "
+                             "natively remove your processor.")
 
         self._update_processors[kind] = processor
 
@@ -235,12 +268,13 @@ class Bot(frozenbot.FrozenBot):
         return frozenbot.FrozenBot(self.api, self.about, self.owner,
                                    self._hide_commands, self.before_help,
                                    self.after_help, self.link_preview_in_help,
+                                   self.validate_callback_signatures,
                                    self.process_backlog, self.lang,
                                    self.itself, self._commands_re,
                                    self._commands, chains, self._scheduler,
                                    self._main_component._component_id,
                                    self._bot_id, self._shared_memory,
-                                   self._update_processors)
+                                   self._update_processors, self.override_i18n)
 
     @property
     def lang(self):
