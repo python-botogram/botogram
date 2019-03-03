@@ -1187,7 +1187,7 @@ about its business.
 
    .. py:method:: pin_message(message[, notify=True])
 
-      Pin the message with the provided ID or :py:class:`~botogram.Message` object .
+      Pin the message with the provided ID or :py:class:`~botogram.Message` object.
       A message can be pinned only if it's sent in a supergroup or channel where the bot is an admin.
 
       The *notify* parameter is for defining if your message should trigger
@@ -1200,7 +1200,7 @@ about its business.
 
    .. py:method:: unpin_message()
 
-      Unpin the pessage pinned
+      Unpin the message pinned
 
       .. versionadded:: 0.6
 
@@ -1211,6 +1211,22 @@ about its business.
       of the other :py:class:`~botogram.Message`.
       The *notify* parameter defines if your message should
       trigger the notification on the client side (yes by default).
+
+
+      .. code-block:: python
+        @bot.command("my_cats")
+        def my_cats(chat):
+            album = botogram.Album()
+            album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
+            album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
+            album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
+            chat.send_album(album)
+
+        @bot.command("my_dogs")
+        def my_dogs(chat):
+        with chat.send_album() as album:
+            album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+            album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
 
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
@@ -1961,6 +1977,38 @@ about its business.
          The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
+
+
+    .. py:method:: reply_with_album([album=None, notify=True])
+
+      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
+      The *notify* parameter defines if your message should
+      trigger the notification on the client side (yes by default).
+
+
+      .. code-block:: python
+        @bot.command("my_cats")
+        def my_cats(message):
+            album = botogram.Album()
+            album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
+            album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
+            album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
+             message.reply_with_album(album)
+
+        @bot.command("my_dogs")
+        def my_dogs(message):
+        with message.reply_with_album() as album:
+            album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+            album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
+
+      :param album: The :py:class:`~botogram.Album` send to the chat
+
+      :param bool notify: If you want to trigger a notification on the client
+
+      :returns: The messages you sent
+      :rtype: list of :py:class:`~botogram.Message`
+
+      .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Photo

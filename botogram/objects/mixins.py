@@ -309,7 +309,7 @@ class ChatMixin:
 
     @_require_api
     def send_album(self, album=None, reply_to=None, notify=True):
-        albums = send_album(self, reply_to, notify)
+        albums = SendAlbum(self, reply_to, notify)
         if album is not None:
             albums._content = album._content
             albums._file = album._file
@@ -448,6 +448,11 @@ class MessageMixin:
         return self.chat.send_contact(*args, reply_to=self, **kwargs)
 
     @_require_api
+    def reply_with_album(self, *args, **kwargs):
+        """Reply with an album to the current message"""
+        return self.chat.send_album(*args, reply_to=self, **kwargs)
+
+    @_require_api
     def delete(self):
         """Delete the message"""
         return self._api.call("deleteMessage", {
@@ -475,7 +480,7 @@ class FileMixin:
 from .media import Album
 
 
-class send_album(Album):
+class SendAlbum(Album):
     def __init__(self, chat, reply_to=None, notify=True):
         self._get_call_args = chat._get_call_args
         self._api = chat._api
