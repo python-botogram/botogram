@@ -20,7 +20,6 @@
 
 from .base import BaseObject
 from . import mixins
-from .. import syntaxes
 
 
 class PhotoSize(BaseObject, mixins.FileMixin):
@@ -240,59 +239,3 @@ class Venue(BaseObject):
         "foursquare_id": "foursquare",
     }
     _check_equality_ = "location"
-
-
-class Album:
-    def __init__(self):
-        self._content = []
-        self._file = []
-
-    def add_photo(self, path=None, url=None, file_id=None, caption=None,
-                  syntax=None):
-        args = {"type": "photo"}
-        if caption is not None:
-            args["caption"] = caption
-            if syntax is not None:
-                syntax = syntaxes.guess_syntax(caption, syntax)
-                args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            name = "photo" + str(len(self._file))
-            args["media"] = "attach://" + name
-            self._file.append((name, (path, open(path, "rb"))))
-        elif file_id is not None and path is None and url is None:
-            args["media"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["media"] = url
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
-
-        self._content.append(args)
-
-    def add_video(self, path=None, file_id=None, url=None, duration=None,
-                  caption=None, syntax=None):
-        args = {"type": "video"}
-        if duration is not None:
-            args["duration"] = duration
-        if caption is not None:
-            args["caption"] = caption
-            if syntax is not None:
-                syntax = syntaxes.guess_syntax(caption, syntax)
-                args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            name = "photo" + str(len(self._file))
-            args["media"] = "attach://" + name
-            self._file.append((name, (path, open(path, "rb"))))
-        elif file_id is not None and path is None and url is None:
-            args["media"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["media"] = url
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
-
-        self._content.append(args)
