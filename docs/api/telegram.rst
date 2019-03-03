@@ -551,7 +551,9 @@ about its business.
 
    .. py:attribute:: invite_link
 
-      This group chat/channel invite link.
+      The chat invite link, it works only in a supergroup or a channel.
+      You can revoke the current link and create a new one by using the
+      :py:method:`~botogram.Chat.revoke_invite_link` method.
 
       *This attribute can be None if it's not provided by Telegram.*
       .. versionadded:: 0.6
@@ -830,6 +832,23 @@ about its business.
       :returns: The class to edit permissions
       :rtype: :py:class:`~botogram.Permissions`
       .. versionadded:: 0.6
+
+   .. py:method:: revoke_invite_link()
+      Revokes the previous invite link of the chat and returns a new one.
+      It works only in a supergroup or a channel.
+
+      .. code-block:: python
+
+         @bot.command("revoke")
+         def revoke_invite(chat):
+             chat.send("Alright, revoking the invite link...")
+             new_link = chat.revoke_invite_link()
+             chat.send("New link: " + new_link)
+
+
+      :returns: A new invite link
+      :rtype: str
+
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 

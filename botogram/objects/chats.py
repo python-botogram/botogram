@@ -114,6 +114,9 @@ class Chat(BaseObject, mixins.ChatMixin):
         "sticker_set_name": str,
         "can_set_sticker_set": bool
     }
+    replace_keys = {
+        "invite_link": "_invite_link",
+    }
     _check_equality_ = "id"
 
     def _to_user(self):
@@ -293,6 +296,37 @@ class Chat(BaseObject, mixins.ChatMixin):
 
     def permissions(self, user):
         return Permissions(user, self)
+
+    @mixins._require_api
+    def revoke_invite_link(self):
+        """Revoke and generate a new invike link for this chat"""
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("You can revoke the invite link only in a supergroup or a channel")
+
+        link = self._api.call("exportChatInviteLink", {
+            "chat_id": self.id,
+        }).get('result', None)
+        self._cache_invite_link = link
+        return link
+
+    @property
+    @mixins._require_api
+    def invite_link(self):
+        """Get the invite link of this chat"""
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("You can get the invite link only in a supergroup or a channel")
+
+        if hasattr(self, "_cache_invite_link"):
+            return self._cache_invite_link
+
+        chat = self._api.call("getChat", {
+            "chat_id": self.id,
+        }, expect=Chat)
+        if not chat._invite_link:
+            return self.revoke_invite_link()
+
+        self._cache_invite_link = chat._invite_link
+        return self._cache_invite_link
 
 
 class Permissions:
