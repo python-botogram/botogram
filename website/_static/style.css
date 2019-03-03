@@ -91,6 +91,11 @@ div.motto p {
     font-size: 1.8em;
 }
 
+div.error {
+    text-align: center;
+    width: 100%;
+}
+
 nav ul {
     text-align: center;
     margin: 0;

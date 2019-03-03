@@ -42,8 +42,7 @@ setuptools.setup(
 
     license = "MIT",
 
-    author = "Pietro Albini",
-    author_email = "pietro@pietroalbini.org",
+    author = "The botogram authors",
 
     description = "A Python framework for Telegram bots",
     long_description = __doc__,

@@ -7,6 +7,6 @@
 cookies==2.2.1            # via responses
 py==1.4.31                # via pytest
 pytest==2.9.2
-requests==2.10.0          # via responses
+requests==2.20.0          # via responses
 responses==0.5.1
 six==1.10.0               # via responses

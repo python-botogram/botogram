@@ -1,7 +1,7 @@
 # Translations template for botogram.
-# Copyright (C) 2017 Pietro Albini <pietro@pietroalbini.io>
+# Copyright (C) 2018 Pietro Albini <pietro@pietroalbini.io>
 # This file is distributed under the same license as the botogram project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 #, fuzzy
 msgid ""

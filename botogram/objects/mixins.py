@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2017 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -103,7 +103,6 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-
         if path is not None and file_id is None and url is None:
             files = {"photo": open(path, "rb")}
         elif file_id is not None and path is None and url is None:
@@ -124,7 +123,7 @@ class ChatMixin:
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
                    performer=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True, caption=None,
+                   extra=None, attach=None, notify=True, caption=None, *,
                    syntax=None):
         """Send an audio track"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -160,7 +159,7 @@ class ChatMixin:
     @_require_api
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True, caption=None, syntax=None):
+                   notify=True, caption=None, *, syntax=None):
         """Send a voice message"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -170,6 +169,9 @@ class ChatMixin:
                 args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if path is not None and file_id is None and url is None:
             files = {"voice": open(path, "rb")}
@@ -201,7 +203,6 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-
         if path is not None and file_id is None and url is None:
             files = {"video": open(path, "rb")}
         elif file_id is not None and path is None and url is None:
@@ -221,7 +222,7 @@ class ChatMixin:
 
     @_require_api
     def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None,
+                  extra=None, attach=None, notify=True, caption=None, *,
                   syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -230,7 +231,6 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-
         if path is not None and file_id is None and url is None:
             files = {"document": open(path, "rb")}
         elif file_id is not None and path is None and url is None:
@@ -274,12 +274,34 @@ class ChatMixin:
         self._api.call("sendVenue", args, expect=_objects().Message)
 
     @_require_api
-    def send_sticker(self, sticker, reply_to=None, extra=None, attach=None,
-                     notify=True):
+    def send_sticker(self, sticker=None, reply_to=None, extra=None,
+                     attach=None, notify=True, *,
+                     path=None, file_id=None, url=None):
         """Send a sticker"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        if sticker is not None:
+            if path is not None:
+                raise TypeError("The sticker argument is overridden by " +
+                                "the path one")
+            path = sticker
+            _deprecated_message(
+                "The sticker parameter", "1.0", "use the path parameter", -3
+            )
 
-        files = {"sticker": open(sticker, "rb")}
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if path is not None and file_id is None and url is None:
+            files = {"sticker": open(path, "rb")}
+        elif file_id is not None and path is None and url is None:
+            files = None
+            args["sticker"] = file_id
+        elif url is not None and file_id is None and path is None:
+            args["sticker"] = url
+            files = None
+        elif path is None and file_id is None and url is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path, file_id and URL must be " +
+                            "passed")
+
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
 
@@ -366,10 +388,13 @@ class MessageMixin:
         self.text = text
 
     @_require_api
-    def edit_caption(self, caption, extra=None, attach=None, syntax=None):
+    def edit_caption(self, caption, extra=None, attach=None, *, syntax=None):
         """Edit this message's caption"""
         args = {"message_id": self.id, "chat_id": self.chat.id}
         args["caption"] = caption
+        syntax = syntaxes.guess_syntax(caption, syntax)
+        if syntax is not None:
+            args["parse_mode"] = syntax
 
         if extra is not None:
             _deprecated_message(
