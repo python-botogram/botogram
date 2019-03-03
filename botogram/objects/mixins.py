@@ -189,8 +189,9 @@ class ChatMixin:
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, streaming=True, reply_to=None, extra=None,
-                   attach=None, notify=True, *, syntax=None):
+                   duration=None, caption=None, streaming=True,
+                   reply_to=None, extra=None, attach=None,
+                   notify=True, *, syntax=None):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         args["supports_streaming"] = streaming
