@@ -113,10 +113,11 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_video(self, path, duration=None, caption=None, reply_to=None,
-                   extra=None, notify=True):
+    def send_video(self, path, duration=None, caption=None, streaming=True,
+                   reply_to=None, extra=None, notify=True):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, notify)
+        args["supports_streaming"] = streaming
         if duration is not None:
             args["duration"] = duration
         if caption is not None:

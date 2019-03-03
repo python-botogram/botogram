@@ -209,7 +209,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_video(path, [duration=None, caption=None, streaming=True, reply_to=None, extra=None, notify=True])
 
       Send the video found in the *path* to the user. You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
@@ -228,6 +228,7 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` to support video streaming
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -740,7 +741,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_video(path, [duration=None, caption=None, reply_to=None, extra=None, notify=True])
+   .. py:method:: send_video(path, [duration=None, caption=None, streaming=True, reply_to=None, extra=None, notify=True])
 
       Send the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video. If the audio track
@@ -759,6 +760,7 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` to support video streaming
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -1414,7 +1416,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video(path, [duration=None, caption=None, extra=None, notify=True])
+   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video. *extra* is an
@@ -1431,6 +1433,7 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` to support video streaming
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
       :returns: The message you sent
