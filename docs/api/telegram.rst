@@ -848,6 +848,7 @@ about its business.
 
       :returns: A new invite link
       :rtype: str
+      .. versionadded:: 0.6
 
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
