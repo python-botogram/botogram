@@ -21,10 +21,9 @@
 import importlib
 import json
 
-from .. import utils
 from .. import syntaxes
+from .. import utils
 from ..utils.deprecations import _deprecated_message
-
 
 _objects_module = None
 
@@ -216,6 +215,30 @@ class ChatMixin:
                             "passed")
 
         return self._api.call("sendVideo", args, files,
+                              expect=_objects().Message)
+
+    @_require_api
+    def send_video_note(self, path=None, file_id=None, duration=None,
+                        lenght=None, reply_to=None, extra=None,
+                        attach=None, notify=True):
+        """Send a videoNote"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if duration is not None:
+            args["duration"] = duration
+        if lenght is not None:
+            args["length"] = lenght
+        if path is not None and file_id is None:
+            files = {"video_note": open(path, "rb")}
+        elif file_id is not None and path is None:
+            files = None
+            args["video_note"] = file_id
+        elif path is None and file_id is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path and file_id must be" +
+                            "passed")
+
+        return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
 
     @_require_api
@@ -432,6 +455,11 @@ class MessageMixin:
     def reply_with_video(self, *args, **kwargs):
         """Reply with a video to the current message"""
         return self.chat.send_video(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def reply_with_video_note(self, *args, **kwargs):
+        """Reply with a video_note to the current message"""
+        return self.chat.send_video_note(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_file(self, *args, **kwargs):

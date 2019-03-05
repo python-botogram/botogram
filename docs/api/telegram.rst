@@ -25,6 +25,7 @@ about its business.
 * :py:class:`~botogram.Document`
 * :py:class:`~botogram.Sticker`
 * :py:class:`~botogram.Video`
+* :py:class:`~botogram.VideoNote`
 * :py:class:`~botogram.Voice`
 * :py:class:`~botogram.Contact`
 * :py:class:`~botogram.Location`
@@ -307,6 +308,38 @@ about its business.
       .. versionchanged:: 0.6
       
          Support text formatting in caption through *syntax*.
+
+.. py:method:: send_video_note([path=None, file_id=None, duration=None, lenght=None, reply_to=None, attach=None, extra=None, notify=True])
+
+      Send a video_note to the user. You can specify the video_note by passing its *path*,
+      or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration* and the *lenght* of the video.
+      If the video_note track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param int duration: The video duration, in seconds
+      :param str lenght: The lenght of the video
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.6
 
    .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
@@ -1454,6 +1487,12 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: video_note
+
+      A :py:class:`~botogram.VideoNote` object, for when this message is a video_note
+      file.
+
+      *This attribute can be None if it's not provided by Telegram.*
    .. py:attribute:: caption
 
       A caption for when this message is a photo or video file.
@@ -1830,6 +1869,38 @@ about its business.
 
          Now the method returns the sent message
 
+.. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, lenght=None, attach=None, extra=None, notify=True])
+
+      Reply with the  video_note to the user. You can specify the video_note by passing its *path*,
+      or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration* and the *lenght* of the video.
+      If the video_note track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param int duration: The video duration, in seconds
+      :param str lenght: The lenght of the video
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.6
+
    .. py:method:: reply_with_file(path, [attach=None, extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
@@ -2041,7 +2112,8 @@ about its business.
    Despite its name, objects of this class are also used to describe images of
    various Telegram API objects, including :py:class:`~botogram.UserProfilePhotos`
    and thumbnail images for the :py:class:`~botogram.Document`,
-   :py:class:`~botogram.Sticker`, and :py:class:`~botogram.Video` classes.
+   :py:class:`~botogram.Sticker`, :py:class:`~botogram.Video`
+   and :py:class:`~botogram.VideoNote` classes.
 
    See the :py:class:`botogram.Photo` class for a more friendly way to work
    with photos specifically.
@@ -2125,7 +2197,8 @@ about its business.
    This class represents a general file. Other objects of this API may be used
    instead in order to take advantage of client side features for common file
    types, such as with :py:class:`~botogram.Audio`, :py:class:`~botogram.Photo`,
-   :py:class:`~botogram.Video` and :py:class:`~botogram.Voice`. Use this class
+   :py:class:`~botogram.Video`, :py:class:`~botogram.VideoNote`
+   and :py:class:`~botogram.Voice`. Use this class
    when working with all other file types, or for when you do not want clients
    to offer specialized features for the type.
 
@@ -2250,6 +2323,40 @@ about its business.
       be generated as part of the path.
 
       :param str path: The file name path locating where the video should be saved.
+
+
+.. py:class:: botogram.VideoNote
+
+   This class represents a video_note file.
+
+   .. py:attribute:: file_id
+
+      The string ID of the file.
+
+   .. py:attribute:: length
+
+      The integer length of the video_note as defined by the sender.
+
+   .. py:attribute:: thumb
+
+      A :py:class:`~botogram.PhotoSize` object representing a thumbnail image of
+      the video_note as defined by the sender.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: file_size
+
+      The integer size of the video_note file.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:method:: save(path)
+
+      Save the video_note to a file located by *path*. Be aware that Telegram does
+      not provide the name of the original file sent by its sender. This should
+      be generated as part of the path.
+
+      :param str path: The file name path locating where the video_note should be saved.
 
 
 .. py:class:: botogram.Voice

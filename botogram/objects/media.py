@@ -239,3 +239,20 @@ class Venue(BaseObject):
         "foursquare_id": "foursquare",
     }
     _check_equality_ = "location"
+
+
+class VideoNote(BaseObject, mixins.FileMixin):
+    """Telegram API representation of a VideoNote
+
+    https://core.telegram.org/bots/api#videonote
+    """
+    required = {
+        "file_id": str,
+        "length": int,
+        "duration": int,
+    }
+    optional = {
+        "thumb": PhotoSize,
+        "file_size": int
+    }
+    _check_equality_ = "file_id"
