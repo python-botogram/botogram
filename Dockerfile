@@ -1,4 +1,7 @@
-#image to build doc
+# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+# Documentation released under the MIT license (see LICENSE)
+
+# image to build doc
 FROM python:3.6-alpine3.6 as BUILDER
 RUN apk update \
     && apk add git bash make 
@@ -11,7 +14,7 @@ RUN cd /botogram && invoke docs && cd .netlify && make
 RUN apk add tree
 RUN tree /botogram/.netlify/build
 
-#image final
+# image final
 FROM nginx:latest
 ENV botogram_version dev
 RUN rm /etc/nginx/conf.d/default.conf

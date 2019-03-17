@@ -33,7 +33,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 project = "botogram"
-copyright = "2015-2019 Pietro Albini"
+copyright = "2015-2019 The Botogram Authors"
 author = "Pietro Albini"
 
 version = "0.5"
