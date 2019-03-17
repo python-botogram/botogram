@@ -54,7 +54,7 @@ class ChatMixin:
     def _get_call_args(self, reply_to, extra, attach, notify):
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
-        if hasattr(reply_to, "message_id"):
+        if hasattr(reply_to, "id"):
             reply_to = reply_to.id
 
         args = {"chat_id": self.id}
@@ -219,14 +219,14 @@ class ChatMixin:
 
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
-                        lenght=None, reply_to=None, extra=None,
+                        diameter=None, reply_to=None, extra=None,
                         attach=None, notify=True):
         """Send a videoNote"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
-        if lenght is not None:
-            args["length"] = lenght
+        if diameter is not None:
+            args["length"] = diameter
         if path is not None and file_id is None:
             files = {"video_note": open(path, "rb")}
         elif file_id is not None and path is None:
