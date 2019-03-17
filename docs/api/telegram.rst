@@ -831,6 +831,17 @@ about its business.
       :rtype: :py:class:`~botogram.Permissions`
       .. versionadded:: 0.6
 
+   .. py:method:: set_description([description=''])
+
+      Edit or remove the chat description.
+
+      Your bot must be an administrator of the chat with the appropriate admin rights in order for this method to work.
+      Doesn't work with private chats.
+
+      :param str description: The new chat description (leave empty to
+                              remove it)
+      .. versionadded:: 0.6
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
