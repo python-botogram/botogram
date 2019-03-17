@@ -301,7 +301,7 @@ class Chat(BaseObject, mixins.ChatMixin):
                 self._api.call("setChatDescription", {
                     "chat_id": self.id,
                     "description": description
-                })
+                }, expect=bool)
             else:
                 raise ValueError("The new description must be below 255 characters.")
         else:
