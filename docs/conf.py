@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 project = "botogram"
-copyright = "2015-2018 Pietro Albini"
+copyright = "2015-2019 Pietro Albini"
 author = "Pietro Albini"
 
 version = "0.5"
