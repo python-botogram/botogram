@@ -23,7 +23,7 @@ if __name__ == "__main__":
     bot.run()
 ```
 
-You can find the documentation at [botogram.pietroalbini.org][2]. Also, you can
+You can find the documentation at [botogram.dev][2]. Also, you can
 get all the news about botogram in its [Telegram channel][channel].
 
 > Please note botogram currently doesn't support some of the upstream API
@@ -51,6 +51,6 @@ On some Linux systems you might need to wrap the ``invoke install`` command with
 ``sudo``, if you don't have root privileges.
 
 [1]: https://core.telegram.org/bots
-[2]: https://botogram.pietroalbini.org/docs
+[2]: https://botogram.dev/docs
 [3]: http://www.pyinvoke.org
 [channel]: https://telegram.me/botogram_framework
