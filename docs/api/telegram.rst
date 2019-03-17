@@ -838,8 +838,7 @@ about its business.
       Your bot must be an administrator of the chat with the appropriate admin rights in order for this method to work.
       Doesn't work with private chats.
 
-      :param str description: The new chat description (leave empty to
-                              remove it)
+      :param str description: The new chat description (leave empty to remove it)
       .. versionadded:: 0.6
 
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
