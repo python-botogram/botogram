@@ -253,6 +253,6 @@ class VideoNote(BaseObject, mixins.FileMixin):
     }
     optional = {
         "thumb": PhotoSize,
-        "file_size": int
+        "file_size": int,
     }
     _check_equality_ = "file_id"

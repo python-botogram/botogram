@@ -221,7 +221,7 @@ class ChatMixin:
     def send_video_note(self, path=None, file_id=None, duration=None,
                         diameter=None, reply_to=None, extra=None,
                         attach=None, notify=True):
-        """Send a videoNote"""
+        """Send a video note"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
             args["duration"] = duration
@@ -233,7 +233,7 @@ class ChatMixin:
             files = None
             args["video_note"] = file_id
         elif path is None and file_id is None:
-            raise TypeError("path or file_id or URL is missing")
+            raise TypeError("Path or file_id or URL is missing")
         else:
             raise TypeError("Only one among path and file_id must be" +
                             "passed")
@@ -458,7 +458,7 @@ class MessageMixin:
 
     @_require_api
     def reply_with_video_note(self, *args, **kwargs):
-        """Reply with a video_note to the current message"""
+        """Reply with a video note to the current message"""
         return self.chat.send_video_note(*args, reply_to=self, **kwargs)
 
     @_require_api
