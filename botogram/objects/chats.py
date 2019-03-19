@@ -44,6 +44,9 @@ class User(BaseObject, mixins.ChatMixin):
         "language_code": str,
         "is_bot": bool,
     }
+    replace_keys = {
+        "language_code": "lang",
+    }
     _check_equality_ = "id"
 
     @property
