@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,11 @@ class User(BaseObject, mixins.ChatMixin):
     optional = {
         "last_name": str,
         "username": str,
-        "is_bot": bool
+        "language_code": str,
+        "is_bot": bool,
+    }
+    replace_keys = {
+        "language_code": "lang",
     }
     _check_equality_ = "id"
 
@@ -293,6 +297,26 @@ class Chat(BaseObject, mixins.ChatMixin):
 
     def permissions(self, user):
         return Permissions(user, self)
+
+    def pin_message(self, message, notify=True):
+        """Pin a message"""
+        # Check if the chat is a supergroup
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("This chat is nota a supergroup or channel!")
+
+        if isinstance(message, Message):
+            message = message.id
+
+        return self._api.call("pinChatMessage", {
+            "chat_id": self.id,
+            "message_id": message,
+            "disable_notification": not notify
+        }, expect=bool)
+
+    def unpin_message(self):
+        return self._api.call("unpinChatMessage", {
+            "chat_id": self.id,
+        }, expect=bool)
 
 
 class Permissions:
