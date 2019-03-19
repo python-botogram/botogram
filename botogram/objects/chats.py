@@ -298,6 +298,26 @@ class Chat(BaseObject, mixins.ChatMixin):
     def permissions(self, user):
         return Permissions(user, self)
 
+    def pin_message(self, message, notify=True):
+        """Pin a message"""
+        # Check if the chat is a supergroup
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("This chat is nota a supergroup or channel!")
+
+        if isinstance(message, Message):
+            message = message.id
+
+        return self._api.call("pinChatMessage", {
+            "chat_id": self.id,
+            "message_id": message,
+            "disable_notification": not notify
+        }, expect=bool)
+
+    def unpin_message(self):
+        return self._api.call("unpinChatMessage", {
+            "chat_id": self.id,
+        }, expect=bool)
+
 
 class Permissions:
     def __init__(self, user, chat):

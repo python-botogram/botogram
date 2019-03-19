@@ -26,7 +26,7 @@ from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
 from .messages  import Message
 from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
 from .updates   import Update, Updates
-
+from .mixins import Album
 
 __all__ = [
     # Chats-related objects
@@ -45,6 +45,7 @@ __all__ = [
     "Contact",
     "Location",
     "Venue",
+    "Album",
 
     # Messages-related objects
     "Message",
