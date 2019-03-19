@@ -299,6 +299,19 @@ class Chat(BaseObject, mixins.ChatMixin):
     def permissions(self, user):
         return Permissions(user, self)
 
+    def set_description(self, description=""):
+        if self.type != "private":
+            """Set the new chat description. Leave empty to delete it."""
+            if len(description) <= 255:
+                self._api.call("setChatDescription", {
+                    "chat_id": self.id,
+                    "description": description
+                }, expect=bool)
+            else:
+                raise ValueError("The new description must be below 255 characters.")
+        else:
+            raise RuntimeError("This method works only with non-private chats.")
+
     @mixins._require_api
     def revoke_invite_link(self):
         """Revoke and generate a new invike link for this chat"""
