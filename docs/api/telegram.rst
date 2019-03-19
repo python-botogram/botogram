@@ -284,7 +284,7 @@ about its business.
       :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1021,7 +1021,7 @@ about its business.
       :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1818,7 +1818,7 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
-      :param bool streaming: Pass `True` to support video streaming
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
