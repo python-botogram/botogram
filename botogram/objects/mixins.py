@@ -563,11 +563,11 @@ class Album:
 class SendAlbum(Album):
     """Send the album instance to the chat passed as argument"""
     def __init__(self, chat, reply_to=None, notify=True):
+        super(SendAlbum, self).__init__()
         self._get_call_args = chat._get_call_args
         self._api = chat._api
         self.reply_to = reply_to
         self.notify = notify
-        Album.__init__(self)
         self._used = False
 
     def __enter__(self):
