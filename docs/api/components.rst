@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _api-components:
 
@@ -252,6 +252,49 @@ about how to create them in the ":ref:`custom-components`" chapter.
       .. versionchanged:: 0.3
 
          Added the ``hidden`` argument.
+
+   .. py:method:: add_callback(name, func)
+
+      This method adds an handler for the callback with the provided name.
+      See the chapter about :ref:`buttons and callbacks <buttons>` for more
+      information about them.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the provided function:
+
+      * **query**: the received :py:class:`~botogram.CallbackQuery`
+
+      * **chat**: the :py:class:`~botogram.Chat` from which the callback query
+        was sent
+
+      * **message**: the :py:class:`~botogram.Message` related to the callback
+        query
+
+      * **data**: the custom information provided by you along with the call
+
+      .. code-block:: python
+
+         class GreeterComponent(botogram.Component):
+             component_name = "greeter"
+
+             def __init__(self):
+                 self.add_command("greeter", self.command)
+                 self.add_callback("say-hi", self.say_hi)
+
+             def greeter(self, chat, message):
+                 """Say hi to the user"""
+                 btns = botogram.Buttons()
+                 btns[0].callback("Click me", "say-hi", message.sender.name)
+
+                 chat.send("Click the button below", attach=btns)
+
+             def say_hi(self, query, data):
+                 query.notify("Hi " + data)
+
+      :param str name: the name of the callback
+      :param callable func: The function you want to use
+
+      .. versionadded:: 0.4
 
    .. py:method:: add_chat_unavailable_hook(func)
 

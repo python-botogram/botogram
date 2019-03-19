@@ -1,14 +1,28 @@
-"""
-    Tests for botogram/bot.py
-
-    Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-    Released under the MIT license
-"""
+# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+#   The above copyright notice and this permission notice shall be included in
+#   all copies or substantial portions of the Software.
+#
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#   DEALINGS IN THE SOFTWARE.
 
 import copy
 
 import botogram.bot
 import botogram.components
+import botogram.utils
 
 import conftest
 
@@ -17,7 +31,7 @@ def test_bot_creation(api, mock_req):
     # Mock the getMe request
     mock_req({
         "getMe": {"ok": True, "result": {"id": 1, "first_name": "test",
-                  "username": "test_bot"}},
+                                         "username": "test_bot"}},
     })
 
     bot1 = botogram.bot.create(conftest.API_KEY)
@@ -63,3 +77,21 @@ def test_bot_freeze(bot):
     frozen = bot.freeze()
 
     assert bot == frozen
+
+
+def test_i18n_override(bot):
+    default_message = botogram.utils.get_language("en") \
+        .gettext("Use /help to get a list of all the commands.")
+    override_message = "git gud"
+
+    bot.override_i18n = {
+        default_message: override_message
+    }
+
+    assert bot._("Use /help to get a list of all the commands.") \
+        == override_message
+
+    bot.override_i18n = {}
+
+    assert bot._("Use /help to get a list of all the commands.") \
+        == default_message

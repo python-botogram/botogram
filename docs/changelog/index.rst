@@ -1,5 +1,5 @@
-.. Copyright (c) 2016 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _changelog:
 
@@ -12,6 +12,7 @@ Here you can see what changed in every botogram release.
 .. toctree::
    :maxdepth: 2
 
+   0.5
    0.4
    0.3
    0.2

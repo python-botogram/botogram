@@ -1,13 +1,13 @@
 # English translations for botogram.
-# Copyright (C) 2016 Pietro Albini <pietro@pietroalbini.io>
+# Copyright (C) 2018 Pietro Albini <pietro@pietroalbini.io>
 # This file is distributed under the same license as the botogram project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: botogram 1.0.dev0\n"
 "Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
-"POT-Creation-Date: 2016-03-30 22:31+0200\n"
+"POT-Creation-Date: 2017-10-06 19:21+0200\n"
 "PO-Revision-Date: 2015-08-01 17:20+0200\n"
 "Last-Translator: Pietro Albini <pietro@pietroalbini.io>\n"
 "Language: en\n"
@@ -16,56 +16,57 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.1.1\n"
+"Generated-By: Babel 2.3.4\n"
 
-#: botogram/defaults.py:32
+#: botogram/defaults.py:46
 msgid "Use /help to get a list of all the commands."
 msgstr ""
 
-#: botogram/defaults.py:39
+#: botogram/defaults.py:53
 msgid "Start using the bot."
 msgstr ""
 
-#: botogram/defaults.py:40
+#: botogram/defaults.py:54
 msgid "This shows a greeting message."
 msgstr ""
 
-#: botogram/defaults.py:48
+#: botogram/defaults.py:62
 msgid "<b>Error!</b> The <code>/help</code> command allows up to one argument."
 msgstr ""
 
-#: botogram/defaults.py:54 botogram/defaults.py:153
+#: botogram/defaults.py:68 botogram/defaults.py:167
 #, python-format
 msgid "<b>Unknown command:</b> <code>/%(name)s</code>"
 msgstr ""
 
-#: botogram/defaults.py:57 botogram/defaults.py:155
+#: botogram/defaults.py:71 botogram/defaults.py:169
 msgid "Use /help to get a list of the commands."
 msgstr ""
 
-#: botogram/defaults.py:78
+#: botogram/defaults.py:93
 msgid "<b>This bot supports those commands:</b>"
 msgstr ""
 
-#: botogram/defaults.py:89 botogram/defaults.py:130
+#: botogram/defaults.py:97 botogram/defaults.py:127
+msgid "No description available."
+msgstr ""
+
+#: botogram/defaults.py:101 botogram/defaults.py:144
 msgid ""
 "You can also use <code>/help &lt;command&gt;</code> to get help about a "
 "specific command."
 msgstr ""
 
-#: botogram/defaults.py:93
+#: botogram/defaults.py:105
 msgid "<i>This bot has no commands.</i>"
 msgstr ""
 
-#: botogram/defaults.py:102 botogram/defaults.py:119
+#: botogram/defaults.py:114 botogram/defaults.py:133
 #, python-format
 msgid "Please contact %(owner)s if you have problems with this bot."
 msgstr ""
 
-#: botogram/defaults.py:129
+#: botogram/defaults.py:143
 msgid "Show this help message."
 msgstr ""
 
-#: botogram/utils.py:144
-msgid "No description available."
-msgstr ""

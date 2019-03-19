@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _api:
 
@@ -16,6 +16,7 @@ the development will be made trying to not break anything.
 
    utility
    bot
+   buttons
    channels
    components
    telegram

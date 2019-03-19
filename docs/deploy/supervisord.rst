@@ -1,5 +1,5 @@
-.. Copyright (c) 2015 Pietro Albini <pietro@pietroalbini.io>
-   Released under the MIT license
+.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _deploy-supervisor:
 
@@ -112,7 +112,7 @@ distributions is located at ``/etc/supervisord.conf``::
 
    redirect_stderr=true
    stdout_logfile=/home/telegrambot/mybot.log
-   stdout_logfile_maxbytes=10M
+   stdout_logfile_maxbytes=10MB
 
 This will create a process named ``mybot`` with some standard configuration:
 
