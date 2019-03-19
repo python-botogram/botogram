@@ -295,6 +295,7 @@ class Chat(BaseObject, mixins.ChatMixin):
         return Permissions(user, self)
 
     def pin_message(self, message, notify=True):
+        """Pin a message"""
         # Check if the chat is a supergroup
         if self.type not in ("supergroup", "channel"):
             raise RuntimeError("This chat is nota a supergroup or channel!")

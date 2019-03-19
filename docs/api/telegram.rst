@@ -146,9 +146,9 @@ about its business.
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
-      :param str path: The path to the photo.
+      :param str path: The path of the photo.
       :param str file_id: The Telegram *file_id* of the photo.
-      :param str url: The URL to the photo.
+      :param str url: The URL of the photo.
       :param str caption: A caption for the photo.
       :param str syntax: The name of the syntax used for the caption.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
@@ -2065,9 +2065,9 @@ about its business.
 
         @bot.command("my_dogs")
         def my_dogs(message):
-        with message.reply_with_album() as album:
-            album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
-            album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
+            with message.reply_with_album() as album:
+                 album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+                 album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
 
       :param album: The :py:class:`~botogram.Album` send to the chat
 
@@ -2498,7 +2498,7 @@ about its business.
 .. py:class:: botogram.Album
 
 
-   This object represents an album (a group of photos and videos)
+   This object represents an album (a group of photos and videos).
 
    .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
 
@@ -2520,9 +2520,9 @@ about its business.
 
       You may optionally specify the *duration* and the *caption* of the video.
 
-      :param str path: The path to the video
+      :param str path: The path of the video
       :param str file_id: The Telegram *file_id* of the video
-      :param str url: The URL to the video
+      :param str url: The URL of the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param str syntax: The name of the syntax used for the caption.

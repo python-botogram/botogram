@@ -331,12 +331,13 @@ class ChatMixin:
 
     @_require_api
     def send_album(self, album=None, reply_to=None, notify=True):
+        """Send a Album"""
         albums = SendAlbum(self, reply_to, notify)
         if album is not None:
             albums._content = album._content
             albums._file = album._file
             albums._used = True
-            return albums.save()
+            return albums.send()
         return albums
 
 
@@ -501,12 +502,14 @@ class FileMixin:
 
 
 class Album:
+    """Factory for albums"""
     def __init__(self):
         self._content = []
         self._file = []
 
     def add_photo(self, path=None, url=None, file_id=None, caption=None,
                   syntax=None):
+        """Add a photo the the album instance"""
         args = {"type": "photo"}
         if caption is not None:
             args["caption"] = caption
@@ -531,6 +534,7 @@ class Album:
 
     def add_video(self, path=None, file_id=None, url=None, duration=None,
                   caption=None, syntax=None):
+        """Add a video the the album instance"""
         args = {"type": "video"}
         if duration is not None:
             args["duration"] = duration
@@ -557,6 +561,7 @@ class Album:
 
 
 class SendAlbum(Album):
+    """Send the album instance to the chat passed as argument"""
     def __init__(self, chat, reply_to=None, notify=True):
         self._get_call_args = chat._get_call_args
         self._api = chat._api
@@ -571,9 +576,10 @@ class SendAlbum(Album):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type is None:
-            self.save()
+            self.send()
 
-    def save(self):
+    def send(self):
+        """Send the Album to telgram"""
         args = self._get_call_args(self.reply_to, None, None, self.notify)
         args["media"] = json.dumps(self._content)
         return self._api.call("sendMediaGroup", args, self._file,
