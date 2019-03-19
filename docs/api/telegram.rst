@@ -61,6 +61,14 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: lang
+
+      The user's language, given by Telegram.
+
+      *This attribute can be None if it's not provided by Telegram*
+
+      .. versionadded:: 0.6
+
    .. py:attribute:: name
 
       The computed name of the user. If someone has only the first name, this
