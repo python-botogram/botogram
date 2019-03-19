@@ -66,7 +66,7 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram*
 
-      .. versionadded:: 0.4
+      .. versionadded:: 0.6
 
    .. py:attribute:: name
 
