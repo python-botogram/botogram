@@ -29,7 +29,7 @@ details are managed by botogram, so you can just focus on your bot.
 Want to get started? `Go to the documentation`_
 
 .. _Telegram bots: https://core.telegram.org/bots
-.. _Go to the documentation: https://botogram.pietroalbini.org/docs
+.. _Go to the documentation: https://botogram.dev/docs
 '''
 
 import setuptools
@@ -38,7 +38,7 @@ import setuptools
 setuptools.setup(
     name = "botogram",
     version = "0.5",
-    url = "https://botogram.pietroalbini.org",
+    url = "https://botogram.dev",
 
     license = "MIT",
 

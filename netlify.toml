@@ -24,3 +24,4 @@ X-Frame-Options = "DENY"
 X-Xss-Protection = "1; mode=block"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "no-referrer"
+

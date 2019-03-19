@@ -1,4 +1,4 @@
-.. Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
    Documentation released under the MIT license (see LICENSE)
 
 .. _api-telegram:
@@ -61,6 +61,14 @@ about its business.
       The user's username, without the ``@`` prefix.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: lang
+
+      The user's language, given by Telegram.
+
+      *This attribute can be None if it's not provided by Telegram*
+
+      .. versionadded:: 0.6
 
    .. py:attribute:: name
 
@@ -131,7 +139,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, syntax=None, reply_to=None, extra=None, attach=None, notify=True])
 
       Send a photo to the user. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -147,10 +155,11 @@ about its business.
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
-      :param str path: The path to the photo.
+      :param str path: The path of the photo.
       :param str file_id: The Telegram *file_id* of the photo.
-      :param str url: The URL to the photo.
+      :param str url: The URL of the photo.
       :param str caption: A caption for the photo.
+      :param str syntax: The name of the syntax used for the caption.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -174,6 +183,10 @@ about its business.
       .. versionchanged:: 0.6
       
          Support text formatting in caption through *syntax*.
+
+      .. versionchanged:: 0.6
+
+         Added support for syntax
 
    .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
@@ -221,6 +234,10 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
    .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the user. You can specify the audio by passing its *path*,
@@ -260,18 +277,18 @@ about its business.
       .. versionchanged:: 0.5
 
          Added support for *caption*, *file_id* and *url*.
-         
-      .. versionchanged:: 0.6
-      
-         Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
+      .. versionchanged:: 0.6
+
+         Added support for syntax
+
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
 
       Send a video to the user. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
       
       You may optionally specify the *duration* and the *caption* of the video.
-      If the audio track you're sending is in reply to another message, 
+      If the video you're sending is in reply to another message,
       set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
 
       The *attach* parameter allows you to attach extra things like
@@ -285,6 +302,7 @@ about its business.
       :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -307,7 +325,7 @@ about its business.
          
       .. versionchanged:: 0.6
       
-         Support text formatting in caption through *syntax*.
+         Added support for syntax
 
 .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
 
@@ -382,6 +400,10 @@ about its business.
       .. versionchanged:: 0.6
       
          Support text formatting in caption through *syntax*.
+
+      .. versionchanged:: 0.6
+
+         Added support for syntax
 
    .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
 
@@ -584,7 +606,9 @@ about its business.
 
    .. py:attribute:: invite_link
 
-      This group chat/channel invite link.
+      The chat invite link, it works only in a supergroup or a channel.
+      You can revoke the current link and create a new one by using the
+      :py:method:`~botogram.Chat.revoke_invite_link` method.
 
       *This attribute can be None if it's not provided by Telegram.*
       .. versionadded:: 0.6
@@ -864,6 +888,24 @@ about its business.
       :rtype: :py:class:`~botogram.Permissions`
       .. versionadded:: 0.6
 
+   .. py:method:: revoke_invite_link()
+      Revokes the previous invite link of the chat and returns a new one.
+      It works only in a supergroup or a channel.
+
+      .. code-block:: python
+
+         @bot.command("revoke")
+         def revoke_invite(chat):
+             chat.send("Alright, revoking the invite link...")
+             new_link = chat.revoke_invite_link()
+             chat.send("New link: " + new_link)
+
+
+      :returns: A new invite link
+      :rtype: str
+      .. versionadded:: 0.6
+
+
    .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
@@ -1032,7 +1074,7 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a video to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1053,6 +1095,7 @@ about its business.
       :param str url: The URL to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1258,6 +1301,58 @@ about its business.
       :param message: The message to delete (can be an ID too)
 
       .. versionadded:: 0.4
+
+   .. py:method:: pin_message(message[, notify=True])
+
+      Pin the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be pinned only if it's sent in a supergroup or channel where the bot is an admin.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param message: The message to delete (can be an ID too)
+      :param bool notify: If you want to trigger a notification on the client
+
+      .. versionadded:: 0.6
+
+   .. py:method:: unpin_message()
+
+      Unpin the message pinned
+
+      .. versionadded:: 0.6
+
+   .. py:method:: send_album([album=None, reply_to=None, notify=True])
+
+      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
+      message you are sending is in reply to another, set *reply_to* to the ID
+      of the other :py:class:`~botogram.Message`.
+      The *notify* parameter defines if your message should
+      trigger the notification on the client side (yes by default).
+
+
+      .. code-block:: python
+        @bot.command("my_cats")
+        def my_cats(chat):
+            album = botogram.Album()
+            album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
+            album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
+            album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
+            chat.send_album(album)
+
+        @bot.command("my_dogs")
+        def my_dogs(chat):
+        with chat.send_album() as album:
+            album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+            album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
+
+      :param album: The :py:class:`~botogram.Album` send to the chat
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool notify: If you want to trigger a notification on the client
+
+      :returns: The messages you sent
+      :rtype: list of :py:class:`~botogram.Message`
+
+      .. versionadded:: 0.6
 
 .. py:class:: botogram.ParsedText
 
@@ -1841,7 +1936,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video(path, [duration=None, caption=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, attach=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video.
@@ -1855,6 +1950,7 @@ about its business.
       :param str path: The path to the video
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
+      :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2042,6 +2138,38 @@ about its business.
          The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
+
+
+    .. py:method:: reply_with_album([album=None, notify=True])
+
+      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
+      The *notify* parameter defines if your message should
+      trigger the notification on the client side (yes by default).
+
+
+      .. code-block:: python
+        @bot.command("my_cats")
+        def my_cats(message):
+            album = botogram.Album()
+            album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
+            album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
+            album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
+             message.reply_with_album(album)
+
+        @bot.command("my_dogs")
+        def my_dogs(message):
+            with message.reply_with_album() as album:
+                 album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+                 album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
+
+      :param album: The :py:class:`~botogram.Album` send to the chat
+
+      :param bool notify: If you want to trigger a notification on the client
+
+      :returns: The messages you sent
+      :rtype: list of :py:class:`~botogram.Message`
+
+      .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Photo
@@ -2494,6 +2622,41 @@ about its business.
       the venue.
 
       *This value can be None if the venue doesn't have a Foursquare ID.*
+
+
+.. py:class:: botogram.Album
+
+
+   This object represents an album (a group of photos and videos).
+
+   .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
+
+      Add a photo to the album. You can specify the photo by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify a *caption* for the photo being sent.
+
+      :param str path: The path to the photo.
+      :param str file_id: The Telegram *file_id* of the photo.
+      :param str url: The URL to the photo.
+      :param str caption: A caption for the photo.
+      :param str syntax: The name of the syntax used for the caption.
+
+   .. py:method:: add_video([path=None, file_id=None, url=None, duration=None, caption=None, syntax=None])
+
+      Add a video to the album. You can specify the video by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration* and the *caption* of the video.
+
+      :param str path: The path of the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param str url: The URL of the video
+      :param int duration: The video duration, in seconds
+      :param str caption: The caption of the video
+      :param str syntax: The name of the syntax used for the caption.
+
+   .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Update
