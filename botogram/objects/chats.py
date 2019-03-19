@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@ from .base import BaseObject, multiple
 from . import mixins
 from datetime import datetime as dt
 from time import mktime
-
-
 from .media import Photo
 
 
@@ -41,7 +39,11 @@ class User(BaseObject, mixins.ChatMixin):
     optional = {
         "last_name": str,
         "username": str,
-        "is_bot": bool
+        "language_code": str,
+        "is_bot": bool,
+    }
+    replace_keys = {
+        "language_code": "lang",
     }
     _check_equality_ = "id"
 
@@ -113,6 +115,9 @@ class Chat(BaseObject, mixins.ChatMixin):
         # "pinned_message" = Message
         "sticker_set_name": str,
         "can_set_sticker_set": bool
+    }
+    replace_keys = {
+        "invite_link": "_invite_link",
     }
     _check_equality_ = "id"
 
@@ -306,6 +311,58 @@ class Chat(BaseObject, mixins.ChatMixin):
                 raise ValueError("The new description must be below 255 characters.")
         else:
             raise RuntimeError("This method works only with non-private chats.")
+
+    @mixins._require_api
+    def revoke_invite_link(self):
+        """Revoke and generate a new invike link for this chat"""
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("You can revoke the invite link only in a supergroup or a channel")
+
+        link = self._api.call("exportChatInviteLink", {
+            "chat_id": self.id,
+        }).get('result', None)
+        self._cache_invite_link = link
+        return link
+
+    @property
+    @mixins._require_api
+    def invite_link(self):
+        """Get the invite link of this chat"""
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("You can get the invite link only in a supergroup or a channel")
+
+        if hasattr(self, "_cache_invite_link"):
+            return self._cache_invite_link
+
+        chat = self._api.call("getChat", {
+            "chat_id": self.id,
+        }, expect=Chat)
+        if not chat._invite_link:
+            return self.revoke_invite_link()
+
+        self._cache_invite_link = chat._invite_link
+        return self._cache_invite_link
+
+    def pin_message(self, message, notify=True):
+        """Pin a message"""
+        # Check if the chat is a supergroup
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError("This chat is nota a supergroup or channel!")
+
+        if isinstance(message, Message):
+            message = message.id
+
+        return self._api.call("pinChatMessage", {
+            "chat_id": self.id,
+            "message_id": message,
+            "disable_notification": not notify
+        }, expect=bool)
+
+    def unpin_message(self):
+        return self._api.call("unpinChatMessage", {
+            "chat_id": self.id,
+        }, expect=bool)
+
 
 class Permissions:
     def __init__(self, user, chat):

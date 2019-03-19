@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2018 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
 from .chats import User, Chat
-from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
-    Location, Venue
+from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
+    Contact, Location, Venue
 
 
 _url_protocol_re = re.compile(r"^https?:\/\/|s?ftp:\/\/|mailto:", re.I)
@@ -343,6 +343,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "photo": Photo,
         "sticker": Sticker,
         "video": Video,
+        "video_note": VideoNote,
         "caption": str,
         "contact": Contact,
         "location": Location,
