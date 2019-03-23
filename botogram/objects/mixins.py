@@ -433,9 +433,6 @@ class MessageMixin:
             args["reply_markup"] = json.dumps(attach._serialize_attachment(
                 self.chat
             ))
-        syntax = syntaxes.guess_syntax(caption, syntax)
-        if syntax is not None:
-            args["parse_mode"] = syntax
 
         self._api.call("editMessageCaption", args)
         self.caption = caption

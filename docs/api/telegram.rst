@@ -82,8 +82,9 @@ about its business.
 
    .. py:attribute:: is_bot
 
-      is_bot indicates if the user is a bot. due to the telegram privacy rules,
+      This attribute indicates if the user is a bot. Due to the telegram privacy rules,
       this can be true only when your bot can actually see other bots' messages.
+
       .. versionadded:: 0.2
 
    .. py:attribute:: avatar
@@ -327,7 +328,7 @@ about its business.
       
          Added support for syntax
 
-.. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -374,8 +375,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
-      :param str file_id: The Telegram *file_id* of the video
-      :param str url: The URL to the video
+      :param str file_id: The Telegram *file_id* of the file
+      :param str url: The URL to the file
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -540,6 +541,39 @@ about its business.
          The *extra* parameter is now deprecated
 
       .. versionadded:: 0.3
+
+   .. py:method:: send_album([album=None, reply_to=None, notify=True])
+
+      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
+      message you are sending is in reply to another, set *reply_to* to the ID
+      of the other :py:class:`~botogram.Message`.
+      The *notify* parameter defines if your message should
+      trigger the notification on the client side (yes by default).
+
+
+      .. code-block:: python
+        @bot.command("my_cats")
+        def my_cats(chat):
+            album = botogram.Album()
+            album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
+            album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
+            album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
+            chat.send_album(album)
+
+        @bot.command("my_dogs")
+        def my_dogs(chat):
+        with chat.send_album() as album:
+            album.add_video('spank.mp4', caption='A video of Spank digging holes in our garden :(')
+            album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
+
+      :param album: The :py:class:`~botogram.Album` send to the chat
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool notify: If you want to trigger a notification on the client
+
+      :returns: The messages you sent
+      :rtype: list of :py:class:`~botogram.Message`
+
+      .. versionadded:: 0.6
 
    .. py:method:: delete_message(message)
 
@@ -1129,6 +1163,38 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
+
+      Send a video note to the user. You can specify the video note by passing its *path*,
+      or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration* and the *diameter* of the video.
+      If the video note track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the video
+      :param str file_id: The Telegram *file_id* of the video
+      :param int duration: The video duration, in seconds
+      :param str diameter: the video diameter
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.6
+
    .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the chat. You can specify the video by passing its *path*,
@@ -1301,35 +1367,6 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: delete_message(message)
-
-      Delete the message with the provided ID or :py:class:`~botogram.Message` object.
-      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
-      It can also be deleted if it's one of the supported service messages.
-
-      :param message: The message to delete (can be an ID too)
-
-      .. versionadded:: 0.4
-
-   .. py:method:: pin_message(message[, notify=True])
-
-      Pin the message with the provided ID or :py:class:`~botogram.Message` object.
-      A message can be pinned only if it's sent in a supergroup or channel where the bot is an admin.
-
-      The *notify* parameter is for defining if your message should trigger
-      a notification on the client side (yes by default).
-
-      :param message: The message to delete (can be an ID too)
-      :param bool notify: If you want to trigger a notification on the client
-
-      .. versionadded:: 0.6
-
-   .. py:method:: unpin_message()
-
-      Unpin the message pinned
-
-      .. versionadded:: 0.6
-
    .. py:method:: send_album([album=None, reply_to=None, notify=True])
 
       Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
@@ -1360,6 +1397,35 @@ about its business.
 
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
+
+      .. versionadded:: 0.6
+
+   .. py:method:: delete_message(message)
+
+      Delete the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be deleted only if is sent by the bot or sent in a supergroup by an user where the bot is admin.
+      It can also be deleted if it's one of the supported service messages.
+
+      :param message: The message to delete (can be an ID too)
+
+      .. versionadded:: 0.4
+
+   .. py:method:: pin_message(message[, notify=True])
+
+      Pin the message with the provided ID or :py:class:`~botogram.Message` object.
+      A message can be pinned only if it's sent in a supergroup or channel where the bot is an admin.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param message: The message to delete (can be an ID too)
+      :param bool notify: If you want to trigger a notification on the client
+
+      .. versionadded:: 0.6
+
+   .. py:method:: unpin_message()
+
+      Unpin the message pinned
 
       .. versionadded:: 0.6
 
@@ -1974,7 +2040,7 @@ about its business.
 
          Now the method returns the sent message
 
-.. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, attach=None, extra=None, notify=True])
 
       Reply with the  video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -2149,7 +2215,7 @@ about its business.
       .. versionadded:: 0.3
 
 
-    .. py:method:: reply_with_album([album=None, notify=True])
+   .. py:method:: reply_with_album([album=None, notify=True])
 
       Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
       The *notify* parameter defines if your message should
@@ -2573,8 +2639,6 @@ about its business.
    This class represents the permissions of the user.
    If you use this as a context manager, the save method will automatically be called if no exceptions were raised."
 
-   .. versionadded:: 0.6
-
    .. py:attribute:: until_date
 
       The unix timestamp or datime format of when the changes you're doing will be reverted.
@@ -2601,6 +2665,7 @@ about its business.
 
       This method automatically detects the changes you made and doesn't do anything if no attribute was changed.
 
+   .. versionadded:: 0.6
 
 
 .. py:class:: botogram.Venue

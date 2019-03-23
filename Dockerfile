@@ -4,7 +4,7 @@
 # Image to build doc
 FROM python:3.6-alpine3.6 as BUILDER
 RUN apk update \
-    && apk add git bash make 
+    && apk add git bash make
 RUN pip install invoke virtualenv
 COPY ./requirements-docs.txt /requirements-docs.txt
 RUN pip install  -r /requirements-docs.txt
@@ -13,9 +13,9 @@ RUN cd /botogram && invoke docs && cd .netlify && make
 
 # Image final
 FROM nginx:latest
-ARG botogram_version=dev
-ENV env_botogram_version=$botogram_version
 RUN rm /etc/nginx/conf.d/default.conf
 COPY /nginx-doc.conf  /etc/nginx/conf.d/default.conf
-RUN sed 's/RELEASE/'"$env_botogram_version"'/g' -i /etc/nginx/conf.d/default.conf
 COPY --from=BUILDER /botogram/.netlify/build/ ./botogram
+ARG botogram_version=dev
+ENV env_botogram_version=$botogram_version
+RUN sed 's/RELEASE/'"$env_botogram_version"'/g' -i /etc/nginx/conf.d/default.conf

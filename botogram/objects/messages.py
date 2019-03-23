@@ -419,7 +419,7 @@ class Message(BaseObject, mixins.MessageMixin):
         return self.left_chat_member
 
     @property
-    @utils.deprecated("Message.message_id", "0.5",
+    @utils.deprecated("Message.message_id", "0.6",
                       "Rename property to Message.id")
     def message_id(self):
         return self.id
