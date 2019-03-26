@@ -109,11 +109,6 @@ New features
   * New method :py:meth:`botogram.User.send_video_note`
   * New method :py:meth:`botogram.Message.reply_with_video_note`
 
-* Added support for sending stickers by ID or URL
-
-  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_sticker`
-  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.User.send_sticker`
-
 * New argument ``attach`` in :py:meth:`botogram.Bot.edit_message`
 
 * New argument ``attach`` in :py:meth:`botogram.Bot.edit_caption`
