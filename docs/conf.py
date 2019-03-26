@@ -34,10 +34,10 @@ master_doc = "index"
 
 project = "botogram"
 copyright = "2015-2019 The Botogram Authors"
-author = "Pietro Albini"
+author = "Botogram-dev"
 
-version = "0.5"
-release = "0.5"
+version = "0.6"
+release = "0.6"
 
 language = None
 

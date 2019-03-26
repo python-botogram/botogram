@@ -50,8 +50,7 @@ class Component:
 
         self._component_id = str(uuid.uuid4())
 
-        if cls.component_name is None:
-            self.component_name = cls.__name__
+        self.component_name = str()
 
         return self
 
