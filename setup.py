@@ -36,8 +36,8 @@ import setuptools
 
 
 setuptools.setup(
-    name = "botogram",
-    version = "0.5",
+    name = "botogram2",
+    version = "0.6",
     url = "https://botogram.dev",
 
     license = "MIT",

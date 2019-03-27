@@ -29,7 +29,7 @@ get all the news about botogram in its [Telegram channel][channel].
 > Please note botogram currently doesn't support some of the upstream API
 > features. All of them will be implemented in botogram 1.0
 
-**Supported Python versions**: 3.4, 3.5  
+**Supported Python versions**: 3.4+
 **License**: MIT
 
 ### Installation
@@ -37,13 +37,13 @@ get all the news about botogram in its [Telegram channel][channel].
 You can install easily botogram with pip (be sure to have Python 3.4 or higher
 installed):
 
-    $ python3 -m pip install botogram
+    $ python3 -m pip install botogram2
 
 If you want to install from the source code, you can clone the repository and
 install it with setuptools. Be sure to have Python 3.4 (or a newer version),
 pip, virtualenv, setuptools and [invoke][3] installed:
 
-    $ git clone https://github.com/pietroalbini/botogram.git
+    $ git clone https://github.com/python-botogram/botogram.git
     $ cd botogram
     $ invoke install
 

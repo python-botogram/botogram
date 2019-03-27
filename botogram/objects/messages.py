@@ -24,8 +24,8 @@ from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
 from .chats import User, Chat
-from .media import Audio, Voice, Document, Photo, Sticker, Video, Contact, \
-    Location, Venue
+from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
+    Contact, Location, Venue
 
 
 _url_protocol_re = re.compile(r"^https?:\/\/|s?ftp:\/\/|mailto:", re.I)
@@ -343,6 +343,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "photo": Photo,
         "sticker": Sticker,
         "video": Video,
+        "video_note": VideoNote,
         "caption": str,
         "contact": Contact,
         "location": Location,
@@ -418,7 +419,7 @@ class Message(BaseObject, mixins.MessageMixin):
         return self.left_chat_member
 
     @property
-    @utils.deprecated("Message.message_id", "0.5",
+    @utils.deprecated("Message.message_id", "0.6",
                       "Rename property to Message.id")
     def message_id(self):
         return self.id
