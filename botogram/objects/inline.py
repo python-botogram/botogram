@@ -19,10 +19,10 @@
 #   DEALINGS IN THE SOFTWARE.
 from .base import BaseObject
 from .messages import User, Location
-from ..inline import Inline
+from .mixins import InlineMixin
 
 
-class InlineQuery(BaseObject, Inline):
+class InlineQuery(BaseObject, InlineMixin):
     required = {
         "id": str,
         "from": User,

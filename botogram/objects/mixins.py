@@ -557,6 +557,29 @@ class FileMixin:
             f.write(downloaded)
 
 
+class InlineMixin:
+
+    @staticmethod
+    def article(title, text, syntax=None, preview=True, attach=None):
+        args = {"type": "article",
+                "id": None,
+                "title": title,
+                "input_message_content": {
+                    "message_text": text,
+                    "disable_web_page_preview": not preview
+                }
+                }
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = \
+                attach._serialize_attachment("-100200000")
+        syntax = syntaxes.guess_syntax(text, syntax)
+        if syntax is not None:
+            args["input_message_content"]["parse_mode"] = syntax
+        return args
+
+
 class Album:
     """Factory for albums"""
     def __init__(self):
