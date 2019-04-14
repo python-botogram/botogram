@@ -33,10 +33,10 @@ class CallbackQuery(BaseObject):
     required = {
         "id": str,
         "from": User,
-        "message": Message,
         "chat_instance": str,
     }
     optional = {
+        "message": Message,
         "inline_message_id": str,
         "data": str,
         "game_short_name": str,
@@ -48,6 +48,13 @@ class CallbackQuery(BaseObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.message is not None:
+            self.is_inline = False
+        elif self.inline_message_id is not None:
+            self.is_inline = True
+        else:
+            raise ValueError
+            # Needs to be modified
 
         self._answered = False
 

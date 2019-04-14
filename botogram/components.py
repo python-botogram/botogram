@@ -38,6 +38,7 @@ class Component:
 
         self.__commands = {}
         self.__callbacks = {}
+        self.__inline = []
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
@@ -145,6 +146,16 @@ class Component:
         })
         self.__callbacks[name] = hook
 
+    def add_inline(self, cache, private, paginate, timer, func):
+        if not callable(func):
+            raise ValueError("A inline must be callable")
+
+        hook = hooks.InlineHook(func, self, {
+            "cache": cache, "private": private,
+            "paginate": paginate,
+            "timer": timer})
+        self.__inline.append(hook)
+
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
@@ -230,6 +241,7 @@ class Component:
                 self.__callbacks[name]
                 for name in sorted(self.__callbacks.keys())
             ]],
+            "inline": [self.__inline],
         }
 
     def _get_commands(self):

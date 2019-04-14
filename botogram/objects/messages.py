@@ -374,7 +374,15 @@ class Message(BaseObject, mixins.MessageMixin):
 
     def __init__(self, data, api=None):
         super().__init__(data, api)
-
+        if self.chat.id == -100200000:
+            self.id = None
+            self.date = None
+            self.chat = None
+            self.is_inline = True
+            self.inline_message_id = data["inline_message_id"]
+        else:
+            self.is_inline = False
+            self.inline_message_id = None
         # Create the parsed_text instance even if there are no entities in the
         # current text
         if self.text is not None and self.parsed_text is None:

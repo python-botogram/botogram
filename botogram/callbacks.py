@@ -24,7 +24,6 @@ import hashlib
 from . import crypto
 from .context import ctx
 
-
 DIGEST = hashlib.md5
 DIGEST_LEN = 16
 
@@ -151,7 +150,10 @@ def get_callback_data(bot, chat, name, data=None):
 
 def get_signature(bot, chat, name, data):
     """Generate a signature for the provided information"""
-    chat_id = str(chat.id).encode("utf-8")
+    if isinstance(chat, str):
+        chat_id = chat.encode("utf-8")
+    else:
+        chat_id = str(chat.id).encode("utf-8")
     return crypto.get_hmac(bot, name + b'\0' + chat_id + b'\0' + data)
 
 
@@ -163,7 +165,11 @@ def hashed_callback_name(name):
 
 def process(bot, chains, update):
     """Process a callback sent to the bot"""
-    chat = update.callback_query.message.chat
+    if update.callback_query.is_inline:
+        chat = "-100200000"
+    else:
+        chat = update.callback_query.message.chat
+
     raw = update.callback_query._data
 
     try:

@@ -18,8 +18,11 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 import re
+import json
+from time import time
 
 from .callbacks import hashed_callback_name
+from .objects.messages import Message
 from .context import Context
 
 
@@ -227,13 +230,90 @@ class CallbackHook(Hook):
             if name != self._name:
                 return
 
+            if q.is_inline:
+
+                args = {
+                    "message_id": 100,
+                    "date": 100,
+                    "chat": {"id": -100200000, "type": "faketype"},
+                    "inline_message_id": q.inline_message_id
+                }
+                message = Message(data=args, api=q._api)
+                chat = q.chat_instance
+            else:
+                message = q.message
+                chat = q.message.chat
+
             bot._call(
-                self.func, self.component_id, query=q, chat=q.message.chat,
-                message=q.message, data=data,
+                self.func, self.component_id, query=q, chat=chat,
+                message=message, data=data, is_inline=q.is_inline
             )
 
             update.callback_query._maybe_send_noop()
             return True
+
+
+class InlineHook(Hook):
+    """Underlying hook for @bot.inline"""
+
+    def _after_init(self, args):
+        self.cache = args["cache"]
+        self.private = args["private"]
+        self.paginate = args["paginate"]
+        self.timer = args["timer"]
+
+    def _call(self, bot, update):
+        sender = update.inline_query.sender
+        inline = update.inline_query
+        query = inline.query
+        counter = 0
+        inlinequery = []
+        if sender.id not in bot._inline_paginate \
+                or query != bot._inline_paginate[sender.id][0]. \
+                gi_frame.f_locals["query"] \
+                or time() > bot._inline_paginate[sender.id][1]:
+            inline.cache = self.cache
+            inline.private = self.private
+            inline.paginate = self.paginate
+            bot._inline_paginate[sender.id] = [bot._call(self.func,
+                                                         self.component_id,
+                                                         inline=inline,
+                                                         sender=sender,
+                                                         query=query),
+                                               time() + self.timer]
+
+        inline_old = bot._inline_paginate[sender.id][0]. \
+            gi_frame.f_locals["inline"]
+
+        while True:
+            try:
+                queryresult = next(bot._inline_paginate[sender.id][0])
+                queryresult["id"] = str(counter)
+                inlinequery.append(queryresult)
+            except StopIteration:
+                break
+            counter += 1
+            if (counter % inline_old.paginate) == 0:
+                args = {
+                    "inline_query_id": inline.id,
+                    "cache_time": inline_old.cache,
+                    "is_personal": inline_old.private,
+                    "results": json.dumps(inlinequery),
+                    "next_offset": str(counter)
+                }
+                bot.api.call("answerInlineQuery", args)
+                return True
+
+        if len(inlinequery) > 0:
+            args = {
+                "inline_query_id": inline.id,
+                "cache_time": inline_old.cache,
+                "is_personal": inline_old.private,
+                "results": json.dumps(inlinequery),
+            }
+            bot.api.call("answerInlineQuery", args)
+        del bot._inline_paginate[sender.id]
+        return True
 
 
 class ChatUnavailableHook(Hook):

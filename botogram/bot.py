@@ -32,6 +32,7 @@ from . import defaults
 from . import components
 from . import utils
 from . import frozenbot
+from . import inline
 from . import shared
 from . import tasks
 from . import messages
@@ -79,6 +80,9 @@ class Bot(frozenbot.FrozenBot):
         maincompid = self._main_component._component_id
         self._shared_memory.register_preparers_list(maincompid, inits)
 
+        # paginate inline
+        self._inline_paginate = {}
+
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
 
@@ -92,6 +96,7 @@ class Bot(frozenbot.FrozenBot):
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
         self.register_update_processor("callback_query", callbacks.process)
+        self.register_update_processor('inline_query', inline.process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -194,6 +199,14 @@ class Bot(frozenbot.FrozenBot):
         """Register a new callback"""
         def __(func):
             self._main_component.add_callback(name, func)
+            return func
+        return __
+
+    def inline(self, cache=300, private=False, paginate=10, timer=60):
+        """Add a inline hook"""
+        def __(func):
+            self._main_component.add_inline(cache, private,
+                                            paginate, timer, func)
             return func
         return __
 

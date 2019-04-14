@@ -369,6 +369,23 @@ class ChatMixin:
 class MessageMixin:
     """Add some methods for messages"""
 
+    def _get_call_args(self, attach):
+        if self.is_inline:
+            args = {"inline_message_id": self.inline_message_id}
+        else:
+            args = {"message_id": self.id, "chat_id": self.chat.id}
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            if self.is_inline:
+                chat = "-100200000"
+            else:
+                chat = self.chat
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                chat
+            ))
+        return args
+
     @_require_api
     def forward_to(self, to, notify=True):
         """Forward the message to another user"""
@@ -388,7 +405,7 @@ class MessageMixin:
     @_require_api
     def edit(self, text, syntax=None, preview=True, extra=None, attach=None):
         """Edit this message"""
-        args = {"message_id": self.id, "chat_id": self.chat.id}
+        args = self._get_call_args(attach)
         args["text"] = text
 
         syntax = syntaxes.guess_syntax(text, syntax)
@@ -403,12 +420,6 @@ class MessageMixin:
                 "The extra parameter", "1.0", "use the attach parameter", -3
             )
             args["reply_markup"] = json.dumps(extra.serialize())
-        if attach is not None:
-            if not hasattr(attach, "_serialize_attachment"):
-                raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = json.dumps(attach._serialize_attachment(
-                self.chat
-            ))
 
         self._api.call("editMessageText", args)
         self.text = text
@@ -416,7 +427,7 @@ class MessageMixin:
     @_require_api
     def edit_caption(self, caption, extra=None, attach=None, *, syntax=None):
         """Edit this message's caption"""
-        args = {"message_id": self.id, "chat_id": self.chat.id}
+        args = self._get_call_args(attach)
         args["caption"] = caption
         syntax = syntaxes.guess_syntax(caption, syntax)
         if syntax is not None:
@@ -427,87 +438,105 @@ class MessageMixin:
                 "The extra parameter", "1.0", "use the attach parameter", -3
             )
             args["reply_markup"] = json.dumps(extra.serialize())
-        if attach is not None:
-            if not hasattr(attach, "_serialize_attachment"):
-                raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = json.dumps(attach._serialize_attachment(
-                self.chat
-            ))
-
         self._api.call("editMessageCaption", args)
         self.caption = caption
 
     @_require_api
     def edit_attach(self, attach):
         """Edit this message's attachment"""
-        args = {"message_id": self.id, "chat_id": self.chat.id}
-        args["reply_markup"] = attach
+        args = self._get_call_args(attach)
 
         self._api.call("editMessageReplyMarkup", args)
 
     @_require_api
     def reply(self, *args, **kwargs):
         """Reply to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_photo(self, *args, **kwargs):
         """Reply with a photo to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_photo(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_audio(self, *args, **kwargs):
         """Reply with an audio track to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_audio(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_voice(self, *args, **kwargs):
         """Reply with a voice message to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_voice(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_video(self, *args, **kwargs):
         """Reply with a video to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_video(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_video_note(self, *args, **kwargs):
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         """Reply with a video note to the current message"""
         return self.chat.send_video_note(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_file(self, *args, **kwargs):
         """Reply with a generic file to the current chat"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_file(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_location(self, *args, **kwargs):
         """Reply with a geographic location to the current chat"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_location(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_venue(self, *args, **kwargs):
         """Reply with a venue to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_venue(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_sticker(self, *args, **kwargs):
         """Reply with a sticker to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_sticker(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_contact(self, *args, **kwargs):
         """Reply with a contact to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_contact(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_album(self, *args, **kwargs):
         """Reply with an album to the current message"""
+        if self.is_inline:
+            raise AttributeError("inline error reply")
         return self.chat.send_album(*args, reply_to=self, **kwargs)
 
     @_require_api
     def delete(self):
         """Delete the message"""
+        if self.is_inline:
+            raise AttributeError("inline error delete")
         return self._api.call("deleteMessage", {
             "chat_id": self.chat.id,
             "message_id": self.id,
