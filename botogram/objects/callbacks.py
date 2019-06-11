@@ -54,7 +54,7 @@ class CallbackQuery(BaseObject):
             self.is_inline = True
         else:
             raise ValueError
-            # Needs to be modified
+            # TODO
 
         self._answered = False
 

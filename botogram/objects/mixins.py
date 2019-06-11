@@ -579,6 +579,39 @@ class InlineMixin:
             args["input_message_content"]["parse_mode"] = syntax
         return args
 
+    @staticmethod
+    def photo(file_id=None, url=None, title=None, description=None,
+              caption=None, syntax=None, attach=None):
+        args = {"type": "photo",
+                "id": None,
+                }
+        if file_id is not None  and url is None:
+            args["photo_file_id"] = file_id
+        elif file_id is None and url is not None:
+            args["photo_url"] = url
+        elif file_id is None and url is None:
+            raise TypeError("file_id or URL is missing")
+        else:
+            raise TypeError("Only one among file_id and URL must be" +
+                            "passed")
+
+        if title is not None:
+            args["title"] = title
+
+        if description is not None:
+            args["description"] = description
+
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = \
+                attach._serialize_attachment("-100200000")
+        if caption is not None:
+            syntax = syntaxes.guess_syntax(caption, syntax)
+            if syntax is not None:
+                args["parse_mode"] = syntax
+        return args
+
 
 class Album:
     """Factory for albums"""

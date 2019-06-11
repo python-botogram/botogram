@@ -147,6 +147,7 @@ class Component:
         self.__callbacks[name] = hook
 
     def add_inline(self, cache, private, paginate, timer, func):
+        """Add a inline processor hook"""
         if not callable(func):
             raise ValueError("A inline must be callable")
 

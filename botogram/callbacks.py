@@ -23,7 +23,6 @@ import hashlib
 
 from . import crypto
 from .context import ctx
-
 DIGEST = hashlib.md5
 DIGEST_LEN = 16
 

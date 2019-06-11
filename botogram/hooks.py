@@ -267,7 +267,7 @@ class InlineHook(Hook):
         inline = update.inline_query
         query = inline.query
         counter = 0
-        inlinequery = []
+        inline_query = []
         if sender.id not in bot._inline_paginate \
                 or query != bot._inline_paginate[sender.id][0]. \
                 gi_frame.f_locals["query"] \
@@ -289,7 +289,7 @@ class InlineHook(Hook):
             try:
                 queryresult = next(bot._inline_paginate[sender.id][0])
                 queryresult["id"] = str(counter)
-                inlinequery.append(queryresult)
+                inline_query.append(queryresult)
             except StopIteration:
                 break
             counter += 1
@@ -298,18 +298,18 @@ class InlineHook(Hook):
                     "inline_query_id": inline.id,
                     "cache_time": inline_old.cache,
                     "is_personal": inline_old.private,
-                    "results": json.dumps(inlinequery),
+                    "results": json.dumps(inline_query),
                     "next_offset": str(counter)
                 }
                 bot.api.call("answerInlineQuery", args)
                 return True
 
-        if len(inlinequery) > 0:
+        if len(inline_query) > 0:
             args = {
                 "inline_query_id": inline.id,
                 "cache_time": inline_old.cache,
                 "is_personal": inline_old.private,
-                "results": json.dumps(inlinequery),
+                "results": json.dumps(inline_query),
             }
             bot.api.call("answerInlineQuery", args)
         del bot._inline_paginate[sender.id]
