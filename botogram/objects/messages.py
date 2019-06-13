@@ -374,7 +374,7 @@ class Message(BaseObject, mixins.MessageMixin):
 
     def __init__(self, data, api=None):
         super().__init__(data, api)
-        if self.chat.id == -100200000:
+        if self.chat.id == 000000000:
             self.id = None
             self.date = None
             self.chat = None

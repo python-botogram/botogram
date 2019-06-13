@@ -165,7 +165,7 @@ def hashed_callback_name(name):
 def process(bot, chains, update):
     """Process a callback sent to the bot"""
     if update.callback_query.is_inline:
-        chat = "-100200000"
+        chat = "000000000"
     else:
         chat = update.callback_query.message.chat
 
