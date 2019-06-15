@@ -77,7 +77,7 @@ something globally. In this case, you can ask your system administrator to
 execute the above command, or you can wrap the command with sudo, if you
 are allowed to do so::
 
-   $ sudo pip3 install botogram2
+   $ sudo python3 -m pip install botogram2
 
 If you installed from source, you need to use this command instead of the last
 one::
