@@ -1571,12 +1571,18 @@ about its business.
 
       * :py:class:`~botogram.User` when the original sender is an user
       * :py:class:`~botogram.Chat` when the message originated in a channel
+      * A string, when the original sender has opted to hide his account.
+      In this case, the attribute :py:attr:`~botogram.Message.forward_hidden` is set to ``True``.
 
       *This attribute can be None if it's not provided by Telegram.*
 
       .. versionchanged:: 0.3
 
          The value can also be an instance of :py:class:`~botogram.Chat`.
+
+      .. versionchanged:: 0.7
+
+         The value can also be a string if the original sender is hidden.
 
    .. py:attribute:: forward_from_message_id
 
@@ -1585,12 +1591,24 @@ about its business.
 
       .. versionadded:: 0.4
 
+   .. py:attribute:: forward_signature
+
+      The signature of the post author if present. This is currently only available for channel posts.
+
+      .. versionadded:: 0.7
+
    .. py:attribute:: forward_date
 
       The integer date (in Unix time) of when the original message was sent,
       when this message is a forward.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: forward_hidden
+
+      When ``True`` indicates that the original sender has opted to hide his account.
+
+      .. versionadded:: 0.7
 
    .. py:attribute:: reply_to_message
 
