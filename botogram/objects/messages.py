@@ -393,7 +393,8 @@ class Message(BaseObject, mixins.MessageMixin):
         """Get from where the message was forwarded"""
         # Provide either _forward_from or _forward_from_chat
         # _forward_from_chat is checked earlier because it's more correct
-        # _forward_sender_name is returned if the original sender has opted to hide his account
+        # _forward_sender_name is returned if the original sender
+        # has opted to hide his account
 
         if self._forward_from_chat is not None:
             return self._forward_from_chat
