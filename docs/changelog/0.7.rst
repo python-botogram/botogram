@@ -1,0 +1,32 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.7.x
+===========================
+
+Here you can find all the changes in the botogram 0.7.x releases.
+
+.. _changelog-0.7:
+
+botogram 0.7
+============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+New features
+------------
+
+* Added support for polls
+
+   * New :py:class:`botogram.Poll`
+   * New :py:class:`botogram.PollOption`
+   * New method :py:meth:`botogram.Chat.send_poll`
+   * New method :py:meth:`botogram.Message.reply_with_poll`
+   * New method :py:meth:`botogram.Message.stop_poll`
+
+
+Bug fixes
+---------
