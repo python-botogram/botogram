@@ -1,0 +1,26 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.7.x
+===========================
+
+Here you can find all the changes in the botogram 0.7.x releases.
+
+.. _changelog-0.7:
+
+botogram 0.7
+============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+New features
+------------
+
+
+Bug fixes
+---------
+
+* Fixed :py:meth:`botogram.Message.edit_attach` to work with inline callbacks
