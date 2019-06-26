@@ -78,22 +78,22 @@ class ChatMixin:
         return args
 
     @staticmethod
-    def _get_file_args(path, file_id, url, kind):
+    def _get_file_args(path, file_id, url):
         args = None
         if path is not None and file_id is None and url is None:
-            files = {kind: open(path, "rb")}
+            file = open(path, "rb")
         elif file_id is not None and path is None and url is None:
             args = file_id
-            files = None
+            file = None
         elif url is not None and file_id is None and path is None:
             args = url
-            files = None
+            file = None
         elif path is None and file_id is None and url is None:
             raise TypeError("path or file_id or URL is missing")
         else:
             raise TypeError("Only one among path, file_id and URL must be" +
                             "passed")
-        return args, files
+        return args, file
 
     @_require_api
     def send(self, message, preview=True, reply_to=None, syntax=None,
@@ -120,14 +120,15 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-        args["photo"], files = self._get_file_args(path, file_id, url, "photo")
+        files = dict()
+        args["photo"], files["photo"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
-                   performer=None, title=None, reply_to=None,
+                   thumb=None, performer=None, title=None, reply_to=None,
                    extra=None, attach=None, notify=True, caption=None, *,
                    syntax=None):
         """Send an audio track"""
@@ -144,7 +145,8 @@ class ChatMixin:
         if title is not None:
             args["title"] = title
 
-        args["audio"], files = self._get_file_args(path, file_id, url, "audio")
+        files = dict()
+        args["audio"], files["audio"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -166,7 +168,8 @@ class ChatMixin:
         if syntax is not None:
             args["parse_mode"] = syntax
 
-        args["voice"], files = self._get_file_args(path, file_id, url, "voice")
+        files = dict()
+        args["voice"], files["voice"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
@@ -187,7 +190,8 @@ class ChatMixin:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
 
-        args["video"], files = self._get_file_args(path, file_id, url, "video")
+        files = dict()
+        args["video"], files["video"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
@@ -203,7 +207,9 @@ class ChatMixin:
         if diameter is not None:
             args["length"] = diameter
 
-        args["video_note"], files = self._get_file_args(path, file_id, None, "video_note")
+        files = dict()
+        args["video_note"], files["video_note"] = self._get_file_args(path, file_id, None)
+
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
 
@@ -219,7 +225,8 @@ class ChatMixin:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
 
-        args["document"], files = self._get_file_args(path, file_id, url, "document")
+        files = dict()
+        args["document"], files["document"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
@@ -265,7 +272,8 @@ class ChatMixin:
 
         args = self._get_call_args(reply_to, extra, attach, notify)
 
-        args["sticker"], files = self._get_file_args(path, file_id, url, "sticker")
+        files = dict()
+        args["sticker"], files["sticker"] = self._get_file_args(path, file_id, url)
 
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
