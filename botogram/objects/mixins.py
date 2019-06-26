@@ -128,7 +128,7 @@ class ChatMixin:
 
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
-                   thumb=None, performer=None, title=None, reply_to=None,
+                   performer=None, title=None, thumb=None, reply_to=None,
                    extra=None, attach=None, notify=True, caption=None, *,
                    syntax=None):
         """Send an audio track"""
@@ -147,6 +147,7 @@ class ChatMixin:
 
         files = dict()
         args["audio"], files["audio"] = self._get_file_args(path, file_id, url)
+        args["thumb"], files["thumb"] = self._get_file_args(thumb.path, thumb.file_id, thumb.url)
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -177,10 +178,9 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, streaming=True,
-                   reply_to=None, extra=None, attach=None,
-                   notify=True, *, syntax=None):
+    def send_video(self, path=None, file_id=None, url=None, duration=None,
+                   caption=None, streaming=True, thumb=None, reply_to=None,
+                   extra=None, attach=None, notify=True, *, syntax=None):
         """Send a video"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         args["supports_streaming"] = streaming
@@ -194,14 +194,15 @@ class ChatMixin:
 
         files = dict()
         args["video"], files["video"] = self._get_file_args(path, file_id, url)
+        args["thumb"], files["thumb"] = self._get_file_args(thumb.path, thumb.file_id, thumb.url)
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
-                        diameter=None, reply_to=None, extra=None,
-                        attach=None, notify=True):
+                        diameter=None, thumb=None, reply_to=None,
+                        extra=None, attach=None, notify=True):
         """Send a video note"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if duration is not None:
@@ -211,14 +212,15 @@ class ChatMixin:
 
         files = dict()
         args["video_note"], files["video_note"] = self._get_file_args(path, file_id, None)
+        args["thumb"], files["thumb"] = self._get_file_args(thumb.path, thumb.file_id, thumb.url)
 
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None, *,
-                  syntax=None):
+    def send_file(self, path=None, file_id=None, url=None, thumb=None,
+                  reply_to=None, extra=None, attach=None, notify=True,
+                  caption=None, *, syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -229,6 +231,7 @@ class ChatMixin:
 
         files = dict()
         args["document"], files["document"] = self._get_file_args(path, file_id, url)
+        args["thumb"], files["thumb"] = self._get_file_args(thumb.path, thumb.file_id, thumb.url)
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
