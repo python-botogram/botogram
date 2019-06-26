@@ -567,3 +567,11 @@ class SendAlbum(Album):
             utils.warn(1, "error_with_album",
                        "you should use `with` to use send_album\
                         -- check the documentation")
+
+
+class Thumb:
+    """Factory for thumbs"""
+    def __init__(self, path=None, file_id=None, url=None):
+        self.path = path
+        self.file_id = file_id
+        self.url = url
