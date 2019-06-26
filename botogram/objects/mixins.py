@@ -164,6 +164,8 @@ class ChatMixin:
                 args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
+        if title is not None:
+            args["title"] = title
         syntax = syntaxes.guess_syntax(caption, syntax)
         if syntax is not None:
             args["parse_mode"] = syntax
