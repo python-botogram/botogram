@@ -151,6 +151,8 @@ class ChatMixin:
         args["audio"], files["audio"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -184,7 +186,7 @@ class ChatMixin:
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, streaming=True,
+                   duration=None, caption=None, streaming=True, thumb=None,
                    reply_to=None, extra=None, attach=None,
                    notify=True, *, syntax=None):
         """Send a video"""
@@ -202,13 +204,15 @@ class ChatMixin:
         args["video"], files["video"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
-                        diameter=None, reply_to=None, extra=None,
+                        diameter=None, thumb=None, reply_to=None, extra=None,
                         attach=None, notify=True):
         """Send a video note"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -221,14 +225,16 @@ class ChatMixin:
         args["video_note"], files["video_note"] = self._get_file_args(path,
                                                                       file_id,
                                                                       None)
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None, *,
-                  syntax=None):
+    def send_file(self, path=None, file_id=None, url=None, thumb=None,
+                  reply_to=None, extra=None, attach=None,
+                  notify=True, caption=None, *, syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -241,6 +247,8 @@ class ChatMixin:
         args["document"], files["document"] = self._get_file_args(path,
                                                                   file_id,
                                                                   url)
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
