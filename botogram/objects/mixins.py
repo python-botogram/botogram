@@ -121,7 +121,9 @@ class ChatMixin:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
         files = dict()
-        args["photo"], files["photo"] = self._get_file_args(path, file_id, url)
+        args["photo"], files["photo"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -146,7 +148,9 @@ class ChatMixin:
             args["title"] = title
 
         files = dict()
-        args["audio"], files["audio"] = self._get_file_args(path, file_id, url)
+        args["audio"], files["audio"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -171,7 +175,9 @@ class ChatMixin:
             args["parse_mode"] = syntax
 
         files = dict()
-        args["voice"], files["voice"] = self._get_file_args(path, file_id, url)
+        args["voice"], files["voice"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
@@ -193,7 +199,9 @@ class ChatMixin:
                 args["parse_mode"] = syntax
 
         files = dict()
-        args["video"], files["video"] = self._get_file_args(path, file_id, url)
+        args["video"], files["video"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
@@ -210,7 +218,9 @@ class ChatMixin:
             args["length"] = diameter
 
         files = dict()
-        args["video_note"], files["video_note"] = self._get_file_args(path, file_id, None)
+        args["video_note"], files["video_note"] = self._get_file_args(path,
+                                                                      file_id,
+                                                                      None)
 
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
@@ -228,7 +238,9 @@ class ChatMixin:
                 args["parse_mode"] = syntax
 
         files = dict()
-        args["document"], files["document"] = self._get_file_args(path, file_id, url)
+        args["document"], files["document"] = self._get_file_args(path,
+                                                                  file_id,
+                                                                  url)
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
@@ -275,7 +287,9 @@ class ChatMixin:
         args = self._get_call_args(reply_to, extra, attach, notify)
 
         files = dict()
-        args["sticker"], files["sticker"] = self._get_file_args(path, file_id, url)
+        args["sticker"], files["sticker"] = self._get_file_args(path,
+                                                                file_id,
+                                                                url)
 
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
