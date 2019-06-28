@@ -189,7 +189,7 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the user. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -210,6 +210,7 @@ about its business.
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -283,7 +284,7 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
 
       Send a video to the user. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -304,6 +305,7 @@ about its business.
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
+      :param str thumb: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -328,7 +330,7 @@ about its business.
       
          Added support for syntax
 
-   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -347,6 +349,7 @@ about its business.
       :param str file_id: The Telegram *file_id* of the video
       :param int duration: The video duration, in seconds
       :param str diameter: the video diameter
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -360,7 +363,7 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the user. You can specify the file by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -377,6 +380,7 @@ about its business.
       :param str path: The path to the file
       :param str file_id: The Telegram *file_id* of the file
       :param str url: The URL to the file
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1026,7 +1030,7 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the chat. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1048,6 +1052,7 @@ about its business.
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1117,7 +1122,7 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a video to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1139,6 +1144,7 @@ about its business.
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1163,7 +1169,7 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1182,6 +1188,7 @@ about its business.
       :param str file_id: The Telegram *file_id* of the video
       :param int duration: The video duration, in seconds
       :param str diameter: the video diameter
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1195,7 +1202,7 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1212,6 +1219,7 @@ about its business.
       :param str path: The path to the file
       :param str file_id: The Telegram *file_id* of the file
       :param str url: The URL to the file
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1954,7 +1962,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the audio track found in the *path* to the chat. You may
       optionally specify the *duration*, the *performer* and the *title* of the
@@ -1970,6 +1978,7 @@ about its business.
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
+      :param str path: The path to the thumb
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2011,7 +2020,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, thumb=True, attach=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video.
@@ -2026,6 +2035,7 @@ about its business.
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
+      :param str path: The path to the thumb
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2040,7 +2050,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the  video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -2059,6 +2069,7 @@ about its business.
       :param str file_id: The Telegram *file_id* of the video
       :param int duration: The video duration, in seconds
       :param str length: The length of the video
+      :param str path: The path to the thumb
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -2072,7 +2083,7 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: reply_with_file(path, [attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_file(path, [thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
       you're sending is in reply to another message, set *reply_to* to the ID
@@ -2085,6 +2096,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
+      :param str path: The path to the thumb
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
