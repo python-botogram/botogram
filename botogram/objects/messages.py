@@ -25,7 +25,7 @@ from . import mixins
 from .. import utils
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
-    Contact, Location, Venue
+    Animation, Contact, Location, Venue
 
 
 _url_protocol_re = re.compile(r"^https?:\/\/|s?ftp:\/\/|mailto:", re.I)
@@ -344,6 +344,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "sticker": Sticker,
         "video": Video,
         "video_note": VideoNote,
+        "animation": Animation,
         "caption": str,
         "contact": Contact,
         "location": Location,

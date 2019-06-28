@@ -224,6 +224,37 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
+    def send_gif(self, path=None, file_id=None, url=None, duration=None,
+                 width=None, height=None, caption=None, thumb=None,
+                 reply_to=None, extra=None, attach=None,
+                 notify=True, syntax=None):
+        """Send an animation"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if duration is not None:
+            args["duration"] = duration
+        if caption is not None:
+            args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
+        if width is not None:
+            args["width"] = width
+        if height is not None:
+            args["height"] = height
+
+        files = dict()
+        args["animation"], files["animation"] = self._get_file_args(path,
+                                                                    file_id,
+                                                                    url)
+        if files["animation"] is None:
+            del files["animation"]
+        if thumb is not None:
+            files["thumb"] = thumb
+
+        return self._api.call("sendAnimation", args, files,
+                              expect=_objects().Message)
+
+    @_require_api
     def send_file(self, path=None, file_id=None, url=None, reply_to=None,
                   extra=None, attach=None, notify=True, caption=None, *,
                   syntax=None):
@@ -436,6 +467,10 @@ class MessageMixin:
     def reply_with_video_note(self, *args, **kwargs):
         """Reply with a video note to the current message"""
         return self.chat.send_video_note(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def reply_with_gif(self, *args, **kwargs):
+        return self.chat.send_gif(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_file(self, *args, **kwargs):
