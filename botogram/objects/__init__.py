@@ -22,11 +22,11 @@
 
 from .chats     import User, Chat, UserProfilePhotos, Permissions
 from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
-                       Video, VideoNote, Contact, Location, Venue
+                       Video, VideoNote, Animation, Contact, Location, Venue
 from .messages  import Message
 from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
 from .updates   import Update, Updates
-from .mixins import Album
+from .mixins    import Album
 
 __all__ = [
     # Chats-related objects
@@ -43,6 +43,7 @@ __all__ = [
     "Sticker",
     "Video",
     "VideoNote",
+    "Animation",
     "Contact",
     "Location",
     "Venue",
