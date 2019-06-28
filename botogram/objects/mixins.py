@@ -124,6 +124,8 @@ class ChatMixin:
         args["photo"], files["photo"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["photo"] is None:
+            del files["photo"]
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -151,6 +153,8 @@ class ChatMixin:
         args["audio"], files["audio"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["audio"] is None:
+            del files["audio"]
         if thumb is not None:
             files["thumb"] = thumb
 
@@ -180,6 +184,8 @@ class ChatMixin:
         args["voice"], files["voice"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["voice"] is None:
+            del files["voice"]
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
@@ -204,6 +210,8 @@ class ChatMixin:
         args["video"], files["video"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["video"] is None:
+            del files["video"]
         if thumb is not None:
             files["thumb"] = thumb
 
@@ -225,6 +233,8 @@ class ChatMixin:
         args["video_note"], files["video_note"] = self._get_file_args(path,
                                                                       file_id,
                                                                       None)
+        if files["video_note"] is None:
+            del files["video_note"]
         if thumb is not None:
             files["thumb"] = thumb
 
@@ -247,6 +257,8 @@ class ChatMixin:
         args["document"], files["document"] = self._get_file_args(path,
                                                                   file_id,
                                                                   url)
+        if files["document"] is None:
+            del files["document"]
         if thumb is not None:
             files["thumb"] = thumb
 
@@ -298,6 +310,8 @@ class ChatMixin:
         args["sticker"], files["sticker"] = self._get_file_args(path,
                                                                 file_id,
                                                                 url)
+        if files["sticker"] is None:
+            del files["sticker"]
 
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
