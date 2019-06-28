@@ -261,6 +261,29 @@ components.
 
       .. versionadded:: 0.4
 
+   .. py:decoratormethod:: poll_update
+
+      Functions decorated with this decorator will receive all the updates
+      about new poll states. This allows you to act when a poll sent by the bot
+      is changed (i.e. new votes) or when a poll seen by the bot is closed.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **poll**: the poll that has just changed state
+        (instance of :py:class:`~botogram.Poll`)
+
+      .. code-block:: python
+
+         @bot.poll_update
+         def poll_update(poll):
+             chat_id = mydb.retrieve_chat_by_poll_id(poll.id)
+             if poll.is_closed:
+                 bot.chat(chat_id).send('Poll final results!\n%s' %
+                                        '\n'.join(['%s: %s' % (o.text, str(o.voter_count)) for o in poll.options]))
+
+      .. versionadded:: 0.7
+
    .. py:decoratormethod:: command(name, [hidden=False, order=0])
 
       This decorator register a new command, and calls the decorated function
