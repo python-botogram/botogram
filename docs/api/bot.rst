@@ -277,7 +277,7 @@ components.
 
          @bot.poll_update
          def poll_update(poll):
-             chat_id = mydb.retrieve_chat_by_poll_id(poll.id)
+             chat_id = mydb.retrieve_chat_by_poll_id(poll.id)  # Dummy method
              if poll.is_closed:
                  bot.chat(chat_id).send('Poll final results!\n%s' %
                                         '\n'.join(['%s: %s' % (o.text, str(o.voter_count)) for o in poll.options]))
