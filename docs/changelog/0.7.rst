@@ -19,7 +19,7 @@ Release description not yet written.
 New features
 ------------
 
-* Enchantments in message forwarding
+* Enhancements in message forwarding
 
   * New return type for :py:attr:`~Message.forward_from`
   * New attribute :py:attr:`~Message.forward_hidden`
