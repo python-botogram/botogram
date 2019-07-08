@@ -362,6 +362,21 @@ class ChatMixin:
         })
 
     @_require_api
+    def set_photo(self, path):
+        args = {"chat_id": self.id}
+        if path is not None:
+            files = {"photo": open(path, "rb")}
+        else:
+            raise TypeError("path of the new photo is missing")
+
+        self._api.call("setChatPhoto", args, files)
+
+    @_require_api
+    def remove_photo(self):
+        args = {"chat_id": self.id}
+        self._api.call("deleteChatPhoto", args)
+
+    @_require_api
     def send_album(self, album=None, reply_to=None, notify=True):
         """Send a Album"""
         albums = SendAlbum(self, reply_to, notify)
@@ -566,9 +581,16 @@ class FileMixin:
     """Add some methods for files"""
 
     @_require_api
-    def save(self, path):
+    def save(self, path, big=True):
         """Save the file to a particular path"""
-        response = self._api.call("getFile", {"file_id": self.file_id})
+        if not hasattr("self", "file_id"):
+            if big:
+                _file_id = self.big
+            else:
+                _file_id = self.small
+        else:
+            _file_id = self.file_id
+        response = self._api.call("getFile", {"file_id": _file_id})
 
         # Save the file to the wanted path
         downloaded = self._api.file_content(response["result"]["file_path"])

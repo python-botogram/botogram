@@ -39,6 +39,23 @@ class PhotoSize(BaseObject, mixins.FileMixin):
     _check_equality_ = "file_id"
 
 
+class ChatPhoto(BaseObject, mixins.FileMixin):
+    """Telegram API representation of a chat photo
+
+    https://core.telegram.org/bots/api#chatphoto
+    """
+
+    required = {
+        "small_file_id": str,
+        "big_file_id": str,
+    }
+    replace_keys = {
+        "small_file_id": "small",
+        "big_file_id": "big"
+    }
+    _check_equality_ = "small_file_id"
+
+
 class Photo(mixins.FileMixin):
     """Custom representation of a photo
 

@@ -23,7 +23,7 @@ from .base import BaseObject, multiple
 from . import mixins
 from datetime import datetime as dt
 from time import mktime
-from .media import Photo
+from .media import Photo, ChatPhoto
 
 
 class User(BaseObject, mixins.ChatMixin):
@@ -114,10 +114,12 @@ class Chat(BaseObject, mixins.ChatMixin):
         # This is added at the bottom of messages.py due to circular imports
         # "pinned_message" = Message
         "sticker_set_name": str,
-        "can_set_sticker_set": bool
+        "can_set_sticker_set": bool,
+        "photo": ChatPhoto
     }
     replace_keys = {
         "invite_link": "_invite_link",
+        "photo": "_photo"
     }
     _check_equality_ = "id"
 
@@ -357,6 +359,30 @@ class Chat(BaseObject, mixins.ChatMixin):
             "message_id": message,
             "disable_notification": not notify
         }, expect=bool)
+
+    @property
+    @mixins._require_api
+    def photo(self):
+        """Get the current chat photo small and big ids"""
+        if self.type not in ("supergroup", "channel"):
+            raise RuntimeError(
+                "You can only get the photo in a supergroup or a channel")
+
+        if hasattr(self, "_cache_photo"):
+            return self._cache_photo
+
+        if self._photo is not None:
+            self._cache_photo = self._photo
+            return self._cache_photo
+
+        chat = self._api.call("getChat", {
+            "chat_id": self.id
+        }, expect=Chat)
+        if not chat._photo:
+            raise RuntimeError("This chat doesn't have a photo")
+
+        self._cache_photo = chat._photo
+        return self._cache_photo
 
     def unpin_message(self):
         return self._api.call("unpinChatMessage", {

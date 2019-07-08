@@ -21,6 +21,7 @@ about its business.
 * :py:class:`~botogram.Message`
 * :py:class:`~botogram.Photo`
 * :py:class:`~botogram.PhotoSize`
+* :py:class:`~botogram.ChatPhoto`
 * :py:class:`~botogram.Audio`
 * :py:class:`~botogram.Document`
 * :py:class:`~botogram.Sticker`
@@ -772,6 +773,12 @@ about its business.
 
       .. versionadded:: 0.3
 
+   .. py:attribute:: photo
+
+      The current chat photo, represented by a :py:class:`~botogram.ChatPhoto` object.
+
+   .. versionadded:: 0.7
+
    .. py:method:: status_of(user)
 
       Return the status of the provided user (either an instance of
@@ -1444,6 +1451,20 @@ about its business.
       Unpin the message pinned
 
       .. versionadded:: 0.6
+
+   .. py:method:: set_photo(path)
+
+      Set a new chat photo, by providing its path.
+
+      :param str path: The path to the new photo
+
+      .. versionadded:: 0.7
+
+   .. py:method:: remove_photo()
+
+      Remove the current chat photo.
+
+      .. versionadded:: 0.7
 
 .. py:class:: botogram.ParsedText
 
@@ -2419,6 +2440,32 @@ about its business.
 
       :param str path: The file name path locating where the image should be saved.
 
+.. py:class:: botogram.ChatPhoto
+
+   This class represents a Telegram API chat photo.
+
+   It consists of two file IDs, each one representing a different size of the current chat photo.
+
+   The photos can be saved using the method :py:meth:`~ChatPhoto.save`
+
+   .. py:attribute:: big
+
+      The string ID of the 640x640 version of the chat photo
+
+   .. py:attribute:: small
+
+      The string ID of the 160x160 version of the chat photo
+
+   .. py:method:: save(path [, big=True])
+
+      Save the image represented to a file located by *path*. Be aware that
+      Telegram does not provide the name of the original file sent by its
+      sender. This should be generated as part of the path.
+
+      :param str path: The file name path locating where the image should be saved.
+      :param bool big: Whether it should save the big or the small version of the chat photo
+
+   .. versionadded:: 0.7
 
 .. py:class:: botogram.Audio
 
