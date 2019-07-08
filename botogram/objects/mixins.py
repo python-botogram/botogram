@@ -372,6 +372,20 @@ class ChatMixin:
             return albums.send()
         return albums
 
+    @_require_api
+    def set_title(self, title):
+        """Set a new chat title"""
+        if type(title) is not str or len(title) > 255 or len(title) < 1:
+            raise ValueError(
+                "The new chat title must be a string between" +
+                " 1 and 255 characters long"
+            )
+        else:
+            self._api.call("setChatTitle", {
+                "chat_id": self.id,
+                "title": title
+            })
+
 
 class MessageMixin:
     """Add some methods for messages"""

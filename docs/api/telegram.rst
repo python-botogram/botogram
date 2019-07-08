@@ -1445,6 +1445,16 @@ about its business.
 
       .. versionadded:: 0.6
 
+   .. py:method:: set_title(title)
+
+      Set a new chat title.
+
+      The bot must be an administrator with the correct rights for this method to work.
+
+      :param str title: The new chat title, must be between 1 and 255 characters long
+
+      .. versionadded:: 0.7
+
 .. py:class:: botogram.ParsedText
 
    This class contains the parsed representation of the text of a received
