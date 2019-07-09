@@ -266,12 +266,19 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_location(self, latitude, longitude, reply_to=None, extra=None,
-                      attach=None, notify=True):
-        """Send a geographic location"""
+    def send_location(self, latitude, longitude, live_period=None,
+                      reply_to=None, extra=None, attach=None, notify=True):
+        """Send a geographic location, set live_period to a number between 60
+        and 86400 if it's a live location"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         args["latitude"] = latitude
         args["longitude"] = longitude
+
+        if live_period:
+            if live_period < 60 or live_period > 86400:
+                raise ValueError(
+                    "live_period must be a number between 60 and 86400")
+            args["live_period"] = live_period
 
         return self._api.call("sendLocation", args,
                               expect=_objects().Message)
@@ -430,6 +437,47 @@ class MessageMixin:
         args["reply_markup"] = attach
 
         self._api.call("editMessageReplyMarkup", args)
+
+    @_require_api
+    def edit_live_location(self, latitude, longitude, extra=None, attach=None):
+        """Edit this message's live location position"""
+        args = {"message_id": self.id, "chat_id": self.chat.id}
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+
+        self._api.call("editMessageLiveLocation", args)
+
+    @_require_api
+    def stop_live_location(self, extra=None, attach=None):
+        """Stop this message's live location"""
+        args = {"message_id": self.id, "chat_id": self.chat.id}
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+        self._api.call("stopMessageLiveLocation", args)
 
     @_require_api
     def reply(self, *args, **kwargs):

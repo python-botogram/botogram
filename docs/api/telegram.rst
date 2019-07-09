@@ -410,7 +410,7 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
@@ -422,8 +422,12 @@ about its business.
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
+      The *live_period* parameter is for defining if this location must be a live location and needs to be updated over time.
+      Leave to `None` if it is not or set it as a number between 60 and 86400 (seconds) if it is.
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param int live_period: The duration of the live location in seconds, None if it is not a live location.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -438,6 +442,10 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. versionchanged:: 0.7
+
+         Now the method supports live locations
 
    .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
 
@@ -1245,9 +1253,9 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_location(latitude, longitude, [reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, attach=None, extra=None, notify=True])
 
-      Send the geographic location to the chat. If the location you're sending
+      Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
       :py:class:`~botogram.Message`.
 
@@ -1257,8 +1265,12 @@ about its business.
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
+      The *live_period* parameter is for defining if this location must be a live location and needs to be updated over time.
+      Leave to `None` if it is not or set it as a number between 60 and 86400 (seconds) if it is.
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param int live_period: The duration of the live location in seconds, None if it is not a live location.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1273,6 +1285,10 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. versionchanged:: 0.7
+
+         Now the method supports live locations
 
    .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
 
@@ -1579,12 +1595,18 @@ about its business.
 
       * :py:class:`~botogram.User` when the original sender is an user
       * :py:class:`~botogram.Chat` when the message originated in a channel
+      * A string, when the original sender has opted to hide his account.
+      In this case, the attribute :py:attr:`~botogram.Message.forward_hidden` is set to ``True``.
 
       *This attribute can be None if it's not provided by Telegram.*
 
       .. versionchanged:: 0.3
 
          The value can also be an instance of :py:class:`~botogram.Chat`.
+
+      .. versionchanged:: 0.7
+
+         The value can also be a string if the original sender is hidden.
 
    .. py:attribute:: forward_from_message_id
 
@@ -1593,12 +1615,24 @@ about its business.
 
       .. versionadded:: 0.4
 
+   .. py:attribute:: forward_signature
+
+      The signature of the post author if present. This is currently only available for channel posts.
+
+      .. versionadded:: 0.7
+
    .. py:attribute:: forward_date
 
       The integer date (in Unix time) of when the original message was sent,
       when this message is a forward.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: forward_hidden
+
+      When ``True`` indicates that the original sender has opted to hide his account.
+
+      .. versionadded:: 0.7
 
    .. py:attribute:: reply_to_message
 
@@ -1885,6 +1919,34 @@ about its business.
 
       .. versionadded:: 0.4
 
+   .. py:method:: edit_live_location(latitude, longitude, [extra=None, attach=None])
+
+      This method allows you to edit the latitude and longitude of a live location you already sent.
+
+      :param float latitude: The new latitude
+      :param float longitude: The new longitude
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach.
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.7
+
+   .. py:method:: stop_live_location([extra=None, attach=None])
+
+      This method allows you to stop a live location and prevent further latitude and longitude edits.
+
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach.
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated.
+
+      .. versionadded:: 0.7
+
    .. py:method:: forward_to(to[, notify=True])
 
       Forward this message *to* another chat or user by specifying their ID. One
@@ -2111,7 +2173,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_location(latitude, longitude, [attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_location(latitude, longitude, [live_period=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user.
 
@@ -2121,8 +2183,13 @@ about its business.
       The *notify* parameter is for defining if your message should trigger
       a notification on the client side (yes by default).
 
+      The *live_period* parameter is for defining if this location must be a live location and needs to be updated over time.
+      Leave to `None` if it is not or set it as a number between 60 and 86400 (seconds) if it is.
+
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
+      :param int live_period: The duration of the live location in seconds, None if it is not a live location.
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2136,6 +2203,10 @@ about its business.
       .. versionchanged:: 0.3
 
          Now the method returns the sent message
+
+      .. versionchanged:: 0.7
+
+         Now the method supports live locations
 
    .. py:method:: reply_with_venue(latitude, longitude, title, address, [foursquare=None, attach=None, extra=None, notify=True])
 

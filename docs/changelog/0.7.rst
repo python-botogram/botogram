@@ -1,5 +1,6 @@
 .. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
    Documentation released under the MIT license (see LICENSE)
+
 ===========================
 Changelog of botogram 0.7.x
 ===========================
@@ -33,6 +34,18 @@ New features
     * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_video_note`
     * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_file`
 
+* Enhancements in message forwarding
+
+  * New return type for :py:attr:`~Message.forward_from`
+  * New attribute :py:attr:`~Message.forward_hidden`
+  * New attribute :py:attr:`~Message.forward_signature`
+
+* Added support for live locations
+
+  * New parameter `live_period` for :py:meth:`~Chat.send_location` and :py:meth:`~User.send_location`
+  * New parameter `live_period` for :py:meth:`~Message.reply_with_location`
+  * New method :py:meth:`~Message.edit_live_location`
+  * New method :py:meth:`~Message.stop_live_location`
 
 
 Bug fixes
