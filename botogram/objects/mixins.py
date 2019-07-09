@@ -337,6 +337,16 @@ class ChatMixin:
         return self._api.call("sendContact", args, expect=_objects().Message)
 
     @_require_api
+    def send_poll(self, question, *kargs, reply_to=None, extra=None,
+                  attach=None, notify=True):
+        """Send a poll"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        args["question"] = question
+        args["options"] = json.dumps(list(kargs))
+
+        return self._api.call("sendPoll", args, expect=_objects().Message)
+
+    @_require_api
     def delete_message(self, message):
         """Delete a message from chat"""
         if hasattr(message, "message_id"):
@@ -544,12 +554,38 @@ class MessageMixin:
         return self.chat.send_album(*args, reply_to=self, **kwargs)
 
     @_require_api
+    def reply_with_poll(self, *args, **kwargs):
+        """Reply with a poll to the current message"""
+        return self.chat.send_poll(*args, reply_to=self, **kwargs)
+
+    @_require_api
     def delete(self):
         """Delete the message"""
         return self._api.call("deleteMessage", {
             "chat_id": self.chat.id,
             "message_id": self.id,
         })
+
+    @_require_api
+    def stop_poll(self, extra=None, attach=None):
+        """Stops a poll"""
+        args = dict()
+        args["chat_id"] = self.chat.id
+        args["message_id"] = self.id
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+        return self._api.call("stopPoll", args,
+                              expect=_objects().Poll)
 
 
 class FileMixin:

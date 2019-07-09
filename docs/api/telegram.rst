@@ -1399,7 +1399,6 @@ about its business.
       The *notify* parameter defines if your message should
       trigger the notification on the client side (yes by default).
 
-
       .. code-block:: python
         @bot.command("my_cats")
         def my_cats(chat):
@@ -1418,11 +1417,35 @@ about its business.
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param bool notify: If you want to trigger a notification on the client
-
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
+
+   .. py:method:: send_poll(question, *options, [reply_to=None, extra=None, attach=None, notify=True])
+
+      Send a poll to the chat. A Telegram poll is made by a question and a list of options
+      (you can specify them as arguments).
+
+      .. code-block:: python
+
+         @bot.command("latest_poll")
+         def latest_poll(chat, message, args):
+             chat.send("This is our last poll, please answer honestly!")
+             chat.send_poll("What's your favorite color?", "Red", "Green", "Blue")
+             # Or, alternate syntax:
+             chat.send_poll("What's your favorite color?", *["Red", "Green", "Blue"])
+
+      :param str question: Poll question, 1-255 characters
+      :param *str options: List of answer options, 2-10 string of 1-100 characters each
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
 
    .. py:method:: delete_message(message)
 
@@ -2297,13 +2320,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-
    .. py:method:: reply_with_album([album=None, notify=True])
 
-      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
+      Reply to this message with an album. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
       The *notify* parameter defines if your message should
       trigger the notification on the client side (yes by default).
-
 
       .. code-block:: python
         @bot.command("my_cats")
@@ -2312,7 +2333,7 @@ about its business.
             album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
             album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
             album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
-             message.reply_with_album(album)
+            message.reply_with_album(album)
 
         @bot.command("my_dogs")
         def my_dogs(message):
@@ -2321,14 +2342,57 @@ about its business.
                  album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
 
       :param album: The :py:class:`~botogram.Album` send to the chat
-
       :param bool notify: If you want to trigger a notification on the client
-
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
 
+   .. py:method:: reply_with_poll(question, *options, [extra=None, attach=None, notify=True])
+
+      Reply to this message with a poll. A Telegram poll is made by a question and a list of options
+      (you can specify them as arguments).
+
+      .. code-block:: python
+
+         @bot.command("latest_poll")
+         def latest_poll(chat, message, args):
+             chat.send("This is our last poll, please answer honestly!")
+             message.reply_with_poll("What's your favorite color?", "Red", "Green", "Blue")
+             # Or, alternate syntax:
+             message.reply_with_poll("What's your favorite color?", *["Red", "Green", "Blue"])
+
+      :param str question: Poll question, 1-255 characters
+      :param *str options: List of answer options, 2-10 string of 1-100 characters each
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
+
+   .. py:method:: stop_poll([extra=None, attach=None])
+
+      Stop a poll sent by a bot.
+
+      .. code-block:: python
+         import time
+
+         @bot.command("quiz")
+         def latest_quiz(chat, message, args):
+             chat.send("Please answer within 10 seconds!")
+             msg = chat.send_poll("What's the capital of Italy?", "Milan", "Rome", "New York")
+             time.sleep(10)
+             poll = msg.stop_poll()
+             chat.send("{n} correct answers!".format(n=poll.options[1].voter_count))
+
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :returns: The stopped poll with the final results
+      :rtype: ~botogram.Poll
+
+      .. versionadded:: 0.7
 
 .. py:class:: botogram.Photo
 
@@ -2783,7 +2847,6 @@ about its business.
 
 .. py:class:: botogram.Album
 
-
    This object represents an album (a group of photos and videos).
 
    .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
@@ -2814,6 +2877,40 @@ about its business.
       :param str syntax: The name of the syntax used for the caption.
 
    .. versionadded:: 0.6
+
+
+.. py:class:: botogram.Poll
+
+   This class represents a poll.
+
+   .. py:attribute:: id
+
+      The unique poll string identifier.
+
+   .. py:attribute:: question
+
+      The poll question.
+
+   .. py:attribute:: options
+
+      A list of :py:class:`~botogram.PollOption` identifying the poll options.
+
+   .. py:attribute:: is_closed
+
+      A boolean indicating if the poll is closed.
+
+
+.. py:class:: botogram.PollOption
+
+   This class represents a :py:class:`~botogram.Poll` option.
+
+   .. py:attribute:: text
+
+      The poll option text.
+
+   .. py:attribute:: voter_count
+
+      Number of users that voted for this option.
 
 
 .. py:class:: botogram.Update
