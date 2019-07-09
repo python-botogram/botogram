@@ -51,7 +51,7 @@ class ChatPhoto(BaseObject, mixins.FileMixin):
     }
     replace_keys = {
         "small_file_id": "small",
-        "big_file_id": "big"
+        "big_file_id": "big",
     }
     _check_equality_ = "small_file_id"
 
