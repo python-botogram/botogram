@@ -19,6 +19,21 @@ Release description not yet written.
 New features
 ------------
 
+* Added support for thumbs
+
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_video`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_file`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_video`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_file`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_video`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_file`
+
 * Enhancements in message forwarding
 
   * New return type for :py:attr:`~Message.forward_from`

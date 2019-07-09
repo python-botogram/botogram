@@ -77,6 +77,24 @@ class ChatMixin:
 
         return args
 
+    @staticmethod
+    def _get_file_args(path, file_id, url):
+        args = None
+        if path is not None and file_id is None and url is None:
+            file = open(path, "rb")
+        elif file_id is not None and path is None and url is None:
+            args = file_id
+            file = None
+        elif url is not None and file_id is None and path is None:
+            args = url
+            file = None
+        elif path is None and file_id is None and url is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path, file_id and URL must be" +
+                            "passed")
+        return args, file
+
     @_require_api
     def send(self, message, preview=True, reply_to=None, syntax=None,
              extra=None, attach=None, notify=True):
@@ -102,26 +120,19 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            files = {"photo": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            args["photo"] = file_id
-            files = None
-        elif url is not None and file_id is None and path is None:
-            args["photo"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
+        files = dict()
+        args["photo"], files["photo"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
+        if files["photo"] is None:
+            del files["photo"]
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
-                   performer=None, title=None, reply_to=None,
+                   thumb=None, performer=None, title=None, reply_to=None,
                    extra=None, attach=None, notify=True, caption=None, *,
                    syntax=None):
         """Send an audio track"""
@@ -138,19 +149,14 @@ class ChatMixin:
         if title is not None:
             args["title"] = title
 
-        if path is not None and file_id is None and url is None:
-            files = {"audio": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            files = None
-            args["audio"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["audio"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
+        files = dict()
+        args["audio"], files["audio"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
+        if files["audio"] is None:
+            del files["audio"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -168,30 +174,25 @@ class ChatMixin:
                 args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
+        if title is not None:
+            args["title"] = title
         syntax = syntaxes.guess_syntax(caption, syntax)
         if syntax is not None:
             args["parse_mode"] = syntax
 
-        if path is not None and file_id is None and url is None:
-            files = {"voice": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            files = None
-            args["voice"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["voice"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
+        files = dict()
+        args["voice"], files["voice"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
+        if files["voice"] is None:
+            del files["voice"]
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, streaming=True,
+                   duration=None, caption=None, streaming=True, thumb=None,
                    reply_to=None, extra=None, attach=None,
                    notify=True, *, syntax=None):
         """Send a video"""
@@ -204,26 +205,22 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            files = {"video": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            files = None
-            args["video"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["video"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
+
+        files = dict()
+        args["video"], files["video"] = self._get_file_args(path,
+                                                            file_id,
+                                                            url)
+        if files["video"] is None:
+            del files["video"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
-                        diameter=None, reply_to=None, extra=None,
+                        diameter=None, thumb=None, reply_to=None, extra=None,
                         attach=None, notify=True):
         """Send a video note"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -231,24 +228,23 @@ class ChatMixin:
             args["duration"] = duration
         if diameter is not None:
             args["length"] = diameter
-        if path is not None and file_id is None:
-            files = {"video_note": open(path, "rb")}
-        elif file_id is not None and path is None:
-            files = None
-            args["video_note"] = file_id
-        elif path is None and file_id is None:
-            raise TypeError("Path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path and file_id must be" +
-                            "passed")
+
+        files = dict()
+        args["video_note"], files["video_note"] = self._get_file_args(path,
+                                                                      file_id,
+                                                                      None)
+        if files["video_note"] is None:
+            del files["video_note"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None, *,
-                  syntax=None):
+    def send_file(self, path=None, file_id=None, url=None, thumb=None,
+                  reply_to=None, extra=None, attach=None,
+                  notify=True, caption=None, *, syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -256,19 +252,15 @@ class ChatMixin:
             if syntax is not None:
                 syntax = syntaxes.guess_syntax(caption, syntax)
                 args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            files = {"document": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            files = None
-            args["document"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["document"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
+
+        files = dict()
+        args["document"], files["document"] = self._get_file_args(path,
+                                                                  file_id,
+                                                                  url)
+        if files["document"] is None:
+            del files["document"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
@@ -320,19 +312,13 @@ class ChatMixin:
             )
 
         args = self._get_call_args(reply_to, extra, attach, notify)
-        if path is not None and file_id is None and url is None:
-            files = {"sticker": open(path, "rb")}
-        elif file_id is not None and path is None and url is None:
-            files = None
-            args["sticker"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["sticker"] = url
-            files = None
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be " +
-                            "passed")
+
+        files = dict()
+        args["sticker"], files["sticker"] = self._get_file_args(path,
+                                                                file_id,
+                                                                url)
+        if files["sticker"] is None:
+            del files["sticker"]
 
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
