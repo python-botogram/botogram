@@ -35,3 +35,5 @@ New features
 
 Bug fixes
 ---------
+
+* Fixed :py:meth:`botogram.Message.edit_attach` to work with inline callbacks

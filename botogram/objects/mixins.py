@@ -448,7 +448,11 @@ class MessageMixin:
     def edit_attach(self, attach):
         """Edit this message's attachment"""
         args = {"message_id": self.id, "chat_id": self.chat.id}
-        args["reply_markup"] = attach
+        if not hasattr(attach, "_serialize_attachment"):
+            raise ValueError("%s is not an attachment" % attach)
+        args["reply_markup"] = json.dumps(attach._serialize_attachment(
+            self.chat
+        ))
 
         self._api.call("editMessageReplyMarkup", args)
 
