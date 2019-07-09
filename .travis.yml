@@ -1,7 +1,14 @@
 language: python
+
+# In order to run Python 3.7 or higher, we need xenial
+# https://docs.travis-ci.com/user/languages/python/#python-37-and-higher
+dist: xenial
+
 python:
 - "3.4"
 - "3.5"
+- "3.6"
+- "3.7"
 
 sudo: false
 cache: pip
