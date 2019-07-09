@@ -334,6 +334,8 @@ class Message(BaseObject, mixins.MessageMixin):
         "forward_from": User,
         "forward_from_chat": Chat,
         "forward_from_message_id": int,
+        "forward_sender_name": str,
+        "forward_signature": str,
         "forward_date": int,
         "reply_to_message": _itself,
         "text": str,
@@ -370,6 +372,7 @@ class Message(BaseObject, mixins.MessageMixin):
         # Those are provided dynamically by self.forward_from
         "forward_from": "_forward_from",
         "forward_from_chat": "_forward_from_chat",
+        "forward_sender_name": "_forward_sender_name",
     }
     _check_equality_ = "message_id"
 
@@ -391,11 +394,23 @@ class Message(BaseObject, mixins.MessageMixin):
         """Get from where the message was forwarded"""
         # Provide either _forward_from or _forward_from_chat
         # _forward_from_chat is checked earlier because it's more correct
+        # _forward_sender_name is returned if the original sender
+        # has opted to hide his account
+
         if self._forward_from_chat is not None:
             return self._forward_from_chat
 
         if self._forward_from is not None:
             return self._forward_from
+
+        if self._forward_sender_name is not None:
+            return self._forward_sender_name
+
+    @property
+    def forward_hidden(self):
+        """Check if the original sender is hidden or not"""
+
+        return isinstance(self.forward_from, str)
 
     @property
     def channel_post_author(self):

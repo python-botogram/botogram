@@ -124,6 +124,8 @@ class ChatMixin:
         args["photo"], files["photo"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["photo"] is None:
+            del files["photo"]
 
         return self._api.call("sendPhoto", args, files,
                               expect=_objects().Message)
@@ -151,6 +153,10 @@ class ChatMixin:
         args["audio"], files["audio"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["audio"] is None:
+            del files["audio"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendAudio", args, files,
                               expect=_objects().Message)
@@ -168,6 +174,8 @@ class ChatMixin:
                 args["parse_mode"] = syntax
         if duration is not None:
             args["duration"] = duration
+        if title is not None:
+            args["title"] = title
         syntax = syntaxes.guess_syntax(caption, syntax)
         if syntax is not None:
             args["parse_mode"] = syntax
@@ -176,13 +184,15 @@ class ChatMixin:
         args["voice"], files["voice"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["voice"] is None:
+            del files["voice"]
 
         return self._api.call("sendVoice", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video(self, path=None, file_id=None, url=None,
-                   duration=None, caption=None, streaming=True,
+                   duration=None, caption=None, streaming=True, thumb=None,
                    reply_to=None, extra=None, attach=None,
                    notify=True, *, syntax=None):
         """Send a video"""
@@ -200,13 +210,17 @@ class ChatMixin:
         args["video"], files["video"] = self._get_file_args(path,
                                                             file_id,
                                                             url)
+        if files["video"] is None:
+            del files["video"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideo", args, files,
                               expect=_objects().Message)
 
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
-                        diameter=None, reply_to=None, extra=None,
+                        diameter=None, thumb=None, reply_to=None, extra=None,
                         attach=None, notify=True):
         """Send a video note"""
         args = self._get_call_args(reply_to, extra, attach, notify)
@@ -219,6 +233,10 @@ class ChatMixin:
         args["video_note"], files["video_note"] = self._get_file_args(path,
                                                                       file_id,
                                                                       None)
+        if files["video_note"] is None:
+            del files["video_note"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendVideoNote", args, files,
                               expect=_objects().Message)
@@ -255,9 +273,9 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_file(self, path=None, file_id=None, url=None, reply_to=None,
-                  extra=None, attach=None, notify=True, caption=None, *,
-                  syntax=None):
+    def send_file(self, path=None, file_id=None, url=None, thumb=None,
+                  reply_to=None, extra=None, attach=None,
+                  notify=True, caption=None, *, syntax=None):
         """Send a generic file"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if caption is not None:
@@ -270,17 +288,28 @@ class ChatMixin:
         args["document"], files["document"] = self._get_file_args(path,
                                                                   file_id,
                                                                   url)
+        if files["document"] is None:
+            del files["document"]
+        if thumb is not None:
+            files["thumb"] = thumb
 
         return self._api.call("sendDocument", args, files,
                               expect=_objects().Message)
 
     @_require_api
-    def send_location(self, latitude, longitude, reply_to=None, extra=None,
-                      attach=None, notify=True):
-        """Send a geographic location"""
+    def send_location(self, latitude, longitude, live_period=None,
+                      reply_to=None, extra=None, attach=None, notify=True):
+        """Send a geographic location, set live_period to a number between 60
+        and 86400 if it's a live location"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         args["latitude"] = latitude
         args["longitude"] = longitude
+
+        if live_period:
+            if live_period < 60 or live_period > 86400:
+                raise ValueError(
+                    "live_period must be a number between 60 and 86400")
+            args["live_period"] = live_period
 
         return self._api.call("sendLocation", args,
                               expect=_objects().Message)
@@ -319,6 +348,8 @@ class ChatMixin:
         args["sticker"], files["sticker"] = self._get_file_args(path,
                                                                 file_id,
                                                                 url)
+        if files["sticker"] is None:
+            del files["sticker"]
 
         return self._api.call("sendSticker", args, files,
                               expect=_objects().Message)
@@ -434,9 +465,54 @@ class MessageMixin:
     def edit_attach(self, attach):
         """Edit this message's attachment"""
         args = {"message_id": self.id, "chat_id": self.chat.id}
-        args["reply_markup"] = attach
+        if not hasattr(attach, "_serialize_attachment"):
+            raise ValueError("%s is not an attachment" % attach)
+        args["reply_markup"] = json.dumps(attach._serialize_attachment(
+            self.chat
+        ))
 
         self._api.call("editMessageReplyMarkup", args)
+
+    @_require_api
+    def edit_live_location(self, latitude, longitude, extra=None, attach=None):
+        """Edit this message's live location position"""
+        args = {"message_id": self.id, "chat_id": self.chat.id}
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+
+        self._api.call("editMessageLiveLocation", args)
+
+    @_require_api
+    def stop_live_location(self, extra=None, attach=None):
+        """Stop this message's live location"""
+        args = {"message_id": self.id, "chat_id": self.chat.id}
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+        self._api.call("stopMessageLiveLocation", args)
 
     @_require_api
     def reply(self, *args, **kwargs):
