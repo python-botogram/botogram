@@ -364,10 +364,7 @@ class ChatMixin:
     @_require_api
     def set_photo(self, path):
         args = {"chat_id": self.id}
-        if path is not None:
-            files = {"photo": open(path, "rb")}
-        else:
-            raise TypeError("path of the new photo is missing")
+        files = {"photo": open(path, "rb")}
 
         self._api.call("setChatPhoto", args, files)
 
