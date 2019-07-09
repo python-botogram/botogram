@@ -389,6 +389,19 @@ class ChatMixin:
         })
 
     @_require_api
+    def set_photo(self, path):
+        """Set a new chat photo"""
+        args = {"chat_id": self.id}
+        files = {"photo": open(path, "rb")}
+        self._api.call("setChatPhoto", args, files)
+
+    @_require_api
+    def remove_photo(self):
+        """Remove the current chat photo"""
+        args = {"chat_id": self.id}
+        self._api.call("deleteChatPhoto", args)
+
+    @_require_api
     def send_album(self, album=None, reply_to=None, notify=True):
         """Send a Album"""
         albums = SendAlbum(self, reply_to, notify)
