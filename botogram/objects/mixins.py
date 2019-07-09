@@ -242,6 +242,37 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
+    def send_gif(self, path=None, file_id=None, url=None, duration=None,
+                 width=None, height=None, caption=None, thumb=None,
+                 reply_to=None, extra=None, attach=None,
+                 notify=True, syntax=None):
+        """Send an animation"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if duration is not None:
+            args["duration"] = duration
+        if caption is not None:
+            args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
+        if width is not None:
+            args["width"] = width
+        if height is not None:
+            args["height"] = height
+
+        files = dict()
+        args["animation"], files["animation"] = self._get_file_args(path,
+                                                                    file_id,
+                                                                    url)
+        if files["animation"] is None:
+            del files["animation"]
+        if thumb is not None:
+            files["thumb"] = thumb
+
+        return self._api.call("sendAnimation", args, files,
+                              expect=_objects().Message)
+
+    @_require_api
     def send_file(self, path=None, file_id=None, url=None, thumb=None,
                   reply_to=None, extra=None, attach=None,
                   notify=True, caption=None, *, syntax=None):
@@ -335,6 +366,16 @@ class ChatMixin:
             args["last_name"] = last_name
 
         return self._api.call("sendContact", args, expect=_objects().Message)
+
+    @_require_api
+    def send_poll(self, question, *kargs, reply_to=None, extra=None,
+                  attach=None, notify=True):
+        """Send a poll"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        args["question"] = question
+        args["options"] = json.dumps(list(kargs))
+
+        return self._api.call("sendPoll", args, expect=_objects().Message)
 
     @_require_api
     def delete_message(self, message):
@@ -527,6 +568,10 @@ class MessageMixin:
         return self.chat.send_video_note(*args, reply_to=self, **kwargs)
 
     @_require_api
+    def reply_with_gif(self, *args, **kwargs):
+        return self.chat.send_gif(*args, reply_to=self, **kwargs)
+
+    @_require_api
     def reply_with_file(self, *args, **kwargs):
         """Reply with a generic file to the current chat"""
         return self.chat.send_file(*args, reply_to=self, **kwargs)
@@ -557,12 +602,38 @@ class MessageMixin:
         return self.chat.send_album(*args, reply_to=self, **kwargs)
 
     @_require_api
+    def reply_with_poll(self, *args, **kwargs):
+        """Reply with a poll to the current message"""
+        return self.chat.send_poll(*args, reply_to=self, **kwargs)
+
+    @_require_api
     def delete(self):
         """Delete the message"""
         return self._api.call("deleteMessage", {
             "chat_id": self.chat.id,
             "message_id": self.id,
         })
+
+    @_require_api
+    def stop_poll(self, extra=None, attach=None):
+        """Stops a poll"""
+        args = dict()
+        args["chat_id"] = self.chat.id
+        args["message_id"] = self.id
+
+        if extra is not None:
+            _deprecated_message(
+                "The extra parameter", "1.0", "use the attach parameter", -3
+            )
+            args["reply_markup"] = json.dumps(extra.serialize())
+        if attach is not None:
+            if not hasattr(attach, "_serialize_attachment"):
+                raise ValueError("%s is not an attachment" % attach)
+            args["reply_markup"] = json.dumps(attach._serialize_attachment(
+                self.chat
+            ))
+        return self._api.call("stopPoll", args,
+                              expect=_objects().Poll)
 
 
 class FileMixin:

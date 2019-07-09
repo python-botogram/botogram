@@ -47,6 +47,7 @@ class Component:
         self.__messages_edited_hooks = []
         self.__channel_post_hooks = []
         self.__channel_post_edited_hooks = []
+        self.__poll_update_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -74,6 +75,14 @@ class Component:
 
         hook = hooks.ProcessMessageHook(func, self)
         self.__processors.append(hook)
+
+    def add_poll_update_hook(self, func):
+        """Add a poll update hook"""
+        if not callable(func):
+            raise ValueError("A poll update hook must be callable")
+
+        hook = hooks.PollUpdateHook(func, self)
+        self.__poll_update_hooks.append(hook)
 
     def add_message_equals_hook(self, string, func, ignore_case=True):
         """Add a message equals hook"""
@@ -220,6 +229,7 @@ class Component:
         ]
         return {
             "messages": messages,
+            "poll_updates": [self.__poll_update_hooks],
             "memory_preparers": [self.__memory_preparers],
             "tasks": [self.__timers],
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],

@@ -364,6 +364,41 @@ about its business.
 
       .. versionadded:: 0.6
 
+   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+
+      Send an animation to the user. You can specify the animation by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration*, the *width* and the *height* of the GIF.
+      If the GIF track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the animation
+      :param str file_id: The Telegram *file_id* of the animation
+      :param int duration: The animation duration, in seconds
+      :param str width: The animation width, in pixels
+      :param str height: The animation height, in pixels
+      :param str caption: The caption of the video
+      :param str thumb: The path to the thumb
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.7
+
    .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the user. You can specify the file by passing its *path*,
@@ -1217,6 +1252,41 @@ about its business.
 
       .. versionadded:: 0.6
 
+   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+
+      Send an animation to the user. You can specify the animation by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration*, the *width* and the *height* of the GIF.
+      If the GIF track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the animation
+      :param str file_id: The Telegram *file_id* of the animation
+      :param int duration: The animation duration, in seconds
+      :param str width: The animation width, in pixels
+      :param str height: The animation height, in pixels
+      :param str caption: The caption of the video
+      :param str thumb: The path to the thumb
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.7
+
    .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the chat. You can specify the video by passing its *path*,
@@ -1406,7 +1476,6 @@ about its business.
       The *notify* parameter defines if your message should
       trigger the notification on the client side (yes by default).
 
-
       .. code-block:: python
         @bot.command("my_cats")
         def my_cats(chat):
@@ -1425,11 +1494,35 @@ about its business.
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
       :param bool notify: If you want to trigger a notification on the client
-
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
+
+   .. py:method:: send_poll(question, *options, [reply_to=None, extra=None, attach=None, notify=True])
+
+      Send a poll to the chat. A Telegram poll is made by a question and a list of options
+      (you can specify them as arguments).
+
+      .. code-block:: python
+
+         @bot.command("latest_poll")
+         def latest_poll(chat, message, args):
+             chat.send("This is our last poll, please answer honestly!")
+             chat.send_poll("What's your favorite color?", "Red", "Green", "Blue")
+             # Or, alternate syntax:
+             chat.send_poll("What's your favorite color?", *["Red", "Green", "Blue"])
+
+      :param str question: Poll question, 1-255 characters
+      :param *str options: List of answer options, 2-10 string of 1-100 characters each
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
 
    .. py:method:: delete_message(message)
 
@@ -1726,6 +1819,14 @@ about its business.
       file.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: animation
+
+      A :py:class:`~botogram.Animation~ object, for when this message is an animation
+      file.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: caption
 
       A caption for when this message is a photo or video file.
@@ -2135,7 +2236,7 @@ about its business.
 
    .. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, thumb=None, attach=None, extra=None, notify=True])
 
-      Reply with the  video note to the user. You can specify the video note by passing its *path*,
+      Reply with the video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
 
       You may optionally specify the *duration* and the *length* of the video.
@@ -2165,6 +2266,41 @@ about its business.
          The *extra* parameter is now deprecated
 
       .. versionadded:: 0.6
+
+   .. py:method:: reply_with_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, attach=None, extra=None, notify=True])
+
+      Reply with an animation to the message. You can specify the animation by passing its *path*,
+      its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
+
+      You may optionally specify the *duration*, the *width* and the *height* of the GIF.
+      If the GIF track you're sending is in reply to another message,
+      set *reply_to* to the ID of the other :py:class:`~botogram.Message`.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      The *notify* parameter is for defining if your message should trigger
+      a notification on the client side (yes by default).
+
+      :param str path: The path to the animation
+      :param str file_id: The Telegram *file_id* of the animation
+      :param int duration: The animation duration, in seconds
+      :param str width: The animation width, in pixels
+      :param str height: The animation height, in pixels
+      :param str caption: The caption of the video
+      :param str thumb: The path to the thumb
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message.
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger the client notification.
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. deprecated:: 0.4
+
+         The *extra* parameter is now deprecated
+
+      .. versionadded:: 0.7
 
    .. py:method:: reply_with_file(path, [thumb=None, attach=None, extra=None, notify=True])
 
@@ -2318,13 +2454,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-
    .. py:method:: reply_with_album([album=None, notify=True])
 
-      Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
+      Reply to this message with an album. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
       The *notify* parameter defines if your message should
       trigger the notification on the client side (yes by default).
-
 
       .. code-block:: python
         @bot.command("my_cats")
@@ -2333,7 +2467,7 @@ about its business.
             album.add_photo('tiger.jpg', caption='<b>Tiger</b>, the father', syntax='HTML')
             album.add_photo(url='https://http.cat/100.jpg', caption='Simba, the cat-mother of the year!')
             album.add_photo(file_id='some file ID here', caption='...and Sassy the daughter')
-             message.reply_with_album(album)
+            message.reply_with_album(album)
 
         @bot.command("my_dogs")
         def my_dogs(message):
@@ -2342,14 +2476,57 @@ about its business.
                  album.add_photo('shilla.jpg', caption='Shilla is so jealous!')
 
       :param album: The :py:class:`~botogram.Album` send to the chat
-
       :param bool notify: If you want to trigger a notification on the client
-
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
 
+   .. py:method:: reply_with_poll(question, *options, [extra=None, attach=None, notify=True])
+
+      Reply to this message with a poll. A Telegram poll is made by a question and a list of options
+      (you can specify them as arguments).
+
+      .. code-block:: python
+
+         @bot.command("latest_poll")
+         def latest_poll(chat, message, args):
+             chat.send("This is our last poll, please answer honestly!")
+             message.reply_with_poll("What's your favorite color?", "Red", "Green", "Blue")
+             # Or, alternate syntax:
+             message.reply_with_poll("What's your favorite color?", *["Red", "Green", "Blue"])
+
+      :param str question: Poll question, 1-255 characters
+      :param *str options: List of answer options, 2-10 string of 1-100 characters each
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
+
+   .. py:method:: stop_poll([extra=None, attach=None])
+
+      Stop a poll sent by a bot.
+
+      .. code-block:: python
+         import time
+
+         @bot.command("quiz")
+         def latest_quiz(chat, message, args):
+             chat.send("Please answer within 10 seconds!")
+             msg = chat.send_poll("What's the capital of Italy?", "Milan", "Rome", "New York")
+             time.sleep(10)
+             poll = msg.stop_poll()
+             chat.send("{n} correct answers!".format(n=poll.options[1].voter_count))
+
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :returns: The stopped poll with the final results
+      :rtype: ~botogram.Poll
+
+      .. versionadded:: 0.7
 
 .. py:class:: botogram.Photo
 
@@ -2692,6 +2869,60 @@ about its business.
       :param str path: The file name path locating where the video note should be saved.
 
 
+.. py:class:: botogram.Animation
+
+   This class represents an animation file.
+
+   .. py:attribute:: file_id
+
+      The string ID of the file.
+
+   .. py:attribute:: length
+
+      The integer length of the animation as defined by the sender.
+
+   .. py:attribute:: width
+
+      The integer width of the video as defined by the sender.
+
+   .. py:attribute:: height
+
+      The integer height of the video as defined by the sender.
+
+   .. py:attribute:: thumb
+
+      A :py:class:`~botogram.PhotoSize` object representing a thumbnail image of
+      the animation as defined by the sender.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: file_name
+
+      The original animation filename as defined by the sender.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: mime_type
+
+      The MIME type of the file as defined by the sender.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: file_size
+
+      The integer size of the animation file
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:method:: save(path)
+
+      Save the animation to a file located by *path*. Be aware that Telegram can
+      not provide the name of the original file sent by its sender. This should
+      be generated as part of the path.
+
+      :param str path: The file name path locating where the video note should be saved.
+
+
 .. py:class:: botogram.Voice
 
    This class represents a voice message.
@@ -2830,7 +3061,6 @@ about its business.
 
 .. py:class:: botogram.Album
 
-
    This object represents an album (a group of photos and videos).
 
    .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
@@ -2861,6 +3091,40 @@ about its business.
       :param str syntax: The name of the syntax used for the caption.
 
    .. versionadded:: 0.6
+
+
+.. py:class:: botogram.Poll
+
+   This class represents a poll.
+
+   .. py:attribute:: id
+
+      The unique poll string identifier.
+
+   .. py:attribute:: question
+
+      The poll question.
+
+   .. py:attribute:: options
+
+      A list of :py:class:`~botogram.PollOption` identifying the poll options.
+
+   .. py:attribute:: is_closed
+
+      A boolean indicating if the poll is closed.
+
+
+.. py:class:: botogram.PollOption
+
+   This class represents a :py:class:`~botogram.Poll` option.
+
+   .. py:attribute:: text
+
+      The poll option text.
+
+   .. py:attribute:: voter_count
+
+      Number of users that voted for this option.
 
 
 .. py:class:: botogram.Update

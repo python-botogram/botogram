@@ -111,6 +111,10 @@ class FrozenBot:
         """Register a message processor hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")
 
+    def poll_update(self, func):
+        """Register a poll update hook"""
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
+
     def message_equals(self, string, ignore_case=True):
         """Add a message equals hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")
