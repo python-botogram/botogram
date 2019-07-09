@@ -18,51 +18,20 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# flake8: noqa
+from .base import BaseObject, multiple
 
-from .chats     import User, Chat, UserProfilePhotos, Permissions
-from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
-                       Video, VideoNote, Animation, Contact, Location, Venue
-from .messages  import Message
-from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
-from .polls     import Poll, PollOption
-from .updates   import Update, Updates
-from .mixins    import Album
 
-__all__ = [
-    # Chats-related objects
-    "User",
-    "Chat",
-    "UserProfilePhotos",
+class PollOption(BaseObject):
+    required = {
+        "text": str,
+        "voter_count": int,
+    }
 
-    # Media-related objects
-    "PhotoSize",
-    "Photo",
-    "Audio",
-    "Voice",
-    "Document",
-    "Sticker",
-    "Video",
-    "VideoNote",
-    "Animation",
-    "Contact",
-    "Location",
-    "Venue",
-    "Album",
 
-    # Messages-related objects
-    "Message",
-
-    # Markup-related objects
-    "ReplyKeyboardMarkup",
-    "ReplyKeyboardHide",
-    "ForceReply",
-
-    # Polls-related objects
-    "Poll",
-    "PollOption",
-
-    # Updates-related objects
-    "Update",
-    "Updates",
-]
+class Poll(BaseObject):
+    required = {
+        "id": str,
+        "question": str,
+        "options": multiple(PollOption),
+        "is_closed": bool,
+    }

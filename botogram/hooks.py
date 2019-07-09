@@ -81,6 +81,13 @@ class ProcessMessageHook(Hook):
     pass
 
 
+class PollUpdateHook(Hook):
+    """Underlying hook for @bot.poll_update"""
+
+    def _call(self, bot, update):
+        return bot._call(self.func, self.component_id, poll=update.poll)
+
+
 class MemoryPreparerHook(Hook):
     """Underlying hook for @bot.prepare_memory"""
 

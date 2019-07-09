@@ -19,6 +19,7 @@ Release description not yet written.
 New features
 ------------
 
+
 * Added support for animations (GIFs)
 
     * New :py:class:`botogram.Animation` class
@@ -26,6 +27,14 @@ New features
     * New method :py:meth:`botogram.Chat.send_gif`
     * New method :py:meth:`botogram.User.send_gif`
     * New method :py:meth:`botogram.Message.reply_with_gif`
+
+* Added support for polls
+
+   * New :py:class:`botogram.Poll`
+   * New :py:class:`botogram.PollOption`
+   * New method :py:meth:`botogram.Chat.send_poll`
+   * New method :py:meth:`botogram.Message.reply_with_poll`
+   * New method :py:meth:`botogram.Message.stop_poll`
 
 * Added support for thumbs
 

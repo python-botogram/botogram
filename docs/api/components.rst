@@ -216,6 +216,33 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
       .. versionadded:: 0.4
 
+   .. py:method:: add_poll_update_hook(func)
+
+      All the functions provided to this method will receive all the updates
+      about new poll states. This allows you to act when a poll sent by the bot
+      is changed (i.e. new votes) or when a poll seen by the bot is closed.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **poll**: the poll that has just changed state
+        (instance of :py:class:`~botogram.Poll`)
+
+      .. code-block:: python
+
+         class PollUpdateComponent(botogram.Component):
+             component_name = "poll-update"
+
+             def __init__(self):
+                 self.add_poll_update_hook(self.trigger)
+
+             def trigger(self, poll):
+                 bot.chat(some_id_here).send("New answers to the poll. Check it out!")
+
+      :param callable func: The function you want to use.
+
+      .. versionadded:: 0.7
+
    .. py:method:: add_command(name, func, [hidden=False, order=0])
 
       This function registers a new command, and calls the provided function
