@@ -583,7 +583,7 @@ class FileMixin:
     @_require_api
     def save(self, path, big=True):
         """Save the file to a particular path"""
-        if not hasattr("self", "file_id"):
+        if isinstance(self, ChatPhoto):
             if big:
                 _file_id = self.big
             else:
