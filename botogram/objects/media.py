@@ -187,6 +187,27 @@ class Video(BaseObject, mixins.FileMixin):
     _check_equality_ = "file_id"
 
 
+class Animation(BaseObject, mixins.FileMixin):
+    """Telegram API representation of an animation
+
+    https://core.telegram.org/bots/api#animation
+    """
+
+    required = {
+        "file_id": str,
+        "width": int,
+        "height": int,
+        "duration": int,
+    }
+    optional = {
+        "thumb": PhotoSize,
+        "file_name": str,
+        "mime_type": str,
+        "file_size": int,
+    }
+    _check_equality_ = "file_id"
+
+
 class Contact(BaseObject):
     """Telegram API representation of a contact
 
