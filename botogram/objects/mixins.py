@@ -581,16 +581,9 @@ class FileMixin:
     """Add some methods for files"""
 
     @_require_api
-    def save(self, path, big=True):
+    def save(self, path):
         """Save the file to a particular path"""
-        if isinstance(self, ChatPhoto):
-            if big:
-                _file_id = self.big
-            else:
-                _file_id = self.small
-        else:
-            _file_id = self.file_id
-        response = self._api.call("getFile", {"file_id": _file_id})
+        response = self._api.call("getFile", {"file_id": self.file_id})
 
         # Save the file to the wanted path
         downloaded = self._api.file_content(response["result"]["file_path"])

@@ -2456,14 +2456,14 @@ about its business.
 
       The string ID of the 160x160 version of the chat photo
 
-   .. py:method:: save(path [, big=True])
+   .. py:method:: save(path [, small=False])
 
       Save the image represented to a file located by *path*. Be aware that
       Telegram does not provide the name of the original file sent by its
       sender. This should be generated as part of the path.
 
       :param str path: The file name path locating where the image should be saved.
-      :param bool big: Whether it should save the big or the small version of the chat photo
+      :param bool small: Whether it should save the big or the small version of the chat photo
 
    .. versionadded:: 0.7
 

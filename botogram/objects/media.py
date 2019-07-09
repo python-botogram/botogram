@@ -55,6 +55,15 @@ class ChatPhoto(BaseObject, mixins.FileMixin):
     }
     _check_equality_ = "small_file_id"
 
+    def save(self, *args, small=False, **kwargs):
+        """Workaround for dealing with big and small chat photos"""
+        if small:
+            self.file_id = self.small
+        else:
+            self.file_id = self.big
+        super(ChatPhoto, self).save(*args, **kwargs)
+        del self.file_id
+
 
 class Photo(mixins.FileMixin):
     """Custom representation of a photo
