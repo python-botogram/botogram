@@ -22,16 +22,16 @@ New features
 
 * Added support for animations (GIFs)
 
-    * New :py:class:`botogram.Animation` class
-    * New attribute :py:attr:`botogram.Message.animation`
-    * New method :py:meth:`botogram.Chat.send_gif`
-    * New method :py:meth:`botogram.User.send_gif`
-    * New method :py:meth:`botogram.Message.reply_with_gif`
+   * New :py:class:`botogram.Animation` class
+   * New attribute :py:attr:`botogram.Message.animation`
+   * New method :py:meth:`botogram.Chat.send_gif`
+   * New method :py:meth:`botogram.User.send_gif`
+   * New method :py:meth:`botogram.Message.reply_with_gif`
 
 * Added support for polls
 
-   * New :py:class:`botogram.Poll`
-   * New :py:class:`botogram.PollOption`
+   * New :py:class:`botogram.Poll` class
+   * New :py:class:`botogram.PollOption` class
    * New method :py:meth:`botogram.Chat.send_poll`
    * New method :py:meth:`botogram.Message.reply_with_poll`
    * New method :py:meth:`botogram.Message.stop_poll`
@@ -53,23 +53,23 @@ New features
 
 * Enhancements in message forwarding
 
-  * New return type for :py:attr:`~Message.forward_from`
-  * New attribute :py:attr:`~Message.forward_hidden`
-  * New attribute :py:attr:`~Message.forward_signature`
+  * New return type for :py:attr:`Message.forward_from`
+  * New attribute :py:attr:`Message.forward_hidden`
+  * New attribute :py:attr:`Message.forward_signature`
 
 * Added support for live locations
 
-  * New parameter `live_period` for :py:meth:`~Chat.send_location` and :py:meth:`~User.send_location`
-  * New parameter `live_period` for :py:meth:`~Message.reply_with_location`
-  * New method :py:meth:`~Message.edit_live_location`
-  * New method :py:meth:`~Message.stop_live_location`
+  * New parameter `live_period` for :py:meth:`Chat.send_location` and :py:meth:`User.send_location`
+  * New parameter `live_period` for :py:meth:`Message.reply_with_location`
+  * New method :py:meth:`Message.edit_live_location`
+  * New method :py:meth:`Message.stop_live_location`
 
 * Added support for editing, getting and removing the chat photo
 
-  * New method :py:meth:`~Chat.set_photo`
-  * New method :py:meth:`~Chat.remove_photo`
-  * New attribute :py:attr:`~Chat.photo`
-  * New class :py:class:`~botogram.ChatPhoto`
+  * New :py:class:`~botogram.ChatPhoto` class
+  * New method :py:meth:`Chat.set_photo`
+  * New method :py:meth:`Chat.remove_photo`
+  * New attribute :py:attr:`Chat.photo`
 
 Bug fixes
 ---------
