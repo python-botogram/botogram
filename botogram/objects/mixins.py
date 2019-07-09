@@ -365,7 +365,6 @@ class ChatMixin:
     def set_photo(self, path):
         args = {"chat_id": self.id}
         files = {"photo": open(path, "rb")}
-
         self._api.call("setChatPhoto", args, files)
 
     @_require_api
