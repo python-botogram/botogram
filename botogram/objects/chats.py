@@ -115,11 +115,11 @@ class Chat(BaseObject, mixins.ChatMixin):
         # "pinned_message" = Message
         "sticker_set_name": str,
         "can_set_sticker_set": bool,
-        "photo": ChatPhoto
+        "photo": ChatPhoto,
     }
     replace_keys = {
         "invite_link": "_invite_link",
-        "photo": "_photo"
+        "photo": "_photo",
     }
     _check_equality_ = "id"
 
