@@ -25,8 +25,7 @@ from . import mixins
 from .. import utils
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
-                   Animation, Contact, Location, Venue, \
-                   Contact, Location, Venue
+    Animation, Contact, Location, Venue
 from .polls import Poll
 
 
