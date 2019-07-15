@@ -364,10 +364,6 @@ class Chat(BaseObject, mixins.ChatMixin):
     @mixins._require_api
     def photo(self):
         """Get the current chat photo small and big ids"""
-        if self.type not in ("supergroup", "channel"):
-            raise RuntimeError(
-                "You can only get the photo in a supergroup or a channel")
-
         if hasattr(self, "_cache_photo"):
             return self._cache_photo
 
