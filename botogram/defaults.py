@@ -19,7 +19,6 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import html
-from time import time
 
 from . import syntaxes
 from . import components
@@ -34,15 +33,8 @@ class DefaultComponent(components.Component):
     def __init__(self):
         self.add_command("start", self.start_command, hidden=True)
         self.add_command("help", self.help_command)
-        self.add_timer(120, self.timer_inline)
 
         self._add_no_commands_hook(self.no_commands_hook)
-
-    # timer for delete inline
-    def timer_inline(self, bot):
-        for id in bot._inline_paginate:
-            if time() > bot._inline_paginate[id][1]:
-                del bot._inline_paginate[id]
 
     # /start command
     def start_command(self, bot, chat):
