@@ -80,9 +80,6 @@ class Bot(frozenbot.FrozenBot):
         maincompid = self._main_component._component_id
         self._shared_memory.register_preparers_list(maincompid, inits)
 
-        # paginate inline
-        self._inline_paginate = {}
-
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
 

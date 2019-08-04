@@ -22,8 +22,8 @@ import json
 from time import time
 
 from .callbacks import hashed_callback_name
-from .objects.messages import Message
 from .context import Context
+from .objects.messages import Message
 
 
 class Hook:

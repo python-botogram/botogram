@@ -73,9 +73,6 @@ class FrozenBot:
         self.itself = itself
         self.itself.set_api(api)
 
-        # Paginate inline
-        self._inline_paginate = {}
-
         # No more changes allowed!
         self._frozen = True
 
