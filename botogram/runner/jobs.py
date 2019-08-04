@@ -34,17 +34,17 @@ class JobsCommands:
     def _put(self, job):
         """Internal implementation of putting a job into the queue"""
         # Directly send the job to the processes wanting it
-        update = job.metadata["update"]
-        if update.inline_query:
-            n_workers = 2
-            worker_id = ((update.inline_query.sender.id +
-                          int(hashlib.md5(update.inline_query.query.
-                                          encode()).
-                              hexdigest()[:8], 16)) % n_workers)
-        else:
-            worker_id = [*self.waiting][0]
-        print(self.waiting, worker_id, sep='\n\n')
+
         if len(self.waiting) > 0:
+            update = job.metadata["update"]
+            if update.inline_query:
+                n_workers = 2
+                worker_id = ((update.inline_query.sender.id +
+                              int(hashlib.md5(update.inline_query.query.
+                                              encode()).
+                                  hexdigest()[:8], 16)) % n_workers)
+            else:
+                worker_id = [*self.waiting][0]
             try:
                 self.waiting[worker_id](job)
                 del self.waiting[worker_id]
@@ -52,7 +52,6 @@ class JobsCommands:
                 pass
             else:
                 return
-
         self.queue.appendleft(job)
 
     def bulk_put(self, jobs, reply):
