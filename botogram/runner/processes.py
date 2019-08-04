@@ -23,6 +23,7 @@ import os
 import traceback
 import queue
 import signal
+import hashlib
 
 import logbook
 
@@ -214,9 +215,17 @@ class UpdaterProcess(BaseProcess):
         result = []
         for update in updates:
             update.set_api(None)
-            result.append(jobs.Job(self.bot_id, jobs.process_update, {
+            data = {
                 "update": update,
-            }))
+            }
+            if update.inline_query:
+                n_workers = 4
+                data.update({'worker':
+                                 ((update.inline_query.sender.id +
+                                   int(hashlib.md5(update.inline_query.query).
+                                       hexdigest()[:8], 16)) % n_workers)})
+
+            result.append(jobs.Job(self.bot_id, jobs.process_update, data))
 
         self.ipc.command("jobs.bulk_put", result)
 
