@@ -19,6 +19,7 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import collections
+import hashlib
 
 
 class JobsCommands:
@@ -26,16 +27,27 @@ class JobsCommands:
 
     def __init__(self):
         self.queue = collections.deque()
-        self.waiting = collections.deque()
+        self.waiting = dict()
 
         self.stop = False
 
     def _put(self, job):
         """Internal implementation of putting a job into the queue"""
         # Directly send the job to the processes wanting it
+        update = job.metadata["update"]
+        if update.inline_query:
+            n_workers = 2
+            worker_id = ((update.inline_query.sender.id +
+                          int(hashlib.md5(update.inline_query.query.
+                                          encode()).
+                              hexdigest()[:8], 16)) % n_workers)
+        else:
+            worker_id = [*self.waiting][0]
+        print(self.waiting, worker_id, sep='\n\n')
         if len(self.waiting) > 0:
             try:
-                self.waiting.pop()(job)
+                self.waiting[worker_id](job)
+                del self.waiting[worker_id]
             except EOFError:
                 pass
             else:
@@ -63,7 +75,7 @@ class JobsCommands:
             if self.stop:
                 reply("__stop__")
 
-            self.waiting.appendleft(reply)
+            self.waiting[worker_id] = reply
 
     def shutdown(self, _, reply):
         """Shutdown the queue"""
@@ -72,7 +84,7 @@ class JobsCommands:
         # Stop all the waiting workers
         if len(self.waiting) > 0:
             for worker in self.waiting:
-                worker("__stop__")
+                self.waiting[worker]("__stop__")
 
         reply(None)
 

@@ -23,7 +23,6 @@ import os
 import traceback
 import queue
 import signal
-import hashlib
 
 import logbook
 
@@ -180,11 +179,10 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bot, commands, n_workers):
+    def setup(self, bot, commands):
         self.bot = bot
         self.bot_id = bot._bot_id
         self.commands = commands
-        self.n_workers = n_workers
 
         self.fetcher = updates_module.UpdatesFetcher(bot)
 
@@ -225,13 +223,6 @@ class UpdaterProcess(BaseProcess):
             data = {
                 "update": update,
             }
-            if update.inline_query:
-                data.update({'worker':
-                                 ((update.inline_query.sender.id +
-                                   int(hashlib.md5(update.inline_query.query.
-                                                   encode()).
-                                       hexdigest()[:8], 16)) % self.n_workers)})
-
             result.append(jobs.Job(self.bot_id, jobs.process_update, data))
 
         self.ipc.command("jobs.bulk_put", result)

@@ -143,8 +143,7 @@ class BotogramRunner:
 
         # Boot up all the updater processes
         for bot in self._bots.values():
-            updater = processes.UpdaterProcess(ipc_info, bot, upd_commands,
-                                               self._workers_count)
+            updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
             updater.start()
 
             self._updater_processes[id] = updater
