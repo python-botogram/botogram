@@ -180,10 +180,11 @@ class UpdaterProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bot, commands):
+    def setup(self, bot, commands, n_workers):
         self.bot = bot
         self.bot_id = bot._bot_id
         self.commands = commands
+        self.n_workers = n_workers
 
         self.fetcher = updates_module.UpdatesFetcher(bot)
 
@@ -225,11 +226,11 @@ class UpdaterProcess(BaseProcess):
                 "update": update,
             }
             if update.inline_query:
-                n_workers = 4
                 data.update({'worker':
                                  ((update.inline_query.sender.id +
-                                   int(hashlib.md5(update.inline_query.query).
-                                       hexdigest()[:8], 16)) % n_workers)})
+                                   int(hashlib.md5(update.inline_query.query.
+                                                   encode()).
+                                       hexdigest()[:8], 16)) % self.n_workers)})
 
             result.append(jobs.Job(self.bot_id, jobs.process_update, data))
 
