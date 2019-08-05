@@ -22,6 +22,11 @@ import collections
 import hashlib
 
 
+def _is_inline_update(job):
+    """This returns true if the job contains an inline update"""
+    return job.metadata["update"].inline_query
+
+
 def _inline_assign_worker(update, workers_number):
     """Internal assignment of workers for handling inline updates"""
     # The same query from the same sender will be handled by the same worker
@@ -48,7 +53,7 @@ class JobsCommands:
 
         if len(self.waiting) > 0:
             update = job.metadata["update"]
-            if update.inline_query:
+            if _is_inline_update(job):
                 worker_id = _inline_assign_worker(update,
                                                   len(self._seen_workers))
                 if worker_id not in self.waiting:
@@ -77,32 +82,36 @@ class JobsCommands:
 
     def get(self, worker_id, reply):
         """Get a job from the queue"""
+        def _reply_with(_job_id):
+            """Reply to a jobs.get request with a job"""
+            _job = self.queue[_job_id]
+            del self.queue[_job_id]
+            reply(_job)
+
         if worker_id not in self._seen_workers:
             self._seen_workers.append(worker_id)
 
         # If there is something in the queue return it, else append the request
         # to the new jobs' waiting deque
-        seen_workers_n = len(self._seen_workers)
         if len(self.queue) > 0:
             for job_id in range(len(self.queue)):
-                if self.queue[job_id].metadata["update"].inline_query:
-                    worker_id_assegnament = \
-                        _inline_assign_worker(self.queue[job_id].
-                                              metadata["update"],
-                                              seen_workers_n)
-                    if worker_id == worker_id_assegnament:
-                        break
-                else:
-                    break
-            job = self.queue[job_id]
-            del self.queue[job_id]
-            reply(job)
+                job = self.queue[job_id]
+                # If the job is an inline update assign it
+                # to the designated worker
+                if _is_inline_update(job):
+                    assigned_worker = _inline_assign_worker(
+                        job.metadata["update"],
+                        len(self._seen_workers)
+                    )
+                    if worker_id == assigned_worker:
+                        return _reply_with(job_id)
+                    continue
+                return _reply_with(job_id)
 
-        else:
-            if self.stop:
-                reply("__stop__")
+        if self.stop:
+            reply("__stop__")
 
-            self.waiting[worker_id] = reply
+        self.waiting[worker_id] = reply
 
     def shutdown(self, _, reply):
         """Shutdown the queue"""
