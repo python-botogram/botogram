@@ -55,7 +55,7 @@ class JobsCommands:
                     self.queue.appendleft(job)
                     return
             else:
-                worker_id = [*self.waiting][0]
+                worker_id = list(self.waiting)[0]
             try:
                 self.waiting[worker_id](job)
                 del self.waiting[worker_id]
