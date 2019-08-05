@@ -82,8 +82,22 @@ class JobsCommands:
 
         # If there is something in the queue return it, else append the request
         # to the new jobs' waiting deque
+        seen_workers_n = len(self._seen_workers)
         if len(self.queue) > 0:
-            reply(self.queue.pop())
+            for job_id in range(len(self.queue)):
+                if self.queue[job_id].metadata["update"].inline_query:
+                    worker_id_assegnament = \
+                        _inline_assign_worker(self.queue[job_id].
+                                              metadata["update"],
+                                              seen_workers_n)
+                    if worker_id == worker_id_assegnament:
+                        break
+                else:
+                    break
+            job = self.queue[job_id]
+            del self.queue[job_id]
+            reply(job)
+
         else:
             if self.stop:
                 reply("__stop__")
