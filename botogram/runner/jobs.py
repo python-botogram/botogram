@@ -22,11 +22,13 @@ import collections
 import hashlib
 
 
-def _get_worker_n(update, n_workers):
+def _inline_assign_worker(update, workers_number):
+    """Internal assignment of workers for handling inline updates"""
+    # The same query from the same sender will be handled by the same worker
+    # this will avoid pagination issues
     return (update.inline_query.sender.id +
-            int(hashlib.md5(update.inline_query.query.
-                            encode()).
-                hexdigest()[-3:], 16)) % n_workers
+            int(hashlib.md5(update.inline_query.query.encode())
+                .hexdigest()[-3:], 16)) % workers_number
 
 
 class JobsCommands:
@@ -35,6 +37,8 @@ class JobsCommands:
     def __init__(self):
         self.queue = collections.deque()
         self.waiting = dict()
+
+        self._seen_workers = list()
 
         self.stop = False
 
@@ -45,12 +49,11 @@ class JobsCommands:
         if len(self.waiting) > 0:
             update = job.metadata["update"]
             if update.inline_query:
-                n_workers = 1
-                worker_id = _get_worker_n(update, n_workers)
+                worker_id = _inline_assign_worker(update,
+                                                  len(self._seen_workers))
                 if worker_id not in self.waiting:
                     self.queue.appendleft(job)
                     return
-
             else:
                 worker_id = [*self.waiting][0]
             try:
@@ -74,6 +77,9 @@ class JobsCommands:
 
     def get(self, worker_id, reply):
         """Get a job from the queue"""
+        if worker_id not in self._seen_workers:
+            self._seen_workers.append(worker_id)
+
         # If there is something in the queue return it, else append the request
         # to the new jobs' waiting deque
         if len(self.queue) > 0:
