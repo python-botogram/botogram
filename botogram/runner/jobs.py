@@ -22,6 +22,13 @@ import collections
 import hashlib
 
 
+def _get_worker_n(update, n_workers):
+    return (update.inline_query.sender.id +
+            int(hashlib.md5(update.inline_query.query.
+                            encode()).
+                hexdigest()[-3:], 16)) % n_workers
+
+
 class JobsCommands:
     """This object will manage the IPC jobs.* commands"""
 
@@ -38,11 +45,12 @@ class JobsCommands:
         if len(self.waiting) > 0:
             update = job.metadata["update"]
             if update.inline_query:
-                n_workers = 2
-                worker_id = ((update.inline_query.sender.id +
-                              int(hashlib.md5(update.inline_query.query.
-                                              encode()).
-                                  hexdigest()[:8], 16)) % n_workers)
+                n_workers = 1
+                worker_id = _get_worker_n(update, n_workers)
+                if worker_id not in self.waiting:
+                    self.queue.appendleft(job)
+                    return
+
             else:
                 worker_id = [*self.waiting][0]
             try:
