@@ -24,6 +24,8 @@ import hashlib
 
 def _is_inline_update(job):
     """This returns true if the job contains an inline update"""
+    if not job.metadata.get('update'):
+        return False
     return job.metadata["update"].inline_query
 
 
@@ -52,8 +54,8 @@ class JobsCommands:
         # Directly send the job to the processes wanting it
 
         if len(self.waiting) > 0:
-            update = job.metadata["update"]
             if _is_inline_update(job):
+                update = job.metadata["update"]
                 worker_id = _inline_assign_worker(update,
                                                   len(self._seen_workers))
                 if worker_id not in self.waiting:

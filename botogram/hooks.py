@@ -17,8 +17,8 @@
 #   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
-import re
 import json
+import re
 from time import time
 
 from .callbacks import hashed_callback_name
@@ -262,58 +262,67 @@ class InlineHook(Hook):
         self.paginate = args["paginate"]
         self.timer = args["timer"]
 
+    def _reset_pagination(self, bot, inline, sender, query):
+        inline.cache = self.cache
+        inline.private = self.private
+        inline.paginate = self.paginate
+        generator = bot._call(self.func,
+                              self.component_id,
+                              inline=inline,
+                              sender=sender,
+                              query=query)
+        bot._inline_paginate[sender.id] = dict()
+        bot._inline_paginate[sender.id][query] = [
+            generator,
+            0,  # First offset
+            None,  # Last update time
+        ]
+
     def _call(self, bot, update):
-        sender = update.inline_query.sender
         inline = update.inline_query
+        sender = inline.sender
         query = inline.query
-        counter = 0
-        inline_query = []
-        if sender.id not in bot._inline_paginate \
-                or query != bot._inline_paginate[sender.id][0]. \
-                gi_frame.f_locals["query"] \
-                or time() > bot._inline_paginate[sender.id][1]:
-            inline.cache = self.cache
-            inline.private = self.private
-            inline.paginate = self.paginate
-            bot._inline_paginate[sender.id] = [bot._call(self.func,
-                                                         self.component_id,
-                                                         inline=inline,
-                                                         sender=sender,
-                                                         query=query),
-                                               time() + self.timer]
 
-        inline_old = bot._inline_paginate[sender.id][0]. \
-            gi_frame.f_locals["inline"]
+        if sender.id not in bot._inline_paginate or \
+                query not in bot._inline_paginate[sender.id] or \
+                inline.offset == '':
+            self._reset_pagination(bot, inline, sender, query)
 
-        while True:
+        generator = bot._inline_paginate[sender.id][query][0]
+        offset = bot._inline_paginate[sender.id][query][1]
+
+        results = []
+        i = offset
+        next_offset = offset + 1
+        while i < next_offset:
             try:
-                queryresult = next(bot._inline_paginate[sender.id][0])
-                queryresult["id"] = str(counter)
-                inline_query.append(queryresult)
+                element = next(generator)
             except StopIteration:
                 break
-            counter += 1
-            if (counter % inline_old.paginate) == 0:
-                args = {
-                    "inline_query_id": inline.id,
-                    "cache_time": inline_old.cache,
-                    "is_personal": inline_old.private,
-                    "results": json.dumps(inline_query),
-                    "next_offset": str(counter)
-                }
-                bot.api.call("answerInlineQuery", args)
-                return True
+            element['id'] = i
+            results.append(element)
+            i += 1
 
-        if len(inline_query) > 0:
-            args = {
-                "inline_query_id": inline.id,
-                "cache_time": inline_old.cache,
-                "is_personal": inline_old.private,
-                "results": json.dumps(inline_query),
-            }
-            bot.api.call("answerInlineQuery", args)
-        del bot._inline_paginate[sender.id]
-        return True
+            hook_locals = generator.gi_frame.f_locals["inline"]
+            next_offset = offset + hook_locals.paginate
+            cache = hook_locals.cache
+            is_private = hook_locals.private
+
+        if len(results) == 0:
+            # No more results, don't do anything
+            return
+
+        bot._inline_paginate[sender.id][query][1] = next_offset
+        bot._inline_paginate[sender.id][query][2] = time()
+
+        args = {
+            "inline_query_id": inline.id,
+            "cache_time": cache,
+            "is_personal": is_private,
+            "results": json.dumps(results),
+            "next_offset": next_offset,
+        }
+        return bot.api.call("answerInlineQuery", args)
 
 
 class ChatUnavailableHook(Hook):

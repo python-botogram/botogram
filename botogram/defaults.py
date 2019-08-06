@@ -19,6 +19,7 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import html
+from time import time
 
 from . import syntaxes
 from . import components
@@ -33,6 +34,7 @@ class DefaultComponent(components.Component):
     def __init__(self):
         self.add_command("start", self.start_command, hidden=True)
         self.add_command("help", self.help_command)
+        self.add_timer(120, self.timer_inline)
 
         self._add_no_commands_hook(self.no_commands_hook)
 
@@ -168,6 +170,19 @@ class DefaultComponent(components.Component):
                 bot._("Use /help to get a list of the commands."),
             ]), syntax="html")
             return True
+
+    # Timer for delete inline pagination cache
+    def timer_inline(self, bot):
+        to_delete = list()
+        current_time = time()
+        for user in bot._inline_paginate:
+            for query in bot._inline_paginate[user]:
+                if current_time > bot._inline_paginate[user][query][2]:
+                    # You can't delete elements of a dict in a for loop
+                    to_delete.append((user, query))
+
+        for element in to_delete:
+            del bot._inline_paginate[element[0]][element[1]]
 
 
 def escape_html(text):
