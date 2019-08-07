@@ -88,7 +88,9 @@ class Buttons:
             self._rows[index] = ButtonsRow()
         return self._rows[index]
 
-    def _serialize_attachment(self, chat):
+    def _serialize_attachment(self, chat=None):
+        if not chat:
+            chat = "000000000"
         rows = [
             list(row._get_content(chat)) for i, row in sorted(
                 tuple(self._rows.items()), key=lambda i: i[0]

@@ -558,33 +558,54 @@ class FileMixin:
 
 
 class InlineMixin:
+    """Helper class for rendering inline elements"""
 
     @staticmethod
-    def article(title, text, syntax=None, preview=True, attach=None):
-        args = {"type": "article",
-                "id": None,
-                "title": title,
-                "input_message_content": {
-                    "message_text": text,
-                    "disable_web_page_preview": not preview
-                }
-                }
+    def _get_call_args(title, attach, content):
+        args = {
+            "id": None,  # Will be smartly assigned in the hook
+            "title": title,
+        }
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = \
-                attach._serialize_attachment("000000000")
-        syntax = syntaxes.guess_syntax(text, syntax)
-        if syntax is not None:
-            args["input_message_content"]["parse_mode"] = syntax
+            args["reply_markup"] = attach._serialize_attachment()
+        if content is not None:
+            args["input_message_content"] = content._serialize()
         return args
 
-    @staticmethod
-    def photo(file_id=None, url=None, title=None, description=None,
+    def article(self, title, content, description=None, url=None, hide_url=None,
+                thumb_url=None, thumb_width=None, thumb_height=None,
+                attach=None):
+        """Render an inline article"""
+        args = self._get_call_args(title, attach, content)
+        args["type"] = "article"
+        if description is not None:
+            args["description"] = description
+        if url is not None:
+            args["url"] = url
+            if hide_url is not None:
+                args["hide_url"] = hide_url
+        if thumb_url is not None:
+            args["thumb_url"] = thumb_url
+            if thumb_width is not None:
+                args["thumb_width"] = thumb_width
+            if thumb_height is not None:
+                args["thumb_height"] = thumb_height
+        return args
+
+    def photo(self, file_id=None, url=None, thumb_url=None,
+              content=None, title=None, description=None,
               caption=None, syntax=None, attach=None):
-        args = {"type": "photo",
-                "id": None,
-                }
+        if thumb_url is None:
+            raise TypeError("thumb_url parameter is required")
+
+        args = self._get_call_args(title, attach, content)
+        args["type"] = "photo"
+        args["thumb_url"] = thumb_url
+        if description is not None:
+            args["description"] = description
+
         if file_id is not None and url is None:
             args["photo_file_id"] = file_id
         elif file_id is None and url is not None:
@@ -594,12 +615,6 @@ class InlineMixin:
         else:
             raise TypeError("Only one among file_id and URL must be" +
                             "passed")
-
-        if title is not None:
-            args["title"] = title
-
-        if description is not None:
-            args["description"] = description
 
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
