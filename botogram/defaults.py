@@ -136,7 +136,8 @@ class DefaultComponent(components.Component):
             docstring = "<i>%s</i>" % bot._("No description available.")
 
         if params_list:
-            message.append("/%s %s <code>-</code> %s" % (command.name, params_list, docstring))
+            message.append("/%s %s <code>-</code> %s" % (
+                command.name, params_list, docstring))
         else:
             message.append("/%s <code>-</code> %s" % (command.name, docstring))
 

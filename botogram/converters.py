@@ -32,7 +32,8 @@ def _convert_to_bool(argument: str) -> bool:
         raise ValueError(lowered + ' is not a recognised boolean option')
 
 
-def _parameters_conversion(converter: callable, argument: str, parameter) -> typing.Any:
+def _parameters_conversion(converter: callable,
+                           argument: str, parameter) -> typing.Any:
     """Convert an argument using a given converter"""
     if converter is bool:
         return _convert_to_bool(argument)
@@ -45,4 +46,6 @@ def _parameters_conversion(converter: callable, argument: str, parameter) -> typ
         except AttributeError:
             name = converter.__class__.__name__
 
-        raise ValueError('Converting to "{}" failed for parameter "{}".'.format(converter.__name__, parameter)) from exc
+        raise ValueError('Converting to "{}" failed '
+                         'for parameter "{}".'.format(
+                          name, parameter)) from exc

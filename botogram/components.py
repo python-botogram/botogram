@@ -123,7 +123,8 @@ class Component:
         })
         self.__processors.append(hook)
 
-    def add_command(self, name, func, hidden=False, order=0, _from_main=False, parameterized=True):
+    def add_command(self, name, func, hidden=False, order=0,
+                    _from_main=False, parameterized=True):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
@@ -137,7 +138,8 @@ class Component:
                        "slash. It's done automatically.")
 
         if parameterized:
-            parameters = {name: value for name, value in inspect.signature(func).parameters.items()
+            parameters = {name: value for name, value in
+                          inspect.signature(func).parameters.items()
                           if name not in _special_parameters}
         else:
             parameters = None
