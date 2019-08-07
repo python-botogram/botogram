@@ -188,11 +188,11 @@ class Bot(frozenbot.FrozenBot):
         self._main_component.add_channel_post_edited_hook(func)
         return func
 
-    def command(self, name, hidden=False, order=0):
+    def command(self, name, hidden=False, order=0, parameterized=True):
         """Register a new command"""
         def __(func):
             self._main_component.add_command(name, func, hidden,
-                                             order=order, _from_main=True)
+                                             order=order, _from_main=True, parameterized=parameterized)
             return func
         return __
 

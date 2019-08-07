@@ -17,10 +17,12 @@
 #   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
+from inspect import Parameter
 import re
 
 from .callbacks import hashed_callback_name
 from .context import Context
+from .converters import _parameters_conversion
 
 
 class Hook:
@@ -199,6 +201,9 @@ class CommandHook(Hook):
         self._order = 0
         if "order" in args:
             self._order = args["order"]
+        self._parameters = None
+        if "parameters" in args:
+            self._parameters = args["parameters"]
 
     def _call(self, bot, update):
         message = update.message
@@ -212,8 +217,21 @@ class CommandHook(Hook):
             return
 
         args = _command_args_split_re.split(text)[1:]
+        params = {}
+
+        if self._parameters:
+            for index, parameter in enumerate(self._parameters.values()):
+                try:
+                    if parameter.annotation is Parameter.empty:
+                        params[parameter.name] = args[index]
+                    else:
+                        params[parameter.name] = _parameters_conversion(parameter.annotation, args[index], parameter.name)
+                except IndexError:
+                    if parameter.default is Parameter.empty:
+                        raise IndexError("A value for the parameter {} is missing".format(parameter.name))
+
         bot._call(self.func, self.component_id, chat=message.chat,
-                  message=message, args=args)
+                  message=message, args=args, **params)
         return True
 
 
