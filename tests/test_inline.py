@@ -95,14 +95,16 @@ def test_inline_hook(bot, mock_req):
 def test_paginate(bot, mock_req):
     chains = inline_default(bot)
     bot.api.call = call_overwrite
+
     for i in range(0, 5):
         update = update_inline(i, str(i*10))
         for hook in chains["inline"]:
             result = hook.call(bot, update)
             assert result[0] == 'answerInlineQuery'
             assert result[1] == expected_result_inline(i*10)
+
+    result = None
     update = update_inline(5, str(5*10))
     for hook in chains['inline']:
         result = hook.call(bot, update)
     assert result is None
-
