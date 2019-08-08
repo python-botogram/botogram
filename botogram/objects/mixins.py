@@ -574,9 +574,9 @@ class InlineMixin:
             args["input_message_content"] = content._serialize()
         return args
 
-    def article(self, title, content, description=None, url=None, hide_url=None,
-                thumb_url=None, thumb_width=None, thumb_height=None,
-                attach=None):
+    def article(self, title, content, description=None, url=None,
+                hide_url=None, thumb_url=None, thumb_width=None,
+                thumb_height=None, attach=None):
         """Render an inline article"""
         args = self._get_call_args(title, attach, content)
         args["type"] = "article"
