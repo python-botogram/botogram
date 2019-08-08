@@ -28,8 +28,7 @@ def process(bot, chains, update):
                          (update.update_id, hook.name))
 
         result = hook.call(bot, update)
-
-        if result is True:
+        if result is {'ok': True, 'result': True}:
             bot.logger.debug("Update #%s was just processed by the %s hook."
                              % (update.update_id, hook.name))
             return
