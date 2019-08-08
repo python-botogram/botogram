@@ -561,11 +561,13 @@ class InlineMixin:
     """Helper class for rendering inline elements"""
 
     @staticmethod
-    def _get_call_args(title, attach, content):
+    def _get_call_args(result_type, title, attach, content):
         args = {
             "id": None,  # Will be smartly assigned in the hook
-            "title": title,
+            "type": result_type,
         }
+        if title is not None:
+            args["title"] = title
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
@@ -574,57 +576,233 @@ class InlineMixin:
             args["input_message_content"] = content._serialize()
         return args
 
+    @staticmethod
+    def _inject_file_args(args, file_id, url):
+        result_type = args["type"]
+        if file_id is not None and url is None:
+            args[result_type + "_file_id"] = file_id
+        elif file_id is None and url is not None:
+            args[result_type + "_url"] = url
+        elif file_id is None and url is None:
+            raise TypeError("file_id or URL is missing")
+        else:
+            raise TypeError("Only one among file_id and URL must be passed")
+        return args
+
+    @staticmethod
+    def _inject_thumb_args(args, url, width=None, height=None):
+        if url is not None:
+            args["thumb_url"] = url
+            if width is not None:
+                args["thumb_width"] = width
+            if height is not None:
+                args["thumb_height"] = height
+        return args
+
+    @staticmethod
+    def _inject_caption_args(args, caption, syntax):
+        if caption is not None:
+            args["caption"] = caption
+            syntax = syntaxes.guess_syntax(caption, syntax)
+            if syntax is not None:
+                args["parse_mode"] = syntax
+        return args
+
     def article(self, title, content, description=None, url=None,
                 hide_url=None, thumb_url=None, thumb_width=None,
                 thumb_height=None, attach=None):
-        """Render an inline article"""
-        args = self._get_call_args(title, attach, content)
-        args["type"] = "article"
+        """Render an inline article result"""
+        args = self._get_call_args("article", title, attach, content)
+        args = self._inject_thumb_args(args, thumb_url,
+                                       thumb_width, thumb_height)
+
         if description is not None:
             args["description"] = description
         if url is not None:
             args["url"] = url
             if hide_url is not None:
                 args["hide_url"] = hide_url
-        if thumb_url is not None:
-            args["thumb_url"] = thumb_url
-            if thumb_width is not None:
-                args["thumb_width"] = thumb_width
-            if thumb_height is not None:
-                args["thumb_height"] = thumb_height
         return args
 
-    def photo(self, file_id=None, url=None, thumb_url=None,
-              content=None, title=None, description=None,
+    def photo(self, file_id=None, url=None, width=None, height=None,
+              title=None, content=None, thumb_url=None, description=None,
               caption=None, syntax=None, attach=None):
-        if thumb_url is None:
-            raise TypeError("thumb_url parameter is required")
+        """Render an inline photo result"""
+        args = self._get_call_args("photo", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_thumb_args(args, thumb_url, None, None)
+        args = self._inject_caption_args(args, caption, syntax)
 
-        args = self._get_call_args(title, attach, content)
-        args["type"] = "photo"
-        args["thumb_url"] = thumb_url
         if description is not None:
             args["description"] = description
+        if width is not None:
+            args["photo_width"] = width
+        if height is not None:
+            args["photo_height"] = height
+        return args
+
+    def audio(self, file_id=None, url=None, title=None, content=None,
+              performer=None, duration=None, caption=None, syntax=None,
+              attach=None):
+        """Render an inline audio result"""
+        args = self._get_call_args("audio", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_caption_args(args, caption, syntax)
+
+        if performer is not None:
+            args["performer"] = performer
+        if duration is not None:
+            args["audio_duration"] = duration
+        if caption is not None:
+            args["caption"] = caption
+        return args
+
+    def voice(self, file_id=None, url=None, title=None, content=None,
+              duration=None, caption=None, syntax=None, attach=None):
+        """Render an inline voice result"""
+        args = self._get_call_args("voice", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_caption_args(args, caption, syntax)
+
+        if duration is not None:
+            args["voice_duration"] = duration
+        return args
+
+    def video(self, file_id=None, url=None, title=None, content=None,
+              thumb_url=None, description=None, mime_type=None, width=None,
+              height=None, duration=None, caption=None,
+              syntax=None, attach=None):
+        """Render an inline video result"""
+        args = self._get_call_args("video", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_thumb_args(args, thumb_url, None, None)
+        args = self._inject_caption_args(args, caption, syntax)
+
+        if description is not None:
+            args["description"] = description
+        if mime_type is not None:
+            args["mime_type"] = mime_type
+        if width is not None:
+            args["video_width"] = width
+        if height is not None:
+            args["video_height"] = height
+        if duration is not None:
+            args["duration"] = duration
+        return args
+
+    def file(self, file_id=None, url=None, title=None, content=None,
+             thumb_url=None, thumb_width=None, thumb_height=None,
+             description=None, mime_type=None, caption=None,
+             syntax=None, attach=None):
+        """Render an inline document result"""
+        args = self._get_call_args("document", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_thumb_args(args, thumb_url,
+                                       thumb_width, thumb_height)
+        args = self._inject_caption_args(args, caption, syntax)
+
+        if description is not None:
+            args["description"] = description
+        if mime_type is not None:
+            args["mime_type"] = mime_type
+        return args
+
+    def location(self, latitude, longitude, title, live_period=None,
+                 content=None, thumb_url=None, thumb_width=None,
+                 thumb_height=None, attach=None):
+        """Render an inline location result"""
+        args = self._get_call_args("location", title, attach, content)
+        args = self._inject_thumb_args(args, thumb_url,
+                                       thumb_width, thumb_height)
+
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+        args["title"] = title
+        if live_period is not None:
+            args["live_period"] = live_period
+        return args
+
+    def venue(self, latitude, longitude, title, address, foursquare_id=None,
+              foursquare_type=None, content=None, thumb_url=None,
+              thumb_width=None, thumb_height=None, attach=None):
+        """Render an inline venue result"""
+        args = self._get_call_args("venue", title, attach, content)
+        args = self._inject_thumb_args(args, thumb_url,
+                                       thumb_width, thumb_height)
+
+        args["latitude"] = latitude
+        args["longitude"] = longitude
+        args["title"] = title
+        args["address"] = address
+        if foursquare_id is not None:
+            args["foursquare_id"] = foursquare_id
+        if foursquare_type is not None:
+            args["foursquare_type"] = foursquare_type
+        return args
+
+    def sticker(self, file_id, content, attach):
+        """Render an inline sticker result"""
+        args = self._get_call_args("sticker", None, attach, content)
+
+        args["sticker_file_id"] = file_id
+        return args
+
+    def contact(self, phone, first_name, last_name=None, vcard=None,
+                content=None, thumb_url=None, thumb_width=None,
+                thumb_height=None, attach=None):
+        """Render an inline contact result"""
+        args = self._get_call_args("contact", None, attach, content)
+        args = self._inject_thumb_args(args, thumb_url,
+                                       thumb_width, thumb_height)
+
+        args["phone_number"] = phone
+        args["first_name"] = first_name
+        if last_name is not None:
+            args["last_name"] = last_name
+        if vcard is not None:
+            args["vcard"] = vcard
+        return args
+
+    def gif(self, file_id=None, url=None, title=None, content=None,
+            thumb_url=None, width=None, height=None, duration=None,
+            caption=None, syntax=None, attach=None):
+        """Render an inline gif result"""
+        args = self._get_call_args("gif", title, attach, content)
+        args = self._inject_file_args(args, file_id, url)
+        args = self._inject_thumb_args(args, thumb_url, None, None)
+        args = self._inject_caption_args(args, caption, syntax)
+
+        if width is not None:
+            args["gif_width"] = width
+        if height is not None:
+            args["gif_height"] = height
+        if duration is not None:
+            args["duration"] = duration
+        return args
+
+    def mpeg4_gif(self, file_id=None, url=None, title=None, content=None,
+                  thumb_url=None, width=None, height=None, duration=None,
+                  caption=None, syntax=None, attach=None):
+        """Render an inline Mpeg4Gif result"""
+        args = self._get_call_args("mpeg4_gif", title, attach, content)
+        args = self._inject_thumb_args(args, thumb_url, None, None)
+        args = self._inject_caption_args(args, caption, syntax)
 
         if file_id is not None and url is None:
-            args["photo_file_id"] = file_id
+            args["mpeg4_file_id"] = file_id
         elif file_id is None and url is not None:
-            args["photo_url"] = url
+            args["mpeg4_url"] = url
         elif file_id is None and url is None:
             raise TypeError("file_id or URL is missing")
         else:
-            raise TypeError("Only one among file_id and URL must be" +
-                            "passed")
+            raise TypeError("Only one among file_id and URL must be passed")
 
-        if attach is not None:
-            if not hasattr(attach, "_serialize_attachment"):
-                raise ValueError("%s is not an attachment" % attach)
-            args["reply_markup"] = \
-                attach._serialize_attachment("000000000")
-        if caption is not None:
-            syntax = syntaxes.guess_syntax(caption, syntax)
-            if syntax is not None:
-                args["parse_mode"] = syntax
+        if width is not None:
+            args["mpeg4_width"] = width
+        if height is not None:
+            args["mpeg4_height"] = height
+        if duration is not None:
+            args["duration"] = duration
         return args
 
 
