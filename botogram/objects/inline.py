@@ -20,10 +20,10 @@
 
 from .base import BaseObject
 from .messages import User, Location
-from .mixins import InlineMixin
+from . import mixins
 
 
-class InlineQuery(BaseObject, InlineMixin):
+class InlineQuery(BaseObject, mixins.InlineMixin):
     required = {
         "id": str,
         "from": User,
@@ -36,3 +36,13 @@ class InlineQuery(BaseObject, InlineMixin):
     replace_keys = {
         "from": "sender"
     }
+
+    def __init__(self, data):
+        super().__init__(data)
+        self._switch_pm_text = None
+        self._switch_pm_parameter = None
+
+    def switch_pm(self, text, parameter):
+        """Helper to set the switch_pm_text and switch_pm_parameter"""
+        self._switch_pm_text = text
+        self._switch_pm_parameter = parameter

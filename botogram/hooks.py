@@ -322,6 +322,10 @@ class InlineHook(Hook):
             "results": json.dumps(results),
             "next_offset": next_offset,
         }
+        if hook_locals._switch_pm_text is not None:
+            args["switch_pm_text"] = hook_locals._switch_pm_text
+        if hook_locals._switch_pm_parameter is not None:
+            args["switch_pm_parameter"] = hook_locals._switch_pm_parameter
         return bot.api.call("answerInlineQuery", args)
 
 
