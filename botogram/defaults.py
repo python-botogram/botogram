@@ -95,7 +95,7 @@ class DefaultComponent(components.Component):
                 summary = escape_html(command.summary)
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
-                parameters_list = command.parameters_list()
+                parameters_list = command.parameters_list
                 if parameters_list:
                     message.append("/%s %s <code>-</code> %s" %
                                    (command.name, parameters_list, summary))
@@ -130,7 +130,7 @@ class DefaultComponent(components.Component):
                         cmd.name == command), None)
 
         docstring = escape_html(command.docstring)
-        params_list = command.parameters_list()
+        params_list = command.parameters_list
 
         if docstring is None:
             docstring = "<i>%s</i>" % bot._("No description available.")

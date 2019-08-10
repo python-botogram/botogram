@@ -83,6 +83,7 @@ class Command:
 
         return "\n".join(result)
 
+    @property
     def parameters_list(self):
         """Get the parameters list of this single command"""
         if not self._hook._parameters:

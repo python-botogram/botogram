@@ -71,6 +71,8 @@ New features
   * New method :py:meth:`Chat.remove_photo`
   * New attribute :py:attr:`Chat.photo`
 
+* Added automatic type conversion for command arguments
+
 Bug fixes
 ---------
 
