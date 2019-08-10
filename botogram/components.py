@@ -26,6 +26,8 @@ from . import tasks
 from . import hooks
 from . import commands
 
+from collections import OrderedDict
+
 _special_parameters = ('args', 'bot', 'chat', 'message', 'shared')
 
 
@@ -137,9 +139,11 @@ class Component:
             utils.warn(go_back, "Command names shouldn't be prefixed with a "
                        "slash. It's done automatically.")
 
-        parameters = {name: value for name, value in
-                      inspect.signature(func).parameters.items()
-                      if name not in _special_parameters}
+        parameters = OrderedDict(inspect.signature(func).parameters)
+
+        for _special_parameter in _special_parameters:
+            if _special_parameter in parameters:
+                parameters.pop(_special_parameter)
 
         hook = hooks.CommandHook(func, self, {
             "name": name,
