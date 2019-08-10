@@ -81,3 +81,19 @@ def process_channel_post_edited(bot, chains, update):
 
     bot.logger.debug("No hook actually processed the #%s update." %
                      update.update_id)
+
+
+def process_poll_update(bot, chains, update):
+    """Process a poll update"""
+    for hook in chains["poll_updates"]:
+        bot.logger.debug("Processing poll update in update #%s with"
+                         "the hook %s..." % (update.update_id, hook.name))
+
+        result = hook.call(bot, update)
+        if result is True:
+            bot.logger.debug("Update %s was just processed by the %s hook." %
+                             (update.update_id, hook.name))
+            return
+
+    bot.logger.debug("No hook actually processed the #%s update." %
+                     update.update_id)
