@@ -271,7 +271,8 @@ class InlineHook(Hook):
                               inline=inline,
                               sender=sender,
                               query=query)
-        bot._inline_paginate[sender.id] = dict()
+        if not bot._inline_paginate.get(sender.id, False):
+            bot._inline_paginate[sender.id] = dict()
         bot._inline_paginate[sender.id][query] = [
             generator,
             0,  # First offset
