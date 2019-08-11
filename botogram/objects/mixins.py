@@ -557,6 +557,97 @@ class FileMixin:
             f.write(downloaded)
 
 
+class Album:
+    """Factory for albums"""
+    def __init__(self):
+        self._content = []
+        self._file = []
+
+    def add_photo(self, path=None, url=None, file_id=None, caption=None,
+                  syntax=None):
+        """Add a photo the the album instance"""
+        args = {"type": "photo"}
+        if caption is not None:
+            args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
+        if path is not None and file_id is None and url is None:
+            name = "photo" + str(len(self._file))
+            args["media"] = "attach://" + name
+            self._file.append((name, (path, open(path, "rb"))))
+        elif file_id is not None and path is None and url is None:
+            args["media"] = file_id
+        elif url is not None and file_id is None and path is None:
+            args["media"] = url
+        elif path is None and file_id is None and url is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path, file_id and URL must be" +
+                            "passed")
+
+        self._content.append(args)
+
+    def add_video(self, path=None, file_id=None, url=None, duration=None,
+                  caption=None, syntax=None):
+        """Add a video the the album instance"""
+        args = {"type": "video"}
+        if duration is not None:
+            args["duration"] = duration
+        if caption is not None:
+            args["caption"] = caption
+            if syntax is not None:
+                syntax = syntaxes.guess_syntax(caption, syntax)
+                args["parse_mode"] = syntax
+        if path is not None and file_id is None and url is None:
+            name = "photo" + str(len(self._file))
+            args["media"] = "attach://" + name
+            self._file.append((name, (path, open(path, "rb"))))
+        elif file_id is not None and path is None and url is None:
+            args["media"] = file_id
+        elif url is not None and file_id is None and path is None:
+            args["media"] = url
+        elif path is None and file_id is None and url is None:
+            raise TypeError("path or file_id or URL is missing")
+        else:
+            raise TypeError("Only one among path, file_id and URL must be" +
+                            "passed")
+
+        self._content.append(args)
+
+
+class SendAlbum(Album):
+    """Send the album instance to the chat passed as argument"""
+    def __init__(self, chat, reply_to=None, notify=True):
+        super(SendAlbum, self).__init__()
+        self._get_call_args = chat._get_call_args
+        self._api = chat._api
+        self.reply_to = reply_to
+        self.notify = notify
+        self._used = False
+
+    def __enter__(self):
+        self._used = True
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.send()
+
+    def send(self):
+        """Send the Album to telgram"""
+        args = self._get_call_args(self.reply_to, None, None, self.notify)
+        args["media"] = json.dumps(self._content)
+        return self._api.call("sendMediaGroup", args, self._file,
+                              expect=multiple(_objects().Message))
+
+    def __del__(self):
+        if not self._used:
+            utils.warn(1, "error_with_album",
+                       "you should use `with` to use send_album\
+                        -- check the documentation")
+
+
 class InlineMixin:
     """Helper class for rendering inline elements"""
 
@@ -804,94 +895,3 @@ class InlineMixin:
         if duration is not None:
             args["duration"] = duration
         return args
-
-
-class Album:
-    """Factory for albums"""
-    def __init__(self):
-        self._content = []
-        self._file = []
-
-    def add_photo(self, path=None, url=None, file_id=None, caption=None,
-                  syntax=None):
-        """Add a photo the the album instance"""
-        args = {"type": "photo"}
-        if caption is not None:
-            args["caption"] = caption
-            if syntax is not None:
-                syntax = syntaxes.guess_syntax(caption, syntax)
-                args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            name = "photo" + str(len(self._file))
-            args["media"] = "attach://" + name
-            self._file.append((name, (path, open(path, "rb"))))
-        elif file_id is not None and path is None and url is None:
-            args["media"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["media"] = url
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
-
-        self._content.append(args)
-
-    def add_video(self, path=None, file_id=None, url=None, duration=None,
-                  caption=None, syntax=None):
-        """Add a video the the album instance"""
-        args = {"type": "video"}
-        if duration is not None:
-            args["duration"] = duration
-        if caption is not None:
-            args["caption"] = caption
-            if syntax is not None:
-                syntax = syntaxes.guess_syntax(caption, syntax)
-                args["parse_mode"] = syntax
-        if path is not None and file_id is None and url is None:
-            name = "photo" + str(len(self._file))
-            args["media"] = "attach://" + name
-            self._file.append((name, (path, open(path, "rb"))))
-        elif file_id is not None and path is None and url is None:
-            args["media"] = file_id
-        elif url is not None and file_id is None and path is None:
-            args["media"] = url
-        elif path is None and file_id is None and url is None:
-            raise TypeError("path or file_id or URL is missing")
-        else:
-            raise TypeError("Only one among path, file_id and URL must be" +
-                            "passed")
-
-        self._content.append(args)
-
-
-class SendAlbum(Album):
-    """Send the album instance to the chat passed as argument"""
-    def __init__(self, chat, reply_to=None, notify=True):
-        super(SendAlbum, self).__init__()
-        self._get_call_args = chat._get_call_args
-        self._api = chat._api
-        self.reply_to = reply_to
-        self.notify = notify
-        self._used = False
-
-    def __enter__(self):
-        self._used = True
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is None:
-            self.send()
-
-    def send(self):
-        """Send the Album to telgram"""
-        args = self._get_call_args(self.reply_to, None, None, self.notify)
-        args["media"] = json.dumps(self._content)
-        return self._api.call("sendMediaGroup", args, self._file,
-                              expect=multiple(_objects().Message))
-
-    def __del__(self):
-        if not self._used:
-            utils.warn(1, "error_with_album",
-                       "you should use `with` to use send_album\
-                        -- check the documentation")
