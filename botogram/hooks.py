@@ -18,11 +18,14 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 from inspect import Parameter
+import logbook
 import re
 
 from .callbacks import hashed_callback_name
 from .context import Context
 from .converters import _parameters_conversion
+
+logger = logbook.Logger("botogram hook")
 
 
 class Hook:
@@ -225,8 +228,11 @@ class CommandHook(Hook):
                     if parameter.annotation is Parameter.empty:
                         params[parameter.name] = args[index]
                     else:
-                        params[parameter.name] = _parameters_conversion(
-                            parameter.annotation, args[index], parameter.name)
+                        try:
+                            params[parameter.name] = _parameters_conversion(
+                                parameter.annotation, args[index], parameter.name)
+                        except Exception as error:
+                            logger.debug(error)
                 except IndexError:
                     if parameter.default is Parameter.empty:
                         raise IndexError("A value for the parameter {} "
