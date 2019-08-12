@@ -228,17 +228,17 @@ class CommandHook(Hook):
                     if parameter.annotation is Parameter.empty:
                         params[parameter.name] = args[index]
                     else:
-                        try:
-                            params[parameter.name] = _parameters_conversion(
-                                parameter.annotation, args[index],
-                                parameter.name)
-                        except Exception as error:
-                            logger.debug(error)
-                            return True
+                        params[parameter.name] = _parameters_conversion(
+                            parameter.annotation, args[index],
+                            parameter.name)
                 except IndexError:
                     if parameter.default is Parameter.empty:
-                        raise IndexError("A value for the parameter {} "
-                                         "is missing".format(parameter.name))
+                        logger.debug("A value for the parameter %s "
+                                     "is missing" % parameter.name)
+                        return True
+                except Exception as error:
+                    logger.debug(error)
+                    return True
 
         bot._call(self.func, self.component_id, chat=message.chat,
                   message=message, args=args, **params)
