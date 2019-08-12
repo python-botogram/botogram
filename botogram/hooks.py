@@ -234,6 +234,7 @@ class CommandHook(Hook):
                                 parameter.name)
                         except Exception as error:
                             logger.debug(error)
+                            return True
                 except IndexError:
                     if parameter.default is Parameter.empty:
                         raise IndexError("A value for the parameter {} "
