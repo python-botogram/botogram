@@ -230,7 +230,8 @@ class CommandHook(Hook):
                     else:
                         try:
                             params[parameter.name] = _parameters_conversion(
-                                parameter.annotation, args[index], parameter.name)
+                                parameter.annotation, args[index],
+                                parameter.name)
                         except Exception as error:
                             logger.debug(error)
                 except IndexError:
