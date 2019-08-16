@@ -31,6 +31,8 @@ about its business.
 * :py:class:`~botogram.Location`
 * :py:class:`~botogram.Permissions`
 * :py:class:`~botogram.Venue`
+* :py:class:`~botogram.Album`
+* :py:class:`~botogram.InlineQuery`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
 * :py:class:`~botogram.ReplyKeyboardMarkup`
@@ -2700,7 +2702,6 @@ about its business.
 
 .. py:class:: botogram.Album
 
-
    This object represents an album (a group of photos and videos).
 
    .. py:method:: add_photo([path=None, url=None, file_id=None, caption=None, syntax=None])
@@ -2731,6 +2732,36 @@ about its business.
       :param str syntax: The name of the syntax used for the caption.
 
    .. versionadded:: 0.6
+
+
+.. py:class:: botogram.InlineQuery
+
+   This class represents an inline query update received by the bot.
+   You can :ref:`check out the API documentation <api-inline>` for more
+   methods of this class.
+
+   .. py:attribute:: id
+
+   Unique string identifier of the inline update.
+
+   .. py:attribute:: sender
+
+   The sending :py:class:`~botogram.User` of the inline query.
+
+   .. py:attribute:: query
+
+   Text of the query (up to 512 characters).
+
+   .. py:attribute:: location
+
+   Sender :py:class:`~botogram.Location`, if the bot has requested it.
+
+   .. py:attribute:: offset
+
+   The offset of the results to be returned.
+   Usually, it's a number (as a string) auto incremented and handled by botogram.
+
+   .. versionadded:: 0.7
 
 
 .. py:class:: botogram.Update
