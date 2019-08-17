@@ -146,15 +146,14 @@ class Component:
         })
         self.__callbacks[name] = hook
 
-    def add_inline(self, cache, private, paginate, timer, func):
+    def add_inline(self, cache, private, paginate, func):
         """Add a inline processor hook"""
         if not callable(func):
             raise ValueError("A inline must be callable")
 
         hook = hooks.InlineHook(func, self, {
             "cache": cache, "private": private,
-            "paginate": paginate,
-            "timer": timer})
+            "paginate": paginate})
         self.__inline.append(hook)
 
     def add_timer(self, interval, func):

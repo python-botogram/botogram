@@ -260,7 +260,6 @@ class InlineHook(Hook):
         self.cache = args["cache"]
         self.private = args["private"]
         self.paginate = args["paginate"]
-        self.timer = args["timer"]
 
     def _reset_pagination(self, bot, inline, sender, query):
         inline.cache = self.cache

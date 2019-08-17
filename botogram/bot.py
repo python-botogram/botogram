@@ -202,11 +202,11 @@ class Bot(frozenbot.FrozenBot):
             return func
         return __
 
-    def inline(self, cache=300, private=False, paginate=10, timer=60):
+    def inline(self, cache=300, private=False, paginate=10):
         """Add an inline hook"""
         def __(func):
             self._main_component.add_inline(cache, private,
-                                            paginate, timer, func)
+                                            paginate, func)
             return func
         return __
 
