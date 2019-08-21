@@ -869,7 +869,7 @@ class InlineMixin:
         if height is not None:
             args["gif_height"] = height
         if duration is not None:
-            args["duration"] = duration
+            args["gif_duration"] = duration
         return args
 
     def mpeg4_gif(self, file_id=None, url=None, title=None, content=None,
@@ -894,5 +894,5 @@ class InlineMixin:
         if height is not None:
             args["mpeg4_height"] = height
         if duration is not None:
-            args["duration"] = duration
+            args["mpeg4_duration"] = duration
         return args
