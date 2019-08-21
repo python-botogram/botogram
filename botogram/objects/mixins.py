@@ -733,8 +733,8 @@ class InlineMixin:
             args["photo_height"] = height
         return args
 
-    def audio(self, file_id=None, url=None, title=None, content=None,
-              performer=None, duration=None, caption=None, syntax=None,
+    def audio(self, file_id=None, url=None, title=None, performer=None,
+              duration=None, caption=None, content=None, syntax=None,
               attach=None):
         """Render an inline audio result"""
         args = self._get_call_args("audio", title, attach, content)
