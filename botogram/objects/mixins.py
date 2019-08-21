@@ -832,7 +832,7 @@ class InlineMixin:
             args["foursquare_type"] = foursquare_type
         return args
 
-    def sticker(self, file_id, content, attach):
+    def sticker(self, file_id, content=None, attach=None):
         """Render an inline sticker result"""
         args = self._get_call_args("sticker", None, attach, content)
 
