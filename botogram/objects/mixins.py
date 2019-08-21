@@ -694,9 +694,10 @@ class InlineMixin:
     def _inject_caption_args(args, caption, syntax):
         if caption is not None:
             args["caption"] = caption
-            syntax = syntaxes.guess_syntax(caption, syntax)
             if syntax is not None:
                 args["parse_mode"] = syntax
+            else:
+                args["parse_mode"] = syntaxes.guess_syntax(caption, syntax)
         return args
 
     def article(self, title, content, description=None, url=None,
