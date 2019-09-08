@@ -100,6 +100,14 @@ about its business.
 
       .. versionadded:: 0.2
 
+   .. py:attribute:: reply_markup
+
+      This attribute contains the inline keyboard attached to the message.
+
+      It's always an instance of :py:class:`~botogram.KeyboardMarkup` class.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:method:: avatar_history()
 
       Get the user's avatar history. This returns a list of the current and all
@@ -3252,6 +3260,45 @@ about its business.
          * Those mentioned by @username in the text of the message object.
          * The sender of the original message, when the message this object
            is attached to is made in reply.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+
+.. py:class:: botogram.InlineKeyboardButton
+
+   This class represents an inline keyboard button.
+
+   .. py:attribute:: text
+
+      Label text of the button.
+
+   .. py:attribute:: url
+
+      The URL that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: callback_data
+
+      The callback data that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: switch_inline_query
+
+      The switch inline query parameter that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: switch_inline_query_current_chat
+
+      The switch inline query current chat parameter that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: pay
+
+      This attribute is `True` when the button is a pay button.
 
       *This attribute can be None if it's not provided by Telegram.*
 
