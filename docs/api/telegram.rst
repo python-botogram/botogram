@@ -37,6 +37,8 @@ about its business.
 * :py:class:`~botogram.ReplyKeyboardMarkup`
 * :py:class:`~botogram.ReplyKeyboardHide`
 * :py:class:`~botogram.ForceReply`
+* :py:class:`~botogram.InlineKeyboardButton`
+* :py:class:`~botogram.InlineKeyboardMarkup`
 
 
 .. py:class:: botogram.User
@@ -104,7 +106,7 @@ about its business.
 
       This attribute contains the inline keyboard attached to the message.
 
-      It's always an instance of :py:class:`~botogram.KeyboardMarkup` class.
+      It's always an instance of :py:class:`~botogram.InlineKeyboardMarkup` class.
 
       *This attribute can be None if it's not provided by Telegram.*
 
@@ -3302,6 +3304,19 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. versionadded:: 0.7
+
+
+.. py:class:: botogram.InlineReplyMarkup
+
+   This class represents a keyboard markup.
+
+   .. py:attribute:: inline_keyboard
+
+      Array of button rows, each represented by an array of
+      :py:class:`~botogram.InlineKeyboardButton`.
+
+   .. versionadded:: 0.7
 
 .. _Telegram's Bot API: https://core.telegram.org/bots/api
 .. _API methods: https://core.telegram.org/bots/api#available-methods

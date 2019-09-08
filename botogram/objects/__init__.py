@@ -57,6 +57,8 @@ __all__ = [
     "ReplyKeyboardMarkup",
     "ReplyKeyboardHide",
     "ForceReply",
+    "InlineKeyboardButton",
+    "InlineKeyboardMarkup",
 
     # Polls-related objects
     "Poll",

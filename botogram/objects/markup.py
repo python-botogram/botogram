@@ -83,8 +83,8 @@ class InlineKeyboardButton(BaseObject):
     }
 
 
-class KeyboardMarkup(BaseObject):
-    """Telegram API representation of a keyboard markup
+class InlineKeyboardMarkup(BaseObject):
+    """Telegram API representation of a inline keyboard markup
 
     https://core.telegram.org/bots/api#inlinekeyboardmarkup
     """

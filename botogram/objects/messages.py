@@ -24,7 +24,7 @@ from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
 from .chats import User, Chat
-from .markup import KeyboardMarkup
+from .markup import InlineKeyboardMarkup
 from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
     Animation, Contact, Location, Venue
 from .polls import Poll
@@ -366,7 +366,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "migrate_from_chat_id": int,
         "pinned_message": _itself,
         "edit_date": int,
-        "reply_markup": KeyboardMarkup,
+        "reply_markup": InlineKeyboardMarkup,
     }
     replace_keys = {
         "from": "sender",
