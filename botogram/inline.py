@@ -103,8 +103,8 @@ class InlineInputVenue:
 class InlineInputContact:
     """A factory for InputContactMessageContent Telegram objects"""
 
-    def __init__(self, phone_number, first_name, last_name=None, vcard=None):
-        self.phone_number = phone_number
+    def __init__(self, phone, first_name, last_name=None, vcard=None):
+        self.phone_number = phone
         self.first_name = first_name
         self.last_name = last_name
         self.vcard = vcard

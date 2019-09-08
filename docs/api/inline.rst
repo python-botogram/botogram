@@ -272,20 +272,116 @@ for more information about it.
 
 .. py:class:: botogram.InlineInputMessage
 
-   TODO
+   This class allows you to build content from
+   inline responses that contains a message.
+
+   .. code-block:: python
+
+      content = botogram.InlineInputMessage(
+         text = 'This is the text of the message to be sent',
+         syntax='html',
+         preview = False,
+      )
+      yield inline.article(
+         title='My inline result',
+         content,
+      )
+
+
+   .. py:method:: __init___(text, [syntax=None, preview=None])
+
+      Creates a instance of this class.
+
+      :param str text: The textual messsage to be sent.
+      :param str syntax: The name of the syntax used for the message.
+      :param bool preview: Whether to show link previews.
+
+   .. versionadded:: 0.7
 
 
 .. py:class:: botogram.InlineInputLocation
 
-   TODO
+   This class allows you to build content from
+   inline responses that contains a location.
+
+   .. code-block:: python
+
+      content = botogram.InlineInputLocation(
+         latitude=0.0,
+         longitude=0.0,
+      )
+      yield inline.article(
+         title='My inline result',
+         content,
+      )
+
+   .. py:method:: __init__(latitude, longitude, [live_period=None])
+
+      Creates an instance of this class.
+
+      :param float latitude: The latitude of the location.
+      :param float longitude: The longitude of the location.
+      :param int live_period: Period in seconds for which the location can be
+      updated, should be between 60 and 86400.
+
+   .. versionadded:: 0.7
 
 
 .. py:class:: botogram.InlineInputVenue
 
-   TODO
+   This class allows you to build content from
+   inline responses that contains a venue.
+
+   .. code-block:: python
+
+      content = botogram.InlineInputVenue(
+         latitude=0.0,
+         longitude=0.0,
+         title='The Abyss',
+         address='Atlantic Ocean',
+      )
+      yield inline.article(
+         title='My inline result',
+         content,
+      )
+
+   .. py:method:: __init__(latitude, longitude, title, address, [foursquare_id=None, foursquare_type=None])
+
+      Creates an instance of this class.
+
+      :param float latitude: The latitude of the venue.
+      :param float longitude: The longitude of the venue.
+      :param str title: The name of the venue.
+      :param str address: The address of the venue.
+      :param str foursquare_id: The Foursquare ID of the venue
+      :param str foursquare_type: The Foursquare type of the venue, if known.
+
+   .. versionadded:: 0.7
 
 
 .. py:class:: botogram.InlineInputContact
 
-   TODO
+   This class allows you to build content from
+   inline responses that contains a contact.
 
+   .. code-block:: python
+
+      content = botogram.InlineInputContact(
+         phone='390124567890',
+         first_name='Support',
+      )
+      yield inline.article(
+         title='My inline result',
+         content,
+      )
+
+   .. py:method:: __init__(phone, first_name, [last_name=None, vcard=None])
+
+      Creates an instance of this class.
+
+      :param str phone: The phone number of the contact.
+      :param str first_name: The first name of the contact.
+      :param str last_name: The last name of the contact.
+      :param str vcard: Additional data about the contact in the form of a vCard.
+
+   .. versionadded:: 0.7
