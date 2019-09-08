@@ -18,7 +18,6 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 
-
 class KeyboardRow:
     """A row of a keyboard"""
 
@@ -83,4 +82,3 @@ class Keyboard:
         return {"keyboard": rows, "resize_keyboard": self.resize_keyboard,
                 "one_time_keyboard": self.one_time_keyboard,
                 "selective": self.selective}
-
