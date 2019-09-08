@@ -35,6 +35,7 @@ from .runner import run
 from .objects import *
 from .utils import usernames_in
 from .callbacks import Buttons, ButtonsRow
+from .keyboards import Keyboard, KeyboardRow
 
 
 # This code will simulate the Windows' multiprocessing behavior if the

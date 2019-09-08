@@ -52,7 +52,8 @@ def _require_api(func):
 class ChatMixin:
     """Add some methods for chats"""
 
-    def _get_call_args(self, reply_to, extra, attach, notify):
+    def _get_call_args(self, reply_to, extra, attach, notify, remove_keyboard, 
+                       force_reply, selective):
         """Get default API call arguments"""
         # Convert instance of Message to ids in reply_to
         if hasattr(reply_to, "id"):
@@ -74,6 +75,23 @@ class ChatMixin:
             ))
         if not notify:
             args["disable_notification"] = True
+
+        if (remove_keyboard is None or force_reply is None) \
+                and selective is not None:
+                raise ValueError("The selective attribute is only usable" +
+                                 "when remove_keyboard or force_reply is True")
+
+        if remove_keyboard is not None:
+            args["reply_markup"] = json.dumps(
+                {"remove_keyboard": remove_keyboard}
+            )	
+            if selective is not None:
+                args["reply_markup"] = json.dumps({"selective": selective})	
+
+        if force_reply is not None:
+            args["reply_markup"] = json.dumps({"force_reply": force_reply})	
+            if selective is not None:
+                args["reply_markup"] = json.dumps({"selective": selective})	
 
         return args
 
@@ -97,9 +115,11 @@ class ChatMixin:
 
     @_require_api
     def send(self, message, preview=True, reply_to=None, syntax=None,
-             extra=None, attach=None, notify=True):
+             extra=None, attach=None, notify=True, remove_keyboard=None,
+             force_reply=None, selective=None):
         """Send a message"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         args["text"] = message
         args["disable_web_page_preview"] = not preview
 
@@ -112,9 +132,11 @@ class ChatMixin:
     @_require_api
     def send_photo(self, path=None, file_id=None, url=None, caption=None,
                    syntax=None, reply_to=None, extra=None, attach=None,
-                   notify=True):
+                   notify=True, remove_keyboard=None, force_reply=None,
+                   selective=None):
         """Send a photo"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         if caption is not None:
             args["caption"] = caption
             if syntax is not None:
@@ -133,10 +155,12 @@ class ChatMixin:
     @_require_api
     def send_audio(self, path=None, file_id=None, url=None, duration=None,
                    thumb=None, performer=None, title=None, reply_to=None,
-                   extra=None, attach=None, notify=True, caption=None, *,
+                   extra=None, attach=None, notify=True, remove_keyboard=None,
+                   force_reply=None, selective=None, caption=None, *,
                    syntax=None):
         """Send an audio track"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         if caption is not None:
             args["caption"] = caption
             if syntax is not None:
@@ -164,9 +188,11 @@ class ChatMixin:
     @_require_api
     def send_voice(self, path=None, file_id=None, url=None, duration=None,
                    title=None, reply_to=None, extra=None, attach=None,
-                   notify=True, caption=None, *, syntax=None):
+                   notify=True, remove_keyboard=None, force_reply=None,
+                   selective=None, caption=None, *, syntax=None):
         """Send a voice message"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         if caption is not None:
             args["caption"] = caption
             if syntax is not None:
@@ -194,9 +220,11 @@ class ChatMixin:
     def send_video(self, path=None, file_id=None, url=None,
                    duration=None, caption=None, streaming=True, thumb=None,
                    reply_to=None, extra=None, attach=None,
-                   notify=True, *, syntax=None):
+                   notify=True, remove_keyboard=None, force_reply=None,
+                   selective=None, *, syntax=None):
         """Send a video"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         args["supports_streaming"] = streaming
         if duration is not None:
             args["duration"] = duration
@@ -221,9 +249,11 @@ class ChatMixin:
     @_require_api
     def send_video_note(self, path=None, file_id=None, duration=None,
                         diameter=None, thumb=None, reply_to=None, extra=None,
-                        attach=None, notify=True):
+                        attach=None, notify=True, remove_keyboard=None,
+                        force_reply=None, selective=None):
         """Send a video note"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         if duration is not None:
             args["duration"] = duration
         if diameter is not None:
@@ -245,9 +275,11 @@ class ChatMixin:
     def send_gif(self, path=None, file_id=None, url=None, duration=None,
                  width=None, height=None, caption=None, thumb=None,
                  reply_to=None, extra=None, attach=None,
-                 notify=True, syntax=None):
+                 notify=True, remove_keyboard=None, force_reply=None,
+                 selective=None, syntax=None):
         """Send an animation"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify, 
+                                   remove_keyboard, force_reply, selective)
         if duration is not None:
             args["duration"] = duration
         if caption is not None:
@@ -275,9 +307,11 @@ class ChatMixin:
     @_require_api
     def send_file(self, path=None, file_id=None, url=None, thumb=None,
                   reply_to=None, extra=None, attach=None,
-                  notify=True, caption=None, *, syntax=None):
+                  notify=True, remove_keyboard=None, force_reply=None,
+                  selective=None, caption=None, *, syntax=None):
         """Send a generic file"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         if caption is not None:
             args["caption"] = caption
             if syntax is not None:
@@ -298,10 +332,12 @@ class ChatMixin:
 
     @_require_api
     def send_location(self, latitude, longitude, live_period=None,
-                      reply_to=None, extra=None, attach=None, notify=True):
+                      reply_to=None, extra=None, attach=None, notify=True,
+                      remove_keyboard=None, force_reply=None, selective=None):
         """Send a geographic location, set live_period to a number between 60
         and 86400 if it's a live location"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         args["latitude"] = latitude
         args["longitude"] = longitude
 
@@ -316,9 +352,10 @@ class ChatMixin:
 
     @_require_api
     def send_venue(self, latitude, longitude, title, address, foursquare=None,
-                   reply_to=None, extra=None, attach=None, notify=True):
+                   reply_to=None, extra=None, attach=None, notify=True, remove_keyboard=None, force_reply=None, selective=None):
         """Send a venue"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
         args["latitude"] = latitude
         args["longitude"] = longitude
         args["title"] = title
@@ -330,7 +367,8 @@ class ChatMixin:
 
     @_require_api
     def send_sticker(self, sticker=None, reply_to=None, extra=None,
-                     attach=None, notify=True, *,
+                     attach=None, notify=True, remove_keyboard=None,
+                     force_reply=None, selective=None, *,
                      path=None, file_id=None, url=None):
         """Send a sticker"""
         if sticker is not None:
@@ -342,7 +380,8 @@ class ChatMixin:
                 "The sticker parameter", "1.0", "use the path parameter", -3
             )
 
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify,
+                                   remove_keyboard, force_reply, selective)
 
         files = dict()
         args["sticker"], files["sticker"] = self._get_file_args(path,
@@ -356,9 +395,11 @@ class ChatMixin:
 
     @_require_api
     def send_contact(self, phone, first_name, last_name=None, *, reply_to=None,
-                     extra=None, attach=None, notify=True):
+                     extra=None, attach=None, notify=True, 
+                     remove_keyboard=None, force_reply=None, selective=None):
         """Send a contact"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify, 
+                                   remove_keyboard, force_reply, selective)
         args["phone_number"] = phone
         args["first_name"] = first_name
 
@@ -369,9 +410,11 @@ class ChatMixin:
 
     @_require_api
     def send_poll(self, question, *kargs, reply_to=None, extra=None,
-                  attach=None, notify=True):
+                  attach=None, notify=True, remove_keyboard=None, 
+                  force_reply=None, selective=None):
         """Send a poll"""
-        args = self._get_call_args(reply_to, extra, attach, notify)
+        args = self._get_call_args(reply_to, extra, attach, notify, 
+                                   remove_keyboard, force_reply, selective)
         args["question"] = question
         args["options"] = json.dumps(list(kargs))
 
