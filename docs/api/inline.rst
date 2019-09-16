@@ -19,7 +19,13 @@ for more information about it.
 
    .. py:method:: switch_pm(text, parameter):
 
-      TODO
+      Adds a button with the specified *text* above the inline results
+      redirecting the user to private chat and appending the specified
+      *parameter* to the /start command.
+
+      :param str text: The text to be shown on top of the inline results.
+      :param str parameter: The parameter passed to the /start command when
+      the *text* is clicked.
 
    .. py:method:: article(title, content, [description=None, url=None, hide_url=None, thumb_url=None, hide_url=None, thumb_url=None, thumb_width=None, thumb_height=None, attach=None])
 
