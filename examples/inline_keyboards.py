@@ -18,7 +18,10 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 import botogram
-bot = botogram.create("API-KEY")
+
+token = input("Insert your API token: ")
+
+bot = botogram.create(token)
 
 
 @bot.command("start")

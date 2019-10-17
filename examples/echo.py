@@ -18,7 +18,10 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
 import botogram
-bot = botogram.create("256918030:AAEUIEgYrgBBvTF3iwK4tP6DVJf659dPMlc")
+
+token = input("Insert your API token: ")
+
+bot = botogram.create(token)
 
 
 def disable_command_not_found_message(chat, message):
