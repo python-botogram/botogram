@@ -1,0 +1,105 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.4.x
+===========================
+
+Here you can find all the changes in the botogram 0.4.x releases.
+
+.. _changelog-0.4.1:
+
+botogram 0.4.1
+==============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+Bug fixes
+---------
+
+* Accounts deleted by inactivity incorrectly raised an APIError instead of a ChatUnavailableError
+
+.. _changelog-0.4:
+
+botogram 0.4
+============
+
+*Alpha release, not yet released.*
+
+botogram 0.4 is the fourth alpha release of botogram. It adds support for
+buttons and a few new APIs added in the meantime by Telegram. It also includes
+big performance improvements and a few deprecations to keep the API clean.
+
+New features
+------------
+
+* Added support for :ref:`buttons and callbacks <buttons>`
+
+  * New attribute :py:attr:`botogram.Bot.validate_callback_signatures`
+  * New class :py:class:`botogram.Buttons`
+  * New class :py:class:`botogram.ButtonsRow`
+  * New class :py:class:`botogram.CallbackQuery`
+  * New decorator :py:meth:`botogram.Bot.callback`
+  * New method :py:meth:`botogram.Component.add_callback`
+
+* Added support for receiving messages sent to channels
+
+  * New decorator :py:meth:`botogram.Bot.channel_post`
+  * New decorator :py:meth:`botogram.Bot.channel_post_edited`
+  * New method :py:meth:`botogram.Component.add_channel_post_hook`
+  * New method :py:meth:`botogram.Component.add_channel_post_edited_hook`
+
+* Added ability to disable the link preview in ``/help``.
+
+  * New parameter :py:attr:`botogram.Bot.link_preview_in_help`
+
+* Added ability to reorder commands in ``/help``.
+
+  * New argument ``order`` in :py:meth:`botogram.Bot.command`
+  * New argument ``order`` in :py:meth:`botogram.Component.add_command`
+
+* Added ability to delete messages
+
+  * New method :py:meth:`botogram.User.delete_message`
+  * New method :py:meth:`botogram.Chat.delete_message`
+  * New method :py:meth:`botogram.Message.delete`
+
+* Added the ``attach`` argument to all the send methods.
+
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.User`
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.Chat`
+  * New argument ``attach`` on multiple methods of :py:class:`botogram.Message`
+
+* Added ability to edit message attachments
+
+  * New method :py:meth:`botogram.Message.edit_attach`
+
+* Added new attributes on the :py:class:`~botogram.Message` object:
+
+  * New attribute :py:attr:`botogram.Message.channel_post_author`
+  * New attribute :py:attr:`botogram.Message.forward_from_message_id`
+
+Performance improvements
+------------------------
+
+* botogram now tries to reuse existing connections to Telegram when possible
+
+Bug fixes
+---------
+
+* Fix inability to fetch updates and stop the runner after an internet
+  connection outage.
+* Fix :py:attr:`botogram.Message.forward_from` giving wrong information with
+  signed channel posts (`issue 80`_)
+
+.. _issue 80: https://github.com/python-botogram/botogram/issues/80
+
+
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* The ``extra`` attribute on all the send methods is now deprecated

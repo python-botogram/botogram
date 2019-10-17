@@ -1,0 +1,132 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.6.x
+===========================
+
+Here you can find all the changes in the botogram 0.6.x release.
+
+.. _changelog-0.6:
+
+botogram 0.6
+============
+
+*Alpha release, not yet released.*
+
+Since this version the original author and the main maintener `Pietro Albini <https://github.com/pietroalbini>`_
+left the project to `Matteo Bocci <https://github.com/matteob99>`_ and `Marco Aceti <https://github.com/MarcoBuster>`_.
+
+We decided to move to a new PyPi package: `botogram2 <https://pypi.org/project/botogram2/>`_.
+`botogram <https://pypi.org/project/botogram/>`_ **is now deprecated and no longer maintained**.
+
+To upgrade to the new version, you can issue those commands: ::
+
+    /path/to/python3 -m pip uninstall botogram
+    /path/to/python3 -m pip install botogram2
+
+
+We also moved to a new website `botogram.dev <https://botogram.dev/>`_ with a new, fresh domain.
+
+**Old website** `botogram.pietroalbini.org <https://botogram.pietroalbini.org/>`_ **is now deprecated and no longer maintaned**.
+
+
+New features
+------------
+
+* Added support for text formatting in media captions
+
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_photo`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_audio`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_file`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_video`
+  * New argument ``syntax`` in :py:meth:`botogram.Chat.send_voice`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_photo`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_audio`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_file`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_video`
+  * New argument ``syntax`` in :py:meth:`botogram.User.send_voice`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.reply_with_photo`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.reply_with_audio`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.reply_with_file`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.reply_with_video`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.reply_with_voice`
+  * New argument ``syntax`` in :py:meth:`botogram.Message.edit_caption`
+
+* Added support for more administrator tools
+
+  * New :py:class:`botogram.Permissions` class
+  * New attribute :py:attr:`botogram.Chat.permissions`
+  * New attribute :py:attr:`botogram.Chat.all_members_are_administrators`
+  * New attribute :py:attr:`botogram.Chat.description`
+  * New attribute :py:attr:`botogram.Chat.pinned_message`
+  * New attribute :py:attr:`botogram.Chat.sticker_set_name`
+  * New attribute :py:attr:`botogram.Chat.can_set_sticker_set`
+  * New method :py:meth:`botogram.Chat.kick`
+  * New method :py:meth:`botogram.Chat.permissions`
+  * New method :py:meth:`botogram.Chat.set_description`
+  * New method :py:meth:`botogram.Chat.pin_message`
+  * New method :py:meth:`botogram.Chat.unpin_message`
+
+* New class :py:class:`botogram.User` attributes
+
+  * New attribute :py:attr:`~botogram.User.is_bot`
+  * New attribute :py:attr:`~botogram.User.lang`
+
+* Added support for sending stickers by ID or URL
+
+  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_sticker`
+  * New arguments ``path``, ``file_id`` and ``url`` in :py:meth:`botogram.User.send_sticker`
+
+* Added support for albums
+
+  * New class :py:class:`botogram.Album`
+  * New method :py:meth:`botogram.Chat.send_album`
+  * New method :py:meth:`botogram.User.send_album`
+  * New method :py:meth:`botogram.Message.reply_with_album`
+
+* Added support for pinned messages
+
+  * New method :py:meth:`botogram.Chat.pin_message`
+  * New method :py:meth:`botogram.Chat.unpin_message`
+
+* Added support for video streaming
+
+  * New argument ``streaming`` in :py:meth:`botogram.Chat.send_video`
+  * New argument ``streaming`` in :py:meth:`botogram.User.send_video`
+  * New argument ``streaming`` in :py:meth:`botogram.Message.reply_with_video`
+
+* Added support for invite links:
+
+  * New attribute :py:attr:`botogram.Chat.invite_link`
+  * New method :py:meth:`botogram.Chat.revoke_invite_link`
+
+* Added support for video notes:
+
+  * New class :py:class:`botogram.VideoNote`
+  * New attribute :py:attr:`botogram.Message.video_note`
+  * New method :py:meth:`botogram.Chat.send_video_note`
+  * New method :py:meth:`botogram.User.send_video_note`
+  * New method :py:meth:`botogram.Message.reply_with_video_note`
+
+* New argument ``attach`` in :py:meth:`botogram.Bot.edit_message`
+
+* New argument ``attach`` in :py:meth:`botogram.Bot.edit_caption`
+
+* Renamed attribute :py:attr:`botogram.Message.message_id` to :py:attr:`botogram.Message.id`
+
+
+
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* The attribute :py:attr:`botogram.Message.message_id` is now deprecated
+* The ``sticker`` parameter in :py:meth:`botogram.Chat.send_sticker` and :py:meth:`botogram.User.send_sticker` is now deprecated
+
+
+Bug fixes
+-------------------
+
+* Fixed inline callbacks on Windows (`#114 <https://github.com/python-botogram/botogram/issues/114>`_)

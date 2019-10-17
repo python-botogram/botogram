@@ -1,0 +1,185 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+.. _i18n:
+
+======================
+Working with languages
+======================
+
+Delivering content in a way that users can understand is vital in providing a
+good UX. Since a bot could focus on an audience that speaks a particular
+language, botogram provides an i18n platform that allows you to translate its
+default messages, such as ``/help``'s one, to another language.
+
+.. _i18n-available-translations:
+
+Available translations
+======================
+
+The following languages are currently included in the botogram package:
+
+* ``br`` (Brazilian Portuguese)
+* ``en`` (English)
+* ``it`` (Italian)
+
+.. _i18n-setting-language:
+
+Setting your bot's language
+===========================
+
+Botogram bots currently only support using a single language for their messages.
+This also means that it is not possible at the moment to translate messages on
+a per-user basis.
+
+While bots will use the English translation by default, it is possible to change
+the language in use by changing the bot's :py:attr:`botogram.Bot.lang` property
+to the target language's code. Please note that the selected language must be
+:ref:`supported <i18n-available-translations>` by the botogram version you are
+using.
+
+.. code-block:: python
+
+   bot.lang = "it"
+
+After doing this, the bot will start using the translated messages included in
+the package. If a message hasn't been translated to the selected language, the
+bot will fall back on the English default.
+
+.. _i18n-overriding:
+
+Overriding default messages
+===========================
+
+.. versionadded:: 0.5
+
+As described in :ref:`i18n-new-language`, new and updated translations'
+availability is limited to new botogram releases, meaning that it could take
+some time for them to reach end users.
+
+Packaged translations may also not always fit a specific use case, making it
+necessary for you to edit some of the messages. While you could use a custom
+build of the package with a modified translation, it is also possible to
+programmatically override the translation of single messages through
+:py:attr:`botogram.Bot.override_i18n`, a dictionary that works basically the
+same way as a ``.po`` file, associating ``msgid``'s to ``msgstr``'s:
+
+.. code-block:: python
+
+   bot.override_i18n = {
+        "Use /help to get a list of all the commands.": \
+        "Utilizza /help per ottenere la lista di tutti i comandi."
+    }
+
+We'll go more in depth on the translation format in the next section.
+
+.. _i18n-new-language:
+
+Translating botogram to a new language
+======================================
+
+If your language isn't yet supported by botogram, you can contribute your own
+translation by forking the project's `git repository
+<https://github.com/pietroalbini/botogram>`_ and opening a new pull request.
+See :ref:`install-edge` for instructions on how to clone the repository and
+install the required dependencies. It is recommended that you don't install this
+bleeding edge clone as a global package: in fact, you can completely avoid
+installing it, while building and testing it in a local virtual environment may
+be useful in order to catch errors.
+
+Botogram handles i18n via `GNU gettext`_, which stores translations in
+plain-text ``.po`` files that are then compiled while installing the package.
+You can find the all the translations that are currently included in the package
+in the ``i18n/`` directory.
+
+You can generate a new language file with the following command: ::
+
+   $ invoke i18n-new <code>
+
+where ``code`` is the `ISO 639-1 code`_ assigned the language you are
+translating to. This will create a new language file located at
+``i18n/langs/<code>.po``. The first few line will look like this:
+
+.. code-block:: none
+
+   msgid ""
+   msgstr ""
+   "Project-Id-Version: botogram 1.0.dev0\n"
+   "Report-Msgid-Bugs-To: https://github.com/pietroalbini/botogram/issues\n"
+   "POT-Creation-Date: 2017-10-06 19:21+0200\n"
+   "PO-Revision-Date: 2017-10-11 15:02+0200\n"
+   "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+   "Language: de\n"
+   "Language-Team: de <LL@li.org>\n"
+   "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+   "MIME-Version: 1.0\n"
+   "Content-Type: text/plain; charset=utf-8\n"
+   "Content-Transfer-Encoding: 8bit\n"
+   "Generated-By: Babel 2.3.4\n"
+
+The first thing you should do is to fill out the ``Last-Translator`` field with
+your contact information. You may also want to do the same with the copyright
+notice at the top of the document.
+
+The remainder of the file is were translations are actually defined:
+
+.. code-block:: none
+
+   #: botogram/defaults.py:46
+   msgid "Use /help to get a list of all the commands."
+   msgstr ""
+
+Each message is assigned a ``msgid`` string which identifies it across
+translations: in botogram it is the English translation for that message.
+``msgstr`` fields are instead specific to each translation and define that
+message's translation for the file's language: this is where you need to enter
+your translation. If a ``msgstr`` is empty (as they are by default) botogram
+will default to the English translation.
+
+Some messages could contain HTML formatting or
+`Python string interpolation`_: your translation should reflect these as closely
+as possible. If you need context on the usage of a message, you can refer to its
+usages in the source code included in the comment line above each string.
+
+Just to be sure your syntax is correct, you can ensure your translation will
+compile correctly by invoking ::
+
+   $ invoke i18n-compile
+
+If the command succeeds there's good chance you didn't mess up anything.
+
+Once you're done, you can commit and push your changes to your fork and propose
+them to be merged into the upstream repository to be included in the next
+botogram release.
+
+.. _i18n-update-translation:
+
+Updating a translation
+======================
+
+As botogram evolves, more message will probably be added to the codebase, and it
+is also possible for currently included translations to contain mistakes.
+
+The workflow for updating a translation is basically the same as the one
+described in :ref:`i18n-new-language`, but you may also need to use ::
+
+   $ invoke i18n-extract
+
+to extract new messages from the codebase. The command also ensures references
+in comments are up-to-date with their current location.
+
+Running the command will always result in the ``.pot`` file and ``.po`` files
+being updated, at least for what concerns the ``POT-Creation-Date`` header. You
+should check your diff and avoid committing any change that doesn't impact the
+actual translation and the source code references in comments.
+
+While trivial, it would be nice if you also changed the ``PO-Revision-Date``
+header to reflect your changes.
+
+
+.. _`GNU gettext`: https://www.gnu.org/software/gettext/
+
+.. _`ISO 639-1 code`: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+.. _`Python string interpolation`:
+   https://docs.python.org/2/library/stdtypes.html#string-formatting

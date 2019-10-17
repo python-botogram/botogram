@@ -1,0 +1,55 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.5.x
+===========================
+
+Here you can find all the changes in the botogram 0.5.x releases.
+
+.. _changelog-0.5:
+
+botogram 0.5
+============
+
+*Alpha release, released on February 15th, 2018.*
+
+Release description not yet written.
+
+New features
+------------
+
+* Added Brazilian Portuguese translation
+* Added Portuguese translation
+* Added ability to override default i18n messages
+
+  * New attribute :py:attr:`botogram.Bot.override_i18n`
+
+* Added support for captions in audios, files and voices
+
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_audio`
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_file`
+  * New argument ``caption`` in :py:meth:`botogram.Chat.send_voice`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_audio`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_file`
+  * New argument ``caption`` in :py:meth:`botogram.User.send_voice`
+
+* Added support for sending media by ID or URL
+
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_audio`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_audio`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_voice`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_voice`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_video`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_video`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_file`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_file`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.Chat.send_photo`
+  * New arguments ``file_id`` and ``url`` in :py:meth:`botogram.User.send_photo`
+
+Bug fixes
+---------
+
+* Fixed invalid callbacks sent to chats different than the current one

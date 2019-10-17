@@ -1,0 +1,174 @@
+.. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+   Documentation released under the MIT license (see LICENSE)
+
+===========================
+Changelog of botogram 0.3.x
+===========================
+
+Here you can find all the changes in the botogram 0.3.x releases.
+
+.. _changelog-0.3.4:
+
+botogram 0.3.4
+==============
+
+*Bugfix release, released on August 10th, 2016*
+
+* Fix inability to send messages to supergroups by username, using the
+  deprecated :py:meth:`botogram.Bot.send` method (`issue 74`_)
+
+.. _issue 74: https://github.com/pietroalbini/botogram/issues/74
+
+.. _changelog-0.3.3:
+
+botogram 0.3.3
+==============
+
+*Bugfix release, released on July 6th, 2016*
+
+* Fix unavailable chats not detected when calling :py:meth:`botogram.Bot.chat`
+  (`issue 71`_)
+* Fix broken detection of unavailable chats, due to changes in the Bot API
+  (`issue 72`_)
+* Discontinue the unavailable chat reason **not_contacted** since it's not
+  possible to detect it anymore (`issue 73`_)
+
+.. _issue 71: https://github.com/pietroalbini/botogram/issues/71
+.. _issue 72: https://github.com/pietroalbini/botogram/issues/72
+.. _issue 73: https://github.com/pietroalbini/botogram/issues/73
+
+.. _changelog-0.3.2:
+
+botogram 0.3.2
+==============
+
+*Bugfix release, released on June 24th, 2016.*
+
+* Fix inability to send messages to channels (`issue 69`_)
+
+.. _issue 69: https://github.com/pietroalbini/botogram/issues/69
+
+.. _changelog-0.3.1:
+
+botogram 0.3.1
+==============
+
+*Alpha release, released on June 14th, 2016*
+
+botogram 0.3.1 is the third alpha release of botogram. It reaches almost
+feature parity with the upstream Telegram API (except for keyboards and
+inlines), including the new features in the Bot API 2.0 and 2.1 updates, such
+as moderating group chats or editing messages.
+
+Performance are improved, with a faster updates fetching process, and a bug was
+fixed in this release. There are also a few deprecations to keep the API clean.
+All the deprecated features in this release will be removed in botogram 1.0, so
+you have plenty of time to switch to the new ones.
+
+New features
+------------
+
+* Added the ability to react :ref:`when a chat is not available
+  <unavailable-chats>`.
+
+   * New decorator :py:meth:`botogram.Bot.chat_unavailable`
+   * New method :py:meth:`botogram.Component.add_chat_unavailable_hook`
+
+* Added support for editing messages sent by the bot
+
+   * New method :py:meth:`botogram.Message.edit`
+   * New method :py:meth:`botogram.Message.edit_caption`
+   * New method :py:meth:`botogram.Bot.edit_message`
+   * New method :py:meth:`botogram.Bot.edit_caption`
+
+* Added support for working with parsed text in a message:
+
+   * New attribute :py:attr:`botogram.Message.parsed_text`
+   * New class :py:class:`botogram.ParsedText`
+   * New class :py:class:`botogram.ParsedTextEntity`
+
+* Added a new way to hide commands from the ``/help`` command:
+
+   * New argument ``hidden`` on :py:meth:`botogram.Bot.command`
+   * New argument ``hidden`` on :py:meth:`botogram.Component.add_command`
+
+* Added support for processing edited messages:
+
+   * New decorator :py:meth:`botogram.Bot.message_edited`
+   * New method :py:meth:`botogram.Component.add_message_edited_hook`
+
+* Added support for moderating groups:
+
+   * New method :py:meth:`botogram.Chat.ban`
+   * New method :py:meth:`botogram.Chat.unban`
+
+* Added support for sending contacts:
+
+   * New method :py:meth:`botogram.User.send_contact`
+   * New method :py:meth:`botogram.Chat.send_contact`
+   * New method :py:meth:`botogram.Message.reply_with_contact`
+
+* Added support for venues:
+
+   * New class :py:class:`botogram.Venue`
+   * New attrinute :py:attr:`botogram.Message.venue`
+   * New method :py:meth:`botogram.User.send_venue`
+   * New method :py:meth:`botogram.Chat.send_venue`
+   * New method :py:meth:`botogram.Message.reply_with_venue`
+
+* Added new attribute :py:attr:`botogram.Message.pinned_message`
+* Added new attribute :py:attr:`botogram.Sticker.emoji`
+* Added new attribute :py:attr:`botogram.Chat.admins`
+* Added new attribute :py:attr:`botogram.Chat.creator`
+* Added new attribute :py:attr:`botogram.Chat.members_count`
+* Added new method :py:meth:`botogram.Chat.status_of`
+* Added new method :py:meth:`botogram.Chat.leave`
+* Added new method :py:meth:`botogram.Bot.chat`
+* Every method which sends something to a chat now returns the sent
+  :py:class:`~botogram.Message`
+* Multiple instances of the same bot are now properly handled (as errors)
+* It's now possible to correctly compare API objects
+
+Changes
+-------
+
+* Renamed ``Message.new_chat_participant`` to
+  :py:meth:`botogram.Message.new_chat_member`
+* Renamed ``Message.left_chat_participant`` to
+  :py:meth:`botogram.Message.left_chat_member`
+* :py:attr:`botogram.Message.forward_from` can now be either an instance of
+  :py:class:`~botogram.User` or :py:class:`~botogram.Chat`
+
+Performance improvements
+------------------------
+
+* Updates queueing performance improved
+* Backlog processing is now instantaneous
+
+Bug fixes
+---------
+
+* Fix docstrings not escaped in the ``/help`` command if no syntax was used
+  (`issue 67`_)
+
+   * Now docstrings are escaped if you don't use any HTML syntax in them, but
+     if you use HTML you need to manually escape that specific docstring.
+
+Deprecated features
+-------------------
+
+Deprecated features will be removed in botogram 1.0!
+
+* ``Message.new_chat_participant`` is now deprecated
+* ``Message.left_chat_participant`` is now deprecated
+* ``Bot.hide_commands`` is now deprecated
+* ``Bot.send`` is now deprecated
+* ``Bot.send_photo`` is now deprecated
+* ``Bot.send_audio`` is now deprecated
+* ``Bot.send_voice`` is now deprecated
+* ``Bot.send_video`` is now deprecated
+* ``Bot.send_file`` is now deprecated
+* ``Bot.send_location`` is now deprecated
+* ``Bot.send_sticker`` is now deprecated
+
+.. _issue 67: https://github.com/pietroalbini/botogram/issues/67
