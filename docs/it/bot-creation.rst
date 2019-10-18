@@ -4,57 +4,58 @@
 .. _bot-creation:
 
 =========================
-Create a new Telegram bot
+Creazione di un nuovo bot Telegram
 =========================
 
-Before you start writing any code, you should create your bot on Telegram. This
-reserves your bot an username, and gives you the API key you need to control
-your bot. This chapter explains you how to do so.
+Prima di iniziare a scrivere codice, dovresti creare un bot su Telegram.
+In mesto modo viene riservato un username per il tuo bot, e ti verrà
+restituita l'API key che serve per controllare il tuo bot. Questa pagina
+ti spiegherà come fare. 
 
 .. _bot-creation-naming:
 
-Choose a good username for your bot
+Scelta di un buon username per il tuo bot
 ===================================
 
-The username of your bot is really important: users will use it to tell their
-friends about your bot, and it will appear on telegram.me links. Also, you're
-not allowed to change username without recreating your bot, and so without
-losing users.
+L'username del tuo bot è molto importante: gli utenti lo useranno per parlare
+ai loro amici del tuo bot ed apparirà nei link telegram.me. Inoltre, non puoi
+cambiare username senza eliminare il tuo bot, e quindi senza perdere utenti.
 
-Bot usernames must adhere to the following rules:
+Gli username dei bot devono avere queste caratteristiche:
 
-* The username must be long at least five characters
-* The username can only contain letters, digits and underscores
-* The username must end with ``bot``
+* L'username deve essere lungo almeno cinque caratteri
+* L'username può contenere solo lettere, numeri e trattini bassi
+* L' username deve finire con ``bot``
 
-For example, all the following usernames are valid: ``my_awesome_bot``,
+Per esempio, tutti gli username seguenti sono validi: ``il_mio_bot``,
 ``SpamBot``, ``test123bot``.
 
 .. _bot-creation-botfather:
 
-Create the bot with @botfather
+Creazione del bot con @botfather
 ==============================
 
-Currently, you can only create a new bot... with another bot. With your
-Telegram client open, contact `@botfather`_, start it and execute the
-``/newbot`` command. It will ask you some questions about your bot.
+Al momento, puoi solo creare un bot... con un altro bot. Con il tuo client
+Telegram apero, contatta `@botfather`_, avvialo ed esegui il comando ``/newbot``.
+Ti verranno fatte alcune domande sul tuo bot.
 
-Then it will give you an unique API key, which you can use to communicate with
-your bot. **Be sure to keep this key secret!** Everyone with your API key can
-take full control of your bot, and that's not a fun thing.
+Successivamente ti verrà fornita un API key univoca, che puoi utilizzare per
+comunicare con il tuo bot. **Assicurati di tenerla segreta!** Tutti coloro
+con la tua API key possono prendere il pieno controllo del tuo bot, e non è
+una cosa divertente.
 
 .. _bot-creation-customization:
 
-Customize your bot
+Personalizzazione del tuo bot
 ==================
 
-Other than allowing you to create it, `@botfather`_ also permits you to
-customize your bot. For example, you can use it to change your bot's avatar,
-its name, or its description. In order to see what you can do, just use the
-``/help`` command on @botfather. Then execute the command for the thing you
-want to customize.
+Oltre a consentirti di crearlo, `@botfather`_ ti permette anche di
+personalizzare il tuo bot. Per esempio, puoi cambiare la foto profilo
+del tuo bot, il suo nome o la sua descrizione. Per vedere cosa puoi fare,
+uilizza il comando ``/help`` su @botfather. Poi esegui il comando relativo
+a cosa vuoi personalizzare.
 
-If you want to use your bot just to manage a channel, you probably don't need
-to do this.
+Se vuoi usare il tuo bot per gestire un canale, probabilmente non hai bisogno
+di farlo.
 
 .. _@botfather: https://telegram.me/botfather
