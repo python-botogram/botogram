@@ -58,7 +58,7 @@ def expected_result_inline(old_offset=0):
     return {'inline_query_id': '123',
                        'cache_time': 0,
                        'is_personal': True,
-                       'results': json.dumps(r),
+                       'results': r,
                        'next_offset': old_offset+10}
 
 

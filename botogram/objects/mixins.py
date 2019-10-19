@@ -371,7 +371,7 @@ class MessageMixin:
 
     def _get_call_args(self, attach):
         if self.is_inline:
-            args = {"inline_message_id": self.inline_message_id}
+            args = {"inline_message_id": self.id}
         else:
             args = {"message_id": self.id, "chat_id": self.chat.id}
         if attach is not None:
