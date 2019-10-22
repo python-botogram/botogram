@@ -391,14 +391,14 @@ class Permissions:
         if chat.type not in ("group", "supergroup"):
             raise RuntimeError("This chat is not a group or a supergroup!")
         # Accept also an instance of `User`
-        self._chatid = chat.id
+        self._chat_id = chat.id
         self._api = chat._api
         if isinstance(user, User):
             self._user = user.id
         else:
             self._user = user
         infouser = self._api.call("getChatMember", {
-            "chat_id": self._chatid,
+            "chat_id": self._chat_id,
             "user_id": self._user},
                                   expect=ChatMember)
 
@@ -441,8 +441,8 @@ class Permissions:
 
     def save(self):
         arguments = {
-            "chat_id": self.chatid,
-            "user_id": self.user
+            "chat_id": self._chat_id,
+            "user_id": self._user,
         }
         modify = False
 
