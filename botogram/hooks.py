@@ -275,7 +275,7 @@ class InlineHook(Hook):
         bot._inline_paginate[sender.id][query] = [
             generator,
             0,  # First offset
-            None,  # Last update time
+            time(),  # Last update time
         ]
 
     def _call(self, bot, update):
