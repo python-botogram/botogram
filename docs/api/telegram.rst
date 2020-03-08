@@ -1672,7 +1672,7 @@ about its business.
    This class represents messages received by and sent from your bot. Messages
    serve as a container for many of the core API objects described here.
 
-   .. py:attribute:: id
+   .. py:attribute:: message_id
 
       The integer ID of the message.
 
