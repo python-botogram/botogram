@@ -2781,7 +2781,9 @@ about its business.
       vast majority of API objects.
 
       *This attribute can be None if it's not provided by Telegram.*
+      .. versionchanged:: 0.7
 
+         Can be None.
 
 .. py:class:: botogram.UserProfilePhotos
 

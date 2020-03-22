@@ -291,6 +291,23 @@ components.
 
          Added the ``hidden`` argument.
 
+   .. py:decoratormethod:: inline([cache=300,private=False, paginate=10])
+
+      Functions decorated with this decorator will receive all the inline queries.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **inline**: the received :py:class:`~botogram.InlineQuery`
+
+      * **sender**: the :py:class:`~botogram.User`
+
+      * **query**:  the Text of the query
+
+      :param int cache: the cache of the result on telegram
+      :param bool private: If the match the result is cached
+      :param int paginate: Number of results per page
+
    .. py:decoratormethod:: callback(name)
 
       This decorator adds an handler for the callback with the provided name.

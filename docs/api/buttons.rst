@@ -138,12 +138,20 @@ information about them.
       An unique string identifying the chat where the message with the button
       that called the callback is.
 
+   .. py:attribute:: is_inline
+
+      This parameter is true if callback is inline and false if its not inline
+
+      .. versionadded:: 0.7
+
    .. py:attribute:: inline_message_id
 
       An unique string identifying the inline message with the button that
       originated the callback.
 
       *This attribute can be None if it's not provided by Telegram.*
+
+      .. versionadded:: 0.7
 
    .. py:attribute:: game_short_name
 

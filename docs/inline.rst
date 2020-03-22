@@ -1,5 +1,5 @@
 .. Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
-Documentation released under the MIT license (see LICENSE)
+   Documentation released under the MIT license (see LICENSE)
 
 .. _inline:
 
@@ -7,26 +7,57 @@ Documentation released under the MIT license (see LICENSE)
 Inline mode
 ===========
 
-Inline bots make it possible to use bot services in any chat without adding those bots as members – you just  any message with their username and everything that comes after becomes a query for the bot.
+Inline bots allow using bot services in any chat without adding them as members – you just type the bot username followed by your message and everything that comes after becomes an inline query.
+To enable the inline mode on your bots and receive updates you need to talk to `BotFather <https://t.me/BotFather>`_.
 
-To enable the Inline Mode on your bot you need to go to `BotFather <https://t.me/BotFather>`_ and write ``/mybots`` in the chat with him, then select your bot of choice, click ``Bot settings``, click on the button that says ``inline_mode``, then click ``turn_on``. Perfect, now you have ``inline_mode`` enabled on your bot ;-).
 
-.. _BotFather https://t.me/BotFather
 
-Create your first reply inline
-------------------------------
-Let's create a simple bot and create a hook
+Create your first inline article
+--------------------------------
+For receving inline updates, you can add your hook under :py:meth:`botogram.Bot.inline`.
+The following example is a simple inline hook:
 
 .. code-block:: python
 
   @bot.inline
   def inline_processor(inline):
-      yield inline.article("Hello World",botogram.InlineInputMessage("Hello World message"))
+      yield inline.article(
+          "Hello World",
+          content=botogram.InlineInputMessage("My first inline response with botogram")
+      )
 
-Inline Processor needs to process all the articles of the inline. In this small example you can see an Hello World message that is send when the Hello World article is clicked. :py:meth:`~botogram.inline.InlineQuery.article`
+When the bot receives an inline update, it will render one inline :py:meth:`~botogram.InlineQuery.article` with the specified *title* and *content*.
+The *content* is what is sent when the user clicks on the result.
 
-How paginate works and what is it for
--------------------------------------
+Handle query strings
+--------------------
+
+Everything the user writes after the bot username is called *query* or *query string*. It can also be an empty string.
+Let's see how we can handle it:
+
+.. code-block:: python
+
+  @bot.inline
+  def inline_processor(inline, query):
+      if query is "hello":
+          yield inline.article(
+              "Hello friend",
+              content=botogram.InlineInputMessage("I wrote \"hello\"!")
+          )
+      else:
+          yield inline.article(
+              "Write \"hello\"",
+              content=botogram.InlineInputMessage(f"I didn't write \"hello\", but I wrote {inline.query}")
+          )
+
+
+You can either use the ``query`` parameter in the hook or the :py:attr:`~botogram.InlineQuery.query` attribute.
+
+Pagination
+----------
+
+When rendering large amounts of results, you may wish to paginate them so you can control how many results are rendered at a time.
+A higher value means more load on your server for request but a lower value can be tedious for the user to scroll through (and even cause bugs). We suggest never going under 5 results for page .
 
 .. code-block:: python
 
@@ -35,26 +66,33 @@ How paginate works and what is it for
       for i in range(100):
          if i == 20:
              inline.paginate = 20
-         yield inline.article("Hello World "+ str(i),botogram.InlineInputMessage("Hello World message "+str(i)))
+         yield inline.article(
+             f"Result #{i}",
+             content=botogram.InlineInputMessage("Hello World message " + str(i))
+         )
 
-In this example you can see an evolution of the precedent code. The ``paginate`` parameter needs to decide how many messages to send to Telegram (**ATTENTION: it is not recommended to use paginate under 5**). This is required not to overload the system of unnecessary request. The system of ``paginate`` is managed by Botogram Core and can be edited locally with "``inline.paginate = int``" and globally with ``@bot.inline(paginate=int)``.
+In the example above you can see that we added a :py:attr:`~botogram.InlineQuery.query.paginate` parameter to the :py:attr:`~botogram.InlineQuery.query` decorator;
+this indicates the inital (global) value of pagination. 
+We can change it later (in our case after 20 iterations) by assigning an int value to :py:attr:`~botogram.InlineQuery.paginate`, botogram will handle the new value smoothly.
 
-Work with queries
----------------
 
-Now you will see how to work with queries
+Setting private to true the query will be cached for all the users.
+Also if private=true the query is cached for **all users**
+#TODO consigli come usare sta cosa qua
 
 .. code-block:: python
 
-  @bot.inline
-  def inline_processor(inline,query):
-    if query is "hello":
-      yield inline.article("Hello World",botogram.InlineInputMessage("Hello World message"))
-    else:
-      yield inline.article("Write hello",botogram.InlineInputMessage("Write hello in inline mode"))
+  @bot.inline(private=True)
+  def inline_private(sender, query, inline):
+      yield inline.article("Hello World",
+                              botogram.InlineInputMessage("Hello world message"))
+      inline.private = False
+      yield inline.article("Hello World don't cache",
+                          botogram.InlineInputMessage(
+                            "Hello world message don't cache"))
 
-In this example you can see what ``Inline Query`` is and how it works. To use ``query`` you can use two methods, the first is to ask a query argument ``inline_processor``, the second method is to use ``"query = inline.query"``.
-The ``query`` is the text written after the bot username.
+In this example the firts article is cached by telegram, while the other article is not.
+
 
 Work with buttons
 -----------------
@@ -66,37 +104,39 @@ Work with buttons
     btns = botogram.buttons()
     btns[0].url("botogram docs", "https://botogram.dev/")
     btns[0].callback("text of message", "button")
-    yield inline.article("Hello World",botogram.InlineInputMessage("Hello World message"),attach=btns)
+    yield inline.article("Hello World",content=botogram.InlineInputMessage("Hello World message"),attach=btns)
 
     message.is_inline
   @bot.callback("button")
   def button_callback(message):
       message.edit("edit message")
 
-In this example you can see how buttons works with ``Inline Mode``, plus some differences compared to non-inline buttons. Some differences are: ``message.date`` returns ``None``, ``message.chat`` returns ``None``, now it exists a new parameter, ``message.is_inline`` (Returns True if it is from an inline message, else it returns False), ``message.id`` returns the id of the inline message (**the reply function does not work with the inline mode**)
+In this example you can see how buttons works with ``Inline Mode``, plus some differences compared to non-inline buttons.
+
+Some differences are: ``message.date`` returns ``None``, ``message.chat`` returns ``None``, now it exists a new parameter, ``message.is_inline`` (Returns True if it is from an inline message, else it returns False), ``message.id`` returns the id of the inline message (**the reply function does not work with the inline mode**)
 
 In this example code you can see how the buttons in the ``Inline Mode`` works. You can see that it changes a little from non-inline buttons, the only difference is that the chat parameter in callback is none.
 
-How buttons.switch_inline_query() works
+How :py:meth:`~botogram.ButtonsRow.switch_inline_query` works
 ------------------------------------------
 
 .. code-block:: python
 
-    @bot.inline
+  @bot.inline
   def inline_processor(inline):
     btns = botogram.buttons()
     btns[0].url("botogram docs", "https://botogram.dev/")
-    yield inline.article("Hello World",botogram.InlineInputMessage("Hello World message"),attach=btns)
+    yield inline.article("Hello World",content=botogram.InlineInputMessage("Hello World message"),attach=btns)
 
 
   @bot.command("start")
   def button_callback(chat):
       btns = botogram.buttons()
-      btns[0].switch_inline_query("test me", current_chat=True)
-      chat.send("click the button qui sotto", attach=btns)
+      btns[0].switch_inline_query("test me" 
+      current_chat=True)
+      chat.send("Click the button below", attach=btns)
 
-In questo esempio vedremo il funzionamento
+In this example we will see how the ``switch_inline_query`` button works. This type of button switches the mode of the user who clicks it to inline mode. For more details click :py:meth:`~botogram.ButtonsRow.switch_inline_query`
 
-In this example we will see how [coso] funziona
 
 .. versionadded:: 0.7
