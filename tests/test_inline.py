@@ -26,6 +26,10 @@ from botogram.runner.jobs import _inline_assign_worker
 
 
 def call_overwrite(*args):
+    for arg in args:
+        if type(arg) is dict:
+            if "results" in arg:
+                arg["results"] = json.loads(arg["results"])
     return args
 
 
