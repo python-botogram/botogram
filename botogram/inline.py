@@ -22,7 +22,7 @@ from . import syntaxes
 
 
 def process(bot, chains, update):
-    """Process a message sent to the bot"""
+    """Process an inline update"""
     for hook in chains["inline"]:
         bot.logger.debug("Processing update #%s with the hook %s..." %
                          (update.update_id, hook.name))
@@ -33,6 +33,21 @@ def process(bot, chains, update):
                              % (update.update_id, hook.name))
             return
 
+    bot.logger.debug("No hook actually processed the #%s update." %
+                     update.update_id)
+
+
+def inline_result_process(bot, chains, update):
+    """process a chosen inline update"""
+    for hook in chains["inline_feedback"]:
+        bot.logger.debug("Processing update #%s with the hook %s..." %
+                         (update.update_id, hook.name))
+
+        result = hook.call(bot, update)
+        if result is {'ok': True}:
+            bot.logger.debug("Update #%s was just processed by the %s hook."
+                             % (update.update_id, hook.name))
+            return
     bot.logger.debug("No hook actually processed the #%s update." %
                      update.update_id)
 

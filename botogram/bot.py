@@ -97,6 +97,8 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post_edited)
         self.register_update_processor("callback_query", callbacks.process)
         self.register_update_processor('inline_query', inline.process)
+        self.register_update_processor("chosen_inline_result",
+                                       inline.inline_result_process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -208,6 +210,12 @@ class Bot(frozenbot.FrozenBot):
             self._main_component.add_inline(cache, private,
                                             paginate, func)
             return func
+        return __
+
+    def inline_feedback(self):
+        """Add an inline feedback hook"""
+        def __(func):
+            self._main_component.add_inline_feedback(func)
         return __
 
     def timer(self, interval):

@@ -46,3 +46,19 @@ class InlineQuery(BaseObject, mixins.InlineMixin):
         """Helper to set the switch_pm_text and switch_pm_parameter"""
         self._switch_pm_text = text
         self._switch_pm_parameter = parameter
+
+
+class ChosenInlineResult(BaseObject):
+    required = {
+        "result_id": str,
+        "from": User,
+        "query": str
+    }
+    optional = {
+        "location": Location,
+        "inline_message_id": str,
+    }
+    replace_keys = {
+        "from": "sender",
+        "inline_message_id": "id"
+    }

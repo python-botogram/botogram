@@ -22,7 +22,7 @@ from .base import BaseObject, multiple
 
 from .callbacks import CallbackQuery
 from .messages import Message
-from .inline import InlineQuery
+from .inline import InlineQuery, ChosenInlineResult
 
 
 class Update(BaseObject):
@@ -42,7 +42,8 @@ class Update(BaseObject):
         "channel_post": Message,
         "edited_channel_post": Message,
         "callback_query": CallbackQuery,
-        "inline_query": InlineQuery
+        "inline_query": InlineQuery,
+        "chosen_inline_result": ChosenInlineResult,
     }
     _check_equality_ = "update_id"
 

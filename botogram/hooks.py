@@ -329,6 +329,13 @@ class InlineHook(Hook):
         return bot.api.call("answerInlineQuery", args)
 
 
+class ChosenInlineHook(Hook):
+    """Underlying hook for @bot.inline_feedback"""
+
+    def _call(self, bot, update):
+        bot._call(self.func, feedback=update.chosen_inline_result)
+
+
 class ChatUnavailableHook(Hook):
     """Underlying hook for @bot.chat_unavailable"""
 
