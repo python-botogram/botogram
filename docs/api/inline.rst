@@ -17,7 +17,7 @@ for more information about it.
    This class allows you to build inline responses that are used
    to answers to inline queries.
 
-   .. py:method:: switch_pm(text, parameter):
+   .. py:method:: switch_pm(text, parameter)
 
       Adds a button with the specified *text* above the inline results
       redirecting the user to private chat and appending the specified
