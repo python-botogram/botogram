@@ -82,6 +82,7 @@ The **cache** parameter indicates the maximum amount of time in seconds that the
 may be cached on Telegram servers (defaults to 300). You can change the parameter at any time.
 
 .. code-block:: python
+
   @bot.inline(cache=500)
   def inline_caching(sender, query, inline):
       yield inline.article(...)
