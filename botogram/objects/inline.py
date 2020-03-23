@@ -48,7 +48,7 @@ class InlineQuery(BaseObject, mixins.InlineMixin):
         self._switch_pm_parameter = parameter
 
 
-class ChosenInlineResult(BaseObject):
+class InlineFeedback(BaseObject):
     required = {
         "result_id": str,
         "from": User,
