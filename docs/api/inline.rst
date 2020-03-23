@@ -96,6 +96,31 @@ for more information about it.
       :param str syntax: The name of the syntax used for the caption.
       :param object attach: An extra thing to attach to the message.
 
+   .. py:method:: voice([file_id=None, url=None, title=None,  performer=None, duration=None, content=None, caption=None, syntax=None, attach=None])
+
+      Renders an inline voice result. By default, the voice will be sent by
+      the user with the an optional caption. Alternatively, you can fill
+      the *content* parameter to send a message with the specified content
+      instead of the voice.
+
+      You can specify the audio by passing its *file_id* or its *url*.
+      You may optionally specify the *duration*, the *performer*
+      and the *title* of the audio track.
+
+      The *attach* parameter allows you to attach extra things like
+      :ref:`buttons <buttons>` to the message.
+
+      :param str file_id: The Telegram *file_id* of the audio.
+      :param str url: The URL of the audio.
+      :param str title: The title of the audio track.
+      :param str performer: The name of the performer.
+      :param int duration: The track duration, in seconds.
+      :param object content: The content of the message to be sent *(instead of the audio)*.
+      :param str caption: The caption of the audio track to be sent, 0-1024 characters
+      :param str syntax: The name of the syntax used for the caption.
+      :param object attach: An extra thing to attach to the message.
+
+
    .. py:method:: video([file_id=None, url=None, title=None, content=None, thumb_url=None, description=None, mime_type=None, width=None, height=None, duration=None, caption=None, syntax=None, attach=None])
 
       Renders an inline video result. By default, the video will be sent by
