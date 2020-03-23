@@ -139,7 +139,7 @@ How :py:meth:`~botogram.ButtonsRow.switch_inline_query` works
 In the following example we will see how the ``switch_inline_query`` button works.
 This type of button switches the mode of the user who clicks it to inline mode.
 
-For more details see :py:meth:`~botogram.ButtonsRow.switch_inline_query`
+For more details see :py:meth:`~botogram.ButtonsRow.switch_inline_query`.
 
 .. code-block:: python
 
@@ -156,6 +156,22 @@ For more details see :py:meth:`~botogram.ButtonsRow.switch_inline_query`
       btns[0].switch_inline_query("Try the bot in inline mode!", current_chat=True)
       chat.send("Click the button below", attach=btns)
 
+
+Inline feedbacks
+----------------
+
+If you have many users, maybe you want to acquire statistics or do something about which elements are chosen by the user
+in the inline results page.
+You can specify how many (in percentage) inline feedbacks do you want to get via BotFather with the ``/setinlinefeedback`` command;
+you'll then receive an update when the user *clicks* on a inline result.
+
+For more details see :py:class:`~botogram.InlineFeedback`.
+
+.. code-block:: python
+
+  @bot.inline_feedback
+  def inline_feedback(feedback):
+      print(f"User {feedback.sender.id} has clicked result_id #{feedback.result_id} with query {feedback.query}!")
 
 
 .. versionadded:: 0.7
