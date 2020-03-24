@@ -238,12 +238,8 @@ class CallbackHook(Hook):
                 return
 
             if q.is_inline:
-
                 args = {
-                    "message_id": 100,
-                    "date": 100,
-                    "chat": {"id": 000000000, "type": "faketype"},
-                    "inline_message_id": q.inline_message_id
+                    "inline_message_id": q.inline_message_id,
                 }
                 message = Message(data=args, api=q._api)
                 chat = q.chat_instance

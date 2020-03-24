@@ -324,12 +324,12 @@ class Message(BaseObject, mixins.MessageMixin):
     def from_(self):
         return self.sender
 
-    required = {
+    required = {}
+    optional = {
         "message_id": int,
+        "inline_message_id": str,
         "date": int,
         "chat": Chat,
-    }
-    optional = {
         "from": User,
         "entities": ParsedText,
         "forward_from": User,
@@ -380,10 +380,7 @@ class Message(BaseObject, mixins.MessageMixin):
 
     def __init__(self, data, api=None):
         super().__init__(data, api)
-        if self.chat.id == 000000000:
-            self.id = data["inline_message_id"]
-            self.date = None
-            self.chat = None
+        if self.chat is None:
             self.is_inline = True
         else:
             self.is_inline = False

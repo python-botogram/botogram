@@ -1678,6 +1678,8 @@ about its business.
 
       The integer ID of the message.
 
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: sender
 
       The sending :py:class:`~botogram.User` of the message. Note the trailing
@@ -1700,9 +1702,23 @@ about its business.
 
       The integer date of when the message was sent, in Unix time.
 
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: chat
 
       The :py:class:`~botogram.Chat` to which the message belongs.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: is_inline
+
+      This attribute is ``True`` if the message is sent via inline mode.
+
+   .. py:attribute:: inline_message_id
+
+      The string unique ID of the message, if sent via inline mode.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: forward_from
 

@@ -162,8 +162,10 @@ class Component:
             raise ValueError("An inline must be callable")
 
         hook = hooks.InlineHook(func, self, {
-            "cache": cache, "private": private,
-            "paginate": paginate})
+            "cache": cache,
+            "private": private,
+            "paginate": paginate,
+        })
         self.__inline.append(hook)
 
     def add_inline_feedback(self, func):

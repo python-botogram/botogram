@@ -418,14 +418,14 @@ class MessageMixin:
 
     def _get_call_args(self, attach):
         if self.is_inline:
-            args = {"inline_message_id": self.id}
+            args = {"inline_message_id": self.inline_message_id}
         else:
             args = {"message_id": self.id, "chat_id": self.chat.id}
         if attach is not None:
             if not hasattr(attach, "_serialize_attachment"):
                 raise ValueError("%s is not an attachment" % attach)
             if self.is_inline:
-                chat = "000000000"
+                chat = None
             else:
                 chat = self.chat
             args["reply_markup"] = json.dumps(attach._serialize_attachment(

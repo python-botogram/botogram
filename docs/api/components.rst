@@ -325,6 +325,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       * **message**: the :py:class:`~botogram.Message` related to the callback
         query
       * **data**: the custom information provided by you along with the call
+      * **is_inline**: whatever the query is from a message sent via inline mode or not
 
       .. code-block:: python
 
