@@ -73,7 +73,7 @@ New features
 
 * Added support for vcards in contacts
   * New argument ``vcard`` in :py:meth:`botogram.Chat.send_contact`
-  * New argument ``vcard`` in :py:meth:`botogram.Uhat.send_contact`
+  * New argument ``vcard`` in :py:meth:`botogram.User.send_contact`
   * New argument ``vcard`` in :py:meth:`botogram.Message.reply_with_contact`
   * New attribute :py:attr:`Contact.vcard`
 
