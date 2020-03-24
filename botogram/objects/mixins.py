@@ -355,7 +355,8 @@ class ChatMixin:
                               expect=_objects().Message)
 
     @_require_api
-    def send_contact(self, phone, first_name, last_name=None, vcard=None, *, reply_to=None,
+    def send_contact(self, phone, first_name, last_name=None,
+                     vcard=None, *, reply_to=None,
                      extra=None, attach=None, notify=True):
         """Send a contact"""
         args = self._get_call_args(reply_to, extra, attach, notify)
