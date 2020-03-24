@@ -71,6 +71,9 @@ New features
   * New method :py:meth:`Chat.remove_photo`
   * New attribute :py:attr:`Chat.photo`
 
+* Added support for vcards in contacts vcards
+  * New argument ``vcard`` in :py:meth:`botogram.chat.send_contact`
+
 Bug fixes
 ---------
 

@@ -557,7 +557,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the user. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -577,6 +577,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1438,7 +1439,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the chat. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -2425,7 +2426,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, vcard=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a contact. A Telegram contact is made of its
       phone number (with the international prefix), its first name and
