@@ -2982,6 +2982,11 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: vcard
+
+      The vcard of the contact.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
 .. py:class:: botogram.Location
 

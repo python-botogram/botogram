@@ -73,6 +73,7 @@ New features
 
 * Added support for vcards in contacts vcards
   * New argument ``vcard`` in :py:meth:`botogram.chat.send_contact`
+  * New attribute :py:attr:`Contact.vcard`
 
 Bug fixes
 ---------
