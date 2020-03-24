@@ -99,7 +99,7 @@ class Bot(frozenbot.FrozenBot):
         self.register_update_processor("callback_query", callbacks.process)
         self.register_update_processor('inline_query', inline.process)
         self.register_update_processor("chosen_inline_result",
-                                       inline.inline_result_process)
+                                       inline.inline_feedback_process)
 
         self._bot_id = str(uuid.uuid4())
 

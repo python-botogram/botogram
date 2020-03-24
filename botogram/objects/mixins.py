@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2020 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ import json
 from .. import syntaxes
 from .. import utils
 from ..utils.deprecations import _deprecated_message
+from ..exceptions import InlineMessageUnsupportedActionException
 from .base import multiple
 
 _objects_module = None
@@ -545,41 +546,53 @@ class MessageMixin:
     def reply(self, *args, **kwargs):
         """Reply to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_photo(self, *args, **kwargs):
         """Reply with a photo to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_photo(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_audio(self, *args, **kwargs):
         """Reply with an audio track to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_audio(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_voice(self, *args, **kwargs):
         """Reply with a voice message to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_voice(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_video(self, *args, **kwargs):
         """Reply with a video to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_video(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_video_note(self, *args, **kwargs):
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         """Reply with a video note to the current message"""
         return self.chat.send_video_note(*args, reply_to=self, **kwargs)
 
@@ -591,42 +604,54 @@ class MessageMixin:
     def reply_with_file(self, *args, **kwargs):
         """Reply with a generic file to the current chat"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_file(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_location(self, *args, **kwargs):
         """Reply with a geographic location to the current chat"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_location(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_venue(self, *args, **kwargs):
         """Reply with a venue to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_venue(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_sticker(self, *args, **kwargs):
         """Reply with a sticker to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_sticker(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_contact(self, *args, **kwargs):
         """Reply with a contact to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_contact(*args, reply_to=self, **kwargs)
 
     @_require_api
     def reply_with_album(self, *args, **kwargs):
         """Reply with an album to the current message"""
         if self.is_inline:
-            raise AttributeError("inline error reply")
+            raise InlineMessageUnsupportedActionException(
+                "You can't use reply_to with a message sent via inline mode"
+            )
         return self.chat.send_album(*args, reply_to=self, **kwargs)
 
     @_require_api

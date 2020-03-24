@@ -18,47 +18,6 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-from .base import BaseObject
-from .messages import User, Location
-from . import mixins
 
-
-class InlineQuery(BaseObject, mixins.InlineMixin):
-    required = {
-        "id": str,
-        "from": User,
-        "query": str,
-    }
-    optional = {
-        "location": Location,
-        "offset": str,
-    }
-    replace_keys = {
-        "from": "sender"
-    }
-
-    def __init__(self, data):
-        super().__init__(data)
-        self._switch_pm_text = None
-        self._switch_pm_parameter = None
-
-    def switch_pm(self, text, parameter):
-        """Helper to set the switch_pm_text and switch_pm_parameter"""
-        self._switch_pm_text = text
-        self._switch_pm_parameter = parameter
-
-
-class InlineFeedback(BaseObject):
-    required = {
-        "result_id": str,
-        "from": User,
-        "query": str
-    }
-    optional = {
-        "location": Location,
-        "inline_message_id": str,
-    }
-    replace_keys = {
-        "from": "sender",
-        "inline_message_id": "id"
-    }
+class InlineMessageUnsupportedActionException(Exception):
+    pass

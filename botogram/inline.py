@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2020 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,8 @@ def process(bot, chains, update):
                      update.update_id)
 
 
-def inline_result_process(bot, chains, update):
-    """process a chosen inline update"""
+def inline_feedback_process(bot, chains, update):
+    """Process a chosen inline result update"""
     for hook in chains["inline_feedback"]:
         bot.logger.debug("Processing update #%s with the hook %s..." %
                          (update.update_id, hook.name))
