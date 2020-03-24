@@ -94,7 +94,7 @@ Bug fixes
 * Fix :py:attr:`botogram.Message.forward_from` giving wrong information with
   signed channel posts (`issue 80`_)
 
-.. _issue 80: https://github.com/pietroalbini/botogram/issues/80
+.. _issue 80: https://github.com/python-botogram/botogram/issues/80
 
 
 Deprecated features

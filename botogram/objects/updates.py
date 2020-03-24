@@ -22,6 +22,7 @@ from .base import BaseObject, multiple
 
 from .callbacks import CallbackQuery
 from .messages import Message
+from .polls import Poll
 from .inline import InlineQuery, InlineFeedback
 
 
@@ -42,6 +43,7 @@ class Update(BaseObject):
         "channel_post": Message,
         "edited_channel_post": Message,
         "callback_query": CallbackQuery,
+        "poll": Poll,
         "inline_query": InlineQuery,
         "chosen_inline_result": InlineFeedback,
     }
