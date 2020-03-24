@@ -1456,6 +1456,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -2443,6 +2444,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
