@@ -123,13 +123,13 @@ In the following example you can see how buttons works with inline mode, plus so
       yield inline.article("Hello World", content=botogram.InlineInputMessage("Hello World message"), attach=btns)
 
 
-    @bot.callback("button")
-    def button_callback(message):
-       if message.is_inline:
-           message.edit("This is a message sent via the inline mode.")
-           print(message.is_inline, 'is True!')
-           print(message.date, '  is None')
-           print(message.id, ' you can\' use message.reply with this')
+  @bot.callback("button")
+  def button_callback(message):
+  if message.is_inline:
+      message.edit("This is a message sent via the inline mode.")
+      print(message.is_inline, 'is True!')
+      print(message.date, '  is None')
+      print(message.id, ' you can\' use message.reply with this')
 
 
 
