@@ -48,13 +48,12 @@ class CallbackQuery(BaseObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.message is not None:
-            self.is_inline = False
-        elif self.inline_message_id is not None:
+        if self.inline_message_id is not None:
             self.is_inline = True
+            data = {'inline_message_id': self.inline_message_id}
+            self.message = Message(data)
         else:
-            raise ValueError
-            # TODO
+            self.is_inline = False
 
         self._answered = False
 
