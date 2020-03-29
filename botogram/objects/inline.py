@@ -60,5 +60,4 @@ class InlineFeedback(BaseObject):
     }
     replace_keys = {
         "from": "sender",
-        "inline_message_id": "id"
     }

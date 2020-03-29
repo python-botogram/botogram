@@ -64,12 +64,12 @@ We suggest never going under 5 results for page.
   @bot.inline(paginate=10)
   def inline_processor(inline):
       for i in range(100):
-         if i == 20:
-             inline.paginate = 20
-         yield inline.article(
-             f"Result #{i}",
-             content=botogram.InlineInputMessage("Hello World message " + str(i))
-         )
+          if i == 20:
+              inline.paginate = 20
+          yield inline.article(
+              f"Result #{i}",
+              content=botogram.InlineInputMessage("Hello World message " + str(i))
+          )
 
 In the example above you can see that we added a :py:attr:`~botogram.InlineQuery.query.paginate` parameter to the :py:attr:`~botogram.InlineQuery.query` decorator;
 this indicates the inital (global) value of pagination. 
@@ -125,11 +125,14 @@ In the following example you can see how buttons works with inline mode, plus so
 
   @bot.callback("button")
   def button_callback(message):
-  if message.is_inline:
-      message.edit("This is a message sent via the inline mode.")
-      print(message.is_inline, 'is True!')
-      print(message.date, '  is None')
-      print(message.id, ' you can\' use message.reply with this')
+      if message.is_inline:
+          message.edit("This is a message sent via the inline mode.")
+          print(message.is_inline)  # True
+          print(message.date)  # None
+          print(message.chat)  # None
+          print(message.id)  # None
+          print(message.inline_message_id)  # Some random unique string
+          message.reply("I can't do this!")  # This throws an exception
 
 
 

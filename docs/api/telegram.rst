@@ -34,6 +34,7 @@ about its business.
 * :py:class:`~botogram.Venue`
 * :py:class:`~botogram.Album`
 * :py:class:`~botogram.InlineQuery`
+* :py:class:`~botogram.InlineFeedback`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
 * :py:class:`~botogram.ReplyKeyboardMarkup`
@@ -1716,7 +1717,7 @@ about its business.
 
    .. py:attribute:: inline_message_id
 
-      The string unique ID of the message, if sent via inline mode.
+      The unique string ID of the message, if sent via inline mode.
 
       *This attribute can be None if it's not provided by Telegram.*
 
@@ -3171,6 +3172,36 @@ about its business.
 
    The offset of the results to be returned.
    Usually, it's a number (as a string) auto incremented and handled by botogram.
+
+   .. versionadded:: 0.7
+
+
+.. py:class:: botogram.InlineFeedback
+
+   This class represents an inline chosen result update received by the bot.
+   You can :ref:`check out the API documentation <api-inline>` for more
+   methods of this class.
+
+   .. py:attribute:: result_id
+
+   The chosen result ID. 
+   Keep in mind that botogram uses progressive numeric IDs for inline results.
+
+   .. py:attribute:: sender
+
+   The sending :py:class:`~botogram.User` of the inline query.
+
+   .. py:attribute:: query
+
+   The original text of the query (up to 512 characters).
+
+   .. py:attribute:: location
+
+   Sender :py:class:`~botogram.Location`, if the bot has requested it.
+
+   .. py:attribute:: inline_message_id
+
+   The unique string ID of the message
 
    .. versionadded:: 0.7
 

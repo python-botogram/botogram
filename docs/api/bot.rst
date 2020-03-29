@@ -330,17 +330,17 @@ components.
 
          @bot.inline(paginate=10)
          def inline_processor(inline):
-            for i in range(100):
-            if i == 20:
-               inline.paginate = 20
-            yield inline.article(
-               f"Result #{i}",
-               content=botogram.InlineInputMessage("Hello World message " + str(i))
-            )
+             for i in range(100):
+             if i == 20:
+                 inline.paginate = 20
+             yield inline.article(
+                 f"Result #{i}",
+                 content=botogram.InlineInputMessage("Hello World message " + str(i))
+             )
 
 
       :param int cache: the amount of time to cache the contents, in seconds *(default 300)*
-      :param bool private: whatever cache results only for the current user or for all *(default ``False``)*
+      :param bool private: whatever cache results only for the current user or for all *(default* ``False`` *)*
       :param int paginate: the number of results returned per request *(default 10)*
 
       .. versionadded:: 0.7
