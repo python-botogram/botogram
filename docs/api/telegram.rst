@@ -3192,9 +3192,18 @@ about its business.
       vast majority of API objects.
 
       *This attribute can be None if it's not provided by Telegram.*
-      .. versionchanged:: 0.7
 
-         Can be None.
+   .. py:attribute:: inline_query
+
+      The encapsulating :py:class:`~botogram.InlineQuery` object.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: chosen_inline_result
+
+      The encapsulating :py:class:`~botogram.InlineFeedback` object.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
 .. py:class:: botogram.UserProfilePhotos
 

@@ -19,6 +19,20 @@ Release description not yet written.
 New features
 ------------
 
+* Added support for inline mode
+
+   * New decorator :py:decoratormethod:`botogram.Bot.inline`
+   * New decorator :py:decoratormethod:`botogram.Bot.inline_feedback`
+   * New attribute :py:attr:`botogram.Update.inline_query`
+   * New attribute :py:attr:`botogram.Update.chosen_inline_result`
+   * New :py:class:`botogram.InlineQuery` class
+   * New :py:class:`botogram.InlineInputMessage` class
+   * New :py:class:`botogram.InlineInputLocation` class
+   * New :py:class:`botogram.InlineInputVenue` class
+   * New :py:class:`botogram.InlineInputContact` class
+   * New :py:class:`botogram.InlineMessageUnsupported`
+   * New attribute :py:attr:`botogram.Message.is_inline`
+   * New attribute :py:attr:`botogram.Message.inline_message_id`
 
 * Added support for animations (GIFs)
 
