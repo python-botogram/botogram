@@ -41,9 +41,16 @@ class User(BaseObject, mixins.ChatMixin):
         "username": str,
         "language_code": str,
         "is_bot": bool,
+        "can_join_groups": bool,
+        "can_read_all_group_messages": bool,
+        "supports_inline_queries": bool
     }
     replace_keys = {
         "language_code": "lang",
+        "can_join_groups": "_can_join_groups",
+        "can_read_all_group_messages": "_can_read_all_group_messages",
+        "supports_inline_queries": "_supports_inline_queries"
+
     }
     _check_equality_ = "id"
 
@@ -55,6 +62,40 @@ class User(BaseObject, mixins.ChatMixin):
             result += " " + self.last_name
 
         return result
+
+
+    @property
+    @mixins._require_api
+    def can_join_groups(self):
+        if self._can_join_groups is None:
+            user = self._api.call("getMe", expect=User)
+            self._can_join_groups = user._can_join_groups
+            self._can_read_all_group_messages = user._can_read_all_group_messages
+            self._supports_inline_queries = user._supports_inline_queries
+        return self._can_join_groups
+
+
+    @property
+    @mixins._require_api
+    def can_read_all_group_messages(self):
+        if self._can_read_all_group_messages is None:
+            user = self._api.call("getMe", expect=User)
+            self._can_join_groups = user._can_join_groups
+            self._can_read_all_group_messages = user._can_read_all_group_messages
+            self._supports_inline_queries = user._supports_inline_queries
+        return self._can_read_all_group_messages
+
+
+    @property
+    @mixins._require_api
+    def supports_inline_queries(self):
+        if self._supports_inline_queries is None:
+            user = self._api.call("getMe", expect=User)
+            self._can_join_groups = user._can_join_groups
+            self._can_read_all_group_messages = user._can_read_all_group_messages
+            self._supports_inline_queries = user._supports_inline_queries
+        return self._supports_inline_queries
+
 
     @property
     @mixins._require_api
