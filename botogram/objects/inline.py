@@ -21,6 +21,7 @@
 from .base import BaseObject
 from .messages import User, Location
 from . import mixins
+from .messages import Message
 
 
 class InlineQuery(BaseObject, mixins.InlineMixin):
@@ -60,4 +61,9 @@ class InlineFeedback(BaseObject):
     }
     replace_keys = {
         "from": "sender",
+        "inline_message_id": "message"
     }
+
+    def __init__(self, data, api=None):
+        super().__init__(data, api)
+        self.message = Message({"inline_message_id": self.message}, api)

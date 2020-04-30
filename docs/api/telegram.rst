@@ -1675,11 +1675,11 @@ about its business.
    This class represents messages received by and sent from your bot. Messages
    serve as a container for many of the core API objects described here.
 
+   If it is Inline messages also features the message ID and the chat ID, and if the bot is inside the group where the message was sent it will also have all the infos about the group itself.
+
    .. py:attribute:: id
 
       The integer ID of the message.
-
-      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: sender
 
@@ -3199,9 +3199,12 @@ about its business.
 
    Sender :py:class:`~botogram.Location`, if the bot has requested it.
 
-   .. py:attribute:: inline_message_id
+   .. py:attribute:: message
 
-   The unique string ID of the message
+   The :py:class:`~botogram.Message` sent inline
+   Available only if there is an inline keyboard attached to the message.
+
+   *This attribute can be None if it's not provided by Telegram.*
 
    .. versionadded:: 0.7
 
