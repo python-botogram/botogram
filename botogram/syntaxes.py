@@ -28,7 +28,8 @@ _markdown_re = re.compile(r".*("
                           r"_(.*)_|"
                           r"\[(.*)\]\((.*)\)|"
                           r"`(.*)`|"
-                          r"```(.*)```"
+                          r"```(.*)```|"
+                          r"~(.*)~"
                           r").*")
 
 _html_re = re.compile(r".*("
@@ -38,7 +39,12 @@ _html_re = re.compile(r".*("
                       r"<em>(.*)<\/em>|"
                       r"<a\shref=\"(.*)\">(.*)<\/a>|"
                       r"<code>(.*)<\/code>|"
-                      r"<pre>(.*)<\/pre>"
+                      r"<pre>(.*)<\/pre>|"
+                      r"<u>(.*)<\/u>|"
+                      r"<ins>(.*)<\/ins>|"
+                      r"<s>(.*)<\/s>|"
+                      r"<strike>(.*)<\/strike>|"
+                      r"<del>(.*)<\/del>"
                       r").*")
 
 
