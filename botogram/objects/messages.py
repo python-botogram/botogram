@@ -394,11 +394,11 @@ class Message(BaseObject, mixins.MessageMixin):
 
         if self.inline_message_id:
             inline_message_id = urlsafe_b64decode(
-                self.inline_message_id + (
-                        '='*(len(self.inline_message_id) % 4)))
+                self.inline_message_id +
+                ('='*(len(self.inline_message_id) % 4)))
             _, self.id, chat_id, _ = unpack('<iiiq', inline_message_id)
             if chat_id < 0:
-                chat_id = int('-100'+str(chat_id*-1))
+                chat_id = int('-100' + str(chat_id * -1))
             if api:
                 try:
                     self.chat = api.call("getChat", {"chat_id": chat_id},
@@ -408,7 +408,6 @@ class Message(BaseObject, mixins.MessageMixin):
                                       }, api=api)
             else:
                 self.chat = Chat({"id": chat_id})
-
 
 
         # Be sure to set this as the Message instance in the parsed text
