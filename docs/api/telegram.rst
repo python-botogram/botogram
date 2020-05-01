@@ -1526,6 +1526,20 @@ about its business.
 
       .. versionadded:: 0.7
 
+   .. py:method:: send_dice([emoji, reply_to=None, extra=None, attach=None, notify=True])
+
+      Use this method to send a dice, which will have a random value from 1 to 6
+
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to “🎲”
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
+
    .. py:method:: delete_message(message)
 
       Delete the message with the provided ID or :py:class:`~botogram.Message` object.
@@ -1855,6 +1869,12 @@ about its business.
       attribute contains its representation.
 
       *This attribute can be None if the message isn't a venue.*
+
+   .. py:attribute::  dice
+
+      A :py:class:`~botogram.Dice` object, when this message is a dice
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: channel_post_author
 
@@ -2531,6 +2551,19 @@ about its business.
 
       .. versionadded:: 0.7
 
+   .. py:method:: reply_with_dice([emoji, extra=None, attach=None, notify=True])
+
+      Use this method to reply with a dice, which will have a random value from 1 to 6
+
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to “🎲”
+      :param object attach: An extra thing to attach to the message
+      :param object extra: An extra reply interface object to attach
+      :param bool notify: If you want to trigger a notification on the client
+      :returns: The message you sent
+      :rtype: ~botogram.Message
+
+      .. versionadded:: 0.7
+
 .. py:class:: botogram.Photo
 
    This class provides a general representation of a photo received by your bot.
@@ -3134,6 +3167,20 @@ about its business.
 
       Number of users that voted for this option.
 
+
+.. py:class:: botogram.Dice
+
+   This object represents a dice with a random value from 1 to 6 for currently supported base emoji.
+
+   .. py:attribute:: emoji
+
+      Emoji on which the dice throw animation is based
+
+   .. py:attribute:: value
+
+      Value of the dice, 1-6 for currently supported base emoji
+
+   .. versionadded:: 0.7
 
 .. py:class:: botogram.Update
 

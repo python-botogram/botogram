@@ -25,7 +25,7 @@ from . import mixins
 from .. import utils
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
-    Animation, Contact, Location, Venue
+    Animation, Contact, Location, Venue, Dice
 from .polls import Poll
 
 
@@ -353,6 +353,7 @@ class Message(BaseObject, mixins.MessageMixin):
         "location": Location,
         "venue": Venue,
         "poll": Poll,
+        "dice": Dice,
         "new_chat_member": User,
         "left_chat_member": User,
         "new_chat_title": str,

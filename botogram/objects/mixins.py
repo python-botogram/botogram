@@ -381,6 +381,16 @@ class ChatMixin:
         return self._api.call("sendPoll", args, expect=_objects().Message)
 
     @_require_api
+    def send_dice(self, emoji=None, reply_to=None, extra=None, attach=None,
+                  notify=True):
+        """Send a message"""
+        args = self._get_call_args(reply_to, extra, attach, notify)
+        if emoji is not None:
+            args["emoji"] = emoji
+
+        return self._api.call("sendDice", args, expect=_objects().Message)
+
+    @_require_api
     def delete_message(self, message):
         """Delete a message from chat"""
         if hasattr(message, "message_id"):
@@ -608,6 +618,11 @@ class MessageMixin:
     def reply_with_poll(self, *args, **kwargs):
         """Reply with a poll to the current message"""
         return self.chat.send_poll(*args, reply_to=self, **kwargs)
+
+    @_require_api
+    def reply_with_dice(self, *args, **kwargs):
+        """Reply with a poll to the current message"""
+        return self.chat.send_dice(*args, reply_to=self, **kwargs)
 
     @_require_api
     def delete(self):

@@ -22,7 +22,8 @@
 
 from .chats     import User, Chat, UserProfilePhotos, Permissions
 from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
-                       Video, VideoNote, Animation, Contact, Location, Venue
+                       Video, VideoNote, Animation, Contact, Location, Venue, \
+                       Dice
 from .messages  import Message
 from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
 from .polls     import Poll, PollOption
@@ -61,6 +62,9 @@ __all__ = [
     # Polls-related objects
     "Poll",
     "PollOption",
+
+    #Dice-related objects
+    "Dice",
 
     # Updates-related objects
     "Update",

@@ -304,3 +304,15 @@ class VideoNote(BaseObject, mixins.FileMixin):
         "file_size": int,
     }
     _check_equality_ = "file_id"
+
+
+class Dice(BaseObject):
+    """Telegram API representation of a venue
+
+    https://core.telegram.orgf/bots/api#dice
+    """
+
+    required = {
+        "emoji": str,
+        "value": int
+    }
