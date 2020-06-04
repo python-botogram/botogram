@@ -1530,7 +1530,7 @@ about its business.
 
       Use this method to send a dice, which will have a random value from 1 to 6
 
-      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to “🎲”
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯” or "🏀". Defaults to “🎲”
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
@@ -2555,7 +2555,7 @@ about its business.
 
       Use this method to reply with a dice, which will have a random value from 1 to 6
 
-      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to “🎲”
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯” or "🏀" . Defaults to “🎲”
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client

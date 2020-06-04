@@ -383,7 +383,7 @@ class ChatMixin:
     @_require_api
     def send_dice(self, emoji=None, reply_to=None, extra=None, attach=None,
                   notify=True):
-        """Send a message"""
+        """Send a dice"""
         args = self._get_call_args(reply_to, extra, attach, notify)
         if emoji is not None:
             args["emoji"] = emoji
@@ -621,7 +621,7 @@ class MessageMixin:
 
     @_require_api
     def reply_with_dice(self, *args, **kwargs):
-        """Reply with a poll to the current message"""
+        """Reply with a dice to the current message"""
         return self.chat.send_dice(*args, reply_to=self, **kwargs)
 
     @_require_api
