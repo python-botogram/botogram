@@ -90,7 +90,7 @@ class Buttons:
             self._rows[index] = ButtonsRow()
         return self._rows[index]
 
-    def _serialize_attachment(self, chat):
+    def _serialize_attachment(self, chat=None):
         rows = [
             list(row._get_content(chat)) for i, row in sorted(
                 tuple(self._rows.items()), key=lambda i: i[0]
@@ -151,7 +151,10 @@ def get_callback_data(bot, chat, name, data=None):
 
 def get_signature(bot, chat, name, data):
     """Generate a signature for the provided information"""
-    chat_id = str(chat.id).encode("utf-8")
+    if chat is None:
+        chat_id = b'00000000'
+    else:
+        chat_id = str(chat.id).encode("utf-8")
     return crypto.get_hmac(bot, name + b'\0' + chat_id + b'\0' + data)
 
 
@@ -163,7 +166,11 @@ def hashed_callback_name(name):
 
 def process(bot, chains, update):
     """Process a callback sent to the bot"""
-    chat = update.callback_query.message.chat
+    if update.callback_query.is_inline:
+        chat = None  # Dummy value for inline mode
+    else:
+        chat = update.callback_query.message.chat
+
     raw = update.callback_query._data
 
     try:

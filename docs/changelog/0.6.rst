@@ -7,6 +7,20 @@ Changelog of botogram 0.6.x
 
 Here you can find all the changes in the botogram 0.6.x release.
 
+.. _changelog-0.6.1:
+
+botogram 0.6.1
+==============
+
+*Alpha release, not yet released.*
+
+Release description not yet written.
+
+Bug fixes
+---------
+
+* Fixed :py:meth:`botogram.Permissions.save` method
+
 .. _changelog-0.6:
 
 botogram 0.6

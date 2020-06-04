@@ -248,6 +248,7 @@ class Contact(BaseObject):
     optional = {
         "last_name": str,
         "user_id": int,
+        "vcard": str,
     }
     _check_equality_ = "phone_number"
 
