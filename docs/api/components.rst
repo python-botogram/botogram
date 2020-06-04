@@ -209,7 +209,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
              def __init__(self):
                  self.add_channel_post_edited_hook(self.reply)
 
-            def reply(self, chat, message):
+             def reply(self, chat, message):
                 message.reply("This post is changed!")
 
       :param callable func: The function you want to use.
@@ -280,6 +280,36 @@ about how to create them in the ":ref:`custom-components`" chapter.
 
          Added the ``hidden`` argument.
 
+   .. py:method:: add_inline(func, [cache=300, private=False, paginate=10])
+
+      This method adds an handler for all the inline queries.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **inline**: the representation of the inline query (an instance of :py:class:`~botogram.InlineQuery`)
+      * **sender**: the representation of the sender user (an instance of :py:class:`~botogram.User`)
+      * **query**: the plain text of the query
+
+      :param int cache: the amount of time to cache the contents, in seconds *(default 300)*
+      :param bool private: whether the cache for that specific query shall be valid for the user who requested it or for everyone *(default ``False``)*
+      :param int paginate: the number of results returned per request *(default 10)*
+
+      .. versionadded:: 0.7
+
+   .. py:decoratormethod:: add_inline_feedback(func)
+
+      This method adds an handler for an :py:class:`~botogram.InlineFeedback` update.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **feedback**: the received :py:class:`~botogram.InlineFeedback`
+
+      .. versionadded:: 0.7
+
    .. py:method:: add_callback(name, func)
 
       This method adds an handler for the callback with the provided name.
@@ -290,14 +320,12 @@ about how to create them in the ":ref:`custom-components`" chapter.
       in the provided function:
 
       * **query**: the received :py:class:`~botogram.CallbackQuery`
-
       * **chat**: the :py:class:`~botogram.Chat` from which the callback query
         was sent
-
       * **message**: the :py:class:`~botogram.Message` related to the callback
         query
-
       * **data**: the custom information provided by you along with the call
+      * **is_inline**: whether the recieved query comes from an inline mode message or not
 
       .. code-block:: python
 
