@@ -9,18 +9,18 @@ Inline API
 
 This page contains the documentation for the APIs related to the
 inline mode. See the :ref:`narrative chapter about them <inline>`
-for more information about it.
+for more informations about it.
 
 
 .. py:class:: botogram.InlineQuery
 
    This class allows you to build inline responses that are used
-   to answers to inline queries.
+   to answers  inline queries.
 
    .. py:method:: switch_pm(text, parameter)
 
       Adds a button with the specified *text* above the inline results
-      redirecting the user to private chat and appending the specified
+      redirecting the user to the bot's private chat and appending the specified
       *parameter* to the /start command.
 
       :param str text: The text to be shown on top of the inline results.
@@ -32,7 +32,7 @@ for more information about it.
       Renders an inline article result. An inline article represents a
       generic text, a link to an article or to a web page.
 
-      The thing inside the *content* parameter will be sent when the user
+      whatever is inside the *content* parameter will be sent when the user
       clicks on the result.
 
       The *attach* parameter allows you to attach extra things like
@@ -128,7 +128,7 @@ for more information about it.
       the *content* parameter to send a message with the specified content
       instead of the video.
 
-      You can specify the photo by passing its *file_id* or an *url* pointing
+      You can specify the video by passing its *file_id* or an *url* pointing
       to the video file or an embedded video player (e.g. YouTube, ...).
       You **must** fill the *mime_type* parameter if you specify an *url*, and
       if *url* is an embedded video player you **must** specify the

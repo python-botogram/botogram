@@ -293,7 +293,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       * **query**: the plain text of the query
 
       :param int cache: the amount of time to cache the contents, in seconds *(default 300)*
-      :param bool private: whatever cache results only for the current user or for all *(default ``False``)*
+      :param bool private: whether the cache for that specific query shall be valid for the user who requested it or for everyone *(default ``False``)*
       :param int paginate: the number of results returned per request *(default 10)*
 
       .. versionadded:: 0.7
@@ -325,7 +325,7 @@ about how to create them in the ":ref:`custom-components`" chapter.
       * **message**: the :py:class:`~botogram.Message` related to the callback
         query
       * **data**: the custom information provided by you along with the call
-      * **is_inline**: whatever the query is from a message sent via inline mode or not
+      * **is_inline**: whether the recieved query comes from an inline mode message or not
 
       .. code-block:: python
 

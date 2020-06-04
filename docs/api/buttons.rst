@@ -140,7 +140,7 @@ information about them.
 
    .. py:attribute:: is_inline
 
-      This parameter is true if callback is inline and false if its not inline
+      This parameter is True if the recived callback comes from an inline request or viceversa
 
       .. versionadded:: 0.7
 
