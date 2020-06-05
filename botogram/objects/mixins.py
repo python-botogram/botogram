@@ -88,6 +88,7 @@ class ChatMixin:
             reply_markup['force_reply'] = force_reply
             if selective is not None:
                 reply_markup['selective'] = selective
+            args["reply_markup"] = json.dumps(reply_markup)
 
         return args
 
