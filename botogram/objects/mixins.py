@@ -76,22 +76,18 @@ class ChatMixin:
         if not notify:
             args["disable_notification"] = True
 
-        if (remove_keyboard is None or force_reply is None) \
-                and selective is not None:
-                raise ValueError("The selective attribute is only usable" +
-                                 "when remove_keyboard or force_reply is True")
-
         if remove_keyboard is not None:
-            args["reply_markup"] = json.dumps(
-                {"remove_keyboard": remove_keyboard}
-            )
+            reply_markup = {}
+            reply_markup['remove_keyboard'] = remove_keyboard
             if selective is not None:
-                args["reply_markup"] = json.dumps({"selective": selective})
+                reply_markup['selective'] = selective
+            args["reply_markup"] = json.dumps(reply_markup)
 
         if force_reply is not None:
-            args["reply_markup"] = json.dumps({"force_reply": force_reply})
+            reply_markup = {}
+            reply_markup['force_reply'] = force_reply
             if selective is not None:
-                args["reply_markup"] = json.dumps({"selective": selective})
+                reply_markup['selective'] = selective
 
         return args
 
