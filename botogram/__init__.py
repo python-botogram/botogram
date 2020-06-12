@@ -31,7 +31,7 @@ from .bot import Bot, create, channel
 from .frozenbot import FrozenBotError
 from .components import Component
 from .decorators import pass_bot, pass_shared, help_message_for
-from .runner import run
+from .runner import run, WebHook
 from .objects import *
 from .utils import usernames_in
 from .callbacks import Buttons, ButtonsRow
