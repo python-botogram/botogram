@@ -18,23 +18,25 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
+import atexit
 import multiprocessing
 import multiprocessing.managers
-import time
-import atexit
 import signal
+import time
+
 import logbook
 
-from . import processes
-from . import shared
 from . import ipc
 from . import jobs
+from . import processes
+from . import shared
+from .webhook import WebHook
 
 
 class BotogramRunner:
     """A multi-process, scalable bot runner"""
 
-    def __init__(self, *bots, workers=2):
+    def __init__(self, *bots, workers=2, web_hook=None):
         # Only frozen instances, thanks
         self._bots = {bot._bot_id: bot.freeze() for bot in bots}
 
@@ -59,6 +61,7 @@ class BotogramRunner:
             bot._shared_memory.switch_driver(shared.MultiprocessingDriver())
 
         self._workers_count = workers
+        self.web_hook = web_hook
 
         self.logger = logbook.Logger("botogram runner")
 
@@ -141,11 +144,31 @@ class BotogramRunner:
 
             self._worker_processes.append(worker)
 
-        # Boot up all the updater processes
-        for bot in self._bots.values():
-            updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
+        if self.web_hook is None:
+            # Boot up all the updater processes
+            for bot in self._bots.values():
+                updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
+                updater.start()
+                self._updater_processes[id] = updater
+        else:
+            bots = dict()
+            for bot_id, bot in self._bots.items():
+                bots.update({bot.api._api_key: bot_id})
+                data = {
+                    "url": self.web_hook.final_url+"bot/"+bot.api._api_key
+                }
+                if self.web_hook.crypto:
+                    files = {"certificate": open(self.web_hook.certfile,
+                                                 "rb")}
+                else:
+                    files = dict()
+                if not bot._api.call("setWebhook", data, files, expect=bool):
+                    raise ValueError
+            print(bots)
+            updater = processes.WebHookProcess(ipc_info, bots,
+                                               upd_commands,
+                                               self.web_hook)
             updater.start()
-
             self._updater_processes[id] = updater
 
         return upd_commands

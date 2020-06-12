@@ -20,15 +20,17 @@
 
 import multiprocessing
 import os
-import traceback
 import queue
 import signal
+import ssl
+import traceback
 
 import logbook
 
+from . import ipc
 from . import jobs
 from . import shared
-from . import ipc
+from . import webhook
 from .. import api
 from .. import updates as updates_module
 
@@ -242,6 +244,51 @@ class UpdaterProcess(BaseProcess):
         if result:
             self.logger.info("This instance is now the only one. The bot is "
                              "working again")
+
+
+class WebHookProcess(BaseProcess):
+    """This process will fetch the updates"""
+
+    name = "Updater"
+
+    def setup(self, bots, commands, webhook_config):
+        self.bots = bots
+        self.commands = commands
+        self.webhook_config = webhook_config
+        self.httpd = webhook.HttpServer(('', self.webhook_config.port),
+                                        webhook.WebHookHandler)
+        if webhook_config.crypto:
+            self.httpd.socket = ssl.wrap_socket(
+                self.httpd.socket,
+                keyfile=self.webhook_config.keyfile,
+                certfile=self.webhook_config.certfile,
+                server_side=True)
+
+        self.httpd.ipc = self.ipc
+        self.httpd.bots = self.bots
+        self.httpd.filter = self.webhook_config.ip_filter
+
+    def should_stop(self):
+        """Check if the process should stop"""
+        try:
+            command = self.commands.get(False)
+        except queue.Empty:
+            val = False
+        else:
+            val = command == "stop"
+        self.stop = val
+        return val
+
+    def loop(self):
+        if self.should_stop():
+            return
+        self.httpd.serve_single()
+
+    def on_stop(self):
+        if self.webhook_config.destroy_at_stop:
+            for bot in self.bots.values():
+                bot._api.call("deleteWebhook")
+        self.stop = True
 
 
 def _ignore_signal(*__):

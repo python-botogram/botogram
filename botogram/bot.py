@@ -19,23 +19,23 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import re
-import logbook
 import uuid
 
+import logbook
 import requests.exceptions
 
 from . import api
 from . import callbacks
-from . import objects
-from . import runner
-from . import defaults
 from . import components
-from . import utils
+from . import defaults
 from . import frozenbot
 from . import inline
+from . import messages
+from . import objects
+from . import runner
 from . import shared
 from . import tasks
-from . import messages
+from . import utils
 
 
 class Bot(frozenbot.FrozenBot):
@@ -272,9 +272,9 @@ class Bot(frozenbot.FrozenBot):
         frozen = self.freeze()
         return frozen.process(update)
 
-    def run(self, workers=2):
+    def run(self, workers=2, web_hook=None):
         """Run the bot with the multi-process runner"""
-        inst = runner.BotogramRunner(self, workers=workers)
+        inst = runner.BotogramRunner(self, workers=workers, web_hook=web_hook)
         inst.run()
 
     def register_update_processor(self, kind, processor):
