@@ -1526,7 +1526,7 @@ about its business.
 
       .. versionadded:: 0.7
 
-   .. py:method:: send_dice([emoji, reply_to=None, extra=None, attach=None, notify=True])
+   .. py:method:: send_dice([emoji=None, reply_to=None, extra=None, attach=None, notify=True])
 
       Use this method to send a dice, which will have a random value from 1 to 6
 
@@ -2551,7 +2551,7 @@ about its business.
 
       .. versionadded:: 0.7
 
-   .. py:method:: reply_with_dice([emoji, extra=None, attach=None, notify=True])
+   .. py:method:: reply_with_dice([emoji=None, extra=None, attach=None, notify=True])
 
       Use this method to reply with a dice, which will have a random value from 1 to 6
 
