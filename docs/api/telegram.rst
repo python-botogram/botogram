@@ -2788,6 +2788,10 @@ about its business.
 
       The integer height of the sticker image.
 
+   .. py:attribute:: is_animated
+
+      The boolean value if the sticker is animated.
+
    .. py:attribute:: thumb
 
       A :py:class:`~botogram.PhotoSize` object representing a thumbnail image of

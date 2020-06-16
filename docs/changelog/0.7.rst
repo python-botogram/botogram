@@ -19,6 +19,7 @@ Release description not yet written.
 New features
 ------------
 
+
 * Added support for inline mode
 
    * New decorator :py:decoratormethod:`botogram.Bot.inline`
@@ -85,6 +86,10 @@ New features
   * New method :py:meth:`Chat.set_photo`
   * New method :py:meth:`Chat.remove_photo`
   * New attribute :py:attr:`Chat.photo`
+  
+* Added support for animated stickers
+
+  * New attribute :py:attr:`botogram.Sticker.is_animated`
 
 * Added support for vcards in contacts
   * New argument ``vcard`` in :py:meth:`botogram.Chat.send_contact`
