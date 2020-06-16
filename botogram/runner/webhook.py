@@ -38,31 +38,48 @@ class HttpServer(HTTPServer):
 
 
 class WebHookHandler(BaseHTTPRequestHandler):
-    # Handler for the Post requests
+
+    def _set_headers(self):
+        self.send_header('Content-type', 'application/text')
+        self.end_headers()
+        self.wfile.write(b'ok')
+
+    # Handler for the Post requests for webhook api telegram
     def do_POST(self):
         path = self.path.split("/")[1:]
-        ip_client = ip_address(self.client_address[0])
         if path[0] != "bot":
             self.send_response(501)
+            self._set_headers()
             return
-        for filter_ip_network in self.server.filter:
+        if self.server.webhook_config.proxy:
+            # get ip client from the headers if proxy is True (by config)
+            ip_client = ip_address(self.headers[
+                                       self.server.webhook_config.header_proxy])
+        else:
+            ip_client = ip_address(self.client_address[0])
+        for filter_ip_network in self.server.webhook_config.ip_filter:
             if ip_client in filter_ip_network:
+                self.server.logger.debug(repr(ip_client) + ":" +
+                                         repr(filter_ip_network))
                 break
         else:
             self.send_response(401)
+            self._set_headers()
             return
-        if path in self.server.bots.keys():
+        if path[1] in self.server.bots.keys():
             length = int(self.headers['Content-Length'])
             data = loads(self.rfile.read(length).decode("utf-8"))
             update = Update(data)
             update.set_api(None)
-            result = [jobs.Job(self.server.bots[path], jobs.process_update, {
-                "update": update,
-            })]
+            result = [jobs.Job(self.server.bots[path[1]],
+                               jobs.process_update, {
+                                   "update": update,
+                               })]
             self.server.ipc.command("jobs.bulk_put", result)
             self.send_response(200)
         else:
             self.send_response(404)
+        self._set_headers()
 
 
 class WebHook:
@@ -73,12 +90,15 @@ class WebHook:
     def __init__(self,
                  final_url: str,
                  destroy_at_stop: bool = True,
-                 ip_filters: Union[None, List[str, IPv4Network,
-                                              IPv6Address],
-                                   str, IPv4Network, IPv6Address] = None,
-                 port: int = 88,
-                 keyfile: Union[None, str] = None,
-                 certfile: Union[None, str] = None):
+                 ip_filters: Union[List[Union[str, IPv4Network,
+                                              IPv6Address]],
+                                   str, IPv4Network, IPv6Address,
+                                   None] = None,
+                 proxy: bool = False,
+                 header_proxy: str = "X-Forwarded-For",
+                 port: int = 8443,
+                 keyfile: Union[str, None] = None,
+                 certfile: Union[str, None] = None):
 
         self.logger = Logger("botogram runner")
         if final_url.endswith("/"):
@@ -88,7 +108,7 @@ class WebHook:
         if not self.final_url.startswith("https"):
             if self.final_url.startswith("http"):
                 self.final_url.replace("http", "https")
-                self.logger.warn("")
+                self.logger.warn("replace http to https")
             else:
                 self.final_url = "https://" + self.final_url
 
@@ -109,8 +129,11 @@ class WebHook:
                     raise ValueError(
                         "%r does not appear to be an IPv4 or IPv6 network",
                         ip_filter)
-        self.ip_filters = [ipaddr for ipaddr in
-                           collapse_addresses(self.ip_filters)]
+        self.ip_filter = [ipaddr for ipaddr in
+                          collapse_addresses(self.ip_filter)]
+
+        self.proxy = proxy
+        self.header_proxy = header_proxy
         self.port = port
 
         if None in (keyfile, certfile):

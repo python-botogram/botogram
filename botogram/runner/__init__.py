@@ -38,7 +38,7 @@ class BotogramRunner:
 
     def __init__(self, *bots, workers=2, web_hook=None):
         # Only frozen instances, thanks
-        self._bots = {bot._bot_id: bot.freeze() for bot in bots}
+        self._bots = {bot._bot_id: bot for bot in bots}
 
         self._updater_processes = {}
         self._worker_processes = []
@@ -146,14 +146,16 @@ class BotogramRunner:
 
         if self.web_hook is None:
             # Boot up all the updater processes
-            for bot in self._bots.values():
-                updater = processes.UpdaterProcess(ipc_info, bot, upd_commands)
+            for bot_id, bot in self._bots.items():
+                self._bots[bot_id] = bot.freeze()
+                updater = processes.UpdaterProcess(ipc_info,
+                                                   self._bots[bot_id],
+                                                   upd_commands)
                 updater.start()
                 self._updater_processes[id] = updater
         else:
-            bots = dict()
+            bots_id = dict()
             for bot_id, bot in self._bots.items():
-                bots.update({bot.api._api_key: bot_id})
                 data = {
                     "url": self.web_hook.final_url+"bot/"+bot.api._api_key
                 }
@@ -162,10 +164,12 @@ class BotogramRunner:
                                                  "rb")}
                 else:
                     files = dict()
-                if not bot._api.call("setWebhook", data, files, expect=bool):
+                if not bot.api.call("setWebhook", data, files, expect=bool):
                     raise ValueError
-            print(bots)
-            updater = processes.WebHookProcess(ipc_info, bots,
+                bots_id.update({bot.api._api_key: bot_id})
+            print(bots_id, type(bots_id))
+            updater = processes.WebHookProcess(ipc_info, bots_id,
+                                               self._bots,
                                                upd_commands,
                                                self.web_hook)
             updater.start()

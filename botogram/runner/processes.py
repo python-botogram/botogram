@@ -251,7 +251,8 @@ class WebHookProcess(BaseProcess):
 
     name = "Updater"
 
-    def setup(self, bots, commands, webhook_config):
+    def setup(self, bots_id, bots, commands, webhook_config):
+        self.bots_id = bots_id
         self.bots = bots
         self.commands = commands
         self.webhook_config = webhook_config
@@ -265,8 +266,9 @@ class WebHookProcess(BaseProcess):
                 server_side=True)
 
         self.httpd.ipc = self.ipc
-        self.httpd.bots = self.bots
-        self.httpd.filter = self.webhook_config.ip_filter
+        self.httpd.bots = self.bots_id
+        self.httpd.webhook_config = self.webhook_config
+        self.httpd.logger = self.logger
 
     def should_stop(self):
         """Check if the process should stop"""
@@ -284,11 +286,10 @@ class WebHookProcess(BaseProcess):
             return
         self.httpd.serve_single()
 
-    def on_stop(self):
+    def after_stop(self):
         if self.webhook_config.destroy_at_stop:
             for bot in self.bots.values():
-                bot._api.call("deleteWebhook")
-        self.stop = True
+                bot.api.call("deleteWebhook")
 
 
 def _ignore_signal(*__):
