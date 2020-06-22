@@ -104,6 +104,10 @@ convert the arguments to the provided types.
 
 You can use *default arguments* as well.
 
+.. versionchanged:: 0.7
+
+   Added the support for optional arguments and type annotations.
+
 Dynamic hooks arguments
 =======================
 
