@@ -98,7 +98,8 @@ class DefaultComponent(components.Component):
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
 
-                parameters_list = command.parameters_list # avoid calling the property more than once
+                # avoid calling the property more than once
+                parameters_list = command.parameters_list
 
                 if parameters_list:
                     message.append("/%s %s <code>-</code> %s" %
