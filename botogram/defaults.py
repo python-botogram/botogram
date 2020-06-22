@@ -94,15 +94,19 @@ class DefaultComponent(components.Component):
             message.append(bot._("<b>This bot supports those commands:</b>"))
             for command in commands:
                 summary = escape_html(command.summary)
+
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
+
                 parameters_list = command.parameters_list
+
                 if parameters_list:
                     message.append("/%s %s <code>-</code> %s" %
                                    (command.name, parameters_list, summary))
                 else:
                     message.append("/%s <code>-</code> %s" %
                                    (command.name, summary))
+
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
