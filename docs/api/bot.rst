@@ -313,7 +313,7 @@ components.
 
       .. versionchanged:: 0.7
 
-         Added the support for optional arguments.
+         Added the support for optional arguments and description of these ones in ``/help``.
 
       .. versionchanged:: 0.4
 
