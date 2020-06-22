@@ -4,9 +4,8 @@
 #
 #    pip-compile requirements-test.in
 #
-certifi==2019.6.16        # via requests
+certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
-colorama==0.4.1           # via pytest
 cookies==2.2.1            # via responses
 idna==2.7                 # via requests
 py==1.4.31                # via pytest
@@ -14,5 +13,4 @@ pytest==2.9.2
 requests==2.20.0          # via responses
 responses==0.5.1
 six==1.10.0               # via responses
-typing==3.7.4
 urllib3==1.24.3           # via requests

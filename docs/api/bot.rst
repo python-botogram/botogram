@@ -319,6 +319,49 @@ components.
 
          Added the ``hidden`` argument.
 
+   .. py:decoratormethod:: inline([cache=300, private=False, paginate=10])
+
+      Functions decorated with this decorator will receive all the inline queries.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **inline**: the representation of the inline query (an instance of :py:class:`~botogram.InlineQuery`)
+      * **sender**: the representation of the sender user (an instance of :py:class:`~botogram.User`)
+      * **query**: the plain text of the query
+
+      .. code-block:: python
+
+         @bot.inline(paginate=10)
+         def inline_processor(inline):
+             for i in range(100):
+             if i == 20:
+                 inline.paginate = 20
+             yield inline.article(
+                 f"Result #{i}",
+                 content=botogram.InlineInputMessage("Hello World message " + str(i))
+             )
+
+
+      :param int cache: the amount of time to cache the contents, in seconds *(default 300)*
+      :param bool private: whether the cache for that specific query shall be valid for the user who requested it or for everyone *(default* ``False`` *)*
+      :param int paginate: the number of results returned per request *(default 10)*
+
+      .. versionadded:: 0.7
+
+   .. py:decoratormethod:: inline_feedback
+
+      This decorator adds an handler for an :py:class:`~botogram.InlineFeedback` update.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **feedback**: the received :py:class:`~botogram.InlineFeedback`
+
+      .. versionadded:: 0.7
+
    .. py:decoratormethod:: callback(name)
 
       This decorator adds an handler for the callback with the provided name.
@@ -329,14 +372,12 @@ components.
       in the decorated function:
 
       * **query**: the received :py:class:`~botogram.CallbackQuery`
-
       * **chat**: the :py:class:`~botogram.Chat` from which the callback query
         was sent
-
       * **message**: the :py:class:`~botogram.Message` related to the callback
         query
-
       * **data**: the custom information provided by you along with the call
+      * **is_inline**: whether the recieved query comes from an inline mode message or not
 
       .. code-block:: python
 
