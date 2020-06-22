@@ -276,6 +276,10 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param bool hidden: If the command should be hidden from ``/help``
       :param int order: The order in which the commands are shown in ``/help``
 
+      .. versionchanged:: 0.7
+
+         Added the support for optional arguments and the description of these ones in ``/help``.
+
       .. versionchanged:: 0.4
 
          Added the ``order`` argument.
