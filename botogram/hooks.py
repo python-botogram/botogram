@@ -19,6 +19,7 @@
 
 from inspect import Parameter
 import json
+import logbook
 import re
 from time import time
 
