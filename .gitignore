@@ -11,6 +11,4 @@ __pycache__
 
 /.netlify/build
 
-\.idea/
-
 \.pytest_cache/
