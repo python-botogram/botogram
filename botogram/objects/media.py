@@ -309,7 +309,7 @@ class VideoNote(BaseObject, mixins.FileMixin):
 class Dice(BaseObject):
     """Telegram API representation of a venue
 
-    https://core.telegram.orgf/bots/api#dice
+    https://core.telegram.org/bots/api#dice
     """
 
     required = {

@@ -63,7 +63,7 @@ __all__ = [
     "Poll",
     "PollOption",
 
-    #Dice-related objects
+    # Dice-related objects
     "Dice",
 
     # Updates-related objects
