@@ -19,10 +19,13 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import re
+from base64 import urlsafe_b64decode
+from struct import unpack
 
 from .base import BaseObject, _itself
 from . import mixins
 from .. import utils
+from ..api import ChatUnavailableError
 from .chats import User, Chat
 from .media import Audio, Voice, Document, Photo, Sticker, Video, VideoNote, \
     Animation, Contact, Location, Venue, Dice
@@ -324,12 +327,12 @@ class Message(BaseObject, mixins.MessageMixin):
     def from_(self):
         return self.sender
 
-    required = {
+    required = {}
+    optional = {
         "message_id": int,
+        "inline_message_id": str,
         "date": int,
         "chat": Chat,
-    }
-    optional = {
         "from": User,
         "entities": ParsedText,
         "forward_from": User,
@@ -381,11 +384,31 @@ class Message(BaseObject, mixins.MessageMixin):
 
     def __init__(self, data, api=None):
         super().__init__(data, api)
-
+        if self.chat is None:
+            self.is_inline = True
+        else:
+            self.is_inline = False
         # Create the parsed_text instance even if there are no entities in the
         # current text
         if self.text is not None and self.parsed_text is None:
             self.parsed_text = ParsedText([], api, self)
+
+        if self.inline_message_id:
+            inline_message_id = urlsafe_b64decode(
+                self.inline_message_id +
+                ('=' * (len(self.inline_message_id) % 4)))
+            _, self.id, chat_id, _ = unpack('<iiiq', inline_message_id)
+            if chat_id < 0:
+                chat_id = int('-100' + str(chat_id * -1))
+            if api:
+                try:
+                    self.chat = api.call("getChat", {"chat_id": chat_id},
+                                         expect=Chat)
+                except ChatUnavailableError:
+                    self.chat = Chat({"id": chat_id,
+                                      }, api=api)
+            else:
+                self.chat = Chat({"id": chat_id})
 
         # Be sure to set this as the Message instance in the parsed text
         # The instance is needed to calculate the content of each entity

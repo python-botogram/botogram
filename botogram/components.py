@@ -38,6 +38,8 @@ class Component:
 
         self.__commands = {}
         self.__callbacks = {}
+        self.__inline = []
+        self.__inline_feedback = []
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
@@ -154,6 +156,26 @@ class Component:
         })
         self.__callbacks[name] = hook
 
+    def add_inline(self, cache, private, paginate, func):
+        """Add an inline processor hook"""
+        if not callable(func):
+            raise ValueError("An inline must be callable")
+
+        hook = hooks.InlineHook(func, self, {
+            "cache": cache,
+            "private": private,
+            "paginate": paginate,
+        })
+        self.__inline.append(hook)
+
+    def add_inline_feedback(self, func):
+        """Add an inline feedback hook"""
+        if not callable(func):
+            raise ValueError("An inline_feedback must be callable")
+
+        hook = hooks.ChosenInlineHook(func, self)
+        self.__inline_feedback.append(hook)
+
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
@@ -161,7 +183,6 @@ class Component:
 
         hook = hooks.TimerHook(func, self)
         job = tasks.TimerTask(interval, hook)
-
         self.__timers.append(job)
 
     def add_memory_preparer(self, func):
@@ -240,6 +261,8 @@ class Component:
                 self.__callbacks[name]
                 for name in sorted(self.__callbacks.keys())
             ]],
+            "inline": [self.__inline],
+            "inline_feedback": [self.__inline_feedback]
         }
 
     def _get_commands(self):

@@ -28,6 +28,22 @@ New features
    * New method :py:meth:`botogram.Message.reply_with_dice`
 
 
+* Added support for inline mode
+
+   * New decorator :py:decoratormethod:`botogram.Bot.inline`
+   * New decorator :py:decoratormethod:`botogram.Bot.inline_feedback`
+   * New attribute :py:attr:`botogram.Update.inline_query`
+   * New attribute :py:attr:`botogram.Update.chosen_inline_result`
+   * New :py:class:`botogram.InlineQuery` class
+   * New :py:class:`botogram.InlineFeedback` class
+   * New :py:class:`botogram.InlineInputMessage` class
+   * New :py:class:`botogram.InlineInputLocation` class
+   * New :py:class:`botogram.InlineInputVenue` class
+   * New :py:class:`botogram.InlineInputContact` class
+   * New :py:class:`botogram.InlineMessageUnsupported`
+   * New attribute :py:attr:`botogram.Message.is_inline`
+   * New attribute :py:attr:`botogram.Message.inline_message_id`
+
 * Added support for animations (GIFs)
 
    * New :py:class:`botogram.Animation` class
@@ -78,6 +94,10 @@ New features
   * New method :py:meth:`Chat.set_photo`
   * New method :py:meth:`Chat.remove_photo`
   * New attribute :py:attr:`Chat.photo`
+  
+* Added support for animated stickers
+
+  * New attribute :py:attr:`botogram.Sticker.is_animated`
 
 * Added support for vcards in contacts
   * New argument ``vcard`` in :py:meth:`botogram.Chat.send_contact`
