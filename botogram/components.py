@@ -18,12 +18,17 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
+import inspect
 import uuid
 
 from . import utils
 from . import tasks
 from . import hooks
 from . import commands
+
+from collections import OrderedDict
+
+_special_parameters = ('args', 'bot', 'chat', 'message', 'shared')
 
 
 class Component:
@@ -122,7 +127,8 @@ class Component:
         })
         self.__processors.append(hook)
 
-    def add_command(self, name, func, hidden=False, order=0, _from_main=False):
+    def add_command(self, name, func, hidden=False, order=0,
+                    _from_main=False):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
@@ -135,10 +141,17 @@ class Component:
             utils.warn(go_back, "Command names shouldn't be prefixed with a "
                        "slash. It's done automatically.")
 
+        parameters = OrderedDict(inspect.signature(func).parameters)
+
+        for _special_parameter in _special_parameters:
+            if _special_parameter in parameters:
+                parameters.pop(_special_parameter)
+
         hook = hooks.CommandHook(func, self, {
             "name": name,
             "hidden": hidden,
             "order": order,
+            "parameters": parameters
         })
         command = commands.Command(hook)
         self.__commands[name] = command

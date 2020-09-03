@@ -10,3 +10,5 @@ __pycache__
 /.cache
 
 /.netlify/build
+
+\.pytest_cache/

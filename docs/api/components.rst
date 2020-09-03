@@ -248,19 +248,23 @@ about how to create them in the ":ref:`custom-components`" chapter.
       This function registers a new command, and calls the provided function
       when someone issues the command in a chat. The command will also be added
       to the ``/help`` message. The provided function will be called with
-      three parameters:
+      these parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
         message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * An ``args`` parameter with the list of parsed arguments
+      * Any other arguments which are required by the bot to call the command.
+        Those special arguments are automatically converted if a *type annotation*
+        is provided. Default parameters are supported as well
 
       If you put a docstring on the provided function, that will be used as
-      extended description of the command in the ``/help`` command.
+      extended description of the command in the ``/help`` command with the
+      required arguments as well.
 
-      Also, if you don't want this command to appear in the ``/help``, you can
-      set the ``hidden`` argument to ``True``.
+      Also, if you don't want this command to appear in the ``/help``,
+      you can set the ``hidden`` argument to ``True``.
 
       .. note::
 
@@ -271,6 +275,10 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param callable func: The function you want to use.
       :param bool hidden: If the command should be hidden from ``/help``
       :param int order: The order in which the commands are shown in ``/help``
+
+      .. versionchanged:: 0.7
+
+         Added the support for optional arguments and the description of these ones in ``/help``.
 
       .. versionchanged:: 0.4
 

@@ -94,10 +94,20 @@ class DefaultComponent(components.Component):
             message.append(bot._("<b>This bot supports those commands:</b>"))
             for command in commands:
                 summary = escape_html(command.summary)
+
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
-                message.append("/%s <code>-</code> %s" %
-                               (command.name, summary))
+
+                # avoid calling the property more than once
+                parameters_list = command.parameters_list
+
+                if parameters_list:
+                    message.append("/%s %s <code>-</code> %s" %
+                                   (command.name, parameters_list, summary))
+                else:
+                    message.append("/%s <code>-</code> %s" %
+                                   (command.name, summary))
+
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
@@ -122,11 +132,20 @@ class DefaultComponent(components.Component):
         """Generate a command's help message"""
         message = []
 
-        docstring = escape_html(next((cmd for cmd in commands if
-                                      cmd.name == command), None).docstring)
+        command = next((cmd for cmd in commands if
+                        cmd.name == command), None)
+
+        docstring = escape_html(command.docstring)
+        params_list = command.parameters_list
+
         if docstring is None:
             docstring = "<i>%s</i>" % bot._("No description available.")
-        message.append("/%s <code>-</code> %s" % (command, docstring))
+
+        if params_list:
+            message.append("/%s %s <code>-</code> %s" % (
+                command.name, params_list, docstring))
+        else:
+            message.append("/%s <code>-</code> %s" % (command.name, docstring))
 
         # Show the owner informations
         if bot.owner:
