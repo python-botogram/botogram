@@ -97,7 +97,14 @@ New features
   * New argument ``vcard`` in :py:meth:`botogram.Message.reply_with_contact`
   * New attribute :py:attr:`Contact.vcard`
 
+ New class :py:class:`botogram.User` attributes
+
+  * New attribute :py:attr:`~botogram.User.can_join_groups`
+  * New attribute :py:attr:`~botogram.User.can_join_groups`
+  * New attribute :py:attr:`~botogram.User.supports_inline_queries`
+
 * Added automatic type conversion for command arguments
+
 
 Bug fixes
 ---------

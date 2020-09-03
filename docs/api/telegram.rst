@@ -91,6 +91,25 @@ about its business.
 
       .. versionadded:: 0.2
 
+   .. py:attribute:: can_join_group
+
+      True, if the bot can be invited to groups.
+
+      .. versionadded:: 0.7
+
+   .. py:attribute:: can_read_all_group_messages
+
+      True, if privacy mode is disabled for the bot.
+
+      .. versionadded:: 0.7
+
+
+   .. py:attribute:: supports_inline_queries
+
+      True, if the bot supports inline queries.
+
+      .. versionadded:: 0.7
+
    .. py:attribute:: avatar
 
       This attribute contains the user's avatar, represented as a
