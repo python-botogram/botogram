@@ -3193,7 +3193,7 @@ about its business.
 
 .. py:class:: botogram.Dice
 
-   This object represents a dice with a random value from 1 to 6 for currently supported base emoji.
+   This object represents a dice with a random value from 1 to 6 (or 1 to 5) for currently supported base emoji.
 
    .. py:attribute:: emoji
 
@@ -3201,7 +3201,7 @@ about its business.
 
    .. py:attribute:: value
 
-      Value of the dice, 1-6 for currently supported base emoji
+      Value of the dice, 1-6 (or 1-5) for currently supported base emoji
 
    .. versionadded:: 0.7
 
