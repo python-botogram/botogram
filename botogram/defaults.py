@@ -19,6 +19,7 @@
 #   DEALINGS IN THE SOFTWARE.
 
 import html
+from time import time
 
 from . import syntaxes
 from . import components
@@ -33,11 +34,11 @@ class DefaultComponent(components.Component):
     def __init__(self):
         self.add_command("start", self.start_command, hidden=True)
         self.add_command("help", self.help_command)
+        self.add_timer(60, self._inline_cleaning_up_timer)
 
         self._add_no_commands_hook(self.no_commands_hook)
 
     # /start command
-
     def start_command(self, bot, chat):
         message = []
         if bot.about:
@@ -93,10 +94,20 @@ class DefaultComponent(components.Component):
             message.append(bot._("<b>This bot supports those commands:</b>"))
             for command in commands:
                 summary = escape_html(command.summary)
+
                 if summary is None:
                     summary = "<i>%s</i>" % bot._("No description available.")
-                message.append("/%s <code>-</code> %s" %
-                               (command.name, summary))
+
+                # avoid calling the property more than once
+                parameters_list = command.parameters_list
+
+                if parameters_list:
+                    message.append("/%s %s <code>-</code> %s" %
+                                   (command.name, parameters_list, summary))
+                else:
+                    message.append("/%s <code>-</code> %s" %
+                                   (command.name, summary))
+
             message.append("")
             message.append(bot._("You can also use <code>/help &lt;command&gt;"
                                  "</code> to get help about a specific "
@@ -121,11 +132,20 @@ class DefaultComponent(components.Component):
         """Generate a command's help message"""
         message = []
 
-        docstring = escape_html(next((cmd for cmd in commands if
-                                      cmd.name == command), None).docstring)
+        command = next((cmd for cmd in commands if
+                        cmd.name == command), None)
+
+        docstring = escape_html(command.docstring)
+        params_list = command.parameters_list
+
         if docstring is None:
             docstring = "<i>%s</i>" % bot._("No description available.")
-        message.append("/%s <code>-</code> %s" % (command, docstring))
+
+        if params_list:
+            message.append("/%s %s <code>-</code> %s" % (
+                command.name, params_list, docstring))
+        else:
+            message.append("/%s <code>-</code> %s" % (command.name, docstring))
 
         # Show the owner informations
         if bot.owner:
@@ -169,6 +189,27 @@ class DefaultComponent(components.Component):
                 bot._("Use /help to get a list of the commands."),
             ]), syntax="html")
             return True
+
+    # Timer for cleaning up inline pagination cache
+    def _inline_cleaning_up_timer(self, bot):
+        to_delete = list()
+        current_time = time()
+        for user in bot._inline_paginate:
+            if len(bot._inline_paginate[user]) == 0:
+                to_delete.append((user, None))
+
+            for query in bot._inline_paginate[user]:
+                delta = \
+                    int(current_time - bot._inline_paginate[user][query][2])
+                if delta > 60:
+                    # You can't delete elements of a dict in a for loop
+                    to_delete.append((user, query))
+
+        for element in to_delete:
+            if element[1] is not None:
+                del bot._inline_paginate[element[0]][element[1]]
+            else:
+                del bot._inline_paginate[element[0]]
 
 
 def escape_html(text):

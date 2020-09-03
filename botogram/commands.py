@@ -18,6 +18,8 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
+from inspect import Parameter
+
 
 class Command:
     """Representation of a single command"""
@@ -80,6 +82,27 @@ class Command:
                 result.pop(pos)
 
         return "\n".join(result)
+
+    @property
+    def parameters_list(self):
+        """Get the parameters list of this single command"""
+        if not self._hook._parameters:
+            return None
+
+        params_list = ""
+
+        for parameter in self._hook._parameters.values():
+            params_list += "[" + parameter.name
+
+            if parameter.annotation is not Parameter.empty:
+                params_list += ":" + parameter.annotation.__name__
+
+            if parameter.default is not Parameter.empty:
+                params_list += "=" + str(parameter.default)
+
+            params_list += "] "
+
+        return params_list.strip()
 
     @property
     def summary(self):

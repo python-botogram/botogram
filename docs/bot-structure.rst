@@ -70,6 +70,44 @@ If you need to store global state check out :ref:`shared memory
 
 .. _bot-structure-hooks-args:
 
+Arguments for the command hook
+==============================
+
+There's a special parameter called ``args``, which is used to get the list of arguments
+provided to the bot when the command is called.
+
+For example, this is an hook which is executed when someone calls the ``/hello``
+command:
+
+.. code-block:: python
+
+   @bot.command("hello")
+   def hello_command(chat, message, args):
+       chat.send("Hello " + ", ".join(args))
+
+If you send ``/hello foo bot``, you will receive *Hello foo, bot* as a message.
+
+You can even decide which arguments are required by the command to work properly.
+
+For example, this is a command hook which requires two arguments (``from_who`` & ``to_wbo``):
+
+.. code-block:: python
+
+   @bot.command("say_hello")
+   def say_hello_command(chat, from_who: str, to_who: str):
+      chat.send("%s says hello to %s!" % (from_who, to_who))
+
+ If you send ``/say_hello foo bot``, you will receive *foo says hello to bot* as a message.
+
+As you can see, you can use *type annotations*! If you use them, the bot will automatically
+convert the arguments to the provided types.
+
+You can use *default arguments* as well.
+
+.. versionchanged:: 0.7
+
+   Added the support for optional arguments and type annotations.
+
 Dynamic hooks arguments
 =======================
 

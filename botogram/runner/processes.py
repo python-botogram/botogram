@@ -147,6 +147,12 @@ class WorkerProcess(BaseProcess):
     """This process will execute all the updates it receives"""
 
     name = "Worker"
+    counter = 0
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._id = type(self).counter
+        type(self).counter += 1
 
     def setup(self, bots):
         self.bots = bots
@@ -154,7 +160,7 @@ class WorkerProcess(BaseProcess):
     def loop(self):
         # Request a new job
         try:
-            job = self.ipc.command("jobs.get", None)
+            job = self.ipc.command("jobs.get", self._id)
         except InterruptedError:
             # This return acts as a continue
             return
@@ -214,9 +220,10 @@ class UpdaterProcess(BaseProcess):
         result = []
         for update in updates:
             update.set_api(None)
-            result.append(jobs.Job(self.bot_id, jobs.process_update, {
+            data = {
                 "update": update,
-            }))
+            }
+            result.append(jobs.Job(self.bot_id, jobs.process_update, data))
 
         self.ipc.command("jobs.bulk_put", result)
 

@@ -17,10 +17,18 @@
 #   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
+from inspect import Parameter
+import json
+import logbook
 import re
+from time import time
 
 from .callbacks import hashed_callback_name
 from .context import Context
+from .converters import _parameters_conversion
+from .objects.messages import Message
+
+logger = logbook.Logger("botogram hook")
 
 
 class Hook:
@@ -199,6 +207,9 @@ class CommandHook(Hook):
         self._order = 0
         if "order" in args:
             self._order = args["order"]
+        self._parameters = None
+        if "parameters" in args:
+            self._parameters = args["parameters"]
 
     def _call(self, bot, update):
         message = update.message
@@ -212,8 +223,28 @@ class CommandHook(Hook):
             return
 
         args = _command_args_split_re.split(text)[1:]
+        params = {}
+
+        if self._parameters:
+            for index, parameter in enumerate(self._parameters.values()):
+                try:
+                    if parameter.annotation is Parameter.empty:
+                        params[parameter.name] = args[index]
+                    else:
+                        params[parameter.name] = _parameters_conversion(
+                            parameter.annotation, args[index],
+                            parameter.name)
+                except IndexError:
+                    if parameter.default is Parameter.empty:
+                        logger.debug("A value for the parameter %s "
+                                     "is missing" % parameter.name)
+                        return True
+                except Exception as error:
+                    logger.debug(error)
+                    return True
+
         bot._call(self.func, self.component_id, chat=message.chat,
-                  message=message, args=args)
+                  message=message, args=args, **params)
         return True
 
 
@@ -234,13 +265,106 @@ class CallbackHook(Hook):
             if name != self._name:
                 return
 
+            if q.is_inline:
+                args = {
+                    "inline_message_id": q.inline_message_id,
+                }
+                message = Message(data=args, api=q._api)
+                chat = q.chat_instance
+            else:
+                message = q.message
+                chat = q.message.chat
+
             bot._call(
-                self.func, self.component_id, query=q, chat=q.message.chat,
-                message=q.message, data=data,
+                self.func, self.component_id, query=q, chat=chat,
+                message=message, data=data, is_inline=q.is_inline
             )
 
             update.callback_query._maybe_send_noop()
             return True
+
+
+class InlineHook(Hook):
+    """Underlying hook for @bot.inline"""
+
+    def _after_init(self, args):
+        self.cache = args["cache"]
+        self.private = args["private"]
+        self.paginate = args["paginate"]
+
+    def _reset_pagination(self, bot, inline, sender, query):
+        inline.cache = self.cache
+        inline.private = self.private
+        inline.paginate = self.paginate
+        generator = bot._call(self.func,
+                              self.component_id,
+                              inline=inline,
+                              sender=sender,
+                              query=query)
+        if not bot._inline_paginate.get(sender.id, False):
+            bot._inline_paginate[sender.id] = dict()
+        bot._inline_paginate[sender.id][query] = [
+            generator,
+            0,  # First offset
+            time(),  # Last update time
+        ]
+
+    def _call(self, bot, update):
+        inline = update.inline_query
+        sender = inline.sender
+        query = inline.query
+
+        if sender.id not in bot._inline_paginate or \
+                query not in bot._inline_paginate[sender.id] or \
+                inline.offset == '':
+            self._reset_pagination(bot, inline, sender, query)
+
+        generator = bot._inline_paginate[sender.id][query][0]
+        offset = bot._inline_paginate[sender.id][query][1]
+
+        results = []
+        i = offset
+        next_offset = offset + 1
+        while i < next_offset:
+            try:
+                element = next(generator)
+            except StopIteration:
+                break
+            element['id'] = i
+            results.append(element)
+            i += 1
+
+            hook_locals = generator.gi_frame.f_locals["inline"]
+            next_offset = offset + hook_locals.paginate
+            cache = hook_locals.cache
+            is_private = hook_locals.private
+
+        if len(results) == 0:
+            # No more results, don't do anything
+            return
+
+        bot._inline_paginate[sender.id][query][1] = next_offset
+        bot._inline_paginate[sender.id][query][2] = time()
+
+        args = {
+            "inline_query_id": inline.id,
+            "cache_time": cache,
+            "is_personal": is_private,
+            "results": json.dumps(results),
+            "next_offset": next_offset,
+        }
+        if hook_locals._switch_pm_text is not None:
+            args["switch_pm_text"] = hook_locals._switch_pm_text
+        if hook_locals._switch_pm_parameter is not None:
+            args["switch_pm_parameter"] = hook_locals._switch_pm_parameter
+        return bot.api.call("answerInlineQuery", args)
+
+
+class ChosenInlineHook(Hook):
+    """Underlying hook for @bot.inline_feedback"""
+
+    def _call(self, bot, update):
+        bot._call(self.func, feedback=update.chosen_inline_result)
 
 
 class ChatUnavailableHook(Hook):

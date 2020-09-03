@@ -141,10 +141,10 @@ class Chat(BaseObject, mixins.ChatMixin):
     """
 
     required = {
-        "id": int,
-        "type": str,
+        "id": int
     }
     optional = {
+        "type": str,
         "title": str,
         "username": str,
         "first_name": str,
