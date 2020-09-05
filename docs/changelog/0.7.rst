@@ -99,6 +99,12 @@ New features
 
 * Added automatic type conversion for command arguments
 
+* Added support for incoming messages inline reply markup
+
+  * New :py:class:`~botogram.InlineKeyboardMarkup` class
+  * New :py:class:`~botogram.InlineKeyboardButton` class
+  * New attribute :py:attr:`Message.reply_markup`
+
 Bug fixes
 ---------
 

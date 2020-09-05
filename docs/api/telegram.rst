@@ -40,6 +40,8 @@ about its business.
 * :py:class:`~botogram.ReplyKeyboardMarkup`
 * :py:class:`~botogram.ReplyKeyboardHide`
 * :py:class:`~botogram.ForceReply`
+* :py:class:`~botogram.InlineKeyboardButton`
+* :py:class:`~botogram.InlineKeyboardMarkup`
 
 
 .. py:class:: botogram.User
@@ -102,6 +104,14 @@ about its business.
       delay.
 
       .. versionadded:: 0.2
+
+   .. py:attribute:: reply_markup
+
+      This attribute contains the inline keyboard attached to the message.
+
+      It's always an instance of :py:class:`~botogram.InlineKeyboardMarkup` class.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:method:: avatar_history()
 
@@ -3360,6 +3370,58 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+
+.. py:class:: botogram.InlineKeyboardButton
+
+   This class represents an inline keyboard button.
+
+   .. py:attribute:: text
+
+      Label text of the button.
+
+   .. py:attribute:: url
+
+      The URL that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: callback_data
+
+      The callback data that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: switch_inline_query
+
+      The switch inline query parameter that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: switch_inline_query_current_chat
+
+      The switch inline query current chat parameter that the button is carrying.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: pay
+
+      This attribute is `True` when the button is a pay button.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. versionadded:: 0.7
+
+
+.. py:class:: botogram.InlineReplyMarkup
+
+   This class represents a keyboard markup.
+
+   .. py:attribute:: inline_keyboard
+
+      Array of button rows, each represented by an array of
+      :py:class:`~botogram.InlineKeyboardButton`.
+
+   .. versionadded:: 0.7
 
 .. _Telegram's Bot API: https://core.telegram.org/bots/api
 .. _API methods: https://core.telegram.org/bots/api#available-methods

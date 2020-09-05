@@ -63,3 +63,32 @@ class ForceReply(BaseObject):
     optional = {
         "selective": bool,
     }
+
+
+class InlineKeyboardButton(BaseObject):
+    """Telegram API representation of a inline keyboard button
+
+    https://core.telegram.org/bots/api#inlinekeyboardbutton
+    """
+
+    required = {
+        "text": str,
+    }
+    optional = {
+        "url": str,
+        "callback_data": str,
+        "switch_inline_query": str,
+        "switch_inline_query_current_chat": str,
+        "pay": bool,
+    }
+
+
+class InlineKeyboardMarkup(BaseObject):
+    """Telegram API representation of a inline keyboard markup
+
+    https://core.telegram.org/bots/api#inlinekeyboardmarkup
+    """
+
+    required = {
+        "inline_keyboard": multiple(multiple(InlineKeyboardButton)),
+    }
