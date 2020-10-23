@@ -96,8 +96,14 @@ New features
   * New argument ``vcard`` in :py:meth:`botogram.User.send_contact`
   * New argument ``vcard`` in :py:meth:`botogram.Message.reply_with_contact`
   * New attribute :py:attr:`Contact.vcard`
-
+  
 * Added automatic type conversion for command arguments
+
+Changes
+-------
+
+* added support for new html and markdown tags to the syntax detector
+
 
 Bug fixes
 ---------
