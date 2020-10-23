@@ -18,5 +18,6 @@ the development will be made trying to not break anything.
    bot
    buttons
    channels
+   inline
    components
    telegram
