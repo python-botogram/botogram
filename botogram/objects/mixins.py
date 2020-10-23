@@ -381,7 +381,7 @@ class ChatMixin:
                 " 1 and 255 characters long"
             )
         else:
-            self._api.call("setChatTitle", {
+            return self._api.call("setChatTitle", {
                 "chat_id": self.id,
                 "title": title
             })
