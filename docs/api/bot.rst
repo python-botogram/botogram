@@ -117,7 +117,7 @@ components.
       If the function returns ``True``, then the message processing is stopped,
       and no more functions will be called for this update.
 
-   .. py:decoratormethod:: after_processing
+   .. py:decoratormethod:: after_processing1
 
       Functions decorated with this decorator will be called after an update
       is processed. This allows you, for example, to send log.
