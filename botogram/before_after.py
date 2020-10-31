@@ -18,6 +18,7 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
+
 def process_before(bot, chains, update):
     """before process"""
     for hook in chains["before_processors"]:
