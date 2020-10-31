@@ -23,6 +23,7 @@ import hashlib
 
 from . import crypto
 from .context import ctx
+from .before_after import process_before, process_after
 
 
 DIGEST = hashlib.md5
@@ -165,7 +166,7 @@ def process(bot, chains, update):
     """Process a callback sent to the bot"""
     chat = update.callback_query.message.chat
     raw = update.callback_query._data
-
+    result = False
     try:
         name, data = parse_callback_data(bot, chat, raw)
     except crypto.TamperedMessageError:
@@ -174,7 +175,8 @@ def process(bot, chains, update):
             % update.update_id
         )
         return
-
+    if process_before(bot, chains, update):
+        return
     for hook in chains["callbacks"]:
         bot.logger.debug("Processing update #%s with the hook %s" %
                          (update.update_id, hook.name))
@@ -183,7 +185,11 @@ def process(bot, chains, update):
         if result is True:
             bot.logger.debug("Update #%s was just processed by the %s hook" %
                              (update.update_id, hook.name))
-            return
+            break
+    if process_after(bot, chains, update):
+        return
+    if result:
+        return
 
     bot.logger.debug("No hook actually processed the #%s update." %
                      update.update_id)

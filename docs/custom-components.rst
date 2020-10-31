@@ -94,13 +94,12 @@ the :py:meth:`botogram.Component.add_before_processing_hook` method:
            self.allowed = allowed
            self.add_before_processing_hook(self.filter)
 
-       def filter(self, chat, message):
-           if message.sender.id not in self.allowed:
+       def filter(self, chat, message, user):
+           if user.id not in self.allowed:
                return True  # Stop processing the update
 
-And the component is complete! The filter simply checks if the message
-sender's ID is in the allowed list. If not, it tells botogram the message was
-successfully processed, preventing the calls to all the other hooks. The full
+And the component is complete! The filter simply checks if the  user sender update ID is in the allowed list.
+If not, it tells botogram the message was successfully processed, preventing the calls to all the other hooks. The full
 source code of the component is the following:
 
 .. code-block:: python
@@ -116,12 +115,13 @@ source code of the component is the following:
            self.allowed = allowed
            self.add_before_processing_hook(self.filter)
 
-       def filter(self, chat, message):
-           if message.sender.id not in self.allowed:
+       def filter(self, chat, message, user):
+           if user.id not in self.allowed:
                return True  # Stop processing the update
 
 .. _custom-components-use:
-
+.. versionchanged:: 0.7
+   use user parameter instead of message parameter
 Using a custom component
 ========================
 

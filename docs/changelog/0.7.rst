@@ -18,7 +18,10 @@ Release description not yet written.
 
 New features
 ------------
+* Added after processing method
 
+    * New :py:meth:`botogram.Bot.after_processing`
+    * New :py:meth:`botogram.Component.add_after_processing_hook`
 
 * Added support for animations (GIFs)
 
@@ -81,3 +84,6 @@ Bug fixes
 ---------
 
 * Fixed :py:meth:`botogram.Message.edit_attach` to work with inline callbacks
+* Fixed before_processing now run with all update, before only for the message (command and process_message)
+   * :py:meth:`botogram.Bot.before_processing`
+   * :py:meth:`botogram.Component.add_before_processing_hook`

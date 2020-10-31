@@ -138,6 +138,11 @@ class Bot(frozenbot.FrozenBot):
         self._main_component.add_before_processing_hook(func)
         return func
 
+    def after_processing(self, func):
+        """Register a after processing hook"""
+        self._main_component.add_after_processing_hook(func)
+        return func
+
     def process_message(self, func):
         """Add a message processor hook"""
         self._main_component.add_process_message_hook(func)

@@ -98,16 +98,44 @@ components.
 
       Functions decorated with this decorator will be called before an update
       is processed. This allows you, for example, to set up a filter on who can
-      send messages to the bot. Decorated functions will be called with two
+      send messages to the bot. Decorated functions will be called with four
       parameters:
 
+      * A ``update`` parameter with the representation
+        of the update (an istance of :py:class:`botogram.Update`)
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (an instance of :py:class:`botogram.Chat`)
+        message was sent (an instance of :py:class:`botogram.Chat`) if provided by update
       * A ``message`` parameter with the representation of the received
-        message (an instance of :py:class:`botogram.Message`)
+        message (an instance of :py:class:`botogram.Message`) if provided by update
+      * A ``user`` parameter with the representation of the user send
+        update (an instance of :py:class:`botogram.User`) if provided by update
+
+      .. versionchanged:: 0.7
+
+         Added update and user parameter
 
       If the function returns ``True``, then the message processing is stopped,
       and no more functions will be called for this update.
+
+   .. py:decoratormethod:: after_processing
+
+      Functions decorated with this decorator will be called after an update
+      is processed. This allows you, for example, to send log.
+      Decorated functions will be called with four parameters:
+
+      * A ``update`` parameter with the representation
+        of the update (an istance of :py:class:`botogram.Update`)
+      * A ``chat`` parameter with the representation of the chat in which the
+        message was sent (an instance of :py:class:`botogram.Chat`) if provided by update
+      * A ``message`` parameter with the representation of the received
+        message (an instance of :py:class:`botogram.Message`) if provided by update
+      * A ``user`` parameter with the representation of the user send
+        update (an instance of :py:class:`botogram.User`) if provided by update
+
+      If the function returns ``True``, then the message processing is stopped,
+      and no more functions will be called for this update.
+
+      .. versionadded:: 0.7
 
    .. py:decoratormethod:: process_message
 
