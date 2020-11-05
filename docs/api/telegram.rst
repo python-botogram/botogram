@@ -1531,9 +1531,10 @@ about its business.
 
    .. py:method:: send_dice([emoji=None, reply_to=None, extra=None, attach=None, notify=True])
 
-      Use this method to send a dice, which will have a random value from 1 to 6 for “🎲”, “🎯” and from 1 to 5 for "🏀".
+      Use this method to send a dice, which will have a random value from 1-6 for “🎲” and “🎯” base emoji,
+       1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
 
-      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯” or "🏀". Defaults to “🎲”
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯”, "🏀", "⚽" or "🎰". Defaults to “🎲”
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
@@ -2572,9 +2573,10 @@ about its business.
 
    .. py:method:: reply_with_dice([emoji=None, extra=None, attach=None, notify=True])
 
-      Use this method to reply with a dice, which will have a random value from 1 to 6
+      Use this method to reply with a dice,which will have a random value from 1-6 for “🎲” and “🎯” base emoji,
+       1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
 
-      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯” or "🏀" . Defaults to “🎲”
+      :param str emoji: Emoji on which the dice throw animation is based. Currently, must be either “🎲”, “🎯”, "🏀", "⚽" or "🎰". Defaults to “🎲”
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
@@ -3201,7 +3203,7 @@ about its business.
 
    .. py:attribute:: value
 
-      Value of the dice, 1-6 (or 1-5) for currently supported base emoji
+      Value of the dice, 1-6, 1-5 or 1-64 for currently supported base emoji
 
    .. versionadded:: 0.7
 
