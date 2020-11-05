@@ -19,6 +19,14 @@ Release description not yet written.
 New features
 ------------
 
+* Added support fo dice
+
+   * New :py:class:`botogram.Dice` class
+   * New attribute :py:attr:`botogram.Message.dice`
+   * New method :py:meth:`botogram.Chat.send_dice`
+   * New method :py:meth:`botogram.User.send_dice`
+   * New method :py:meth:`botogram.Message.reply_with_dice`
+
 
 * Added support for inline mode
 
