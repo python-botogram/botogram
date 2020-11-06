@@ -111,7 +111,7 @@ about its business.
 
       .. versionadded:: 0.2
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
+   .. py:method:: send(message, [preview=True, reply_to=None, allow_sending=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the user. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -129,6 +129,7 @@ about its business.
       :param str message: The textual message to be sent.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param str syntax: The name of the syntax used for the message.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -144,7 +145,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, syntax=None, reply_to=None, extra=None, attach=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, syntax=None, reply_to=None, allow_sending=None, extra=None, attach=None, notify=True])
 
       Send a photo to the user. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -166,6 +171,7 @@ about its business.
       :param str caption: A caption for the photo.
       :param str syntax: The name of the syntax used for the caption.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
@@ -193,7 +199,11 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the user. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -244,7 +254,11 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, allow_sending=None,  extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the user. You can specify the audio by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -288,7 +302,12 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, attach=None, extra=None, notify=True, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, syntax=None])
 
       Send a video to the user. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -334,7 +353,12 @@ about its business.
       
          Added support for syntax
 
-   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -367,7 +391,12 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send an animation to the user. You can specify the animation by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -402,7 +431,7 @@ about its business.
 
       .. versionadded:: 0.7
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the user. You can specify the file by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -449,7 +478,12 @@ about its business.
 
          Added support for syntax
 
-   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
@@ -486,7 +520,12 @@ about its business.
 
          Now the method supports live locations
 
-   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a venue to the user. A venue is made of its geographic coordinates
       (latitude and longitude), its title and address, and optionally the
@@ -524,7 +563,12 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, path=None, file_id=None, url=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_sticker([sticker=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, path=None, file_id=None, url=None])
 
       Send the sticker to the user (in webp format). You can specify the sticker by
       passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
@@ -560,7 +604,12 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a contact to the user. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -594,7 +643,12 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_album([album=None, reply_to=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_album([album=None, reply_to=None, allow_sending=None, notify=True])
 
       Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
       message you are sending is in reply to another, set *reply_to* to the ID
@@ -620,12 +674,18 @@ about its business.
 
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param bool notify: If you want to trigger a notification on the client
 
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
+
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
 
    .. py:method:: delete_message(message)
 
@@ -1007,7 +1067,7 @@ about its business.
       :rtype: str
       .. versionadded:: 0.6
 
-   .. py:method:: send(message, [preview=True, reply_to=None, syntax=None, attach=None, extra=None, notify=True])
+   .. py:method:: send(message, [preview=True, reply_to=None, allow_sending=None, syntax=None, attach=None, extra=None, notify=True])
 
       Send the textual *message* to the chat. You may optionally stop clients
       from generating a *preview* for any link included in the message. If the
@@ -1025,6 +1085,7 @@ about its business.
       :param str message: The textual message to be sent.
       :param bool preview: Whether to show link previews.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param str syntax: The name of the syntax used for the message.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -1040,7 +1101,12 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, attach=None, extra=None, attach=None, notify=True, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_photo([path=None, file_id=None, url=None, caption=None, reply_to=None, allow_sending=None, attach=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a photo to the chat. You can specify the photo by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1061,6 +1127,7 @@ about its business.
       :param str url: The URL to the photo.
       :param str caption: A caption for the photo.
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
       :param bool notify: If you want to trigger the client notification.
@@ -1084,7 +1151,12 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_audio([path=None, file_id=None, url=None, duration=None, performer=None, title=None, thumb=None, reply_to=None, allow_sending=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send an audio track to the chat. You can specify the track by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1132,7 +1204,12 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_voice([path=None, file_id=None, url=None, duration=None, reply_to=None, allow_sending=None, extra=None, attach=None, notify=True, caption=None, syntax=None])
 
       Send a voice message to the chat. You can specify the audio by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1176,7 +1253,12 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, extra=None, attach=None, notify=True, syntax=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_video([path=None, file_id=None, url=None, duration=None, caption=None, streaming=True, thumb=None, reply_to=None, allow_sending=None, extra=None, attach=None, notify=True, syntax=None])
 
       Send a video to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1223,7 +1305,12 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_video_note([path=None, file_id=None, duration=None, diameter=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1256,7 +1343,12 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+
+   .. py:method:: send_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send an animation to the user. You can specify the animation by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1291,7 +1383,7 @@ about its business.
 
       .. versionadded:: 0.7
 
-   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
+   .. py:method:: send_file([path=None, file_id=None, url=None, thumb=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, caption=None, syntax=None])
 
       Send a generic file to the chat. You can specify the video by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -1334,7 +1426,11 @@ about its business.
       
          Support text formatting in caption through *syntax*.
 
-   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_location(latitude, longitude, [live_period=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user. If the location you're sending
       is in reply to another message, set *reply_to* to the ID of the other
@@ -1371,7 +1467,11 @@ about its business.
 
          Now the method supports live locations
 
-   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_venue(latitude, longitude, title, address, [foursquare=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a venue to the chat. A venue is made of its geographic coordinates
       (latitude and longitude), its title and address, and optionally the
@@ -1406,7 +1506,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_sticker([sticker=None, reply_to=None, attach=None, extra=None, notify=True, file_id=None, url=None])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_sticker([sticker=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True, file_id=None, url=None])
 
       Send the sticker to the chat (in webp format). You can specify the sticker by
       passing its *path*, its *url*, or its Telegram *file_id*. Only one of these 
@@ -1442,7 +1546,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send a contact to the chat. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -1473,7 +1581,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: send_album([album=None, reply_to=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_album([album=None, reply_to=None, allow_sending=None, notify=True])
 
       Send album to the chat. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable. If the
       message you are sending is in reply to another, set *reply_to* to the ID
@@ -1498,13 +1610,18 @@ about its business.
 
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param bool notify: If you want to trigger a notification on the client
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
 
-   .. py:method:: send_poll(question, *options, [reply_to=None, extra=None, attach=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: send_poll(question, *options, [reply_to=None, allow_sending=None, extra=None, attach=None, notify=True])
 
       Send a poll to the chat. A Telegram poll is made by a question and a list of options
       (you can specify them as arguments).
@@ -1520,7 +1637,8 @@ about its business.
 
       :param str question: Poll question, 1-255 characters
       :param *str options: List of answer options, 2-10 string of 1-100 characters each
-      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
@@ -2109,7 +2227,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply(message, [preview=True, syntax=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply(message, [preview=True, allow_sending=None,  syntax=None, attach=None, extra=None, notify=True])
 
       Reply with the textual *message* in regards to this message. You may
       optionally stop clients from generating a *preview* for any link included
@@ -2125,6 +2243,7 @@ about its business.
 
       :param str message: The textual message to reply with.
       :param bool preview: Whether to show link previews.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param str syntax: The name of the syntax used for the message.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -2140,7 +2259,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_photo(path, [caption=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_photo(path, [allow_sending=None, caption=None, attach=None, extra=None, notify=True])
 
       Reply with a photo found at *path* in regards to this message. You may
       optionally specify a *caption* for the photo being sent in reply.
@@ -2152,6 +2275,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the photo.
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param str caption: A caption for the photo.
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach.
@@ -2167,7 +2291,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_audio(path, [duration=None, performer=None, title=None, thumb=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_audio(path, [allow_sending=None, duration=None, performer=None, title=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the audio track found in the *path* to the chat. You may
       optionally specify the *duration*, the *performer* and the *title* of the
@@ -2180,6 +2308,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the audio track
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param int duration: The track duration, in seconds
       :param str performer: The name of the performer
       :param str title: The title of the track
@@ -2198,7 +2327,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_voice(chat, path, [duration=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_voice(path, [allow_sending=None, duration=None, attach=None, extra=None, notify=True])
 
       Send the voice message found in the *path* to the chat. You may
       optionally specify the *duration* of the voice message.
@@ -2210,6 +2343,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the voice message
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param int duration: The message duration, in seconds
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -2225,7 +2359,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video(path, [duration=None, caption=None, streaming=True, thumb=True, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_video(path, [allow_sending=None, duration=None, caption=None, streaming=True, thumb=True, attach=None, extra=None, notify=True])
 
       Reply with the video found in the *path* to the chat. You may optionally
       specify the *duration* and the *caption* of the video.
@@ -2237,6 +2375,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the video
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param int duration: The video duration, in seconds
       :param str caption: The caption of the video
       :param bool streaming: Pass `True` or `False` to set whether the video should support streaming or not. Defaults as `True`.
@@ -2255,7 +2394,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_video_note([path=None, file_id=None, duration=None, length=None, thumb=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_video_note([path=None, file_id=None, allow_sending=None,  duration=None, length=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the video note to the user. You can specify the video note by passing its *path*,
       or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -2272,6 +2415,7 @@ about its business.
 
       :param str path: The path to the video
       :param str file_id: The Telegram *file_id* of the video
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param int duration: The video duration, in seconds
       :param str length: The length of the video
       :param str path: The path to the thumb
@@ -2288,7 +2432,11 @@ about its business.
 
       .. versionadded:: 0.6
 
-   .. py:method:: reply_with_gif([path=None, file_id=None, duration=None, width=None, height=None, caption=None, thumb=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_gif([path=None, file_id=None, allow_sending=None, duration=None, width=None, height=None, caption=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with an animation to the message. You can specify the animation by passing its *path*,
       its *url*, or its Telegram *file_id*. Only one of these arguments must be passed.
@@ -2305,6 +2453,7 @@ about its business.
 
       :param str path: The path to the animation
       :param str file_id: The Telegram *file_id* of the animation
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param int duration: The animation duration, in seconds
       :param str width: The animation width, in pixels
       :param str height: The animation height, in pixels
@@ -2323,7 +2472,7 @@ about its business.
 
       .. versionadded:: 0.7
 
-   .. py:method:: reply_with_file(path, [thumb=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_file(path, [allow_sending=None, thumb=None, attach=None, extra=None, notify=True])
 
       Reply with the generic file found in the *path* to the chat. If the file
       you're sending is in reply to another message, set *reply_to* to the ID
@@ -2336,7 +2485,8 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str path: The path to the file
-      :param str path: The path to the thumb
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
+      :param str thumb: The path to the thumb
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2351,7 +2501,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_location(latitude, longitude, [live_period=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_location(latitude, longitude, [live_period=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Send the geographic location to the user.
 
@@ -2367,7 +2521,7 @@ about its business.
       :param float latitude: The latitude of the location
       :param float longitude: The longitude of the location
       :param int live_period: The duration of the live location in seconds, None if it is not a live location.
-      :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2386,7 +2540,11 @@ about its business.
 
          Now the method supports live locations
 
-   .. py:method:: reply_with_venue(latitude, longitude, title, address, [foursquare=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_venue(latitude, longitude, title, address, [allow_sending=None, foursquare=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a venue. A venue is made of its geographic
       coordinates (latitude and longitude), its title and address, and
@@ -2408,6 +2566,7 @@ about its business.
       :param float longitude: The longitude of the venue
       :param str title: The name of the venue
       :param str address: The address of the venue
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param str foursquare: The Foursquare ID of the venue
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -2421,7 +2580,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: reply_with_sticker(sticker, [reply_to=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_sticker(sticker, [allow_sending=None, attach=None, extra=None, notify=True])
 
       Reply with the sticker (in webp format) to the chat.
 
@@ -2432,6 +2595,7 @@ about its business.
       a notification on the client side (yes by default).
 
       :param str sticker: The path to the webp-formatted sticker
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger the client notification.
@@ -2446,7 +2610,11 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, vcard=None, attach=None, extra=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, vcard=None, allow_sending=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a contact. A Telegram contact is made of its
       phone number (with the international prefix), its first name and
@@ -2464,6 +2632,7 @@ about its business.
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
       :param str vcard: The contact vcard
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
@@ -2476,7 +2645,11 @@ about its business.
 
       .. versionadded:: 0.3
 
-   .. py:method:: reply_with_album([album=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_album([album=None, notify=True, allow_sending=None])
 
       Reply to this message with an album. This method returns an instance of :py:class:`~botogram.Album` or sends the :py:class:`~botogram.Album` provided by the album variable.
       The *notify* parameter defines if your message should
@@ -2499,12 +2672,17 @@ about its business.
 
       :param album: The :py:class:`~botogram.Album` send to the chat
       :param bool notify: If you want to trigger a notification on the client
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :returns: The messages you sent
       :rtype: list of :py:class:`~botogram.Message`
 
       .. versionadded:: 0.6
 
-   .. py:method:: reply_with_poll(question, *options, [extra=None, attach=None, notify=True])
+      .. versionchanged:: 0.7
+
+         Support allow_sending parameter
+
+   .. py:method:: reply_with_poll(question, *options, [extra=None, attach=None, notify=True, allow_sending=None])
 
       Reply to this message with a poll. A Telegram poll is made by a question and a list of options
       (you can specify them as arguments).
@@ -2523,6 +2701,7 @@ about its business.
       :param object attach: An extra thing to attach to the message
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
+      :param bool allow_sending Pass True, if the message should be sent even if the specified replied-to message is not found
       :returns: The message you sent
       :rtype: ~botogram.Message
 
