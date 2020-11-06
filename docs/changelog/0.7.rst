@@ -18,7 +18,44 @@ Release description not yet written.
 
 New features
 ------------
+* Added supprot for allow_sending in send method
 
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_photo`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_voice`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_location`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_venue`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_sticker`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_contact`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_album`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_audio`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_video`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_video_note`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Chat.send_file`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_photo`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_voice`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_location`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_venue`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_sticker`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_contact`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_album`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_audio`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_video`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_video_note`
+    * New argument ``allow_sending`` in :py:meth:`botogram.User.send_file`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_photo`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_voice`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_location`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_venue`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_sticker`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_contact`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_album`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_audio`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_video`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_video_note`
+    * New argument ``allow_sending`` in :py:meth:`botogram.Message.reply_with_file`
 
 * Added support for inline mode
 
