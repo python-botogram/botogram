@@ -55,8 +55,9 @@ setuptools.setup(
     ],
 
     install_requires = [
-        "requests",
         "logbook",
+        "requests",
+        "typing"
     ],
 
     include_package_data = True,
