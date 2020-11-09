@@ -80,7 +80,39 @@ def rebuild(cls, func, component, args):
 
 
 class BeforeProcessingHook(Hook):
-    """Underlying hook for @bot.process_message"""
+    """before processing hook for all update"""
+
+    def _call(self, bot, update):
+        """*Actually* call the hook"""
+        # add message and chat for backward compatibility
+        kwargs = {"update": update, "message": None, "chat": None,
+                  "user": None}
+        if update.message is not None:
+            kwargs.update({"message": update.message,
+                           "chat": update.message.chat,
+                           "user": update.message.sender})
+        elif update.edited_message is not None:
+            kwargs.update({"message": update.edited_message,
+                           "chat": update.edited_message.chat,
+                           "user": update.edited_message.sender})
+        elif update.channel_post is not None:
+            kwargs.update({"message": update.channel_post,
+                           "chat": update.channel_post.chat,
+                           "user": update.channel_post.sender})
+        elif update.edited_channel_post is not None:
+            kwargs.update({"message": update.edited_channel_post,
+                           "chat": update.edited_channel_post.chat,
+                           "user": update.edited_channel_post.sender})
+        elif update.callback_query is not None:
+            kwargs.update({"message": update.callback_query.message,
+                           "chat": update.callback_query.message.chat,
+                           "user": update.callback_query.sender})
+
+        return bot._call(self.func, self.component_id, **kwargs)
+
+
+class AfterProcessingHook(BeforeProcessingHook):
+    """after processing hook for all update"""
     pass
 
 

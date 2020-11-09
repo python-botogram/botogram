@@ -110,6 +110,10 @@ class FrozenBot:
         """Register a before processing hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")
 
+    def after_processing(self, func):
+        """Register a after processing hook"""
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
+
     def process_message(self, func):
         """Register a message processor hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")

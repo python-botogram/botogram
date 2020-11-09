@@ -35,17 +35,46 @@ about how to create them in the ":ref:`custom-components`" chapter.
       The function provided to this method will be called before an update is
       processed by a bot which uses the component. This allows you, for
       example, to set up a filter on who can send messages to the bot.
-      Provided functions will be called with two parameters:
+      Provided functions will be called with four parameters:
 
+      * A ``update`` parameter with the representation
+        of the update (an istance of :py:class:`botogram.Update`)
       * A ``chat`` parameter with the representation of the chat in which the
-        message was sent (an instance of :py:class:`botogram.Chat`)
+        message was sent (an instance of :py:class:`botogram.Chat`) if provided by update
       * A ``message`` parameter with the representation of the received
-        message (an instance of :py:class:`botogram.Message`)
+        message (an instance of :py:class:`botogram.Message`) if provided by update
+      * A ``user`` parameter with the representation of the user send
+        update (an instance of :py:class:`botogram.User`) if provided by update
 
       If the function returns ``True``, then the message processing is stopped,
       and no more functions will be called for that update.
 
       :param callable func: The function you want to add.
+
+      .. versionchanged:: 0.7
+
+        Added update and user parameter
+
+   .. py:method:: add_after_processing_hook(func)
+
+      The function provided to this method will be called after an update is
+      processed by a bot which uses the component. This allows you, for
+      example, to send log.
+      Provided functions will be called with four parameters:
+
+      * A ``update`` parameter with the representation
+        of the update (an istance of :py:class:`botogram.Update`)
+      * A ``chat`` parameter with the representation of the chat in which the
+        message was sent (an instance of :py:class:`botogram.Chat`) if provided by update
+      * A ``message`` parameter with the representation of the received
+        message (an instance of :py:class:`botogram.Message`) if provided by update
+      * A ``user`` parameter with the representation of the user send
+        update (an instance of :py:class:`botogram.User`) if provided by update
+
+      :param callable func: The function you want to add.
+
+      .. versionadded:: 0.7
+
 
    .. py:method:: add_process_message_hook(func)
 

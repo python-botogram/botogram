@@ -48,6 +48,7 @@ class Component:
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
+        self.__after_processors = []
         self.__memory_preparers = []
         self.__timers = []
         self.__chat_unavailable_hooks = []
@@ -74,6 +75,14 @@ class Component:
 
         hook = hooks.BeforeProcessingHook(func, self)
         self.__before_processors.append(hook)
+
+    def add_after_processing_hook(self, func):
+        """Register a before processing hook"""
+        if not callable(func):
+            raise ValueError("A after processing hook must be callable")
+
+        hook = hooks.AfterProcessingHook(func, self)
+        self.__after_processors.append(hook)
 
     def add_process_message_hook(self, func):
         """Add a message processor hook"""
@@ -255,13 +264,14 @@ class Component:
     def _get_chains(self):
         """Get the full hooks chain for this component"""
         messages = [
-            self.__before_processors[:],
             [self.__commands[name]._hook
                 for name in sorted(self.__commands.keys())],
             self.__no_commands[:],
             self.__processors[:],
         ]
         return {
+            "before_processors": [self.__before_processors[:]],
+            "after_processors": [self.__after_processors[:]],
             "messages": messages,
             "poll_updates": [self.__poll_update_hooks],
             "memory_preparers": [self.__memory_preparers],
