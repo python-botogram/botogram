@@ -99,6 +99,9 @@ New features
 
 * Added automatic type conversion for command arguments
 
+* Added support for editing the chat title
+
+  * New method :py:meth:`~Chat.set_title`
 Bug fixes
 ---------
 
