@@ -111,6 +111,17 @@ def test_command_docstring(bot):
     assert cmd.docstring == "a\nb"
 
 
+def test_command_parameters_list(bot):
+    def test4(x: int, y: float, q, z: bool = True, w="h"):
+        pass
+
+    # First of all create a command
+    func, cmd = create_command(bot, "test4", func=test4)
+
+    # Check the parameters list
+    assert cmd.parameters_list == "[x:int] [y:float] [q] [z:bool=True] [w=h]"
+
+
 def test_command_summary(bot):
     # First of all create a command
     func, cmd = create_command(bot, "test")

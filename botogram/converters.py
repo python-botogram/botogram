@@ -18,38 +18,34 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# Prepare the logger
-from .utils import configure_logger
-configure_logger()
-del configure_logger
+import typing
 
 
-# flake8: noqa
-
-from .api import APIError, ChatUnavailableError
-from .bot import Bot, create, channel
-from .frozenbot import FrozenBotError
-from .components import Component
-from .decorators import pass_bot, pass_shared, help_message_for
-from .runner import run
-from .objects import *
-from .utils import usernames_in
-from .callbacks import Buttons, ButtonsRow
-from .keyboards import Keyboard, KeyboardRow
-from .inline import (
-    InlineInputMessage,
-    InlineInputLocation,
-    InlineInputVenue,
-    InlineInputContact,
-)
+def _convert_to_bool(argument: str) -> bool:
+    """Convert the given argument in a boolean value"""
+    lowered = argument.lower()
+    if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+        return True
+    elif lowered in ('no', 'n', 'false', 'f', '0', 'disable', 'off'):
+        return False
+    else:
+        raise ValueError(lowered + ' is not a recognised boolean option')
 
 
-# This code will simulate the Windows' multiprocessing behavior if the
-# BOTOGRAM_SIMULATE_WINDOWS environment variable is set
-import os
-import multiprocessing
+def _parameters_conversion(converter: callable,
+                           argument: str, parameter) -> typing.Any:
+    """Convert an argument using a given converter"""
+    if converter is bool:
+        return _convert_to_bool(argument)
 
-if "BOTOGRAM_SIMULATE_WINDOWS" in os.environ:
-    multiprocessing.set_start_method("spawn", force=True)
+    try:
+        return converter(argument)
+    except Exception as exc:
+        try:
+            name = converter.__name__
+        except AttributeError:
+            name = converter.__class__.__name__
 
-del os, multiprocessing
+        raise ValueError('Converting to "{}" failed '
+                         'for parameter "{}".'.format(
+                             name, parameter)) from exc

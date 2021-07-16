@@ -57,6 +57,7 @@ Narrative documentation
    unavailable-chats
    groups-management
    buttons
+   inline
    shared-memory
    tasks
    custom-components

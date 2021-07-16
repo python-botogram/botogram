@@ -61,16 +61,20 @@ def call(func, **available):
         signature = inspect.signature(func)
 
     kwargs = {}
-    for name in signature.parameters:
-        if name not in available:
+
+    for parameter in signature.parameters.values():
+        if parameter.name not in available:
+            if parameter.default is not inspect.Parameter.empty:
+                continue
+
             raise TypeError("botogram doesn't know what to provide for %s"
-                            % name)
+                            % parameter.name)
 
         # If the argument is lazily loaded wake him up
-        arg = available[name]
+        arg = available[parameter.name]
         if hasattr(arg, "_botogram_call_lazy_argument"):
             arg = arg.load()
 
-        kwargs[name] = arg
+        kwargs[parameter.name] = arg
 
     return func(**kwargs)

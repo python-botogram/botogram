@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2019 The Botogram Authors (see AUTHORS)
+# Copyright (c) 2015-2020 The Botogram Authors (see AUTHORS)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,38 +18,6 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# Prepare the logger
-from .utils import configure_logger
-configure_logger()
-del configure_logger
 
-
-# flake8: noqa
-
-from .api import APIError, ChatUnavailableError
-from .bot import Bot, create, channel
-from .frozenbot import FrozenBotError
-from .components import Component
-from .decorators import pass_bot, pass_shared, help_message_for
-from .runner import run
-from .objects import *
-from .utils import usernames_in
-from .callbacks import Buttons, ButtonsRow
-from .keyboards import Keyboard, KeyboardRow
-from .inline import (
-    InlineInputMessage,
-    InlineInputLocation,
-    InlineInputVenue,
-    InlineInputContact,
-)
-
-
-# This code will simulate the Windows' multiprocessing behavior if the
-# BOTOGRAM_SIMULATE_WINDOWS environment variable is set
-import os
-import multiprocessing
-
-if "BOTOGRAM_SIMULATE_WINDOWS" in os.environ:
-    multiprocessing.set_start_method("spawn", force=True)
-
-del os, multiprocessing
+class InlineMessageUnsupportedActionException(Exception):
+    pass

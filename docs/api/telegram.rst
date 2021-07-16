@@ -32,6 +32,9 @@ about its business.
 * :py:class:`~botogram.Location`
 * :py:class:`~botogram.Permissions`
 * :py:class:`~botogram.Venue`
+* :py:class:`~botogram.Album`
+* :py:class:`~botogram.InlineQuery`
+* :py:class:`~botogram.InlineFeedback`
 * :py:class:`~botogram.Update`
 * :py:class:`~botogram.UserProfilePhotos`
 * :py:class:`~botogram.ReplyKeyboardMarkup`
@@ -557,7 +560,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the user. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -577,6 +580,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1438,7 +1442,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: send_contact(phone, first_name, [last_name=None, reply_to=None, attach=None, extra=None, notify=True])
+   .. py:method:: send_contact(phone, first_name, [last_name=None, vcard=None, reply_to=None, attach=None, extra=None, notify=True])
 
       Send a contact to the chat. A Telegram contact is made of its phone
       number (with the international prefix), its first name and optionally its
@@ -1455,6 +1459,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param int reply_to: The ID of the :py:class:`~botogram.Message` this one is replying to
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
@@ -1672,6 +1677,8 @@ about its business.
    This class represents messages received by and sent from your bot. Messages
    serve as a container for many of the core API objects described here.
 
+   If it is Inline messages also features the message ID and the chat ID, and if the bot is inside the group where the message was sent it will also have all the infos about the group itself.
+
    .. py:attribute:: id
 
       The integer ID of the message.
@@ -1698,9 +1705,23 @@ about its business.
 
       The integer date of when the message was sent, in Unix time.
 
+      *This attribute can be None if it's not provided by Telegram.*
+
    .. py:attribute:: chat
 
       The :py:class:`~botogram.Chat` to which the message belongs.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: is_inline
+
+      This attribute is ``True`` if the message is sent via inline mode.
+
+   .. py:attribute:: inline_message_id
+
+      The unique string ID of the message, if sent via inline mode.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
    .. py:attribute:: forward_from
 
@@ -2425,7 +2446,7 @@ about its business.
 
          Now the method returns the sent message
 
-   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, attach=None, extra=None, notify=True])
+   .. py:method:: reply_with_contact(phone, first_name, [last_name=None, vcard=None, attach=None, extra=None, notify=True])
 
       Reply to this message with a contact. A Telegram contact is made of its
       phone number (with the international prefix), its first name and
@@ -2442,6 +2463,7 @@ about its business.
       :param str phone: The phone number of the contact
       :param str first_name: The first name of the contact
       :param str last_name: The last name of the contact
+      :param str vcard: The contact vcard
       :param object attach: An extra thing to attach to the message.
       :param object extra: An extra reply interface object to attach
       :param bool notify: If you want to trigger a notification on the client
@@ -2766,6 +2788,10 @@ about its business.
 
       The integer height of the sticker image.
 
+   .. py:attribute:: is_animated
+
+      The boolean value if the sticker is animated.
+
    .. py:attribute:: thumb
 
       A :py:class:`~botogram.PhotoSize` object representing a thumbnail image of
@@ -2981,6 +3007,11 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: vcard
+
+      The vcard of the contact.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
 .. py:class:: botogram.Location
 
@@ -3091,8 +3122,8 @@ about its business.
       :param str syntax: The name of the syntax used for the caption.
 
    .. versionadded:: 0.6
-
-
+  
+  
 .. py:class:: botogram.Poll
 
    This class represents a poll.
@@ -3127,6 +3158,69 @@ about its business.
       Number of users that voted for this option.
 
 
+.. py:class:: botogram.InlineQuery
+
+   This class represents an inline query update received by the bot.
+   You can :ref:`check out the API documentation <api-inline>` for more
+   methods of this class.
+
+   .. py:attribute:: id
+
+   Unique string identifier of the inline update.
+
+   .. py:attribute:: sender
+
+   The sending :py:class:`~botogram.User` of the inline query.
+
+   .. py:attribute:: query
+
+   Text of the query (up to 512 characters).
+
+   .. py:attribute:: location
+
+   Sender :py:class:`~botogram.Location`, if the bot has requested it.
+
+   .. py:attribute:: offset
+
+   The offset of the results to be returned.
+   Usually, it's a number (as a string) auto incremented and handled by botogram.
+
+   .. versionadded:: 0.7
+
+
+.. py:class:: botogram.InlineFeedback
+
+   This class represents an inline chosen result update received by the bot.
+   You can :ref:`check out the API documentation <api-inline>` for more
+   methods of this class.
+
+   .. py:attribute:: result_id
+
+   The chosen result ID. 
+   Keep in mind that botogram uses progressive numeric IDs for inline results.
+
+   .. py:attribute:: sender
+
+   The sending :py:class:`~botogram.User` of the inline query.
+
+   .. py:attribute:: query
+
+   The original text of the query (up to 512 characters).
+
+   .. py:attribute:: location
+
+   Sender :py:class:`~botogram.Location`, if the bot has requested it.
+
+   .. py:attribute:: message
+
+   The :py:class:`~botogram.Message` sent inline
+   Available only if there is an inline keyboard attached to the message.
+
+   *This attribute can be None if it's not provided by Telegram.*
+
+   .. versionadded:: 0.7
+
+
 .. py:class:: botogram.Update
 
    This class represents an update received by the bot. You should not need to
@@ -3145,6 +3239,17 @@ about its business.
 
       *This attribute can be None if it's not provided by Telegram.*
 
+   .. py:attribute:: inline_query
+
+      The encapsulating :py:class:`~botogram.InlineQuery` object.
+
+      *This attribute can be None if it's not provided by Telegram.*
+
+   .. py:attribute:: chosen_inline_result
+
+      The encapsulating :py:class:`~botogram.InlineFeedback` object.
+
+      *This attribute can be None if it's not provided by Telegram.*
 
 .. py:class:: botogram.UserProfilePhotos
 

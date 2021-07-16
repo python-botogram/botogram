@@ -37,7 +37,7 @@ import setuptools
 
 setuptools.setup(
     name = "botogram2",
-    version = "0.6",
+    version = "0.6.1",
     url = "https://botogram.dev",
 
     license = "MIT",
@@ -55,8 +55,9 @@ setuptools.setup(
     ],
 
     install_requires = [
-        "requests",
         "logbook",
+        "requests",
+        "typing"
     ],
 
     include_package_data = True,
