@@ -209,31 +209,62 @@ about how to create them in the ":ref:`custom-components`" chapter.
              def __init__(self):
                  self.add_channel_post_edited_hook(self.reply)
 
-            def reply(self, chat, message):
+             def reply(self, chat, message):
                 message.reply("This post is changed!")
 
       :param callable func: The function you want to use.
 
       .. versionadded:: 0.4
 
+   .. py:method:: add_poll_update_hook(func)
+
+      All the functions provided to this method will receive all the updates
+      about new poll states. This allows you to act when a poll sent by the bot
+      is changed (i.e. new votes) or when a poll seen by the bot is closed.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **poll**: the poll that has just changed state
+        (instance of :py:class:`~botogram.Poll`)
+
+      .. code-block:: python
+
+         class PollUpdateComponent(botogram.Component):
+             component_name = "poll-update"
+
+             def __init__(self):
+                 self.add_poll_update_hook(self.trigger)
+
+             def trigger(self, poll):
+                 bot.chat(some_id_here).send("New answers to the poll. Check it out!")
+
+      :param callable func: The function you want to use.
+
+      .. versionadded:: 0.7
+
    .. py:method:: add_command(name, func, [hidden=False, order=0])
 
       This function registers a new command, and calls the provided function
       when someone issues the command in a chat. The command will also be added
       to the ``/help`` message. The provided function will be called with
-      three parameters:
+      these parameters:
 
       * A ``chat`` parameter with the representation of the chat in which the
         message was sent (an instance of :py:class:`botogram.Chat`)
       * A ``message`` parameter with the representation of the received
         message (an instance of :py:class:`botogram.Message`)
       * An ``args`` parameter with the list of parsed arguments
+      * Any other arguments which are required by the bot to call the command.
+        Those special arguments are automatically converted if a *type annotation*
+        is provided. Default parameters are supported as well
 
       If you put a docstring on the provided function, that will be used as
-      extended description of the command in the ``/help`` command.
+      extended description of the command in the ``/help`` command with the
+      required arguments as well.
 
-      Also, if you don't want this command to appear in the ``/help``, you can
-      set the ``hidden`` argument to ``True``.
+      Also, if you don't want this command to appear in the ``/help``,
+      you can set the ``hidden`` argument to ``True``.
 
       .. note::
 
@@ -245,6 +276,10 @@ about how to create them in the ":ref:`custom-components`" chapter.
       :param bool hidden: If the command should be hidden from ``/help``
       :param int order: The order in which the commands are shown in ``/help``
 
+      .. versionchanged:: 0.7
+
+         Added the support for optional arguments and the description of these ones in ``/help``.
+
       .. versionchanged:: 0.4
 
          Added the ``order`` argument.
@@ -252,6 +287,36 @@ about how to create them in the ":ref:`custom-components`" chapter.
       .. versionchanged:: 0.3
 
          Added the ``hidden`` argument.
+
+   .. py:method:: add_inline(func, [cache=300, private=False, paginate=10])
+
+      This method adds an handler for all the inline queries.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **inline**: the representation of the inline query (an instance of :py:class:`~botogram.InlineQuery`)
+      * **sender**: the representation of the sender user (an instance of :py:class:`~botogram.User`)
+      * **query**: the plain text of the query
+
+      :param int cache: the amount of time to cache the contents, in seconds *(default 300)*
+      :param bool private: whether the cache for that specific query shall be valid for the user who requested it or for everyone *(default ``False``)*
+      :param int paginate: the number of results returned per request *(default 10)*
+
+      .. versionadded:: 0.7
+
+   .. py:decoratormethod:: add_inline_feedback(func)
+
+      This method adds an handler for an :py:class:`~botogram.InlineFeedback` update.
+      See the chapter about the :ref:`inline mode <inline>` for more informations.
+
+      You can :ref:`request the following arguments <bot-structure-hooks-args>`
+      in the decorated functions:
+
+      * **feedback**: the received :py:class:`~botogram.InlineFeedback`
+
+      .. versionadded:: 0.7
 
    .. py:method:: add_callback(name, func)
 
@@ -263,14 +328,12 @@ about how to create them in the ":ref:`custom-components`" chapter.
       in the provided function:
 
       * **query**: the received :py:class:`~botogram.CallbackQuery`
-
       * **chat**: the :py:class:`~botogram.Chat` from which the callback query
         was sent
-
       * **message**: the :py:class:`~botogram.Message` related to the callback
         query
-
       * **data**: the custom information provided by you along with the call
+      * **is_inline**: whether the recieved query comes from an inline mode message or not
 
       .. code-block:: python
 

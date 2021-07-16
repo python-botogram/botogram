@@ -5,14 +5,15 @@
 FROM python:3.6-alpine3.6 as BUILDER
 RUN apk update \
     && apk add git bash make
+RUN pip install --upgrade pip
 RUN pip install invoke virtualenv
 COPY ./requirements-docs.txt /requirements-docs.txt
 RUN pip install  -r /requirements-docs.txt
 COPY ./  /botogram
-RUN cd /botogram && invoke docs && cd .netlify && make 
+RUN cd /botogram && invoke docs &&  cd /botogram/.netlify && make
 
 # Image final
-FROM nginx:latest
+FROM nginx:1.17.0-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY /nginx-doc.conf  /etc/nginx/conf.d/default.conf
 COPY --from=BUILDER /botogram/.netlify/build/ ./botogram

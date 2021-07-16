@@ -23,7 +23,7 @@ from .base import BaseObject, multiple
 from . import mixins
 from datetime import datetime as dt
 from time import mktime
-from .media import Photo
+from .media import Photo, ChatPhoto
 
 
 class User(BaseObject, mixins.ChatMixin):
@@ -100,10 +100,10 @@ class Chat(BaseObject, mixins.ChatMixin):
     """
 
     required = {
-        "id": int,
-        "type": str,
+        "id": int
     }
     optional = {
+        "type": str,
         "title": str,
         "username": str,
         "first_name": str,
@@ -114,10 +114,12 @@ class Chat(BaseObject, mixins.ChatMixin):
         # This is added at the bottom of messages.py due to circular imports
         # "pinned_message" = Message
         "sticker_set_name": str,
-        "can_set_sticker_set": bool
+        "can_set_sticker_set": bool,
+        "photo": ChatPhoto,
     }
     replace_keys = {
         "invite_link": "_invite_link",
+        "photo": "_photo",
     }
     _check_equality_ = "id"
 
@@ -358,6 +360,26 @@ class Chat(BaseObject, mixins.ChatMixin):
             "disable_notification": not notify
         }, expect=bool)
 
+    @property
+    @mixins._require_api
+    def photo(self):
+        """Get the current chat photo small and big ids"""
+        if hasattr(self, "_cache_photo"):
+            return self._cache_photo
+
+        if self._photo is not None:
+            self._cache_photo = self._photo
+            return self._cache_photo
+
+        chat = self._api.call("getChat", {
+            "chat_id": self.id
+        }, expect=Chat)
+        if not chat._photo:
+            raise RuntimeError("This chat doesn't have a photo")
+
+        self._cache_photo = chat._photo
+        return self._cache_photo
+
     def unpin_message(self):
         return self._api.call("unpinChatMessage", {
             "chat_id": self.id,
@@ -369,14 +391,14 @@ class Permissions:
         if chat.type not in ("group", "supergroup"):
             raise RuntimeError("This chat is not a group or a supergroup!")
         # Accept also an instance of `User`
-        self._chatid = chat.id
+        self._chat_id = chat.id
         self._api = chat._api
         if isinstance(user, User):
             self._user = user.id
         else:
             self._user = user
         infouser = self._api.call("getChatMember", {
-            "chat_id": self._chatid,
+            "chat_id": self._chat_id,
             "user_id": self._user},
                                   expect=ChatMember)
 
@@ -419,8 +441,8 @@ class Permissions:
 
     def save(self):
         arguments = {
-            "chat_id": self.chatid,
-            "user_id": self.user
+            "chat_id": self._chat_id,
+            "user_id": self._user,
         }
         modify = False
 

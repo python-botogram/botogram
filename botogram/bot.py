@@ -32,6 +32,7 @@ from . import defaults
 from . import components
 from . import utils
 from . import frozenbot
+from . import inline
 from . import shared
 from . import tasks
 from . import messages
@@ -79,6 +80,9 @@ class Bot(frozenbot.FrozenBot):
         maincompid = self._main_component._component_id
         self._shared_memory.register_preparers_list(maincompid, inits)
 
+        # paginate inline
+        self._inline_paginate = {}
+
         # Setup the scheduler
         self._scheduler = tasks.Scheduler()
 
@@ -91,7 +95,11 @@ class Bot(frozenbot.FrozenBot):
                                        messages.process_channel_post)
         self.register_update_processor("edited_channel_post",
                                        messages.process_channel_post_edited)
+        self.register_update_processor("poll", messages.process_poll_update)
         self.register_update_processor("callback_query", callbacks.process)
+        self.register_update_processor('inline_query', inline.process)
+        self.register_update_processor("chosen_inline_result",
+                                       inline.inline_feedback_process)
 
         self._bot_id = str(uuid.uuid4())
 
@@ -140,6 +148,11 @@ class Bot(frozenbot.FrozenBot):
     def process_message(self, func):
         """Add a message processor hook"""
         self._main_component.add_process_message_hook(func)
+        return func
+
+    def poll_update(self, func):
+        """Add a poll update hook"""
+        self._main_component.add_poll_update_hook(func)
         return func
 
     def message_equals(self, string, ignore_case=True):
@@ -195,6 +208,20 @@ class Bot(frozenbot.FrozenBot):
         def __(func):
             self._main_component.add_callback(name, func)
             return func
+        return __
+
+    def inline(self, cache=300, private=False, paginate=10):
+        """Add an inline hook"""
+        def __(func):
+            self._main_component.add_inline(cache, private,
+                                            paginate, func)
+            return func
+        return __
+
+    def inline_feedback(self):
+        """Add an inline feedback hook"""
+        def __(func):
+            self._main_component.add_inline_feedback(func)
         return __
 
     def timer(self, interval):

@@ -73,6 +73,9 @@ class FrozenBot:
         self.itself = itself
         self.itself.set_api(api)
 
+        # paginate inline
+        self._inline_paginate = {}
+
         # No more changes allowed!
         self._frozen = True
 
@@ -109,6 +112,10 @@ class FrozenBot:
 
     def process_message(self, func):
         """Register a message processor hook"""
+        raise FrozenBotError("Can't add hooks to a bot at runtime")
+
+    def poll_update(self, func):
+        """Register a poll update hook"""
         raise FrozenBotError("Can't add hooks to a bot at runtime")
 
     def message_equals(self, string, ignore_case=True):

@@ -18,12 +18,17 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
+import inspect
 import uuid
 
 from . import utils
 from . import tasks
 from . import hooks
 from . import commands
+
+from collections import OrderedDict
+
+_special_parameters = ('args', 'bot', 'chat', 'message', 'shared')
 
 
 class Component:
@@ -38,6 +43,8 @@ class Component:
 
         self.__commands = {}
         self.__callbacks = {}
+        self.__inline = []
+        self.__inline_feedback = []
         self.__processors = []
         self.__no_commands = []
         self.__before_processors = []
@@ -47,6 +54,7 @@ class Component:
         self.__messages_edited_hooks = []
         self.__channel_post_hooks = []
         self.__channel_post_edited_hooks = []
+        self.__poll_update_hooks = []
 
         self._component_id = str(uuid.uuid4())
 
@@ -74,6 +82,14 @@ class Component:
 
         hook = hooks.ProcessMessageHook(func, self)
         self.__processors.append(hook)
+
+    def add_poll_update_hook(self, func):
+        """Add a poll update hook"""
+        if not callable(func):
+            raise ValueError("A poll update hook must be callable")
+
+        hook = hooks.PollUpdateHook(func, self)
+        self.__poll_update_hooks.append(hook)
 
     def add_message_equals_hook(self, string, func, ignore_case=True):
         """Add a message equals hook"""
@@ -111,7 +127,8 @@ class Component:
         })
         self.__processors.append(hook)
 
-    def add_command(self, name, func, hidden=False, order=0, _from_main=False):
+    def add_command(self, name, func, hidden=False, order=0,
+                    _from_main=False):
         """Register a new command"""
         if name in self.__commands:
             raise NameError("The command /%s already exists" % name)
@@ -124,10 +141,17 @@ class Component:
             utils.warn(go_back, "Command names shouldn't be prefixed with a "
                        "slash. It's done automatically.")
 
+        parameters = OrderedDict(inspect.signature(func).parameters)
+
+        for _special_parameter in _special_parameters:
+            if _special_parameter in parameters:
+                parameters.pop(_special_parameter)
+
         hook = hooks.CommandHook(func, self, {
             "name": name,
             "hidden": hidden,
             "order": order,
+            "parameters": parameters
         })
         command = commands.Command(hook)
         self.__commands[name] = command
@@ -145,6 +169,26 @@ class Component:
         })
         self.__callbacks[name] = hook
 
+    def add_inline(self, cache, private, paginate, func):
+        """Add an inline processor hook"""
+        if not callable(func):
+            raise ValueError("An inline must be callable")
+
+        hook = hooks.InlineHook(func, self, {
+            "cache": cache,
+            "private": private,
+            "paginate": paginate,
+        })
+        self.__inline.append(hook)
+
+    def add_inline_feedback(self, func):
+        """Add an inline feedback hook"""
+        if not callable(func):
+            raise ValueError("An inline_feedback must be callable")
+
+        hook = hooks.ChosenInlineHook(func, self)
+        self.__inline_feedback.append(hook)
+
     def add_timer(self, interval, func):
         """Register a new timer"""
         if not callable(func):
@@ -152,7 +196,6 @@ class Component:
 
         hook = hooks.TimerHook(func, self)
         job = tasks.TimerTask(interval, hook)
-
         self.__timers.append(job)
 
     def add_memory_preparer(self, func):
@@ -220,6 +263,7 @@ class Component:
         ]
         return {
             "messages": messages,
+            "poll_updates": [self.__poll_update_hooks],
             "memory_preparers": [self.__memory_preparers],
             "tasks": [self.__timers],
             "chat_unavalable_hooks": [self.__chat_unavailable_hooks],
@@ -230,6 +274,8 @@ class Component:
                 self.__callbacks[name]
                 for name in sorted(self.__callbacks.keys())
             ]],
+            "inline": [self.__inline],
+            "inline_feedback": [self.__inline_feedback]
         }
 
     def _get_commands(self):

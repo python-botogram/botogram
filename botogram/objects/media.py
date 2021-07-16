@@ -39,6 +39,32 @@ class PhotoSize(BaseObject, mixins.FileMixin):
     _check_equality_ = "file_id"
 
 
+class ChatPhoto(BaseObject, mixins.FileMixin):
+    """Telegram API representation of a chat photo
+
+    https://core.telegram.org/bots/api#chatphoto
+    """
+
+    required = {
+        "small_file_id": str,
+        "big_file_id": str,
+    }
+    replace_keys = {
+        "small_file_id": "small",
+        "big_file_id": "big",
+    }
+    _check_equality_ = "small_file_id"
+
+    def save(self, *args, small=False, **kwargs):
+        """Workaround for dealing with big and small chat photos"""
+        if small:
+            self.file_id = self.small
+        else:
+            self.file_id = self.big
+        super(ChatPhoto, self).save(*args, **kwargs)
+        del self.file_id
+
+
 class Photo(mixins.FileMixin):
     """Custom representation of a photo
 
@@ -158,6 +184,7 @@ class Sticker(BaseObject, mixins.FileMixin):
         "file_id": str,
         "width": int,
         "height": int,
+        "is_animated": bool,
     }
     optional = {
         "thumb": PhotoSize,
@@ -187,6 +214,27 @@ class Video(BaseObject, mixins.FileMixin):
     _check_equality_ = "file_id"
 
 
+class Animation(BaseObject, mixins.FileMixin):
+    """Telegram API representation of an animation
+
+    https://core.telegram.org/bots/api#animation
+    """
+
+    required = {
+        "file_id": str,
+        "width": int,
+        "height": int,
+        "duration": int,
+    }
+    optional = {
+        "thumb": PhotoSize,
+        "file_name": str,
+        "mime_type": str,
+        "file_size": int,
+    }
+    _check_equality_ = "file_id"
+
+
 class Contact(BaseObject):
     """Telegram API representation of a contact
 
@@ -200,6 +248,7 @@ class Contact(BaseObject):
     optional = {
         "last_name": str,
         "user_id": int,
+        "vcard": str,
     }
     _check_equality_ = "phone_number"
 

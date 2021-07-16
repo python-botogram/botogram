@@ -18,51 +18,34 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #   DEALINGS IN THE SOFTWARE.
 
-# flake8: noqa
+import typing
 
-from .chats     import User, Chat, UserProfilePhotos, Permissions
-from .media     import PhotoSize, Photo, Audio, Voice, Document, Sticker, \
-                       Video, VideoNote, Animation, Contact, Location, Venue
-from .messages  import Message
-from .markup    import ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply
-from .polls     import Poll, PollOption
-from .updates   import Update, Updates
-from .mixins    import Album
 
-__all__ = [
-    # Chats-related objects
-    "User",
-    "Chat",
-    "UserProfilePhotos",
+def _convert_to_bool(argument: str) -> bool:
+    """Convert the given argument in a boolean value"""
+    lowered = argument.lower()
+    if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+        return True
+    elif lowered in ('no', 'n', 'false', 'f', '0', 'disable', 'off'):
+        return False
+    else:
+        raise ValueError(lowered + ' is not a recognised boolean option')
 
-    # Media-related objects
-    "PhotoSize",
-    "Photo",
-    "Audio",
-    "Voice",
-    "Document",
-    "Sticker",
-    "Video",
-    "VideoNote",
-    "Animation",
-    "Contact",
-    "Location",
-    "Venue",
-    "Album",
 
-    # Messages-related objects
-    "Message",
+def _parameters_conversion(converter: callable,
+                           argument: str, parameter) -> typing.Any:
+    """Convert an argument using a given converter"""
+    if converter is bool:
+        return _convert_to_bool(argument)
 
-    # Markup-related objects
-    "ReplyKeyboardMarkup",
-    "ReplyKeyboardHide",
-    "ForceReply",
+    try:
+        return converter(argument)
+    except Exception as exc:
+        try:
+            name = converter.__name__
+        except AttributeError:
+            name = converter.__class__.__name__
 
-    # Polls-related objects
-    "Poll",
-    "PollOption",
-
-    # Updates-related objects
-    "Update",
-    "Updates",
-]
+        raise ValueError('Converting to "{}" failed '
+                         'for parameter "{}".'.format(
+                             name, parameter)) from exc

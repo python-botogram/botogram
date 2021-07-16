@@ -19,22 +19,90 @@ Release description not yet written.
 New features
 ------------
 
+
+* Added support for inline mode
+
+   * New decorator :py:decoratormethod:`botogram.Bot.inline`
+   * New decorator :py:decoratormethod:`botogram.Bot.inline_feedback`
+   * New attribute :py:attr:`botogram.Update.inline_query`
+   * New attribute :py:attr:`botogram.Update.chosen_inline_result`
+   * New :py:class:`botogram.InlineQuery` class
+   * New :py:class:`botogram.InlineFeedback` class
+   * New :py:class:`botogram.InlineInputMessage` class
+   * New :py:class:`botogram.InlineInputLocation` class
+   * New :py:class:`botogram.InlineInputVenue` class
+   * New :py:class:`botogram.InlineInputContact` class
+   * New :py:class:`botogram.InlineMessageUnsupported`
+   * New attribute :py:attr:`botogram.Message.is_inline`
+   * New attribute :py:attr:`botogram.Message.inline_message_id`
+
+* Added support for animations (GIFs)
+
+   * New :py:class:`botogram.Animation` class
+   * New attribute :py:attr:`botogram.Message.animation`
+   * New method :py:meth:`botogram.Chat.send_gif`
+   * New method :py:meth:`botogram.User.send_gif`
+   * New method :py:meth:`botogram.Message.reply_with_gif`
+
+* Added support for polls
+
+   * New :py:class:`botogram.Poll` class
+   * New :py:class:`botogram.PollOption` class
+   * New method :py:meth:`botogram.Chat.send_poll`
+   * New method :py:meth:`botogram.Message.reply_with_poll`
+   * New method :py:meth:`botogram.Message.stop_poll`
+
+* Added support for thumbs
+
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_video`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.Chat.send_file`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_video`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.User.send_file`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_audio`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_video`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_video_note`
+    * New argument ``thumb`` in :py:meth:`botogram.Message.reply_with_file`
+
 * Enhancements in message forwarding
 
-  * New return type for :py:attr:`~Message.forward_from`
-  * New attribute :py:attr:`~Message.forward_hidden`
-  * New attribute :py:attr:`~Message.forward_signature`
+  * New return type for :py:attr:`Message.forward_from`
+  * New attribute :py:attr:`Message.forward_hidden`
+  * New attribute :py:attr:`Message.forward_signature`
 
 * Added support for live locations
 
-  * New parameter `live_period` for :py:meth:`~Chat.send_location` and :py:meth:`~User.send_location`
-  * New parameter `live_period` for :py:meth:`~Message.reply_with_location`
-  * New method :py:meth:`~Message.edit_live_location`
-  * New method :py:meth:`~Message.stop_live_location`
+  * New parameter `live_period` for :py:meth:`Chat.send_location` and :py:meth:`User.send_location`
+  * New parameter `live_period` for :py:meth:`Message.reply_with_location`
+  * New method :py:meth:`Message.edit_live_location`
+  * New method :py:meth:`Message.stop_live_location`
+
+* Added support for editing, getting and removing the chat photo
+
+  * New :py:class:`~botogram.ChatPhoto` class
+  * New method :py:meth:`Chat.set_photo`
+  * New method :py:meth:`Chat.remove_photo`
+  * New attribute :py:attr:`Chat.photo`
+  
+* Added support for animated stickers
+
+  * New attribute :py:attr:`botogram.Sticker.is_animated`
+
+* Added support for vcards in contacts
+  * New argument ``vcard`` in :py:meth:`botogram.Chat.send_contact`
+  * New argument ``vcard`` in :py:meth:`botogram.User.send_contact`
+  * New argument ``vcard`` in :py:meth:`botogram.Message.reply_with_contact`
+  * New attribute :py:attr:`Contact.vcard`
+
+* Added automatic type conversion for command arguments
 
 * Added support for editing the chat title
 
   * New method :py:meth:`~Chat.set_title`
-
 Bug fixes
 ---------
+
+* Fixed :py:meth:`botogram.Message.edit_attach` to work with inline callbacks
