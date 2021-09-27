@@ -21,6 +21,7 @@ The following languages are currently included in the botogram package:
 
 * ``br`` (Brazilian Portuguese)
 * ``en`` (English)
+* ``es`` (Spanish)
 * ``it`` (Italian)
 
 .. _i18n-setting-language:

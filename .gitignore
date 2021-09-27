@@ -1,14 +1,15 @@
-/botogram.egg-info
-/botogram2.egg-info
-/build
+botogram.egg-info
+botogram2.egg-info
+build
 
-/botogram/i18n/*.mo
+*.mo
+*code*
 
 __pycache__
 *.py[oc]
 
-/.cache
+.cache
 
-/.netlify/build
+.netlify/build
 
-\.pytest_cache/
+.pytest_cache/
