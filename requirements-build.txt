@@ -4,7 +4,13 @@
 #
 #    pip-compile requirements-build.in
 #
-babel==2.3.4
-pytz==2016.4              # via babel
+babel==2.9.1
+    # via -r requirements-build.in
+pytz==2016.4
+    # via
+    #   -r requirements-build.in
+    #   babel
 typing==3.7.4.1
+    # via -r requirements-build.in
 wheel==0.29.0
+    # via -r requirements-build.in
