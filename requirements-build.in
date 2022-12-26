@@ -7,4 +7,4 @@
 babel==2.3.4
 pytz==2016.4              # via babel
 typing==3.7.4.1
-wheel==0.29.0
+wheel==0.38.1
